@@ -1,0 +1,19 @@
+{
+    "name": "doublethreedigital/runway",
+    "autoload": {
+        "psr-4": {
+            "DoubleThreeDigital\\Runway\\": "src"
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Runway",
+            "description": "Use Eloquent in Statamic like never before."
+        },
+        "laravel": {
+            "providers": [
+                "DoubleThreeDigital\\Runway\\ServiceProvider"
+            ]
+        }
+    }
+}
