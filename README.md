@@ -54,6 +54,11 @@ return [
         //             'order_number',
         //             'price',
         //         ],
+
+        //         'sort' => [
+        //             'column' => 'paid_at',
+        //             'direction' => 'desc',
+        //         ],
         //     ],
         // ],
     ],
@@ -126,7 +131,7 @@ While these fields create a blueprint for the publish forms, it should be pointe
 
 ### `listing`
 
-Inside `listing`, you can control certain aspects of how the model's listing table works. Currently, the only thing you can customize on the table are the columns that are displayed.
+Inside `listing`, you can control certain aspects of how the model's listing table displays records. You can currently configure the listing columns and the sort order of columns in the table.
 
 ```php
 'listing' => [
@@ -134,10 +139,13 @@ Inside `listing`, you can control certain aspects of how the model's listing tab
         'order_number',
         'price',
     ],
+
+    'sort' => [
+        'column' => 'paid_at',
+        'direction' => 'desc',
+    ],
 ],
 ```
-
-You can display as many of the fields from your blueprint as you need.
 
 ## Usage
 

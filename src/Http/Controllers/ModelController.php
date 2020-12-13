@@ -13,7 +13,7 @@ class ModelController extends CpController
         $model = ModelFinder::find($model);
         $blueprint = $model['blueprint'];
 
-        $query = (new $model['model']());
+        $query = (new $model['model']())->orderBy($model['listing_sort']['column'], $model['listing_sort']['direction']);
 
         $columns = collect($model['listing_columns'])
             ->map(function ($columnKey) use ($model, $blueprint) {

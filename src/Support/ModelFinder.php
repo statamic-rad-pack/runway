@@ -72,6 +72,7 @@ class ModelFinder
                     'singular'          => Str::singular($config['name']),
                     'blueprint'         => $blueprint,
                     'listing_columns'   => $config['listing']['columns'],
+                    'listing_sort'      => $config['listing']['sort'],
                     'primary_key'       => (new $model())->getKeyName(),
                 ];
             })
