@@ -88,7 +88,7 @@ class ModelController extends CpController
         $blueprint = $model['blueprint'];
         $fields = $blueprint->fields()->addValues($values)->preProcess();
 
-        return view('runway::create', [
+        return view('runway::edit', [
             'model'     => $model,
             'blueprint' => $blueprint->toPublishArray(),
             'values'    => $fields->values(),
