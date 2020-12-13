@@ -141,8 +141,8 @@ class ModelController extends CpController
 
         $record->delete();
 
-        return redirect(route('runway.index', [
+        return redirect(cp_route('runway.index', [
             'model' => $model['_handle'],
-        ]));
+        ]))->with('success', "{$model['singular']} deleted");
     }
 }
