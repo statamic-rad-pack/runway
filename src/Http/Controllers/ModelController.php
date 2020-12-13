@@ -135,7 +135,7 @@ class ModelController extends CpController
         ];
     }
 
-    public function destroy(Request $request, $model, $record)
+    public function destroy($model, $record)
     {
         $model = ModelFinder::find($model);
         $record = (new $model['model']())->find($record);
