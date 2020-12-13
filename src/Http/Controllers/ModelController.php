@@ -76,7 +76,7 @@ class ModelController extends CpController
             'record'    => $record->toArray(),
             'redirect'  => cp_route('runway.edit', [
                 'model'     => $model['_handle'],
-                'record'    => $record->id
+                'record'    => $record->{$model['primary_key']},
             ]),
         ];
     }
@@ -109,7 +109,7 @@ class ModelController extends CpController
             'meta'      => $fields->meta(),
             'action'    => cp_route('runway.update', [
                 'model'     => $model['_handle'],
-                'record'    => $record->id,
+                'record'    => $record->{$model['primary_key']},
             ]),
         ]);
     }

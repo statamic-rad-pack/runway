@@ -66,12 +66,13 @@ class ModelFinder
                 $blueprint = Blueprint::make()->setContents($config['blueprint']);
 
                 return [
-                    '_handle' => Str::lower(class_basename($model)),
-                    'model' => $model,
-                    'name' => $config['name'],
-                    'singular' => Str::singular($config['name']),
-                    'blueprint' => $blueprint,
-                    'listing_columns' => $config['listing']['columns'],
+                    '_handle'           => Str::lower(class_basename($model)),
+                    'model'             => $model,
+                    'name'              => $config['name'],
+                    'singular'          => Str::singular($config['name']),
+                    'blueprint'         => $blueprint,
+                    'listing_columns'   => $config['listing']['columns'],
+                    'primary_key'       => (new $model())->getKeyName(),
                 ];
             })
             ->toArray();
