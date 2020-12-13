@@ -13,7 +13,9 @@
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Title</th>
+                        @foreach ($columns as $column)
+                            <th>{{ $column['title'] }}</th>
+                        @endforeach
                         <th class="actions-column"></th>
                     </tr>
                 </thead>
@@ -21,11 +23,18 @@
                 <tbody>
                     @foreach($records as $record)
                         <tr>
-                            <td>
-                                <div class="flex items-center">
-                                    <a href="{{ cp_route('runway.edit', ['model' => $model['_handle'], 'record' => $record->id]) }}">{{ $record->title }}</a>
-                                </div>
-                            </td>
+                            @foreach ($columns as $column)
+                                <td>
+                                    @if($column['has_link'])
+                                        <div class="flex items-center">
+                                            <a href="{{ cp_route('runway.edit', ['model' => $model['_handle'], 'record' => $record->id]) }}">{{ $record->{$column['handle']} }}</a>
+                                        </div>
+                                    @else
+                                        {{ $record->{$column['handle']} }}
+                                    @endif
+                                </td>
+                            @endforeach
+
                             <td class="flex justify-end">
                                 <dropdown-list>
                                     <dropdown-item text="Edit" redirect="{{ cp_route('runway.edit', ['model' => $model['_handle'], 'record' => $record->id]) }}"></dropdown-item>

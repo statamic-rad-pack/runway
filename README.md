@@ -48,6 +48,13 @@ return [
         //             ],
         //         ],
         //     ],
+
+        //     'listing' => [
+        //         'columns' => [
+        //             'order_number',
+        //             'price',
+        //         ],
+        //     ],
         // ],
     ],
 
@@ -116,6 +123,21 @@ An example of a field configuration looks like this:
 ```
 
 While these fields create a blueprint for the publish forms, it should be pointed out that no blueprint will be saved as a file to your `resources/blueprints` directory. It's created on the fly.
+
+### `listing`
+
+Inside `listing`, you can control certain aspects of how the model's listing table works. Currently, the only thing you can customize on the table are the columns that are displayed.
+
+```php
+'listing' => [
+    'columns' => [
+        'order_number',
+        'price',
+    ],
+],
+```
+
+You can display as many of the fields from your blueprint as you need.
 
 ## Usage
 

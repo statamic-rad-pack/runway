@@ -31,6 +31,13 @@ return [
         //             ],
         //         ],
         //     ],
+
+        //     'listing' => [
+        //         'columns' => [
+        //             'order_number',
+        //             'price',
+        //         ],
+        //     ],
         // ],
     ],
 

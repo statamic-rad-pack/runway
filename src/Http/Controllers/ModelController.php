@@ -11,13 +11,27 @@ class ModelController extends CpController
     public function index(Request $request, $model)
     {
         $model = ModelFinder::find($model);
+        $blueprint = $model['blueprint'];
 
-        $query = (new $model['model']())->query();
+        $query = (new $model['model']());
+
+        $columns = collect($model['listing_columns'])
+            ->map(function ($columnKey) use ($model, $blueprint) {
+                $field = $blueprint->field($columnKey);
+
+                return [
+                    'handle' => $columnKey,
+                    'title'  => $field->display(),
+                    'has_link' => $model['listing_columns'][0] === $columnKey,
+                ];
+            })
+            ->toArray();
 
         return view('runway::index', [
             'title'     => $model['name'],
             'model'     => $model,
             'records'   => $query->paginate(config('statamic.cp.pagination_size')),
+            'columns'   => $columns,
         ]);
     }
 

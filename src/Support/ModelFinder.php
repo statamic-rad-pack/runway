@@ -71,6 +71,7 @@ class ModelFinder
                     'name' => $config['name'],
                     'singular' => Str::singular($config['name']),
                     'blueprint' => $blueprint,
+                    'listing_columns' => $config['listing']['columns'],
                 ];
             })
             ->toArray();
