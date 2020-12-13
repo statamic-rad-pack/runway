@@ -15,7 +15,7 @@ class ModelController extends CpController
         $query = (new $model['model']())->query();
 
         return view('runway::cp.index', [
-            'title'     => $model['plural'],
+            'title'     => $model['name'],
             'model'     => $model,
             'records'   => $query->paginate(config('statamic.cp.pagination_size')),
         ]);

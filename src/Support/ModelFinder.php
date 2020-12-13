@@ -69,7 +69,6 @@ class ModelFinder
                     '_handle' => Str::lower(class_basename($model)),
                     'model' => $model,
                     'name' => $config['name'],
-                    'plural' => Str::plural($config['name']),
                     'singular' => Str::singular($config['name']),
                     'blueprint' => $blueprint,
                 ];
