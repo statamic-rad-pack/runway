@@ -1,8 +1,15 @@
 {
     "name": "doublethreedigital/runway",
+    "description": "Use Eloquent in Statamic like never before.",
+    "license": "proprietary",
     "autoload": {
         "psr-4": {
             "DoubleThreeDigital\\Runway\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DoubleThreeDigital\\Runway\\Tests\\": "tests"
         }
     },
     "extra": {
@@ -15,5 +22,27 @@
                 "DoubleThreeDigital\\Runway\\ServiceProvider"
             ]
         }
+    },
+    "require": {
+        "php": "^7.4",
+        "statamic/cms": "3.0.*"
+    },
+    "require-dev": {
+        "nunomaduro/collision": "^4.2",
+        "orchestra/testbench": "^4.0|^5.0|^6.0"
+    },
+    "minimum-stability": "dev",
+    "scripts": {
+        "lint": [
+            "php-cs-fixer fix ./src"
+        ],
+        "test": [
+            "php -d memory_limit=-1 ./vendor/bin/phpunit"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
     }
 }
