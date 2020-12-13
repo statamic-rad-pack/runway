@@ -5,7 +5,6 @@ namespace DoubleThreeDigital\Runway\Http\Controllers;
 use DoubleThreeDigital\Runway\Http\Requests\StoreRequest;
 use DoubleThreeDigital\Runway\Http\Requests\UpdateRequest;
 use DoubleThreeDigital\Runway\Support\ModelFinder;
-use Illuminate\Http\Request;
 use Statamic\Http\Controllers\CP\CpController;
 
 class ModelController extends CpController
