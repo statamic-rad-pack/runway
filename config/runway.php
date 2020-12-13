@@ -16,12 +16,18 @@ return [
         // \App\Models\Order::class => [
         //     'name' => 'Orders',
 
-        //     'fields' => [
-        //         [
-        //             'handle' => 'price',
-        //             'field' => [
-        //                 'type' => 'number',
-        //                 'validate' => 'required',
+        //     'blueprint' => [
+        //         'sections' => [
+        //             'main' => [
+        //                 'fields' => [
+        //                     [
+        //                         'handle' => 'price',
+        //                         'field' => [
+        //                             'type' => 'number',
+        //                             'validate' => 'required',
+        //                         ],
+        //                     ],
+        //                 ],
         //             ],
         //         ],
         //     ],

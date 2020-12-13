@@ -33,12 +33,18 @@ return [
         // \App\Models\Order::class => [
         //     'name' => 'Orders',
 
-        //     'fields' => [
-        //         [
-        //             'handle' => 'price',
-        //             'field' => [
-        //                 'type' => 'number',
-        //                 'validate' => 'required',
+        //     'blueprint' => [
+        //         'sections' => [
+        //             'main' => [
+        //                 'fields' => [
+        //                     [
+        //                         'handle' => 'price',
+        //                         'field' => [
+        //                             'type' => 'number',
+        //                             'validate' => 'required',
+        //                         ],
+        //                     ],
+        //                 ],
         //             ],
         //         ],
         //     ],
@@ -62,42 +68,48 @@ For each of the models, there's various configuration options available:
 ### `name`
 This will be the name displayed throughout the Control Panel for this resource. We recommend you use a plural for this.
 
-### `fields`
-This is where you can define the fields for your model's blueprint. You can use any available fieldtype with any of it's configuration options. You can optionally add validation rules if you'd like and they'll be used when saving or updating the record.
+### `blueprint`
+This is where you can define the fields & sections for your model's blueprint. You can use any available fieldtypes with any of their configuration options. You can optionally add validation rules if you'd like and they'll be used when saving or updating the record.
 
 Make sure that you create a field for each of the required columns in your database or else you'll run into issues when saving. The handle for the field should match up with the column name in the database.
 
 An example of a field configuration looks like this:
 
 ```php
-'fields' => [
-    [
-        'handle' => 'title',
-        'field' => [
-            'type' => 'text',
-            'validate' => 'required',
-        ],
-    ],
-    [
-        'handle' => 'body',
-        'field' => [
-            'type' => 'markdown',
-            'validate' => '',
-        ],
-    ],
-    [
-        'handle' => 'images',
-        'field' => [
-            'type' => 'assets',
-            'container' => 'assets',
-            'validate' => '',
-        ],
-    ],
-    [
-        'handle' => 'publish_at',
-        'field' => [
-            'type' => 'date',
-            'validate' => '',
+'blueprint' => [
+    'sections' => [
+        'main' => [
+            'fields' => [
+                [
+                    'handle' => 'title',
+                    'field' => [
+                        'type' => 'text',
+                        'validate' => 'required',
+                    ],
+                ],
+                [
+                    'handle' => 'body',
+                    'field' => [
+                        'type' => 'markdown',
+                        'validate' => '',
+                    ],
+                ],
+                [
+                    'handle' => 'images',
+                    'field' => [
+                        'type' => 'assets',
+                        'container' => 'assets',
+                        'validate' => '',
+                    ],
+                ],
+                [
+                    'handle' => 'publish_at',
+                    'field' => [
+                        'type' => 'date',
+                        'validate' => '',
+                    ],
+                ],
+            ],
         ],
     ],
 ],

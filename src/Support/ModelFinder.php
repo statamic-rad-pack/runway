@@ -18,7 +18,7 @@ class ModelFinder
 
     public static function bootModels()
     {
-// $modelDirectory = is_dir(app_path('Models')) ? app_path('Models') : app_path();
+        // $modelDirectory = is_dir(app_path('Models')) ? app_path('Models') : app_path();
 
         // $models = collect(File::allFiles($modelDirectory))
         //     ->reject(function (SplFileInfo $file) {
@@ -61,29 +61,9 @@ class ModelFinder
         //         ];
         //     });
 
-
         static::$models = collect(config('runway.models'))
             ->map(function ($config, $model) {
-                // $blueprint = Blueprint::makeFromFields($config['fields']);
-                $blueprint = Blueprint::make()->setContents([
-                    'sections' => [
-                        'main' => [
-                            'fields' => $config['fields'],
-                        ],
-                        // 'sidebar' => [
-                        //     'fields' => [
-                        //         [
-                        //             'handle' => 'id',
-                        //             'field' => [
-                        //                 'type' => 'slug',
-                        //                 'read_only' => true,
-                        //                 'display' => 'ID',
-                        //             ],
-                        //         ],
-                        //     ],
-                        // ],
-                    ],
-                ]);
+                $blueprint = Blueprint::make()->setContents($config['blueprint']);
 
                 return [
                     '_handle' => Str::lower(class_basename($model)),
