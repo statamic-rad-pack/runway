@@ -14,7 +14,7 @@ class ModelController extends CpController
 
         $query = (new $model['model']())->query();
 
-        return view('runway::cp.index', [
+        return view('runway::index', [
             'title'     => $model['name'],
             'model'     => $model,
             'records'   => $query->paginate(config('statamic.cp.pagination_size')),
@@ -29,7 +29,7 @@ class ModelController extends CpController
         $fields = $blueprint->fields();
         $fields = $fields->preProcess();
 
-        return view('runway::cp.create', [
+        return view('runway::create', [
             'model'     => $model,
             'blueprint' => $blueprint->toPublishArray(),
             'values'    => $fields->values(),
@@ -88,7 +88,7 @@ class ModelController extends CpController
         $blueprint = $model['blueprint'];
         $fields = $blueprint->fields()->addValues($values)->preProcess();
 
-        return view('runway::cp.create', [
+        return view('runway::create', [
             'model'     => $model,
             'blueprint' => $blueprint->toPublishArray(),
             'values'    => $fields->values(),
