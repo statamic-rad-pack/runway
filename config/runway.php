@@ -1,6 +1,7 @@
 <?php
 
 return [
+
     /*
     |--------------------------------------------------------------------------
     | Eloquent Models
@@ -12,40 +13,19 @@ return [
     */
 
     'models' => [
-        \App\Models\Post::class => [
-            'name' => 'Post',
+        // \App\Models\Order::class => [
+        //     'name' => 'Orders',
 
-            'fields' => [
-                [
-                    'handle' => 'title',
-                    'field' => [
-                        'type' => 'text',
-                        'validate' => 'required',
-                    ],
-                ],
-                [
-                    'handle' => 'body',
-                    'field' => [
-                        'type' => 'markdown',
-                        'validate' => '',
-                    ],
-                ],
-                [
-                    'handle' => 'images',
-                    'field' => [
-                        'type' => 'assets',
-                        'container' => 'assets',
-                        'validate' => '',
-                    ],
-                ],
-                [
-                    'handle' => 'publish_at',
-                    'field' => [
-                        'type' => 'date',
-                        'validate' => '',
-                    ],
-                ],
-            ],
-        ],
+        //     'fields' => [
+        //         [
+        //             'handle' => 'price',
+        //             'field' => [
+        //                 'type' => 'number',
+        //                 'validate' => 'required',
+        //             ],
+        //         ],
+        //     ],
+        // ],
     ],
+
 ];

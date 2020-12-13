@@ -25,6 +25,10 @@ class ServiceProvider extends AddonServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'runway');
         $this->mergeConfigFrom(__DIR__.'/../config/runway.php', 'runway');
 
+        $this->publishes([
+            __DIR__.'/../config/runway.php' => config_path('runway.php'),
+        ], 'runway-config');
+
         Statamic::booted(function () {
             ModelFinder::bootModels();
 
