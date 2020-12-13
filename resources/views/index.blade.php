@@ -42,7 +42,7 @@
                                         @csrf
                                         @method('DELETE')
 
-                                        <dropdown-item text="Delete" redirect="#"></dropdown-item>
+                                        <dropdown-item class="warning" text="Delete" redirect="#"></dropdown-item>
                                     </form>
                                 </dropdown-list>
                             </td>
