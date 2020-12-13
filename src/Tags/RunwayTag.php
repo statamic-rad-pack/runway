@@ -26,6 +26,13 @@ class RunwayTag extends Tags
             $query->where(explode(':', $where)[0], explode(':', $where)[1]);
         }
 
+        if ($this->params->has('sort')) {
+            $sortColumn = explode(':', $this->params->get('sort'))[0];
+            $sortDirection = explode(':', $this->params->get('sort'))[1];
+
+            $query->orderBy($sortColumn, $sortDirection);
+        }
+
         if ($this->params->has('limit')) {
             return $this->augmentRecords(
                 $query->paginate($this->params->get('limit'))->all(),
