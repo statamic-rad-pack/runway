@@ -2,13 +2,15 @@
 
 namespace DoubleThreeDigital\Runway\Http\Controllers;
 
+use DoubleThreeDigital\Runway\Http\Requests\StoreRequest;
+use DoubleThreeDigital\Runway\Http\Requests\UpdateRequest;
 use DoubleThreeDigital\Runway\Support\ModelFinder;
 use Illuminate\Http\Request;
 use Statamic\Http\Controllers\CP\CpController;
 
 class ModelController extends CpController
 {
-    public function index(Request $request, $model)
+    public function index($model)
     {
         $model = ModelFinder::find($model);
         $blueprint = $model['blueprint'];
@@ -35,7 +37,7 @@ class ModelController extends CpController
         ]);
     }
 
-    public function create(Request $request, $model)
+    public function create($model)
     {
         $model = ModelFinder::find($model);
 
@@ -52,12 +54,9 @@ class ModelController extends CpController
         ]);
     }
 
-    public function store(Request $request, $model)
+    public function store(StoreRequest $request, $model)
     {
         $model = ModelFinder::find($model);
-
-        $this->validate($request, $model['blueprint']->fields()->validator()->rules());
-
         $record = (new $model['model']());
 
         foreach ($model['blueprint']->fields()->all() as $fieldKey => $field) {
@@ -81,7 +80,7 @@ class ModelController extends CpController
         ];
     }
 
-    public function edit(Request $request, $model, $record)
+    public function edit($model, $record)
     {
         $model = ModelFinder::find($model);
         $record = (new $model['model']())->find($record);
@@ -114,12 +113,10 @@ class ModelController extends CpController
         ]);
     }
 
-    public function update(Request $request, $model, $record)
+    public function update(UpdateRequest $request, $model, $record)
     {
         $model = ModelFinder::find($model);
         $record = (new $model['model']())->find($record);
-
-        $this->validate($request, $model['blueprint']->fields()->validator()->rules());
 
         foreach ($model['blueprint']->fields()->all() as $fieldKey => $field) {
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
