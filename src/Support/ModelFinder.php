@@ -63,7 +63,9 @@ class ModelFinder
 
         static::$models = collect(config('runway.models'))
             ->map(function ($config, $model) {
-                $blueprint = Blueprint::make()->setContents($config['blueprint']);
+                $blueprint = is_string($config['blueprint'])
+                    ? Blueprint::find($config['blueprint'])
+                    : Blueprint::make()->setContents($config['blueprint']);
 
                 return [
                     '_handle'           => Str::lower(class_basename($model)),

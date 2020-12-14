@@ -127,7 +127,13 @@ An example of a field configuration looks like this:
 ],
 ```
 
-While these fields create a blueprint for the publish forms, it should be pointed out that no blueprint will be saved as a file to your `resources/blueprints` directory. It's created on the fly.
+If you prefer, you can also create a normal blueprint file in `resources/blueprints` and reference it inside your config.
+
+```php
+'blueprint' => 'orders',
+```
+
+Bear in mind that at the moment, blueprints in the root of `resources/blueprint` won't be displayed as editable in the Control Panel.
 
 ### `listing`
 
