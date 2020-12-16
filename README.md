@@ -4,8 +4,6 @@
 
 This addon allows you to easily manage your Eloquent models and display them in your templates. It includes Control Panel listing tables and publish forms.
 
-Although the code for this addon is open-source, you need to purchase a license from the Statamic Marketplace to use it on [a public domain](https://statamic.dev/licensing#public-domains).
-
 ## Installation
 
 1. Install via Composer `composer require doublethreedigital/runway`
