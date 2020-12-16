@@ -8,7 +8,7 @@ This addon allows you to easily manage your Eloquent models and display them in 
 
 1. Install via Composer `composer require doublethreedigital/runway`
 2. Publish the configuration file `php artisan vendor:publish --tag="runway-config"`
-3. Configure the fields for each of the Eloquent models you wish to be used with Runway.
+3. Configure the blueprint for each of the Eloquent models you wish to use with Runway.
 
 ## Configuration
 
@@ -71,7 +71,8 @@ To configure the models you'd like to use Runway with, just create a new item in
 ```php
 [
     'name' => 'Orders',
-    'fields' => [],
+    'blueprint' => [...],
+    'listing' => [...],
 ],
 ```
 
