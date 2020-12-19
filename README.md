@@ -186,6 +186,12 @@ The tag also has various parameters you can use to filter the records that get o
 {{ /runway:post }}
 ```
 
+### Permissions
+
+![Permissions](./permissions.png)
+
+Runway provides some permissions to limit which users have access to view, create, edit and delete your model records. You can configure these permissions in the same way you can with built-in Statamic permissions. [Read the Statamic Docs](https://statamic.dev/users#permissions).
+
 ## Troubleshooting
 
 **Unexpected data found. Trailing data**
@@ -202,8 +208,7 @@ protected $casts = [
 
 We've got a couple of features we're planning on implementing in the next couple of months. If you've got any additional feature requests, please create an issue for them.
 
-* Filtering & Search on the CP Listing table
-* Control Panel Permissions
+* Filtering on the CP Listing table
 * Ability to define custom actions
 
 ## Support

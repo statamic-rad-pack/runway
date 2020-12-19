@@ -15,6 +15,10 @@ class ModelController extends CpController
         $model = ModelFinder::find($model);
         $blueprint = $model['blueprint'];
 
+        if (! $request->user()->hasPermission("View {$model['_handle']}") && ! $request->user()->isSuper()) {
+            abort('403');
+        }
+
         $query = (new $model['model']())
             ->orderBy($model['listing_sort']['column'], $model['listing_sort']['direction']);
 
@@ -48,9 +52,13 @@ class ModelController extends CpController
         ]);
     }
 
-    public function create($model)
+    public function create(Request $request, $model)
     {
         $model = ModelFinder::find($model);
+
+        if (! $request->user()->hasPermission("Create new {$model['_handle']}") && ! $request->user()->isSuper()) {
+            abort('403');
+        }
 
         $blueprint = $model['blueprint'];
         $fields = $blueprint->fields();
@@ -69,6 +77,10 @@ class ModelController extends CpController
     {
         $model = ModelFinder::find($model);
         $record = (new $model['model']());
+
+        if (! $request->user()->hasPermission("Create new {$model['_handle']}") && ! $request->user()->isSuper()) {
+            abort('403');
+        }
 
         foreach ($model['blueprint']->fields()->all() as $fieldKey => $field) {
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
@@ -91,10 +103,14 @@ class ModelController extends CpController
         ];
     }
 
-    public function edit($model, $record)
+    public function edit(Request $request, $model, $record)
     {
         $model = ModelFinder::find($model);
         $record = (new $model['model']())->find($record);
+
+        if (! $request->user()->hasPermission("Edit {$model['_handle']}") && ! $request->user()->isSuper()) {
+            abort('403');
+        }
 
         $values = [];
         $blueprintFieldKeys = $model['blueprint']->fields()->all()->keys()->toArray();
@@ -129,6 +145,10 @@ class ModelController extends CpController
         $model = ModelFinder::find($model);
         $record = (new $model['model']())->find($record);
 
+        if (! $request->user()->hasPermission("Edit {$model['_handle']}") && ! $request->user()->isSuper()) {
+            abort('403');
+        }
+
         foreach ($model['blueprint']->fields()->all() as $fieldKey => $field) {
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
 
@@ -146,10 +166,14 @@ class ModelController extends CpController
         ];
     }
 
-    public function destroy($model, $record)
+    public function destroy(Request $request, $model, $record)
     {
         $model = ModelFinder::find($model);
         $record = (new $model['model']())->find($record);
+
+        if (! $request->user()->hasPermission("Delete {$model['_handle']}") && ! $request->user()->isSuper()) {
+            abort('403');
+        }
 
         $record->delete();
 

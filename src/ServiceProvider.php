@@ -5,6 +5,7 @@ namespace DoubleThreeDigital\Runway;
 use DoubleThreeDigital\Runway\Support\ModelFinder;
 use DoubleThreeDigital\Runway\Tags\RunwayTag;
 use Statamic\Facades\CP\Nav;
+use Statamic\Facades\Permission;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 
@@ -38,6 +39,17 @@ class ServiceProvider extends AddonServiceProvider
                         ->route('runway.index', ['model' => $model['_handle']]);
                 }
             });
+
+            foreach (ModelFinder::all() as $model) {
+                Permission::register("View {$model['_handle']}", function ($permission) use ($model) {
+                    $permission->children([
+                        Permission::make("Edit {$model['_handle']}")->children([
+                            Permission::make("Create new {$model['_handle']}"),
+                            Permission::make("Delete {$model['_handle']}"),
+                        ]),
+                    ]);
+                })->group('Runway');
+            }
         });
     }
 }
