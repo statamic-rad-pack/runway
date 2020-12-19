@@ -2,7 +2,7 @@
 
 # Runway
 
-This addon allows you to easily manage your Eloquent models and display them in your templates. It includes Control Panel listing tables and publish forms.
+This addon allows you to easily manage your Eloquent models from the Control Panel and output them inside your Antlers templates. This addon is useful for when you have some information (like orders) that you'd prefer to be stored in a database, for whatever reason but you don't want to move all of your entries over to a database as well.
 
 ## Installation
 
