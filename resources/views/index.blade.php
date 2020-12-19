@@ -1,5 +1,6 @@
 @extends('statamic::layout')
 @section('title', $title)
+@section('wrapper_class', 'max-w-full')
 
 @section('content')
     <div class="flex items-center justify-between mb-3">
@@ -16,7 +17,7 @@
                     type="search"
                     name="query"
                     style="height: auto;"
-                    placeholder="Search {{ $title }}"
+                    placeholder="Search..."
                     value="{{ request()->input('query') }}"
                 >
             </form>
