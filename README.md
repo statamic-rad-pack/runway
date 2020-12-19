@@ -188,7 +188,7 @@ The tag also has various parameters you can use to filter the records that get o
 
 ### Permissions
 
-![Permissions](./permissions.png)
+![Permissions](https://raw.githubusercontent.com/doublethreedigital/runway/master/permissions.png)
 
 Runway provides some permissions to limit which users have access to view, create, edit and delete your model records. You can configure these permissions in the same way you can with built-in Statamic permissions. [Read the Statamic Docs](https://statamic.dev/users#permissions).
 
