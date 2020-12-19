@@ -1,0 +1,6 @@
+/.github export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/tests export-ignore
+/banner.png export-ignore
+/permissions.png export-ignore
