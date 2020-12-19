@@ -10,6 +10,17 @@
 
     @if ($records->count())
         <div class="card p-0">
+            <form class="w-full p-2 flex" action="#" method="get">
+                <input
+                    class="input-text flex-1"
+                    type="search"
+                    name="query"
+                    style="height: auto;"
+                    placeholder="Search {{ $title }}"
+                    value="{{ request()->input('query') }}"
+                >
+            </form>
+
             <table class="data-table">
                 <thead>
                     <tr>

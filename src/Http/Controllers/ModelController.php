@@ -5,16 +5,28 @@ namespace DoubleThreeDigital\Runway\Http\Controllers;
 use DoubleThreeDigital\Runway\Http\Requests\StoreRequest;
 use DoubleThreeDigital\Runway\Http\Requests\UpdateRequest;
 use DoubleThreeDigital\Runway\Support\ModelFinder;
+use Illuminate\Http\Request;
 use Statamic\Http\Controllers\CP\CpController;
 
 class ModelController extends CpController
 {
-    public function index($model)
+    public function index(Request $request, $model)
     {
         $model = ModelFinder::find($model);
         $blueprint = $model['blueprint'];
 
-        $query = (new $model['model']())->orderBy($model['listing_sort']['column'], $model['listing_sort']['direction']);
+        $query = (new $model['model']())
+            ->orderBy($model['listing_sort']['column'], $model['listing_sort']['direction']);
+
+        if ($searchQuery = $request->input('query')) {
+            $query->where(function ($query) use ($searchQuery, $blueprint) {
+                $wildcard = '%'.$searchQuery.'%';
+
+                foreach ($blueprint->fields()->items()->toArray() as $field) {
+                    $query->orWhere($field['handle'], 'LIKE', $wildcard);
+                }
+            });
+        }
 
         $columns = collect($model['listing_columns'])
             ->map(function ($columnKey) use ($model, $blueprint) {

@@ -76,6 +76,8 @@ class ModelFinder
                     'listing_columns'   => $config['listing']['columns'],
                     'listing_sort'      => $config['listing']['sort'],
                     'primary_key'       => (new $model())->getKeyName(),
+                    'model_table'       => $modelTable = (new $model())->getTable(),
+                    'schema_columns'    => Schema::getColumnListing($modelTable),
                 ];
             })
             ->toArray();
