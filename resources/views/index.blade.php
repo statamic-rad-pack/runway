@@ -39,7 +39,10 @@
                                 <td>
                                     @if($column['has_link'])
                                         <div class="flex items-center">
-                                            <a href="{{ cp_route('runway.edit', ['model' => $model['_handle'], 'record' => $record->{$model['primary_key']}]) }}">{{ $record->{$column['handle']} }}</a>
+                                            <a href="{{ cp_route('runway.edit', [
+                                                'model' => $model['_handle'],
+                                                'record' => $record->{$model['route_key']}
+                                            ]) }}">{{ $record->{$column['handle']} }}</a>
                                         </div>
                                     @else
                                         {{ $record->{$column['handle']} }}

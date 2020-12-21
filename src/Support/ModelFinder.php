@@ -67,6 +67,8 @@ class ModelFinder
                     ? Blueprint::find($config['blueprint'])
                     : Blueprint::make()->setContents($config['blueprint']);
 
+                $eloquentModel = (new $model());
+
                 return [
                     '_handle'           => Str::lower(class_basename($model)),
                     'model'             => $model,
@@ -75,7 +77,8 @@ class ModelFinder
                     'blueprint'         => $blueprint,
                     'listing_columns'   => $config['listing']['columns'],
                     'listing_sort'      => $config['listing']['sort'],
-                    'primary_key'       => (new $model())->getKeyName(),
+                    'primary_key'       => $eloquentModel->getKeyName(),
+                    'route_key'         => $eloquentModel->getRouteKey() ?? 'id',
                     'model_table'       => $modelTable = (new $model())->getTable(),
                     'schema_columns'    => Schema::getColumnListing($modelTable),
                 ];

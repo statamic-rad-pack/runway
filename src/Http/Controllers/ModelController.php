@@ -106,7 +106,7 @@ class ModelController extends CpController
     public function edit(Request $request, $model, $record)
     {
         $model = ModelFinder::find($model);
-        $record = (new $model['model']())->find($record);
+        $record = (new $model['model']())->where($model['route_key'], $record)->first();
 
         if (! $request->user()->hasPermission("Edit {$model['_handle']}") && ! $request->user()->isSuper()) {
             abort('403');
@@ -143,7 +143,7 @@ class ModelController extends CpController
     public function update(UpdateRequest $request, $model, $record)
     {
         $model = ModelFinder::find($model);
-        $record = (new $model['model']())->find($record);
+        $record = (new $model['model']())->where($model['route_key'], $record)->first();
 
         if (! $request->user()->hasPermission("Edit {$model['_handle']}") && ! $request->user()->isSuper()) {
             abort('403');
@@ -169,7 +169,7 @@ class ModelController extends CpController
     public function destroy(Request $request, $model, $record)
     {
         $model = ModelFinder::find($model);
-        $record = (new $model['model']())->find($record);
+        $record = (new $model['model']())->where($model['route_key'], $record)->first();
 
         if (! $request->user()->hasPermission("Delete {$model['_handle']}") && ! $request->user()->isSuper()) {
             abort('403');
