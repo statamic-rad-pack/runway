@@ -65,38 +65,10 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
 
-            @if($records->hasMorePages())
-                <div class="w-full flex mt-3">
-                    <div class="flex-1"></div>
-
-                    <ul class="flex justify-center items-center list-reset">
-                        @if($records->previousPageUrl())
-                            <li class="mx-1">
-                                <a href="{{ $records->previousPageUrl() }}"><span>&laquo;</span></a>
-                            </li>
-                        @endif
-
-                        @foreach($records->links()->elements[0] as $number => $link)
-                            <li class="mx-1 @if($number === $records->currentPage()) font-bold @endif">
-                                <a href="{{ $link }}">{{ $number }}</a>
-                            </li>
-                        @endforeach
-
-                        @if($records->nextPageUrl())
-                            <li class="mx-1">
-                                <a href="{{ $records->nextPageUrl() }}">
-                                    <span>»</span>
-                                </a>
-                            </li>
-                        @endif
-                    </ul>
-
-                    <div class="flex flex-1">
-                        <div class="flex-1"></div>
-                    </div>
-                </div>
-            @endif
+        <div class="my-2">
+            {{ $records->links('runway::pagination') }}
         </div>
     @else
         @include('statamic::partials.create-first', [
