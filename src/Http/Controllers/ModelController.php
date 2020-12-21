@@ -83,6 +83,10 @@ class ModelController extends CpController
         }
 
         foreach ($model['blueprint']->fields()->all() as $fieldKey => $field) {
+            if ($field->type() === 'section') {
+                continue;
+            }
+            
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
 
             if (is_array($processedValue)) {
@@ -150,6 +154,10 @@ class ModelController extends CpController
         }
 
         foreach ($model['blueprint']->fields()->all() as $fieldKey => $field) {
+            if ($field->type() === 'section') {
+                continue;
+            }
+            
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
 
             if (is_array($processedValue)) {

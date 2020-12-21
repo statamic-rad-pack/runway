@@ -1,4 +1,4 @@
-<img src="./banner.png">
+![Runway](https://raw.githubusercontent.com/doublethreedigital/runway/master/banner.png)
 
 # Runway
 
