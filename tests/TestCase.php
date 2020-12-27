@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway\Tests;
 
 use DoubleThreeDigital\Runway\ServiceProvider;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,6 +17,8 @@ abstract class TestCase extends OrchestraTestCase
 {
     use DatabaseMigrations, RefreshDatabase;
 
+    protected $shouldFakeVersion = true;
+
     protected function setUp(): void
     {
         // require_once __DIR__.'/__fixtures__/app/User.php';
@@ -24,10 +27,10 @@ abstract class TestCase extends OrchestraTestCase
 
         $this->loadMigrationsFrom(__DIR__.'/__fixtures__/database/migrations');
 
-        // if ($this->shouldFakeVersion) {
-        //     \Facades\Statamic\Version::shouldReceive('get')->andReturn('3.0.0-testing');
-        //     $this->addToAssertionCount(-1); // Dont want to assert this
-        // }
+        if ($this->shouldFakeVersion) {
+            \Facades\Statamic\Version::shouldReceive('get')->andReturn('3.0.0-testing');
+            $this->addToAssertionCount(-1); // Dont want to assert this
+        }
     }
 
     protected function getPackageProviders($app)
@@ -85,9 +88,62 @@ abstract class TestCase extends OrchestraTestCase
         $app['config']->set('statamic.users.repository', 'file');
         $app['config']->set('statamic.stache.stores.users', [
             'class' => UsersStore::class,
-            'directory' => __DIR__.'/__fixtures/users',
+            'directory' => __DIR__.'/__fixtures__/users',
         ]);
 
-        $app['config']->set('runway', require(__DIR__.'/../config/runway.php'));
+        $app['config']->set('runway', [
+            'models' => [
+                Post::class => [
+                    'name' => 'Posts',
+                    'blueprint' => [
+                        'sections' => [
+                            'main' => [
+                                'fields' => [
+                                    [
+                                        'handle' => 'title',
+                                        'field' => [
+                                            'type' => 'text'
+                                        ],
+                                    ],
+                                    [
+                                        'handle' => 'body',
+                                        'field' => [
+                                            'type' => 'textarea'
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'listing' => [
+                        'columns' => [
+                            'title',
+                        ],
+                        'sort' => [
+                            'column' => 'title',
+                            'direction' => 'desc',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
     }
+
+    public function tearDown() : void
+    {
+        if ($this->app) {
+            $this->callBeforeApplicationDestroyedCallbacks();
+
+            $this->app = null;
+        }
+
+        parent::tearDown();
+    }
+}
+
+class Post extends Model
+{
+    protected $fillable = [
+        'title', 'body',
+    ];
 }
