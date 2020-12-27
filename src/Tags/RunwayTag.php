@@ -3,8 +3,6 @@
 namespace DoubleThreeDigital\Runway\Tags;
 
 use DoubleThreeDigital\Runway\Support\ModelFinder;
-use Facades\Statamic\Fields\FieldtypeRepository;
-use Illuminate\Database\Eloquent\Model;
 use Statamic\Fields\Field;
 use Statamic\Tags\Tags;
 

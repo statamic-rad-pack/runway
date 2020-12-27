@@ -38,7 +38,7 @@ class ModelController extends CpController
 
                 return [
                     'handle' => $columnKey,
-                    'title'  => $field->display(),
+                    'title'  => !$field ? $columnKey : $field->display(),
                     'has_link' => $model['listing_columns'][0] === $columnKey,
                 ];
             })
@@ -86,7 +86,7 @@ class ModelController extends CpController
             if ($field->type() === 'section') {
                 continue;
             }
-            
+
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
 
             if (is_array($processedValue)) {
@@ -157,7 +157,7 @@ class ModelController extends CpController
             if ($field->type() === 'section') {
                 continue;
             }
-            
+
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
 
             if (is_array($processedValue)) {
