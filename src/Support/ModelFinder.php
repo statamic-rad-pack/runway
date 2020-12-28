@@ -14,49 +14,6 @@ class ModelFinder
 
     public static function bootModels()
     {
-        // $modelDirectory = is_dir(app_path('Models')) ? app_path('Models') : app_path();
-
-        // $models = collect(File::allFiles($modelDirectory))
-        //     ->reject(function (SplFileInfo $file) {
-        //         $fileContents = file_get_contents($file->getPathname());
-
-        //         return Str::contains($fileContents, 'trait') || Str::contains($fileContents, 'interface');
-        //     })
-        //     ->map(function (SplFileInfo $file) {
-        //         $fileContents = file_get_contents($file->getPathname());
-
-        //         $modelNamespace = strstr($fileContents, 'namespace ',);
-        //         $modelNamespace = strstr($modelNamespace, ';', true);
-        //         $modelNamespace = str_replace('namespace ', '', $modelNamespace);
-
-        //         $modelClassName = str_replace('.php', '', $file->getFilename());
-
-        //         $fullModelClassName = $modelNamespace.'\\'.$modelClassName;
-
-        //         $model = new $fullModelClassName();
-
-        //         return $model;
-        //     })
-        //     ->filter(function ($model) {
-        //         return $model instanceof Model;
-        //     })
-        //     ->map(function ($model) {
-        //         $blueprintFields = collect(Schema::getColumnListing($model->getTable()))
-        //             ->map(function ($columnName) {
-        //                 return new Field($columnName, [
-        //                     'type' => 'text',
-        //                 ]);
-        //             })
-        //             ->toArray();
-
-        //         $blueprint = Blueprint::makeFromFields($blueprintFields);
-
-        //         return [
-        //             'model' => class_basename($model),
-        //             'blueprint' => $blueprint,
-        //         ];
-        //     });
-
         static::$models = collect(config('runway.models'))
             ->map(function ($config, $model) {
                 $blueprint = is_string($config['blueprint'])
