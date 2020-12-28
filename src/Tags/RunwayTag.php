@@ -52,6 +52,20 @@ class RunwayTag extends Tags
 
     protected function augmentRecord($record, $blueprint)
     {
+        return collect($record)
+            ->map(function ($value, $key) use ($blueprint) {
+                if ($value instanceof \Carbon\Carbon) {
+                    return $value->format('Y-m-d H:i');
+                }
+
+                if ($blueprint->hasField($key)) {
+                    return $blueprint->field($key)->fieldtype()->augment($value);
+                }
+
+                return $value;
+            })
+            ->toArray();
+
         $values = [];
         $blueprintFields = collect($blueprint->fields()->all())->map(function (Field $field) {
             return $field->fieldtype();

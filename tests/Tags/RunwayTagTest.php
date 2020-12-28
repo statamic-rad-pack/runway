@@ -68,6 +68,7 @@ class RunwayTagTest extends TestCase
         $this->tag->setParameters([
             'where' => 'title:penguin',
         ]);
+
         $usage = $this->tag->wildcard('post');
 
         $this->assertSame(1, count($usage));
@@ -88,6 +89,7 @@ class RunwayTagTest extends TestCase
         $this->tag->setParameters([
             'sort' => 'title:desc',
         ]);
+
         $usage = $this->tag->wildcard('post');
 
         $this->assertSame(2, count($usage));
@@ -110,6 +112,7 @@ class RunwayTagTest extends TestCase
         $this->tag->setParameters([
             'limit' => 2,
         ]);
+
         $usage = $this->tag->wildcard('post');
 
         $this->assertSame(2, count($usage));
@@ -118,6 +121,27 @@ class RunwayTagTest extends TestCase
         $this->assertSame($usage[1]['title'], $posts[1]['title']);
 
         $this->assertFalse(isset($usage[2]));
+    }
+
+    /** @test */
+    public function can_get_records_and_non_blueprint_columns_are_returned()
+    {
+        $posts = [
+            $this->makeFactory(),
+            $this->makeFactory(),
+        ];
+
+        $this->tag->setParameters([]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertSame(2, count($usage));
+
+        $this->assertSame($usage[0]['id'], $posts[0]['id']);
+        $this->assertSame($usage[1]['id'], $posts[1]['id']);
+
+        $this->assertSame($usage[0]['title'], $posts[0]['title']);
+        $this->assertSame($usage[1]['title'], $posts[1]['title']);
     }
 
     protected function makeFactory()
