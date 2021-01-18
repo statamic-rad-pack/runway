@@ -6,6 +6,7 @@ use DoubleThreeDigital\Runway\Http\Requests\StoreRequest;
 use DoubleThreeDigital\Runway\Http\Requests\UpdateRequest;
 use DoubleThreeDigital\Runway\Support\ModelFinder;
 use Illuminate\Http\Request;
+use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 
 class ModelController extends CpController
@@ -15,7 +16,7 @@ class ModelController extends CpController
         $model = ModelFinder::find($model);
         $blueprint = $model['blueprint'];
 
-        if (! $request->user()->hasPermission("View {$model['_handle']}") && ! $request->user()->isSuper()) {
+        if (! User::current()->hasPermission("View {$model['_handle']}") && ! User::current()->isSuper()) {
             abort('403');
         }
 
