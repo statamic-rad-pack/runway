@@ -57,7 +57,7 @@ class ModelController extends CpController
     {
         $model = ModelFinder::find($model);
 
-        if (! $request->user()->hasPermission("Create new {$model['_handle']}") && ! $request->user()->isSuper()) {
+        if (! User::current()->hasPermission("Create new {$model['_handle']}") && ! User::current()->isSuper()) {
             abort('403');
         }
 
@@ -79,7 +79,7 @@ class ModelController extends CpController
         $model = ModelFinder::find($model);
         $record = (new $model['model']());
 
-        if (! $request->user()->hasPermission("Create new {$model['_handle']}") && ! $request->user()->isSuper()) {
+        if (! User::current()->hasPermission("Create new {$model['_handle']}") && ! User::current()->isSuper()) {
             abort('403');
         }
 
@@ -113,7 +113,7 @@ class ModelController extends CpController
         $model = ModelFinder::find($model);
         $record = (new $model['model']())->where($model['route_key'], $record)->first();
 
-        if (! $request->user()->hasPermission("Edit {$model['_handle']}") && ! $request->user()->isSuper()) {
+        if (! User::current()->hasPermission("Edit {$model['_handle']}") && ! User::current()->isSuper()) {
             abort('403');
         }
 
@@ -150,7 +150,7 @@ class ModelController extends CpController
         $model = ModelFinder::find($model);
         $record = (new $model['model']())->where($model['route_key'], $record)->first();
 
-        if (! $request->user()->hasPermission("Edit {$model['_handle']}") && ! $request->user()->isSuper()) {
+        if (! User::current()->hasPermission("Edit {$model['_handle']}") && ! User::current()->isSuper()) {
             abort('403');
         }
 
@@ -180,7 +180,7 @@ class ModelController extends CpController
         $model = ModelFinder::find($model);
         $record = (new $model['model']())->where($model['route_key'], $record)->first();
 
-        if (! $request->user()->hasPermission("Delete {$model['_handle']}") && ! $request->user()->isSuper()) {
+        if (! User::current()->hasPermission("Delete {$model['_handle']}") && ! User::current()->isSuper()) {
             abort('403');
         }
 
