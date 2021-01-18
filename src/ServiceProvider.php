@@ -36,6 +36,7 @@ class ServiceProvider extends AddonServiceProvider
             Nav::extend(function ($nav) {
                 foreach (ModelFinder::all() as $model) {
                     $nav->content($model['name'])
+                        ->icon($model['cp_icon'])
                         ->route('runway.index', ['model' => $model['_handle']]);
                 }
             });
