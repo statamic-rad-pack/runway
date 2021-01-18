@@ -151,6 +151,8 @@ Inside `listing`, you can control certain aspects of how the model's listing tab
         'column' => 'paid_at',
         'direction' => 'desc',
     ],
+    
+    'cp_icon' => 'icon-name-or-inline-svg',
 ],
 ```
 
