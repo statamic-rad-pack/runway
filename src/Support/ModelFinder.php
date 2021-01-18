@@ -34,6 +34,9 @@ class ModelFinder
                     'route_key'         => $eloquentModel->getRouteKey() ?? 'id',
                     'model_table'       => $modelTable = (new $model())->getTable(),
                     'schema_columns'    => Schema::getColumnListing($modelTable),
+                    'cp_icon'           => isset($config['listing']['cp_icon'])
+                        ? $config['listing']['cp_icon']
+                        : file_get_contents(__DIR__.'/../../resources/svg/database.svg'),
                 ];
             })
             ->toArray();
