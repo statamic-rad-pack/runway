@@ -74,7 +74,7 @@
         @include('statamic::partials.create-first', [
             'resource' => $title,
             'svg' => 'empty/collection',
-            'route' => '#'
+            'route' => cp_route('runway.create', ['model' => $model['_handle']]),
         ])
     @endif
 @endsection
