@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway\Support;
 
 use DoubleThreeDigital\Runway\Exceptions\ModelNotFound;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -33,7 +34,13 @@ class ModelFinder
                     'primary_key'       => $eloquentModel->getKeyName(),
                     'route_key'         => $eloquentModel->getRouteKey() ?? 'id',
                     'model_table'       => $modelTable = (new $model())->getTable(),
-                    'schema_columns'    => Schema::getColumnListing($modelTable),
+                    'schema_columns'    => function () use ($modelTable) {
+                        try {
+                            return Schema::getColumnListing($modelTable);
+                        } catch (QueryException $e) {
+                            return [];
+                        }
+                    },
                     'cp_icon'           => isset($config['listing']['cp_icon'])
                         ? $config['listing']['cp_icon']
                         : file_get_contents(__DIR__.'/../../resources/svg/database.svg'),
