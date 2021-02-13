@@ -52,8 +52,8 @@
 
                             <td class="flex justify-end">
                                 <dropdown-list>
-                                    <dropdown-item text="Edit" redirect="{{ cp_route('runway.edit', ['model' => $model['_handle'], 'record' => $record->{$model['primary_key']}]) }}"></dropdown-item>
-                                    <form action="{{ cp_route('runway.destroy', ['model' => $model['_handle'], 'record' => $record->{$model['primary_key']}]) }}" method="POST">
+                                    <dropdown-item text="Edit" redirect="{{ cp_route('runway.edit', ['model' => $model['_handle'], 'record' => $record->{$model['route_key']}]) }}"></dropdown-item>
+                                    <form action="{{ cp_route('runway.destroy', ['model' => $model['_handle'], 'record' => $record->{$model['route_key']}]) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
 
