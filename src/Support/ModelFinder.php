@@ -40,7 +40,7 @@ class ModelFinder
                         } catch (QueryException $e) {
                             return [];
                         }
-                    },
+                    }(),
                     'cp_icon'           => isset($config['listing']['cp_icon'])
                         ? $config['listing']['cp_icon']
                         : file_get_contents(__DIR__.'/../../resources/svg/database.svg'),
