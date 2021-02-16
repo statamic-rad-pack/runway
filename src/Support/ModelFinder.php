@@ -22,6 +22,7 @@ class ModelFinder
                     : Blueprint::make()->setContents($config['blueprint']);
 
                 $eloquentModel = (new $model());
+                $modelTable = (new $model())->getTable();
                 
                 try {
                     $schemaColumns = Schema::getColumnListing($modelTable);
@@ -39,7 +40,7 @@ class ModelFinder
                     'listing_sort'      => $config['listing']['sort'],
                     'primary_key'       => $eloquentModel->getKeyName(),
                     'route_key'         => $eloquentModel->getRouteKey() ?? 'id',
-                    'model_table'       => $modelTable = (new $model())->getTable(),
+                    'model_table'       => $modelTable,
                     'schema_columns'    => $schemaColumns,
                     'cp_icon'           => isset($config['listing']['cp_icon'])
                         ? $config['listing']['cp_icon']
