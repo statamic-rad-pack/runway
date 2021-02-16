@@ -22,6 +22,12 @@ class ModelFinder
                     : Blueprint::make()->setContents($config['blueprint']);
 
                 $eloquentModel = (new $model());
+                
+                try {
+                    $schemaColumns = Schema::getColumnListing($modelTable);
+                } catch (QueryException $e) {
+                    $schemaColumns = [];
+                }
 
                 return [
                     '_handle'           => Str::lower(class_basename($model)),
@@ -34,13 +40,7 @@ class ModelFinder
                     'primary_key'       => $eloquentModel->getKeyName(),
                     'route_key'         => $eloquentModel->getRouteKey() ?? 'id',
                     'model_table'       => $modelTable = (new $model())->getTable(),
-                    'schema_columns'    => function () use ($modelTable) {
-                        try {
-                            return Schema::getColumnListing($modelTable);
-                        } catch (QueryException $e) {
-                            return [];
-                        }
-                    }(),
+                    'schema_columns'    => $schemaColumns,
                     'cp_icon'           => isset($config['listing']['cp_icon'])
                         ? $config['listing']['cp_icon']
                         : file_get_contents(__DIR__.'/../../resources/svg/database.svg'),
