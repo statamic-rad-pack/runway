@@ -39,7 +39,7 @@ class ModelFinder
                     'listing_columns'   => $config['listing']['columns'],
                     'listing_sort'      => $config['listing']['sort'],
                     'primary_key'       => $eloquentModel->getKeyName(),
-                    'route_key'         => $eloquentModel->getRouteKey() ?? 'id',
+                    'route_key'         => $eloquentModel->getRouteKeyName() ?? 'id',
                     'model_table'       => $modelTable,
                     'schema_columns'    => $schemaColumns,
                     'cp_icon'           => isset($config['listing']['cp_icon'])
