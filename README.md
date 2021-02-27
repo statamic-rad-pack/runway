@@ -217,7 +217,6 @@ If you discover a security vulnerability within Runway, please report it [via em
 ## Resources
 
 * [**Issue Tracker**](https://github.com/doublethreedigital/runway/issues): Find & report bugs in Runway
-* [**Discussions**](https://github.com/doublethreedigital/runway/discussions): Get help and put forward feature requests
 * [**Email**](mailto:duncan@doublethree.digital): Support from the developer behind the addon
 
 ---
