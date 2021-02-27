@@ -1,8 +1,10 @@
-![Runway](https://raw.githubusercontent.com/doublethreedigital/runway/master/banner.png)
+![Banner](https://raw.githubusercontent.com/doublethreedigital/runway/master/banner.png)
 
-# Runway
+## Runway
 
-This addon allows you to easily manage your Eloquent models from the Control Panel and output them inside your Antlers templates. This addon is useful for when you have some information (like orders) that you'd prefer to be stored in a database, for whatever reason but you don't want to move all of your entries over to a database as well.
+Runway allows you to easilly manage your Eloquent models straight from your Statamic Control Panel. Runway also gives you the option of outputting your Eloquent models in your Antlers templates. No need for a custom tag, it's all built-in.
+
+This repository contains the source code of Runway.
 
 ## Installation
 
@@ -182,7 +184,7 @@ The tag also has various parameters you can use to filter the records that get o
 * `sort` - Define the column and order (descending or ascending) of records
 * `where` - Get records where something is something else.
 
-```antlers
+```handlebars
 {{ runway:post sort="title:asc" where="author_id:duncan" limit="25" }}
     <h2>{{ title }}</h2>
 {{ /runway:post }}
@@ -194,7 +196,7 @@ The tag also has various parameters you can use to filter the records that get o
 
 Runway provides some permissions to limit which users have access to view, create, edit and delete your model records. You can configure these permissions in the same way you can with built-in Statamic permissions. [Read the Statamic Docs](https://statamic.dev/users#permissions).
 
-## Troubleshooting
+### Troubleshooting
 
 **Unexpected data found. Trailing data**
 
@@ -206,12 +208,21 @@ protected $casts = [
 ];
 ```
 
-## Roadmap
+## Security
 
-We've got a couple of features we're planning on implementing in the next couple of months. If you've got any additional feature requests, please create an issue for them.
+From a security perspective, the latest version only will receive a security release if a vulnerability is found.
 
-* Filtering on the CP Listing table
-* Ability to define custom actions
+If you discover a security vulnerability within Simple Commerce, please report it [via email](mailto:duncan@doublethree.digital) straight away. Please don't report security issues in the issue tracker.
 
-## Support
-For developer support or any other questions related to this addon, please [get in touch](mailto:hello@doublethree.digital).
+## Resources
+
+* [**Issue Tracker**](https://github.com/doublethreedigital/runway/issues): Find & report bugs in Simple Commerce
+* [**Discussions**](https://github.com/doublethreedigital/runway/discussions): Get help and put forward feature requests
+* [**Email**](mailto:duncan@doublethree.digital): Support from the developer behind the addon
+
+---
+
+<p>
+<a href="https://statamic.com"><img src="https://img.shields.io/badge/Statamic-3.0+-FF269E?style=for-the-badge" alt="Compatible with Statamic v3"></a>
+<a href="https://packagist.org/packages/doublethreedigital/addon-boilerplate/stats"><img src="https://img.shields.io/packagist/v/doublethreedigital/addon-boilerplate?style=for-the-badge" alt="Simple Commerce on Packagist"></a>
+</p>
