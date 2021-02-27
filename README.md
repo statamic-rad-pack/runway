@@ -212,11 +212,11 @@ protected $casts = [
 
 From a security perspective, the latest version only will receive a security release if a vulnerability is found.
 
-If you discover a security vulnerability within Simple Commerce, please report it [via email](mailto:duncan@doublethree.digital) straight away. Please don't report security issues in the issue tracker.
+If you discover a security vulnerability within Runway, please report it [via email](mailto:duncan@doublethree.digital) straight away. Please don't report security issues in the issue tracker.
 
 ## Resources
 
-* [**Issue Tracker**](https://github.com/doublethreedigital/runway/issues): Find & report bugs in Simple Commerce
+* [**Issue Tracker**](https://github.com/doublethreedigital/runway/issues): Find & report bugs in Runway
 * [**Discussions**](https://github.com/doublethreedigital/runway/discussions): Get help and put forward feature requests
 * [**Email**](mailto:duncan@doublethree.digital): Support from the developer behind the addon
 
@@ -224,5 +224,5 @@ If you discover a security vulnerability within Simple Commerce, please report i
 
 <p>
 <a href="https://statamic.com"><img src="https://img.shields.io/badge/Statamic-3.0+-FF269E?style=for-the-badge" alt="Compatible with Statamic v3"></a>
-<a href="https://packagist.org/packages/doublethreedigital/addon-boilerplate/stats"><img src="https://img.shields.io/packagist/v/doublethreedigital/addon-boilerplate?style=for-the-badge" alt="Simple Commerce on Packagist"></a>
+<a href="https://packagist.org/packages/doublethreedigital/runway/stats"><img src="https://img.shields.io/packagist/v/doublethreedigital/runway?style=for-the-badge" alt="Runway on Packagist"></a>
 </p>
