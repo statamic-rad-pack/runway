@@ -4,7 +4,7 @@
 
 Runway allows you to easilly manage your Eloquent models straight from your Statamic Control Panel. Runway also gives you the option of outputting your Eloquent models in your Antlers templates. No need for a custom tag, it's all built-in.
 
-This repository contains the source code of Runway.
+This repository contains the source code of Runway. While Runway is free and doesn't require a license, you can [donate to Duncan](https://duncanm.dev/donate), the developer behind Runway, to show your appreciation.
 
 ## Installation
 
