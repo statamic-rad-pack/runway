@@ -23,7 +23,7 @@ class ModelFinder
 
                 $eloquentModel = (new $model());
                 $modelTable = (new $model())->getTable();
-                
+
                 try {
                     $schemaColumns = Schema::getColumnListing($modelTable);
                 } catch (QueryException $e) {
@@ -45,6 +45,7 @@ class ModelFinder
                     'cp_icon'           => isset($config['listing']['cp_icon'])
                         ? $config['listing']['cp_icon']
                         : file_get_contents(__DIR__.'/../../resources/svg/database.svg'),
+                    'hidden'            => isset($config['hidden']) && $config['hidden'] === true,
                 ];
             })
             ->toArray();

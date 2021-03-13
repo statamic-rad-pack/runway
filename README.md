@@ -138,6 +138,14 @@ If you prefer, you can also create a normal blueprint file in `resources/bluepri
 
 Bear in mind that at the moment, blueprints in the root of `resources/blueprint` won't be displayed as editable in the Control Panel.
 
+### `hidden`
+
+If you wish to hide a model from the Control Panel navigation, add the `hidden` key to your model in the Runway config.
+
+```php
+'hidden' => true,
+```
+
 ### `listing`
 
 Inside `listing`, you can control certain aspects of how the model's listing table displays records. You can currently configure the listing columns and the sort order of columns in the table.
@@ -153,7 +161,7 @@ Inside `listing`, you can control certain aspects of how the model's listing tab
         'column' => 'paid_at',
         'direction' => 'desc',
     ],
-    
+
     'cp_icon' => 'icon-name-or-inline-svg',
 ],
 ```
