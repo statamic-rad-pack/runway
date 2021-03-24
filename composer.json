@@ -25,7 +25,7 @@
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "statamic/cms": "3.0.*"
+        "statamic/cms": "^3.0 || ^3.1"
     },
     "require-dev": {
         "nunomaduro/collision": "^4.2",
