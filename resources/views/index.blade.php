@@ -11,16 +11,36 @@
 
     @if ($records->count())
         <div class="card p-0">
-            <form class="w-full p-2 flex" action="#" method="get">
-                <input
-                    class="input-text flex-1"
-                    type="search"
-                    name="query"
-                    style="height: auto;"
-                    placeholder="Search..."
-                    value="{{ request()->input('query') }}"
-                >
-            </form>
+            <div class="flex items-center w-full p-2">
+                <form class="w-full flex" action="#" method="get">
+                    <input
+                        class="input-text flex-1"
+                        type="search"
+                        name="query"
+                        style="height: auto;"
+                        placeholder="Search..."
+                        value="{{ request()->input('query') }}"
+                    >
+                </form>
+
+                @if(count($model['listing_buttons']) >= 1)
+                    <div class="flex items-center ml-2">
+                        @foreach($model['listing_buttons'] as $listingButton => $action)
+                            <form
+                                action="{{ cp_route('runway.listing-buttons', [
+                                    'model' => $model['_handle'],
+                                ]) }}"
+                                method="POST"
+                            >
+                                @csrf
+                                <input type="hidden" name="listing-button" value="{{ $listingButton }}">
+
+                                <button class="btn">{{ $listingButton }}</button>
+                            </form>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
 
             <table class="data-table">
                 <thead>

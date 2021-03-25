@@ -46,6 +46,9 @@ class ModelFinder
                         ? $config['listing']['cp_icon']
                         : file_get_contents(__DIR__.'/../../resources/svg/database.svg'),
                     'hidden'            => isset($config['hidden']) && $config['hidden'] === true,
+                    'listing_buttons'   => isset($config['listing']['buttons'])
+                        ? $config['listing']['buttons']
+                        : [],
                 ];
             })
             ->toArray();
