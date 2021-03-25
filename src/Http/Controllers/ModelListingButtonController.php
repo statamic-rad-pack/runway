@@ -13,6 +13,10 @@ class ModelListingButtonController extends CpController
         $model = ModelFinder::find($model);
         $listingButton = $model['listing_buttons'][$request->get('listing-button')];
 
-        return $listingButton($request, $model);
+        if (is_callable($listingButton)) {
+            return $listingButton($request, $model);
+        }
+
+        return (new $listingButton())->__invoke($request, $model);
     }
 }
