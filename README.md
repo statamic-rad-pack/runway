@@ -189,7 +189,7 @@ When a user clicks the button, it will run the specified controller's `__invoke`
 ```php
 class YourController extends Controller
 {
-    public function __invoke(Request $request, $modelHandle)
+    public function __invoke(Request $request, $model)
     {
         // Your code..
     }
