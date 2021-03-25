@@ -166,6 +166,36 @@ Inside `listing`, you can control certain aspects of how the model's listing tab
 ],
 ```
 
+#### Listing buttons
+
+**In the future, the plan is to replace this concept with [Actions](https://statamic.dev/extending/actions#content), the same way it works for collections. This means this feature will probably be removed in future versions.**
+
+If you need to add some sort of button to your model listing page, like for a CSV export or something similar, you can add your own 'listing button'.
+
+![Banner](https://raw.githubusercontent.com/doublethreedigital/runway/master/listing-buttons.png)
+
+```php
+'listing' => [
+    ...
+
+    'buttons' => [
+        'Export as CSV' => YourController::class,
+    ],
+],
+```
+
+When a user clicks the button, it will run the specified controller's `__invoke` method. Make sure to add any logic you need into there!
+
+```php
+class YourController extends Controller
+{
+    public function __invoke()
+    {
+        // Your code..
+    }
+}
+```
+
 ## Usage
 
 ### Control Panel
