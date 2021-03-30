@@ -31,14 +31,22 @@ class RunwayTag extends Tags
             $query->orderBy($sortColumn, $sortDirection);
         }
 
-        if ($this->params->has('limit')) {
-            return $this->augmentRecords(
-                $query->paginate($this->params->get('limit'))->all(),
-                $blueprint
-            );
+        if ($this->params->get('paginate') || $this->params->get('limit')) {
+            $paginator = $query->paginate($this->params->get('limit'));
+            $results = $paginator->items();
+        } else {
+            $results = $query->get();
         }
 
-        return $this->augmentRecords($query->get(), $blueprint);
+        if (! $this->params->has('as')) {
+            return $this->augmentRecords($results, $blueprint);
+        }
+
+        return [
+            $this->params->get('as') => $this->augmentRecords($results, $blueprint),
+            'paginate'   => isset($paginator) ? $paginator->toArray() : null,
+            'no_results' => collect($results)->isEmpty(),
+        ];
     }
 
     protected function augmentRecords($query, $blueprint)
