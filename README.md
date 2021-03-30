@@ -228,6 +228,46 @@ The tag also has various parameters you can use to filter the records that get o
 {{ /runway:post }}
 ```
 
+#### Scoping
+
+The Runway tag also allows you to scope your results to a certain variable, similar to how [scoping works on the collection tag](https://statamic.dev/tags/collection#scope).
+
+```handlebars
+{{ runway:post as="posts" }}
+    {{ posts }}
+        <h2>{{ title }}</h2>
+    {{ /posts }}
+{{ /runway:post }}
+```
+
+#### Pagination
+
+You can also use pagination with the Runway tag if you need to. Bear in mind, you'll also need to use scoping while also using pagination.
+
+```handlebars
+{{ runway:post as="posts" paginate="true" limit="10" }}
+    {{ if no_results }}
+        <p>Nothing has been posted yet. Sad times.</p>
+    {{ /if }}
+
+    {{ posts }}
+        <h2>{{ title }}</h2>
+    {{ /posts }}
+
+    {{ paginate }}
+        {{ if prev_page_url }}
+            <a href="{{ prev_page_url }}">Previous</a>
+        {{ /if }}
+
+        <span>Page {{ current_page }} of {{ last_page }}</span>
+
+        {{ if next_page_url }}
+            <a href="{{ next_page_url }}">Previous</a>
+        {{ /if }}
+    {{ /paginate }}
+{{ /runway:post }}
+```
+
 ### Permissions
 
 ![Permissions](https://raw.githubusercontent.com/doublethreedigital/runway/master/permissions.png)
