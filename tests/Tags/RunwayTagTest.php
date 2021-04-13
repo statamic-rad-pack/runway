@@ -99,6 +99,29 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
+    public function can_get_records_with_scoping()
+    {
+        $posts = [
+            $this->makeFactory(),
+            $this->makeFactory(),
+        ];
+
+        $posts[0]->update(['title' => 'abc']);
+        $posts[1]->update(['title' => 'def']);
+
+        $this->tag->setParameters([
+            'as' => 'items',
+        ]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertSame(2, count($usage['items']));
+
+        $this->assertSame($usage['items'][0]['title'], 'abc');
+        $this->assertSame($usage['items'][1]['title'], 'def');
+    }
+
+    /** @test */
     public function can_get_records_with_limit_parameter()
     {
         $posts = [
@@ -121,6 +144,35 @@ class RunwayTagTest extends TestCase
         $this->assertSame($usage[1]['title'], $posts[1]['title']);
 
         $this->assertFalse(isset($usage[2]));
+    }
+
+    /** @test */
+    public function can_get_records_with_scoping_and_pagination()
+    {
+        $posts = [
+            $this->makeFactory(),
+            $this->makeFactory(),
+            $this->makeFactory(),
+            $this->makeFactory(),
+            $this->makeFactory(),
+        ];
+
+        $this->tag->setParameters([
+            'limit' => 2,
+            'as' => 'items',
+        ]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertSame(2, count($usage['items']));
+
+        $this->assertSame($usage['items'][0]['title'], $posts[0]['title']);
+        $this->assertSame($usage['items'][1]['title'], $posts[1]['title']);
+
+        $this->assertFalse(isset($usage['items'][2]));
+
+        $this->assertArrayHasKey('paginate', $usage);
+        $this->assertArrayHasKey('no_results', $usage);
     }
 
     /** @test */

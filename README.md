@@ -4,7 +4,7 @@
 
 Runway allows you to easilly manage your Eloquent models straight from your Statamic Control Panel. Runway also gives you the option of outputting your Eloquent models in your Antlers templates. No need for a custom tag, it's all built-in.
 
-This repository contains the source code of Runway. While Runway is free and doesn't require a license, you can [donate to Duncan](https://duncanm.dev/donate), the developer behind Runway, to show your appreciation.
+This repository contains the source code of Runway. While Runway is free and doesn't require a license, you can [donate to Duncan](https://duncanmcclean.com/donate), the developer behind Runway, to show your appreciation.
 
 ## Installation
 
@@ -166,6 +166,36 @@ Inside `listing`, you can control certain aspects of how the model's listing tab
 ],
 ```
 
+#### Listing buttons
+
+**In the future, the plan is to replace this concept with [Actions](https://statamic.dev/extending/actions#content), the same way it works for collections. This means this feature will probably be removed in future versions.**
+
+If you need to add some sort of button to your model listing page, like for a CSV export or something similar, you can add your own 'listing button'.
+
+![Banner](https://raw.githubusercontent.com/doublethreedigital/runway/master/listing-buttons.png)
+
+```php
+'listing' => [
+    ...
+
+    'buttons' => [
+        'Export as CSV' => YourController::class,
+    ],
+],
+```
+
+When a user clicks the button, it will run the specified controller's `__invoke` method. Make sure to add any logic you need into there!
+
+```php
+class YourController extends Controller
+{
+    public function __invoke(Request $request, $model)
+    {
+        // Your code..
+    }
+}
+```
+
 ## Usage
 
 ### Control Panel
@@ -195,6 +225,46 @@ The tag also has various parameters you can use to filter the records that get o
 ```handlebars
 {{ runway:post sort="title:asc" where="author_id:duncan" limit="25" }}
     <h2>{{ title }}</h2>
+{{ /runway:post }}
+```
+
+#### Scoping
+
+The Runway tag also allows you to scope your results to a certain variable, similar to how [scoping works on the collection tag](https://statamic.dev/tags/collection#scope).
+
+```handlebars
+{{ runway:post as="posts" }}
+    {{ posts }}
+        <h2>{{ title }}</h2>
+    {{ /posts }}
+{{ /runway:post }}
+```
+
+#### Pagination
+
+You can also use pagination with the Runway tag if you need to. Bear in mind, you'll also need to use scoping while also using pagination.
+
+```handlebars
+{{ runway:post as="posts" paginate="true" limit="10" }}
+    {{ if no_results }}
+        <p>Nothing has been posted yet. Sad times.</p>
+    {{ /if }}
+
+    {{ posts }}
+        <h2>{{ title }}</h2>
+    {{ /posts }}
+
+    {{ paginate }}
+        {{ if prev_page_url }}
+            <a href="{{ prev_page_url }}">Previous</a>
+        {{ /if }}
+
+        <span>Page {{ current_page }} of {{ last_page }}</span>
+
+        {{ if next_page_url }}
+            <a href="{{ next_page_url }}">Previous</a>
+        {{ /if }}
+    {{ /paginate }}
 {{ /runway:post }}
 ```
 
