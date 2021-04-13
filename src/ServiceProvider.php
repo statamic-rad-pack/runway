@@ -11,6 +11,10 @@ use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
+    protected $fieldtypes = [
+        Fieldtypes\BelongsToFieldtype::class,
+    ];
+
     protected $routes = [
         'cp' => __DIR__ . '/../routes/cp.php',
     ];
