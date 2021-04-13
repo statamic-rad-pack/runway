@@ -84,7 +84,7 @@ class BaseFieldtype extends Relationship
             $record = (new $model['model']())->firstWhere($model['primary_key'], $recordId);
 
             return AugmentedRecord::augment($record, $model['blueprint']);
-        });
+        })->toArray();
     }
 
     protected function getColumns()
