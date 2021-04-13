@@ -59,20 +59,25 @@ class BaseFieldtype extends Relationship
             ->filter()->values();
     }
 
-    public function getItemData($values)
-    {
-        $model = ModelFinder::find($this->config('model'));
+    // public function getItemData($values)
+    // {
+    //     $model = ModelFinder::find($this->config('model'));
 
-        return collect($values)
-            ->map(function ($value) use ($model) {
-                $record = (new $model['model']())->firstWhere($model['primary_key'], $value);
+    //     return collect($values)
+    //         ->map(function ($value) use ($model) {
+    //             // return $this->augment([$value])->first();
 
-                return [
-                    'id' => $value,
-                    'title' => $record->{collect($model['listing_columns'])->first()},
-                ];
-            });
-    }
+    //             $record = (new $model['model']())->firstWhere($model['primary_key'], $value);
+
+    //             // return $record->{collect($model['listing_columns'])->first()};
+
+    //             return [
+    //                 'id' => $value,
+    //                 'title' => $record->{collect($model['listing_columns'])->first()},
+    //                 'text' => $record->{collect($model['listing_columns'])->first()},
+    //             ];
+    //         });
+    // }
 
     public function preProcessIndex($data)
     {
@@ -84,6 +89,8 @@ class BaseFieldtype extends Relationship
 
         return collect($data)
             ->map(function ($item) use ($model) {
+                return $this->augment([$item])->first();
+
                 $record = (new $model['model']())->firstWhere($model['primary_key'], $item);
 
                 return [
@@ -101,7 +108,7 @@ class BaseFieldtype extends Relationship
             $record = (new $model['model']())->firstWhere($model['primary_key'], $recordId);
 
             return AugmentedRecord::augment($record, $model['blueprint']);
-        })->filter()->values();
+        });
     }
 
     protected function getColumns()
@@ -112,11 +119,18 @@ class BaseFieldtype extends Relationship
             ->map(function ($columnKey) {
                 return Column::make($columnKey);
             })
+            ->merge([Column::make('title')])
             ->toArray();
     }
 
     protected function toItemArray($id)
     {
-        return $this->augment([$id])->first();
+        $model = ModelFinder::find($this->config('model'));
+        $record = (new $model['model']())->firstWhere($model['primary_key'], $id);
+
+        return [
+            'id'    => $record->id,
+            'title' => $record->{collect($model['listing_columns'])->first()},
+        ];
     }
 }
