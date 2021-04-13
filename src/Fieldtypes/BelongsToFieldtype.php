@@ -9,8 +9,7 @@ class BelongsToFieldtype extends BaseFieldtype
         $config = [
             'max_items' => [
                 'display' => __('Max Items'),
-                'instructions' => __('statamic::messages.max_items_instructions'),
-                'type' => 'integer',
+                'type' => 'hidden',
                 'width' => 50,
                 'default' => 1,
                 'read_only' => true,
