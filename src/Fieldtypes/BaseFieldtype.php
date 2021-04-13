@@ -69,15 +69,11 @@ class BaseFieldtype extends Relationship
 
         return collect($data)
             ->map(function ($item) use ($model) {
-                return $this->augment([$item])->first();
-
                 $record = (new $model['model']())->firstWhere($model['primary_key'], $item);
 
-                return [
-                    'id' => $item,
-                    'title' => $record->{collect($model['listing_columns'])->first()},
-                ];
-            });
+                return $record->{collect($model['listing_columns'])->first()};
+            })
+            ->join(', ');
     }
 
     public function augment($values)
