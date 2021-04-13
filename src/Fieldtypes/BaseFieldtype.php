@@ -59,26 +59,6 @@ class BaseFieldtype extends Relationship
             ->filter()->values();
     }
 
-    // public function getItemData($values)
-    // {
-    //     $model = ModelFinder::find($this->config('model'));
-
-    //     return collect($values)
-    //         ->map(function ($value) use ($model) {
-    //             // return $this->augment([$value])->first();
-
-    //             $record = (new $model['model']())->firstWhere($model['primary_key'], $value);
-
-    //             // return $record->{collect($model['listing_columns'])->first()};
-
-    //             return [
-    //                 'id' => $value,
-    //                 'title' => $record->{collect($model['listing_columns'])->first()},
-    //                 'text' => $record->{collect($model['listing_columns'])->first()},
-    //             ];
-    //         });
-    // }
-
     public function preProcessIndex($data)
     {
         if (! $data) {
