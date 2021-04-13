@@ -9,6 +9,7 @@ use Statamic\Fieldtypes\Relationship;
 class BaseFieldtype extends Relationship
 {
     protected $canCreate = false;
+    protected $categories = ['relationship'];
 
     protected function configFieldItems(): array
     {
@@ -47,19 +48,14 @@ class BaseFieldtype extends Relationship
             ->orderBy($model['listing_sort']['column'], $model['listing_sort']['direction'])
             ->get()
             ->map(function ($record) use ($model) {
-                $base = [
-                    'id' => $record->id,
-                    'title' => $record->{collect($model['listing_columns'])->first()},
-                ];
-
-                $columnData = collect($model['listing_columns'])
+                return collect($model['listing_columns'])
                     ->mapWithKeys(function ($columnKey) use ($record) {
                         return [$columnKey => $record->{$columnKey}];
                     })
+                    ->merge(['id' => $record->{$model['primary_key']}])
                     ->toArray();
-
-                return array_merge($columnData, $base);
-            });
+            })
+            ->filter()->values();
     }
 
     public function getItemData($values)
