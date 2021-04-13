@@ -117,12 +117,6 @@ class BaseFieldtype extends Relationship
 
     protected function toItemArray($id)
     {
-        $model = ModelFinder::find($this->config('model'));
-        $record = (new $model['model']())->firstWhere($model['primary_key'], $id);
-
-        return [
-            'id' => $record->{$model['primary_key']},
-            'title' => $record->{collect($model['listing_columns'])->first()},
-        ];
+        return $this->augment([$id])->first();
     }
 }
