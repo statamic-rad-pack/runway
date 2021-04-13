@@ -2,6 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Tags;
 
+use DoubleThreeDigital\Runway\AugmentedRecord;
 use DoubleThreeDigital\Runway\Support\ModelFinder;
 use Statamic\Fields\Field;
 use Statamic\Tags\Tags;
@@ -58,37 +59,9 @@ class RunwayTag extends Tags
             ->toArray();
     }
 
+    // TODO: replace calls to this method with the real deal
     protected function augmentRecord($record, $blueprint)
     {
-        return collect($record)
-            ->map(function ($value, $key) use ($blueprint) {
-                if ($value instanceof \Carbon\Carbon) {
-                    return $value->format('Y-m-d H:i');
-                }
-
-                if ($blueprint->hasField($key)) {
-                    return $blueprint->field($key)->fieldtype()->augment($value);
-                }
-
-                return $value;
-            })
-            ->toArray();
-
-        $values = [];
-        $blueprintFields = collect($blueprint->fields()->all())->map(function (Field $field) {
-            return $field->fieldtype();
-        });
-
-        foreach ($blueprintFields as $fieldKey => $fieldtype) {
-            $value = $record->{$fieldKey};
-
-            if ($value instanceof \Carbon\Carbon) {
-                $value = $value->format('Y-m-d H:i');
-            }
-
-            $values[$fieldKey] = $fieldtype->augment($value);
-        }
-
-        return $values;
+        return AugmentedRecord::augment($record, $blueprint);
     }
 }
