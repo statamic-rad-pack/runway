@@ -268,6 +268,16 @@ You can also use pagination with the Runway tag if you need to. Bear in mind, yo
 {{ /runway:post }}
 ```
 
+### Fieldtypes
+
+#### BelongsTo fieldtype
+
+![BelongsTo Fieldtype](https://raw.githubusercontent.com/doublethreedigital/runway/master/belongs-to-fieldtype.png)
+
+Recently, a Belongs To fieldtype has been added to Runway. It allows you to select a record from a specified model. The record's primary key will then be saved.
+
+You can use the BelongsTo fieldtype in any blueprint. Whether it be inside an entry or inside a blueprint you're using for a Runway model, it should all work.
+
 ### Permissions
 
 ![Permissions](https://raw.githubusercontent.com/doublethreedigital/runway/master/permissions.png)
