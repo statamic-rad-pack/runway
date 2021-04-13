@@ -84,9 +84,16 @@ class BaseFieldtype extends Relationship
         }
 
         $model = ModelFinder::find($this->config('model'));
-        $record = (new $model['model']())->firstWhere($model['primary_key'], $data);
 
-        return $record->{collect($model['listing_columns'])->first()};
+        return collect($data)
+            ->map(function ($item) use ($model) {
+                $record = (new $model['model']())->firstWhere($model['primary_key'], $item);
+
+                return [
+                    'id' => $item,
+                    'title' => $record->{collect($model['listing_columns'])->first()},
+                ];
+            });
     }
 
     // TODO: augmentation, will need tag refactor.
