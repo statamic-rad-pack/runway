@@ -5,13 +5,10 @@ namespace DoubleThreeDigital\Runway\Tests\Tags;
 use DoubleThreeDigital\Runway\Tags\RunwayTag;
 use DoubleThreeDigital\Runway\Tests\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Statamic\Facades\Antlers;
 
 class RunwayTagTest extends TestCase
 {
-    use WithFaker;
-
     public $tag;
 
     public function setUp(): void
@@ -32,13 +29,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_no_parameters()
     {
-        $posts = [
-            $this->makeFactory(),
-            $this->makeFactory(),
-            $this->makeFactory(),
-            $this->makeFactory(),
-            $this->makeFactory(),
-        ];
+        $posts = $this->postFactory(5);
 
         $this->tag->setParameters([]);
         $usage = $this->tag->wildcard('post');
@@ -55,13 +46,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_where_parameter()
     {
-        $posts = [
-            $this->makeFactory(),
-            $this->makeFactory(),
-            $this->makeFactory(),
-            $this->makeFactory(),
-            $this->makeFactory(),
-        ];
+        $posts = $this->postFactory(5);
 
         $posts[0]->update(['title' => 'penguin']);
 
@@ -78,10 +63,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_sort_parameter()
     {
-        $posts = [
-            $this->makeFactory(),
-            $this->makeFactory(),
-        ];
+        $posts = $this->postFactory(2);
 
         $posts[0]->update(['title' => 'abc']);
         $posts[1]->update(['title' => 'def']);
@@ -101,10 +83,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_scoping()
     {
-        $posts = [
-            $this->makeFactory(),
-            $this->makeFactory(),
-        ];
+        $posts = $this->postFactory(2);
 
         $posts[0]->update(['title' => 'abc']);
         $posts[1]->update(['title' => 'def']);
@@ -124,13 +103,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_limit_parameter()
     {
-        $posts = [
-            $this->makeFactory(),
-            $this->makeFactory(),
-            $this->makeFactory(),
-            $this->makeFactory(),
-            $this->makeFactory(),
-        ];
+        $posts = $this->postFactory(5);
 
         $this->tag->setParameters([
             'limit' => 2,
@@ -149,13 +122,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_scoping_and_pagination()
     {
-        $posts = [
-            $this->makeFactory(),
-            $this->makeFactory(),
-            $this->makeFactory(),
-            $this->makeFactory(),
-            $this->makeFactory(),
-        ];
+        $posts = $this->postFactory(5);
 
         $this->tag->setParameters([
             'limit' => 2,
@@ -178,10 +145,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_and_non_blueprint_columns_are_returned()
     {
-        $posts = [
-            $this->makeFactory(),
-            $this->makeFactory(),
-        ];
+        $posts = $this->postFactory(2);
 
         $this->tag->setParameters([]);
 
@@ -194,13 +158,5 @@ class RunwayTagTest extends TestCase
 
         $this->assertSame($usage[0]['title'], $posts[0]['title']);
         $this->assertSame($usage[1]['title'], $posts[1]['title']);
-    }
-
-    protected function makeFactory()
-    {
-        return Post::create([
-            'title' => join(' ', $this->faker->words(6)),
-            'body' => join(' ', $this->faker->paragraphs(10)),
-        ]);
     }
 }

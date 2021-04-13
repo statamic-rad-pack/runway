@@ -5,28 +5,26 @@ namespace DoubleThreeDigital\Runway\Tests\Http\Controllers;
 use DoubleThreeDigital\Runway\Tests\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Statamic\Facades\User;
 
 class ModelControllerTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
 
     /** @test */
     public function get_model_index()
     {
         $user = User::make()->makeSuper()->save();
 
-        $postOne = $this->makeFactory();
-        $postTwo = $this->makeFactory();
+        $posts = $this->postFactory(2);
 
         $this->actingAs($user)
             ->get(cp_route('runway.index', ['model' => 'post']))
             ->assertOk()
             ->assertViewIs('runway::index')
             ->assertSee([
-                $postOne->title,
-                $postTwo->title,
+                $posts[0]->title,
+                $posts[1]->title,
             ]);
     }
 
@@ -45,10 +43,13 @@ class ModelControllerTest extends TestCase
     {
         $user = User::make()->makeSuper()->save();
 
+        $author = $this->authorFactory();
+
         $this->actingAs($user)
             ->post(cp_route('runway.store', ['model' => 'post']), [
                 'title' => 'Jingle Bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
+                'author_id' => [$author->id],
             ])
             ->assertOk()
             ->assertJsonStructure([
@@ -66,7 +67,7 @@ class ModelControllerTest extends TestCase
     {
         $user = User::make()->makeSuper()->save();
 
-        $post = $this->makeFactory();
+        $post = $this->postFactory();
 
         $this->actingAs($user)
             ->get(cp_route('runway.edit', ['model' => 'post', 'record' => $post->id]))
@@ -80,12 +81,13 @@ class ModelControllerTest extends TestCase
     {
         $user = User::make()->makeSuper()->save();
 
-        $post = $this->makeFactory();
+        $post = $this->postFactory();
 
         $this->actingAs($user)
             ->post(cp_route('runway.update', ['model' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'body' => $post->body,
+                'author_id' => [$post->author_id],
             ])
             ->assertOk()
             ->assertJsonStructure([
@@ -102,7 +104,7 @@ class ModelControllerTest extends TestCase
     {
         $user = User::make()->makeSuper()->save();
 
-        $post = $this->makeFactory();
+        $post = $this->postFactory();
 
         $this->actingAs($user)
             ->delete(cp_route('runway.destroy', ['model' => 'post', 'record' => $post->id]))
@@ -111,14 +113,6 @@ class ModelControllerTest extends TestCase
 
         $this->assertDatabaseMissing('posts', [
             'id' => $post->id,
-        ]);
-    }
-
-    protected function makeFactory()
-    {
-        return Post::create([
-            'title' => join(' ', $this->faker->words(6)),
-            'body' => join(' ', $this->faker->paragraphs(10)),
         ]);
     }
 }
