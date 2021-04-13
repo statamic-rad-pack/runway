@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Statamic\Extend\Manifest;
 use Statamic\Providers\StatamicServiceProvider;
@@ -15,7 +16,7 @@ use Statamic\Statamic;
 
 abstract class TestCase extends OrchestraTestCase
 {
-    use DatabaseMigrations, RefreshDatabase;
+    use DatabaseMigrations, RefreshDatabase, WithFaker;
 
     protected $shouldFakeVersion = true;
 
@@ -111,6 +112,15 @@ abstract class TestCase extends OrchestraTestCase
                                             'type' => 'textarea'
                                         ],
                                     ],
+                                    [
+                                        'handle' => 'author_id',
+                                        'field' => [
+                                            'type' => 'belongs_to',
+                                            'model' => 'author',
+                                            'max_items' => 1,
+                                            'mode' => 'default',
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
@@ -125,10 +135,71 @@ abstract class TestCase extends OrchestraTestCase
                         ],
                     ],
                 ],
+
+                Author::class => [
+                    'name' => 'Author',
+                    'blueprint' => [
+                        'sections' => [
+                            'main' => [
+                                'fields' => [
+                                    [
+                                        'handle' => 'name',
+                                        'field' => [
+                                            'type' => 'text',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'listing' => [
+                        'columns' => [
+                            'name',
+                        ],
+                        'sort' => [
+                            'column' => 'name',
+                            'direction' => 'asc',
+                        ],
+                    ],
+                ],
             ],
         ]);
     }
 
+    public function postFactory(int $count = 1, array $attributes = [])
+    {
+        $items = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            $items[] = Post::create(array_merge($attributes, [
+                'title' => join(' ', $this->faker->words(6)),
+                'body' => join(' ', $this->faker->paragraphs(10)),
+                'author_id' => $this->authorFactory()->id,
+            ]));
+        }
+
+        return count($items) === 1
+            ? $items[0]
+            : $items;
+    }
+
+    public function authorFactory(int $count = 1, array $attributes = [])
+    {
+        $items = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            $items[] = Author::create(array_merge($attributes, [
+                'name' => $this->faker->name(),
+            ]));
+        }
+
+        return count($items) === 1
+            ? $items[0]
+            : $items;
+    }
+
+
+    // TODO: let's update to 3.1 only and we should be able to get rid of this
     public function tearDown() : void
     {
         if ($this->app) {
@@ -144,6 +215,23 @@ abstract class TestCase extends OrchestraTestCase
 class Post extends Model
 {
     protected $fillable = [
-        'title', 'body',
+        'title', 'body', 'author_id',
     ];
+
+    public function author()
+    {
+        return $this->belongsTo(Author::class);
+    }
+}
+
+class Author extends Model
+{
+    protected $fillable = [
+        'name',
+    ];
+
+    public function posts()
+    {
+        return $this->hasMany(Author::class);
+    }
 }
