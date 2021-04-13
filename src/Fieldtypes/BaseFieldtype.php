@@ -2,6 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
+use DoubleThreeDigital\Runway\AugmentedRecord;
 use DoubleThreeDigital\Runway\Support\ModelFinder;
 use Statamic\CP\Column;
 use Statamic\Fieldtypes\Relationship;
@@ -92,7 +93,16 @@ class BaseFieldtype extends Relationship
             });
     }
 
-    // TODO: augmentation, will need tag refactor.
+    public function augment($values)
+    {
+        $model = ModelFinder::find($this->config('model'));
+
+        return collect($values)->map(function ($recordId) use ($model) {
+            $record = (new $model['model']())->firstWhere($model['primary_key'], $recordId);
+
+            return AugmentedRecord::augment($record, $model['blueprint']);
+        })->filter()->values();
+    }
 
     protected function getColumns()
     {
