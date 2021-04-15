@@ -284,7 +284,7 @@ You can use the BelongsTo fieldtype in any blueprint. Whether it be inside an en
 
 Runway provides some permissions to limit which users have access to view, create, edit and delete your model records. You can configure these permissions in the same way you can with built-in Statamic permissions. [Read the Statamic Docs](https://statamic.dev/users#permissions).
 
-### Troubleshooting
+### Troubleshooting & Gotchas
 
 **Unexpected data found. Trailing data**
 
@@ -295,6 +295,29 @@ protected $casts = [
     'publish_at' => 'datetime',
 ];
 ```
+
+**Using Bard**
+
+Runway should work with pretty much any Statamic fieldtype, including [Bard](https://statamic.dev/fieldtypes/bard#content). 
+
+However, as Bard saves as an array, there's a couple of extra steps you'll need to make in your Eloquent model.
+
+1. Setup your Bard field in your blueprint.
+2. Create a column for your Bard field, using the `json` column type is recommended.
+
+```php
+$table->json('body')->nullable();
+```
+
+3. In your Eloquent model, cast the column to JSON.
+
+```php
+protected $casts = [
+    'body',
+];
+```
+
+> The above documentation on Bard also applies for any other fieldtypes that output arrays. Such as the Array fieldtype, Grids and Replicators.
 
 ## Security
 
