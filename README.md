@@ -313,7 +313,7 @@ $table->json('body')->nullable();
 
 ```php
 protected $casts = [
-    'body',
+    'body' => 'json',
 ];
 ```
 
