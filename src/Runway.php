@@ -39,6 +39,8 @@ class Runway
                 return [$handle => $resource];
             })
             ->toArray();
+
+        return new static;
     }
 
     public static function allResources(): Collection
