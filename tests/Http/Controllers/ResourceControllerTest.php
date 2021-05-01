@@ -2,12 +2,11 @@
 
 namespace DoubleThreeDigital\Runway\Tests\Http\Controllers;
 
-use DoubleThreeDigital\Runway\Tests\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Statamic\Facades\User;
 
-class ModelControllerTest extends TestCase
+class ResourceControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -19,7 +18,7 @@ class ModelControllerTest extends TestCase
         $posts = $this->postFactory(2);
 
         $this->actingAs($user)
-            ->get(cp_route('runway.index', ['model' => 'post']))
+            ->get(cp_route('runway.index', ['resourceHandle' => 'post']))
             ->assertOk()
             ->assertViewIs('runway::index')
             ->assertSee([
@@ -29,24 +28,24 @@ class ModelControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_create_model()
+    public function can_create_resource()
     {
         $user = User::make()->makeSuper()->save();
 
         $this->actingAs($user)
-            ->get(cp_route('runway.create', ['model' => 'post']))
+            ->get(cp_route('runway.create', ['resourceHandle' => 'post']))
             ->assertOk();
     }
 
     /** @test */
-    public function can_store_model()
+    public function can_store_resource()
     {
         $user = User::make()->makeSuper()->save();
 
         $author = $this->authorFactory();
 
         $this->actingAs($user)
-            ->post(cp_route('runway.store', ['model' => 'post']), [
+            ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
                 'title' => 'Jingle Bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
                 'author_id' => [$author->id],
@@ -63,28 +62,28 @@ class ModelControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_edit_model()
+    public function can_edit_resource()
     {
         $user = User::make()->makeSuper()->save();
 
         $post = $this->postFactory();
 
         $this->actingAs($user)
-            ->get(cp_route('runway.edit', ['model' => 'post', 'record' => $post->id]))
+            ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))
             ->assertOk()
             ->assertSee($post->title)
             ->assertSee($post->body);
     }
 
     /** @test */
-    public function can_update_model()
+    public function can_update_resource()
     {
         $user = User::make()->makeSuper()->save();
 
         $post = $this->postFactory();
 
         $this->actingAs($user)
-            ->post(cp_route('runway.update', ['model' => 'post', 'record' => $post->id]), [
+            ->post(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'body' => $post->body,
                 'author_id' => [$post->author_id],
@@ -100,14 +99,14 @@ class ModelControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_destroy_model()
+    public function can_destroy_resource()
     {
         $user = User::make()->makeSuper()->save();
 
         $post = $this->postFactory();
 
         $this->actingAs($user)
-            ->delete(cp_route('runway.destroy', ['model' => 'post', 'record' => $post->id]))
+            ->delete(cp_route('runway.destroy', ['resourceHandle' => 'post', 'record' => $post->id]))
             ->assertRedirect('/cp/runway/post')
             ->assertSessionHas('success');
 

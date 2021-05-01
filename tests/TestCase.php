@@ -22,14 +22,12 @@ abstract class TestCase extends OrchestraTestCase
 
     protected function setUp(): void
     {
-        // require_once __DIR__.'/__fixtures__/app/User.php';
-
         parent::setUp();
 
         $this->loadMigrationsFrom(__DIR__.'/__fixtures__/database/migrations');
 
         if ($this->shouldFakeVersion) {
-            \Facades\Statamic\Version::shouldReceive('get')->andReturn('3.0.0-testing');
+            \Facades\Statamic\Version::shouldReceive('get')->andReturn('3.1.0-testing');
             $this->addToAssertionCount(-1); // Dont want to assert this
         }
     }
@@ -116,7 +114,7 @@ abstract class TestCase extends OrchestraTestCase
                                         'handle' => 'author_id',
                                         'field' => [
                                             'type' => 'belongs_to',
-                                            'model' => 'author',
+                                            'resource' => 'author',
                                             'max_items' => 1,
                                             'mode' => 'default',
                                         ],
@@ -196,19 +194,6 @@ abstract class TestCase extends OrchestraTestCase
         return count($items) === 1
             ? $items[0]
             : $items;
-    }
-
-
-    // TODO: let's update to 3.1 only and we should be able to get rid of this
-    public function tearDown() : void
-    {
-        if ($this->app) {
-            $this->callBeforeApplicationDestroyedCallbacks();
-
-            $this->app = null;
-        }
-
-        parent::tearDown();
     }
 }
 
