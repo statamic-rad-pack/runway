@@ -22,8 +22,6 @@ abstract class TestCase extends OrchestraTestCase
 
     protected function setUp(): void
     {
-        // require_once __DIR__.'/__fixtures__/app/User.php';
-
         parent::setUp();
 
         $this->loadMigrationsFrom(__DIR__.'/__fixtures__/database/migrations');
@@ -196,19 +194,6 @@ abstract class TestCase extends OrchestraTestCase
         return count($items) === 1
             ? $items[0]
             : $items;
-    }
-
-
-    // TODO: let's update to 3.1 only and we should be able to get rid of this
-    public function tearDown() : void
-    {
-        if ($this->app) {
-            $this->callBeforeApplicationDestroyedCallbacks();
-
-            $this->app = null;
-        }
-
-        parent::tearDown();
     }
 }
 
