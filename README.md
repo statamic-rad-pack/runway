@@ -42,7 +42,7 @@ return [
         //                     [
         //                         'handle' => 'price',
         //                         'field' => [
-        //                             'type' => 'number',
+        //                             'type' => 'integer',
         //                             'validate' => 'required',
         //                         ],
         //                     ],
