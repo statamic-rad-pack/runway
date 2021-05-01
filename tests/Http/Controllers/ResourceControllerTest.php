@@ -6,7 +6,7 @@ use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Statamic\Facades\User;
 
-class ModelControllerTest extends TestCase
+class ResourceControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -28,7 +28,7 @@ class ModelControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_create_model()
+    public function can_create_resource()
     {
         $user = User::make()->makeSuper()->save();
 
@@ -38,7 +38,7 @@ class ModelControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_store_model()
+    public function can_store_resource()
     {
         $user = User::make()->makeSuper()->save();
 
@@ -62,7 +62,7 @@ class ModelControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_edit_model()
+    public function can_edit_resource()
     {
         $user = User::make()->makeSuper()->save();
 
@@ -76,7 +76,7 @@ class ModelControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_update_model()
+    public function can_update_resource()
     {
         $user = User::make()->makeSuper()->save();
 
@@ -99,7 +99,7 @@ class ModelControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_destroy_model()
+    public function can_destroy_resource()
     {
         $user = User::make()->makeSuper()->save();
 

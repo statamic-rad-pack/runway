@@ -6,7 +6,7 @@ use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Http\Request;
 use Statamic\Http\Controllers\CP\CpController;
 
-class ModelListingButtonController extends CpController
+class ResourceListingButtonController extends CpController
 {
     public function index(Request $request, $resourceHandle)
     {

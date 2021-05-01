@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 
-class ModelController extends CpController
+class ResourceController extends CpController
 {
     // TODO: need to put requests in place for authorization and validation
 
