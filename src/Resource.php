@@ -137,7 +137,7 @@ class Resource
 
     public function routeKey()
     {
-        return $this->model()->getRouteKey();
+        return $this->model()->getRouteKey() ?? 'id';
     }
 
     public function databaseTable()
