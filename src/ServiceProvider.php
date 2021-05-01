@@ -35,6 +35,9 @@ class ServiceProvider extends AddonServiceProvider
         ], 'runway-config');
 
         Statamic::booted(function () {
+            Runway::discoverResources();
+
+            // TODO: remove old stuff
             ModelFinder::bootModels();
 
             Nav::extend(function ($nav) {
