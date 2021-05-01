@@ -187,9 +187,12 @@ If you need to add some sort of button to your model listing page, like for a CS
 When a user clicks the button, it will run the specified controller's `__invoke` method. Make sure to add any logic you need into there!
 
 ```php
+use DoubleThreeDigital\Runway\Resource;
+use Illuminate\Http\Request;
+
 class YourController extends Controller
 {
-    public function __invoke(Request $request, $model)
+    public function __invoke(Request $request, Resource $resource)
     {
         // Your code..
     }
@@ -298,7 +301,7 @@ protected $casts = [
 
 **Using Bard**
 
-Runway should work with pretty much any Statamic fieldtype, including [Bard](https://statamic.dev/fieldtypes/bard#content). 
+Runway should work with pretty much any Statamic fieldtype, including [Bard](https://statamic.dev/fieldtypes/bard#content).
 
 However, as Bard saves as an array, there's a couple of extra steps you'll need to make in your Eloquent model.
 
