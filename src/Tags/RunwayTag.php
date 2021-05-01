@@ -3,23 +3,22 @@
 namespace DoubleThreeDigital\Runway\Tags;
 
 use DoubleThreeDigital\Runway\AugmentedRecord;
-use DoubleThreeDigital\Runway\Support\ModelFinder;
-use Statamic\Fields\Field;
+use DoubleThreeDigital\Runway\Runway;
 use Statamic\Tags\Tags;
 
 class RunwayTag extends Tags
 {
     protected static $handle = 'runway';
 
-    public function wildcard($model = null)
+    public function wildcard($resourceHandle = null)
     {
-        $model = ModelFinder::find(
-            $this->params->has('model') ? $this->params->get('model') : $model
+        $resource = Runway::findResource(
+            $this->params->has('resource') ? $this->params->get('resource') : $resourceHandle
         );
 
-        $blueprint = $model['blueprint'];
+        $blueprint = $resource->blueprint();
 
-        $query = (new $model['model']())->query();
+        $query = $resource->model()->query();
 
         if ($this->params->has('where') && $where = $this->params->get('where')) {
             $query->where(explode(':', $where)[0], explode(':', $where)[1]);
