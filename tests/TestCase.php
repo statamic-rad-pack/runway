@@ -27,7 +27,7 @@ abstract class TestCase extends OrchestraTestCase
         $this->loadMigrationsFrom(__DIR__.'/__fixtures__/database/migrations');
 
         if ($this->shouldFakeVersion) {
-            \Facades\Statamic\Version::shouldReceive('get')->andReturn('3.0.0-testing');
+            \Facades\Statamic\Version::shouldReceive('get')->andReturn('3.1.0-testing');
             $this->addToAssertionCount(-1); // Dont want to assert this
         }
     }
