@@ -1,5 +1,5 @@
 @extends('statamic::layout')
-@section('title', 'Create ' . $model['singular'])
+@section('title', "Create {$resource->singular()}")
 @section('wrapper_class', 'max-w-3xl')
 
 @section('content')
@@ -7,7 +7,7 @@
         :blueprint='@json($blueprint)'
         :meta='@json($meta)'
         :values='@json($values)'
-        title="Create {{ $model['singular'] }}"
+        title="Create {{ $resource->singular() }}"
         name="create-publish-form"
         action="{{ $action }}"
         method="post"

@@ -41,23 +41,23 @@ class ServiceProvider extends AddonServiceProvider
             ModelFinder::bootModels();
 
             Nav::extend(function ($nav) {
-                foreach (ModelFinder::all() as $model) {
-                    if ($model['hidden']) {
+                foreach (Runway::allResources() as $resource) {
+                    if ($resource->hidden()) {
                         continue;
                     }
 
-                    $nav->content($model['name'])
-                        ->icon($model['cp_icon'])
-                        ->route('runway.index', ['model' => $model['_handle']]);
+                    $nav->content($resource->name())
+                        ->icon($resource->cpIcon())
+                        ->route('runway.index', ['model' => $resource->handle()]);
                 }
             });
 
-            foreach (ModelFinder::all() as $model) {
-                Permission::register("View {$model['_handle']}", function ($permission) use ($model) {
+            foreach (Runway::allResources() as $resource) {
+                Permission::register("View {$resource->plural()}", function ($permission) use ($resource) {
                     $permission->children([
-                        Permission::make("Edit {$model['_handle']}")->children([
-                            Permission::make("Create new {$model['_handle']}"),
-                            Permission::make("Delete {$model['_handle']}"),
+                        Permission::make("Edit {$resource->plural()}")->children([
+                            Permission::make("Create new {$resource->singular()}"),
+                            Permission::make("Delete {$resource->singular()}"),
                         ]),
                     ]);
                 })->group('Runway');
