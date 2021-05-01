@@ -114,7 +114,7 @@ abstract class TestCase extends OrchestraTestCase
                                         'handle' => 'author_id',
                                         'field' => [
                                             'type' => 'belongs_to',
-                                            'model' => 'author',
+                                            'resource' => 'author',
                                             'max_items' => 1,
                                             'mode' => 'default',
                                         ],
