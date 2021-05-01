@@ -6,7 +6,7 @@
     <div class="flex items-center justify-between mb-3">
         <h1 class="flex-1">{{ $title }}</h1>
 
-        <a class="btn-primary" href="{{ cp_route('runway.create', ['model' => $resource->handle()]) }}">Create {{ $resource->singular() }}</a>
+        <a class="btn-primary" href="{{ cp_route('runway.create', ['resourceHandle' => $resource->handle()]) }}">Create {{ $resource->singular() }}</a>
     </div>
 
     @if ($records->count())
@@ -28,7 +28,7 @@
                         @foreach($resource->listingButtons() as $listingButton => $action)
                             <form
                                 action="{{ cp_route('runway.listing-buttons', [
-                                    'model' => $resource->handle(),
+                                    'resourceHandle' => $resource->handle(),
                                 ]) }}"
                                 method="POST"
                             >
@@ -60,7 +60,7 @@
                                     @if($column['has_link'])
                                         <div class="flex items-center">
                                             <a href="{{ cp_route('runway.edit', [
-                                                'model' => $resource->handle(),
+                                                'resourceHandle' => $resource->handle(),
                                                 'record' => $record->{$resource->routeKey()}
                                             ]) }}">{{ $record->{$column['handle']} }}</a>
                                         </div>
@@ -72,8 +72,8 @@
 
                             <td class="flex justify-end">
                                 <dropdown-list>
-                                    <dropdown-item text="Edit" redirect="{{ cp_route('runway.edit', ['model' => $resource->handle(), 'record' => $record->{$resource->routeKey()}]) }}"></dropdown-item>
-                                    <form action="{{ cp_route('runway.destroy', ['model' => $resource->handle(), 'record' => $record->{$resource->routeKey()}]) }}" method="POST">
+                                    <dropdown-item text="Edit" redirect="{{ cp_route('runway.edit', ['resourceHandle' => $resource->handle(), 'record' => $record->{$resource->routeKey()}]) }}"></dropdown-item>
+                                    <form action="{{ cp_route('runway.destroy', ['resourceHandle' => $resource->handle(), 'record' => $record->{$resource->routeKey()}]) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
 
@@ -94,7 +94,7 @@
         @include('statamic::partials.create-first', [
             'resource' => $title,
             'svg' => 'empty/collection',
-            'route' => cp_route('runway.create', ['model' => $resource->handle()]),
+            'route' => cp_route('runway.create', ['resourceHandle' => $resource->handle()]),
         ])
     @endif
 @endsection

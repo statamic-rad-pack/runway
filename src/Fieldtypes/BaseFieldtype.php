@@ -32,8 +32,8 @@ class BaseFieldtype extends Relationship
                 'instructions' => "Select the Runway resource you'd like to be selectable from this field.",
                 'type' => 'select',
                 'options' => collect(Runway::allResources())
-                    ->mapWithKeys(function ($model) {
-                        return [$model->handle() => $model->name()];
+                    ->mapWithKeys(function ($resource) {
+                        return [$resource->handle() => $resource->name()];
                     })
                     ->toArray(),
                 'width' => 50,

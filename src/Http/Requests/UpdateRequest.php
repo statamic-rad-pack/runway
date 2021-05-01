@@ -14,7 +14,7 @@ class UpdateRequest extends FormRequest
 
     public function rules()
     {
-        return Runway::findResource($this->model)
+        return Runway::findResource($this->resourceHandle)
             ->blueprint()
             ->fields()
             ->validator()

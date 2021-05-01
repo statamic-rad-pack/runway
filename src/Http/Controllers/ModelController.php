@@ -11,12 +11,11 @@ use Statamic\Http\Controllers\CP\CpController;
 
 class ModelController extends CpController
 {
-    // TODO: replace route model binding from $model to $resource.
     // TODO: need to put requests in place for authorization and validation
 
-    public function index(Request $request, $model)
+    public function index(Request $request, $resourceHandle)
     {
-        $resource = Runway::findResource($model);
+        $resource = Runway::findResource($resourceHandle);
         $blueprint = $resource->blueprint();
 
         if (! User::current()->hasPermission("View {$resource->plural()}") && ! User::current()->isSuper()) {
@@ -56,9 +55,9 @@ class ModelController extends CpController
         ]);
     }
 
-    public function create(Request $request, $model)
+    public function create(Request $request, $resourceHandle)
     {
-        $resource = Runway::findResource($model);
+        $resource = Runway::findResource($resourceHandle);
 
         if (! User::current()->hasPermission("Create new {$resource->plural()}") && ! User::current()->isSuper()) {
             abort('403');
@@ -73,13 +72,13 @@ class ModelController extends CpController
             'blueprint' => $blueprint->toPublishArray(),
             'values'    => $fields->values(),
             'meta'      => $fields->meta(),
-            'action'    => cp_route('runway.store', ['model' => $resource->handle()]),
+            'action'    => cp_route('runway.store', ['resourceHandle' => $resource->handle()]),
         ]);
     }
 
-    public function store(StoreRequest $request, $model)
+    public function store(StoreRequest $request, $resourceHandle)
     {
-        $resource = Runway::findResource($model);
+        $resource = Runway::findResource($resourceHandle);
         $record = $resource->model();
 
         if (! User::current()->hasPermission("Create new {$resource->plural()}") && ! User::current()->isSuper()) {
@@ -105,15 +104,15 @@ class ModelController extends CpController
         return [
             'record'    => $record->toArray(),
             'redirect'  => cp_route('runway.edit', [
-                'model'  => $resource->handle(),
+                'resourceHandle'  => $resource->handle(),
                 'record' => $record->{$resource->primaryKey()},
             ]),
         ];
     }
 
-    public function edit(Request $request, $model, $record)
+    public function edit(Request $request, $resourceHandle, $record)
     {
-        $resource = Runway::findResource($model);
+        $resource = Runway::findResource($resourceHandle);
         $record = $resource->model()->where($resource->routeKey(), $record)->first();
 
         if (! User::current()->hasPermission("Edit {$resource->singular()}") && ! User::current()->isSuper()) {
@@ -142,15 +141,15 @@ class ModelController extends CpController
             'values'    => $fields->values(),
             'meta'      => $fields->meta(),
             'action'    => cp_route('runway.update', [
-                'model'  => $resource->handle(),
+                'resourceHandle'  => $resource->handle(),
                 'record' => $record->{$resource->primaryKey()},
             ]),
         ]);
     }
 
-    public function update(UpdateRequest $request, $model, $record)
+    public function update(UpdateRequest $request, $resourceHandle, $record)
     {
-        $resource = Runway::findResource($model);
+        $resource = Runway::findResource($resourceHandle);
         $record = $resource->model()->where($resource->routeKey(), $record)->first();
 
         if (! User::current()->hasPermission("Edit {$resource->singular()}") && ! User::current()->isSuper()) {
@@ -178,9 +177,9 @@ class ModelController extends CpController
         ];
     }
 
-    public function destroy(Request $request, $model, $record)
+    public function destroy(Request $request, $resourceHandle, $record)
     {
-        $resource = Runway::findResource($model);
+        $resource = Runway::findResource($resourceHandle);
         $record = $resource->model()->where($resource->routeKey(), $record)->first();
 
         if (! User::current()->hasPermission("Delete {$resource->singular()}") && ! User::current()->isSuper()) {
@@ -190,7 +189,7 @@ class ModelController extends CpController
         $record->delete();
 
         return redirect(cp_route('runway.index', [
-            'model' => $resource->handle(),
+            'resourceHandle' => $resource->handle(),
         ]))->with('success', "{$resource->singular()} deleted");
     }
 }

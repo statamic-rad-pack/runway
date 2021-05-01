@@ -44,7 +44,7 @@ class ServiceProvider extends AddonServiceProvider
 
                     $nav->content($resource->name())
                         ->icon($resource->cpIcon())
-                        ->route('runway.index', ['model' => $resource->handle()]);
+                        ->route('runway.index', ['resourceHandle' => $resource->handle()]);
                 }
             });
 

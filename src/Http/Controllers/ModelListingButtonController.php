@@ -8,9 +8,9 @@ use Statamic\Http\Controllers\CP\CpController;
 
 class ModelListingButtonController extends CpController
 {
-    public function index(Request $request, $model)
+    public function index(Request $request, $resourceHandle)
     {
-        $resource = Runway::findResource($model);
+        $resource = Runway::findResource($resourceHandle);
         $listingButton = $resource->listingButtons()[$request->get('listing-button')];
 
         if (is_callable($listingButton)) {
