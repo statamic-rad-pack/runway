@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway;
 
-use DoubleThreeDigital\Runway\Support\ModelFinder;
 use DoubleThreeDigital\Runway\Tags\RunwayTag;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\Permission;
@@ -36,9 +35,6 @@ class ServiceProvider extends AddonServiceProvider
 
         Statamic::booted(function () {
             Runway::discoverResources();
-
-            // TODO: remove old stuff
-            ModelFinder::bootModels();
 
             Nav::extend(function ($nav) {
                 foreach (Runway::allResources() as $resource) {
