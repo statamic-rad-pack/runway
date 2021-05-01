@@ -2,7 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Http\Requests;
 
-use DoubleThreeDigital\Runway\Support\ModelFinder;
+use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
@@ -14,8 +14,10 @@ class StoreRequest extends FormRequest
 
     public function rules()
     {
-        $model = ModelFinder::find($this->model);
-
-        return $model['blueprint']->fields()->validator()->rules();
+        return Runway::findResource($this->model)
+            ->blueprint()
+            ->fields()
+            ->validator()
+            ->rules();
     }
 }
