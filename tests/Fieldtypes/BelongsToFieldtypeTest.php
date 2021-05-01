@@ -26,7 +26,7 @@ class BelongsToFieldtypeTest extends TestCase
         $this->fieldtype->setField(new Field('author', [
             'max_items' => 1,
             'mode' => 'default',
-            'model' => 'author',
+            'resource' => 'author',
             'display' => 'Author',
             'type' => 'belongs_to',
         ]));
