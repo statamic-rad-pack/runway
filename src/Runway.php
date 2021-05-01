@@ -36,6 +36,10 @@ class Runway
                     $resource->hidden($config['hidden']);
                 }
 
+                if (isset($config['route'])) {
+                    $resource->route($config['route']);
+                }
+
                 return [$handle => $resource];
             })
             ->toArray();

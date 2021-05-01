@@ -20,6 +20,7 @@ class Resource
     protected $listingButtons;
     protected $cpIcon;
     protected $hidden;
+    protected $route;
 
     public function handle($handle = null)
     {
@@ -130,6 +131,12 @@ class Resource
             ->args(func_get_args());
     }
 
+    public function route($route = null)
+    {
+        return $this->fluentlyGetOrSet('route')
+            ->args(func_get_args());
+    }
+
     public function primaryKey()
     {
         return $this->model()->getKeyName();
@@ -162,6 +169,7 @@ class Resource
             'listing_buttons' => $this->listingButtons(),
             'cp_icon'         => $this->cpIcon(),
             'hidden'          => $this->hidden(),
+            'route'           => $this->route(),
         ];
     }
 
