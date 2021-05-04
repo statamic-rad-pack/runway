@@ -44,12 +44,13 @@ trait HasRoutes
         return 'layout';
     }
 
-    // public function id()
-    // {
-    //     if (! property_exists($this, 'id')) {
-    //         dd('www');
-    //     }
+    public function id()
+    {
+        return $this->getKey();
+    }
 
-    //     return $this->id;
-    // }
+    public function getRouteKey()
+    {
+        return $this->getAttributeValue($this->getRouteKeyName());
+    }
 }
