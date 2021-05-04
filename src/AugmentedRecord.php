@@ -8,7 +8,7 @@ use Statamic\Fields\Blueprint;
 
 class AugmentedRecord
 {
-    public static function augment(Model $record, Blueprint $blueprint)
+    public static function augment(Model $record, Blueprint $blueprint): array
     {
         return collect($record)
             ->map(function ($value, $key) use ($blueprint) {

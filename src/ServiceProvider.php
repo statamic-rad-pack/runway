@@ -28,6 +28,7 @@ class ServiceProvider extends AddonServiceProvider
 
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'runway');
         $this->mergeConfigFrom(__DIR__.'/../config/runway.php', 'runway');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         $this->publishes([
             __DIR__.'/../config/runway.php' => config_path('runway.php'),

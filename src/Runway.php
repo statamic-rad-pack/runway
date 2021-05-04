@@ -63,4 +63,18 @@ class Runway
 
         return $resource;
     }
+
+    public static function findResourceByModel(object $model): ?Resource
+    {
+        $resource = collect(static::$resources)->filter(function (Resource $resource) use ($model) {
+            return get_class($resource->model()) === get_class($model);
+        })->first();
+
+        if (! $resource) {
+            // TODO: replace with ResourceNotFound
+            throw new ModelNotFound("Runway could not find [{$model}]. Please ensure its configured properly and you're using the correct model.");
+        }
+
+        return $resource;
+    }
 }

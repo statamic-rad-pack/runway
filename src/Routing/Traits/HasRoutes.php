@@ -2,9 +2,13 @@
 
 namespace DoubleThreeDigital\Runway\Routing\Traits;
 
+use DoubleThreeDigital\Runway\AugmentedRecord;
+use DoubleThreeDigital\Runway\Models\RunwayUri;
 use DoubleThreeDigital\Runway\ResourceResponse;
+use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Support\Arr;
 use Statamic\Routing\Routable;
+use Statamic\View\Antlers\Parser;
 
 trait HasRoutes
 {
@@ -52,5 +56,40 @@ trait HasRoutes
     public function getRouteKey()
     {
         return $this->getAttributeValue($this->getRouteKeyName());
+    }
+
+    public function runwayUri()
+    {
+        return $this->morphOne(RunwayUri::class, 'model');
+    }
+
+    public static function bootHasRoutes()
+    {
+        static::saved(function ($model) {
+            $resource = Runway::findResourceByModel($model);
+            $augmentedModel = AugmentedRecord::augment($model, $resource->blueprint());
+
+            if (! $resource->route()) {
+                return;
+            }
+
+            $uri = (new Parser)
+                ->parse($resource->route(), $augmentedModel)
+                ->__toString();
+
+            if ($model->runwayUri()->exists()) {
+                $model->runwayUri()->first()->update([
+                    'uri' => $uri,
+                ]);
+            } else {
+                $model->runwayUri()->create([
+                    'uri' => $uri,
+                ]);
+            }
+        });
+
+        static::deleting(function ($model) {
+            $model->runwayUri()->delete();
+        });
     }
 }
