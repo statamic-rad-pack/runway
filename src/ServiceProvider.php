@@ -60,17 +60,8 @@ class ServiceProvider extends AddonServiceProvider
                 })->group('Runway');
             }
 
-            $this->app->singleton(\Statamic\Contracts\Data\DataRepository::class, function ($app) {
-                return (new \Statamic\Data\DataRepository)
-                    ->setRepository('entry', \Statamic\Contracts\Entries\EntryRepository::class)
-                    ->setRepository('term', \Statamic\Contracts\Taxonomies\TermRepository::class)
-                    ->setRepository('collection', \Statamic\Contracts\Entries\CollectionRepository::class)
-                    ->setRepository('taxonomy', \Statamic\Contracts\Taxonomies\TaxonomyRepository::class)
-                    ->setRepository('global', \Statamic\Contracts\Globals\GlobalRepository::class)
-                    ->setRepository('asset', \Statamic\Contracts\Assets\AssetRepository::class)
-                    ->setRepository('user', \Statamic\Contracts\Auth\UserRepository::class)
-                    ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
-            });
+            $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
+                ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
         });
     }
 }
