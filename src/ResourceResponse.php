@@ -68,7 +68,7 @@ class ResourceResponse implements Responsable
         $contents = (new View)
             ->template($this->data->template())
             ->layout($this->data->layout())
-            ->with($this->with)
+            ->with($this->data->toAugmentedArray())
             ->cascadeContent($this->data)
             ->render();
 

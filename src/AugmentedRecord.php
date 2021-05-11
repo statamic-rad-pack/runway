@@ -17,7 +17,7 @@ class AugmentedRecord
                 }
 
                 if ($blueprint->hasField($key)) {
-                    return $blueprint->field($key)->fieldtype()->augment($value);
+                    return $blueprint->field($key)->setValue($value)->augment()->value();
                 }
 
                 return $value;

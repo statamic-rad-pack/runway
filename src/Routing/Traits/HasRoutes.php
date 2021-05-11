@@ -23,9 +23,7 @@ trait HasRoutes
 
     public function routeData()
     {
-        return Arr::merge($this->toArray(), [
-            'content' => 'Wipps'
-        ]);
+        return [];
     }
 
     public function uri()
@@ -56,6 +54,16 @@ trait HasRoutes
     public function getRouteKey()
     {
         return $this->getAttributeValue($this->getRouteKeyName());
+    }
+
+    public function asResource()
+    {
+        return Runway::findResourceByModel($this);
+    }
+
+    public function toAugmentedArray()
+    {
+        return AugmentedRecord::augment($this, $this->asResource()->blueprint());
     }
 
     public function runwayUri()
