@@ -10,6 +10,10 @@ use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
+    protected $commands = [
+        Console\Commands\RebuildUriCache::class,
+    ];
+
     protected $fieldtypes = [
         Fieldtypes\BelongsToFieldtype::class,
     ];
