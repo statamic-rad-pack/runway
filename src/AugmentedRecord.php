@@ -22,6 +22,11 @@ class AugmentedRecord
 
                 return $value;
             })
+            ->merge([
+                'url' => in_array('DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes', class_uses($record))
+                    ? $record->uri()
+                    : null,
+            ])
             ->toArray();
     }
 }

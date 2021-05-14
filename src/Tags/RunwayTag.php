@@ -53,14 +53,8 @@ class RunwayTag extends Tags
     {
         return collect($query)
             ->map(function ($record, $key) use ($blueprint) {
-                return $this->augmentRecord($record, $blueprint);
+                return AugmentedRecord::augment($record, $blueprint);
             })
             ->toArray();
-    }
-
-    // TODO: replace calls to this method with the real deal
-    protected function augmentRecord($record, $blueprint)
-    {
-        return AugmentedRecord::augment($record, $blueprint);
     }
 }

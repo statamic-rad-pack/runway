@@ -17,7 +17,7 @@ trait RunwayRoutes
 
     public function route()
     {
-        return '/'.$this->slug();
+        return $this->runwayUri->uri;
     }
 
     public function routeData()
