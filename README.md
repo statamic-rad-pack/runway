@@ -205,7 +205,25 @@ class YourController extends Controller
 
 At it's core, Runway provides Control Panel views for each of your models so you can view, create, update and delete Eloquent records. All the basic [CRUD](https://www.codecademy.com/articles/what-is-crud) actions you need.
 
-### Templating
+### Routing
+
+Runway can optionally be setup to serve front-end routes for your Eloquent models.
+
+For example, say you store your products in the database and you want to display them on your site. This is the perfect use case for Runway's routing.
+
+#### Enabling routing
+
+TODO
+
+1. Add config option
+2. Add trait and interface to model
+3. Run command
+
+#### Making use of routing
+
+TODO
+
+### Antler Tags
 
 In addition to letting you create, view & update Eloquent records, Runway also provides a useful tag that allows you to output Eloquent records right in your front-end.
 
@@ -228,6 +246,16 @@ The tag also has various parameters you can use to filter the records that get o
 ```handlebars
 {{ runway:post sort="title:asc" where="author_id:duncan" limit="25" }}
     <h2>{{ title }}</h2>
+{{ /runway:post }}
+```
+
+Additionally, if you're using Runway's routing feature, a `url` variable will be automatically added alongside your augmented variables. Allowing you to do something like this:
+
+```handlebars
+<h2>Blog Posts</h2>
+
+{{ runway:post }}
+    <h2><a href="{{ url }}">{{ title }}</a></h2>
 {{ /runway:post }}
 ```
 
@@ -287,7 +315,7 @@ You can use the BelongsTo fieldtype in any blueprint. Whether it be inside an en
 
 Runway provides some permissions to limit which users have access to view, create, edit and delete your model records. You can configure these permissions in the same way you can with built-in Statamic permissions. [Read the Statamic Docs](https://statamic.dev/users#permissions).
 
-### Troubleshooting & Gotchas
+### Knowledge Base
 
 **Unexpected data found. Trailing data**
 
