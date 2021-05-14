@@ -8,10 +8,12 @@ class ResourceRoutingRepository
 {
     public function findByUri(string $uri)
     {
-        try {
-            return RunwayUri::where('uri', $uri)->first()->model;
-        } catch (\Exception $e) {
+        $runwayUri = RunwayUri::where('uri', $uri)->first();
+
+        if (! $runwayUri) {
             return null;
         }
+
+        return $runwayUri->model;
     }
 }

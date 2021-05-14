@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway;
+namespace DoubleThreeDigital\Runway\Routing;
 
 use Facades\Statamic\View\Cascade;
 use Illuminate\Contracts\Support\Responsable;

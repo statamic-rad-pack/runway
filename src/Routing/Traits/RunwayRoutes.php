@@ -4,13 +4,12 @@ namespace DoubleThreeDigital\Runway\Routing\Traits;
 
 use DoubleThreeDigital\Runway\AugmentedRecord;
 use DoubleThreeDigital\Runway\Models\RunwayUri;
-use DoubleThreeDigital\Runway\ResourceResponse;
+use DoubleThreeDigital\Runway\Routing\ResourceResponse;
 use DoubleThreeDigital\Runway\Runway;
-use Illuminate\Support\Arr;
 use Statamic\Routing\Routable;
 use Statamic\View\Antlers\Parser;
 
-trait HasRoutes
+trait RunwayRoutes
 {
     use Routable {
         uri as routableUri;
@@ -71,7 +70,7 @@ trait HasRoutes
         return $this->morphOne(RunwayUri::class, 'model');
     }
 
-    public static function bootHasRoutes()
+    public static function bootRunwayRoutes()
     {
         static::saved(function ($model) {
             $resource = Runway::findResourceByModel($model);
