@@ -4,7 +4,6 @@ namespace DoubleThreeDigital\Runway\Routing;
 
 use Facades\Statamic\View\Cascade;
 use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Support\Str;
 use Statamic\Events\ResponseCreated;
 use Statamic\Facades\Site;
 use Statamic\Statamic;
@@ -27,8 +26,6 @@ class ResourceResponse implements Responsable
         $this->request = $request;
 
         $this
-            ->adjustResponseType()
-            ->addContentHeaders()
             ->addViewPaths();
 
         $response = response()
@@ -72,10 +69,6 @@ class ResourceResponse implements Responsable
             ->cascadeContent($this->data)
             ->render();
 
-        if ($this->isLivePreview()) {
-            $contents = $this->versionJavascriptModules($contents);
-        }
-
         return $contents;
     }
 
@@ -84,75 +77,10 @@ class ResourceResponse implements Responsable
         return Cascade::instance()->withContent($this->data)->hydrate();
     }
 
-    protected function adjustResponseType()
-    {
-        // $contentType = $this->data->get('content_type', 'html');
-
-        // if ($contentType !== 'html') {
-        //     $this->headers['Content-Type'] = self::contentType($contentType);
-        // }
-
-        return $this;
-    }
-
-    protected function addContentHeaders()
-    {
-        // foreach ($this->data->get('headers', []) as $header => $value) {
-        //     $this->headers[$header] = $value;
-        // }
-
-        return $this;
-    }
-
     public function with($data)
     {
         $this->with = $data;
 
         return $this;
-    }
-
-    protected function isLivePreview()
-    {
-        return $this->request->headers->get('X-Statamic-Live-Preview');
-    }
-
-    protected function versionJavascriptModules($contents)
-    {
-        return preg_replace_callback('~<script[^>]*type=("|\')module\1[^>]*>~i', function ($scriptMatches) {
-            return preg_replace_callback('~src=("|\')(.*?)\1~i', function ($matches) {
-                $quote = $matches[1];
-                $url = $matches[2];
-
-                $parameter = 't='.(microtime(true) * 10000);
-
-                if (Str::contains($url, '?')) {
-                    $url = str_replace('?', "?$parameter&", $url);
-                } else {
-                    $url .= "?$parameter";
-                }
-
-                return 'src='.$quote.$url.$quote;
-            }, $scriptMatches[0]);
-        }, $contents);
-    }
-
-    public static function contentType($type)
-    {
-        switch ($type) {
-            case 'html':
-                return 'text/html; charset=UTF-8';
-            case 'xml':
-                return 'text/xml';
-            case 'rss':
-                return 'application/rss+xml';
-            case 'atom':
-                return 'application/atom+xml; charset=UTF-8';
-            case 'json':
-                return 'application/json';
-            case 'text':
-                return 'text/plain';
-            default:
-                return $type;
-        }
     }
 }
