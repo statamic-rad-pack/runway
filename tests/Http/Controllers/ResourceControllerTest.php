@@ -52,7 +52,6 @@ class ResourceControllerTest extends TestCase
             ])
             ->assertOk()
             ->assertJsonStructure([
-                'record',
                 'redirect',
             ]);
 
@@ -91,6 +90,7 @@ class ResourceControllerTest extends TestCase
             ->assertOk()
             ->assertJsonStructure([
                 'record',
+                'resource_handle',
             ]);
 
         $post->refresh();
