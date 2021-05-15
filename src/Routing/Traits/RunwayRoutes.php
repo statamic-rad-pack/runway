@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway\Routing\Traits;
 
-use DoubleThreeDigital\Runway\AugmentedRecord;
 use DoubleThreeDigital\Runway\Models\RunwayUri;
 use DoubleThreeDigital\Runway\Routing\ResourceResponse;
 use DoubleThreeDigital\Runway\Runway;
@@ -61,7 +60,9 @@ trait RunwayRoutes
         return $this->getAttributeValue($this->getRouteKeyName());
     }
 
-    /** @return \Illuminate\Database\Eloquent\Relations\MorphOne */
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
     public function runwayUri()
     {
         return $this->morphOne(RunwayUri::class, 'model');
@@ -76,10 +77,8 @@ trait RunwayRoutes
                 return;
             }
 
-            $augmentedModel = AugmentedRecord::augment($model, $resource->blueprint());
-
             $uri = (new Parser)
-                ->parse($resource->route(), $augmentedModel)
+                ->parse($resource->route(), $resource->augment($model))
                 ->__toString();
 
             if ($model->runwayUri()->exists()) {

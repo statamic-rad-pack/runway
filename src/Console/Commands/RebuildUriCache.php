@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway\Console\Commands;
 
-use DoubleThreeDigital\Runway\AugmentedRecord;
 use DoubleThreeDigital\Runway\Models\RunwayUri;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
@@ -65,10 +64,8 @@ class RebuildUriCache extends Command
                 $resource->model()->all()->each(function ($model) use ($resource) {
                     $this->line("{$resource->name()}: {$model->{$resource->primaryKey()}}");
 
-                    $augmentedModel = AugmentedRecord::augment($model, $resource->blueprint());
-
                     $uri = (new Parser)
-                        ->parse($resource->route(), $augmentedModel)
+                        ->parse($resource->route(), $resource->augment($model))
                         ->__toString();
 
                     $model->runwayUri()->create([

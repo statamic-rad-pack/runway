@@ -2,7 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Tags;
 
-use DoubleThreeDigital\Runway\AugmentedRecord;
+use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Statamic\Tags\Tags;
 
@@ -39,21 +39,21 @@ class RunwayTag extends Tags
         }
 
         if (! $this->params->has('as')) {
-            return $this->augmentRecords($results, $blueprint);
+            return $this->augmentRecords($results, $resource);
         }
 
         return [
-            $this->params->get('as') => $this->augmentRecords($results, $blueprint),
+            $this->params->get('as') => $this->augmentRecords($results, $resource),
             'paginate'   => isset($paginator) ? $paginator->toArray() : null,
             'no_results' => collect($results)->isEmpty(),
         ];
     }
 
-    protected function augmentRecords($query, $blueprint)
+    protected function augmentRecords($query, Resource $resource)
     {
         return collect($query)
-            ->map(function ($record, $key) use ($blueprint) {
-                return AugmentedRecord::augment($record, $blueprint);
+            ->map(function ($record, $key) use ($resource) {
+                return $resource->augment($record);
             })
             ->toArray();
     }

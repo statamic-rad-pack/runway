@@ -30,9 +30,6 @@ class Resource
             ->args(func_get_args());
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Model
-     */
     public function model($model = null)
     {
         return $this->fluentlyGetOrSet('model')
@@ -62,9 +59,6 @@ class Resource
         return Str::plural($this->name);
     }
 
-    /**
-     * @return Statamic\Fields\Blueprint
-     */
     public function blueprint()
     {
         return $this->fluentlyGetOrSet('blueprint')
@@ -197,6 +191,11 @@ class Resource
             'hidden'          => $this->hidden(),
             'route'           => $this->route(),
         ];
+    }
+
+    public function augment(Model $model)
+    {
+        return AugmentedRecord::augment($model, $this->blueprint());
     }
 
     public function __get($name)
