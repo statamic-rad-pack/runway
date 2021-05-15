@@ -8,8 +8,10 @@ use Statamic\Fields\Blueprint;
 
 class AugmentedRecord
 {
-    public static function augment(Model $record, Blueprint $blueprint)
+    public static function augment(Model $record, Blueprint $blueprint): array
     {
+        $resource = Runway::findResourceByModel($record);
+
         return collect($record)
             ->map(function ($value, $key) use ($blueprint) {
                 if ($value instanceof CarbonInterface) {
@@ -17,11 +19,14 @@ class AugmentedRecord
                 }
 
                 if ($blueprint->hasField($key)) {
-                    return $blueprint->field($key)->fieldtype()->augment($value);
+                    return $blueprint->field($key)->setValue($value)->augment()->value();
                 }
 
                 return $value;
             })
+            ->merge([
+                'url' => $resource->hasRouting() ? $record->uri() : null,
+            ])
             ->toArray();
     }
 }

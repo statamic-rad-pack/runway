@@ -3,13 +3,16 @@
 @section('wrapper_class', 'max-w-3xl')
 
 @section('content')
-    <publish-form
-        :blueprint='@json($blueprint)'
-        :meta='@json($meta)'
-        :values='@json($values)'
-        title="Edit {{ $resource->singular() }}"
-        name="edit-publish-form"
+    <runway-publish-form
+        :breadcrumbs="{{ $breadcrumbs->toJson() }}"
+        :initial-blueprint='@json($blueprint)'
+        :initial-meta='@json($meta)'
+        :initial-values='@json($values)'
+        initial-title="Edit {{ $resource->singular() }}"
         action="{{ $action }}"
         method="post"
-    ></publish-form>
+        :resource-has-routes="{{ $resource->hasRouting() }}"
+        permalink="{{ $permalink }}"
+        :is-creating="false"
+    ></runway-publish-form>
 @endsection

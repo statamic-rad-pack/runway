@@ -10,6 +10,10 @@ use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
+    protected $commands = [
+        Console\Commands\RebuildUriCache::class,
+    ];
+
     protected $fieldtypes = [
         Fieldtypes\BelongsToFieldtype::class,
     ];
@@ -22,12 +26,17 @@ class ServiceProvider extends AddonServiceProvider
         RunwayTag::class,
     ];
 
+    protected $scripts = [
+        __DIR__.'/../resources/dist/js/cp.js',
+    ];
+
     public function boot()
     {
         parent::boot();
 
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'runway');
         $this->mergeConfigFrom(__DIR__.'/../config/runway.php', 'runway');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         $this->publishes([
             __DIR__.'/../config/runway.php' => config_path('runway.php'),
@@ -58,6 +67,9 @@ class ServiceProvider extends AddonServiceProvider
                     ]);
                 })->group('Runway');
             }
+
+            $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
+                ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
         });
     }
 }

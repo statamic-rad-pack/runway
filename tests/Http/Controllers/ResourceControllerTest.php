@@ -47,12 +47,12 @@ class ResourceControllerTest extends TestCase
         $this->actingAs($user)
             ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
                 'title' => 'Jingle Bells',
+                'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
                 'author_id' => [$author->id],
             ])
             ->assertOk()
             ->assertJsonStructure([
-                'record',
                 'redirect',
             ]);
 
@@ -85,12 +85,14 @@ class ResourceControllerTest extends TestCase
         $this->actingAs($user)
             ->post(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
+                'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
                 'author_id' => [$post->author_id],
             ])
             ->assertOk()
             ->assertJsonStructure([
                 'record',
+                'resource_handle',
             ]);
 
         $post->refresh();

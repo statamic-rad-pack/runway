@@ -75,13 +75,13 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertSame(count($augment), 5);
 
         $this->assertSame($authors[0]->id, $augment[0]['id']);
-        $this->assertSame($authors[0]->name, $augment[0]['name']);
+        $this->assertSame($authors[0]->name, (string) $augment[0]['name']);
 
         $this->assertSame($authors[2]->id, $augment[2]['id']);
-        $this->assertSame($authors[2]->name, $augment[2]['name']);
+        $this->assertSame($authors[2]->name, (string) $augment[2]['name']);
 
         $this->assertSame($authors[4]->id, $augment[4]['id']);
-        $this->assertSame($authors[4]->name, $augment[4]['name']);
+        $this->assertSame($authors[4]->name, (string) $augment[4]['name']);
     }
 
     /**

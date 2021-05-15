@@ -20,6 +20,9 @@ class Resource
     protected $listingButtons;
     protected $cpIcon;
     protected $hidden;
+    protected $route;
+    protected $template;
+    protected $layout;
 
     public function handle($handle = null)
     {
@@ -27,9 +30,6 @@ class Resource
             ->args(func_get_args());
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Model
-     */
     public function model($model = null)
     {
         return $this->fluentlyGetOrSet('model')
@@ -59,9 +59,6 @@ class Resource
         return Str::plural($this->name);
     }
 
-    /**
-     * @return Statamic\Fields\Blueprint
-     */
     public function blueprint()
     {
         return $this->fluentlyGetOrSet('blueprint')
@@ -130,6 +127,36 @@ class Resource
             ->args(func_get_args());
     }
 
+    public function route($route = null)
+    {
+        return $this->fluentlyGetOrSet('route')
+            ->args(func_get_args());
+    }
+
+    public function template($template = null)
+    {
+        return $this->fluentlyGetOrSet('template')
+            ->getter(function ($value) {
+                return $value ?? 'default';
+            })
+            ->args(func_get_args());
+    }
+
+    public function layout($layout = null)
+    {
+        return $this->fluentlyGetOrSet('layout')
+            ->getter(function ($value) {
+                return $value ?? 'layout';
+            })
+            ->args(func_get_args());
+    }
+
+    public function hasRouting(): bool
+    {
+        return ! is_null($this->route())
+            && in_array('DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes', class_uses($this->model()));
+    }
+
     public function primaryKey()
     {
         return $this->model()->getKeyName();
@@ -162,7 +189,13 @@ class Resource
             'listing_buttons' => $this->listingButtons(),
             'cp_icon'         => $this->cpIcon(),
             'hidden'          => $this->hidden(),
+            'route'           => $this->route(),
         ];
+    }
+
+    public function augment(Model $model)
+    {
+        return AugmentedRecord::augment($model, $this->blueprint());
     }
 
     public function __get($name)

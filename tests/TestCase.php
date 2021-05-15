@@ -2,7 +2,9 @@
 
 namespace DoubleThreeDigital\Runway\Tests;
 
+use DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes;
 use DoubleThreeDigital\Runway\ServiceProvider;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -24,6 +26,7 @@ abstract class TestCase extends OrchestraTestCase
     {
         parent::setUp();
 
+        $this->runLaravelMigrations();
         $this->loadMigrationsFrom(__DIR__.'/__fixtures__/database/migrations');
 
         if ($this->shouldFakeVersion) {
@@ -90,6 +93,10 @@ abstract class TestCase extends OrchestraTestCase
             'directory' => __DIR__.'/__fixtures__/users',
         ]);
 
+        $app['config']->set('view.paths', [
+            __DIR__.'/__fixtures__/resources/views',
+        ]);
+
         $app['config']->set('runway', [
             'models' => [
                 Post::class => [
@@ -102,6 +109,12 @@ abstract class TestCase extends OrchestraTestCase
                                         'handle' => 'title',
                                         'field' => [
                                             'type' => 'text'
+                                        ],
+                                    ],
+                                    [
+                                        'handle' => 'slug',
+                                        'field' => [
+                                            'type' => 'slug'
                                         ],
                                     ],
                                     [
@@ -132,6 +145,7 @@ abstract class TestCase extends OrchestraTestCase
                             'direction' => 'desc',
                         ],
                     ],
+                    'route' => '/posts/{{ slug }}',
                 ],
 
                 Author::class => [
@@ -170,8 +184,9 @@ abstract class TestCase extends OrchestraTestCase
 
         for ($i = 0; $i < $count; $i++) {
             $items[] = Post::create(array_merge($attributes, [
-                'title' => join(' ', $this->faker->words(6)),
-                'body' => join(' ', $this->faker->paragraphs(10)),
+                'title'     => $title = join(' ', $this->faker->words(6)),
+                'slug'      => str_slug($title),
+                'body'      => join(' ', $this->faker->paragraphs(10)),
                 'author_id' => $this->authorFactory()->id,
             ]));
         }
@@ -197,10 +212,12 @@ abstract class TestCase extends OrchestraTestCase
     }
 }
 
-class Post extends Model
+class Post extends Model implements Responsable
 {
+    use RunwayRoutes;
+
     protected $fillable = [
-        'title', 'body', 'author_id',
+        'title', 'slug', 'body', 'author_id',
     ];
 
     public function author()

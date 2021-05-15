@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
-use DoubleThreeDigital\Runway\AugmentedRecord;
 use DoubleThreeDigital\Runway\Runway;
 use Statamic\CP\Column;
 use Statamic\Fieldtypes\Relationship;
@@ -83,7 +82,7 @@ class BaseFieldtype extends Relationship
         return collect($values)->map(function ($recordId) use ($resource) {
             $record = $resource->model()->firstWhere($resource->primaryKey(), $recordId);
 
-            return AugmentedRecord::augment($record, $resource->blueprint());
+            return $resource->augment($record);
         })->toArray();
     }
 

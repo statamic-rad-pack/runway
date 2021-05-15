@@ -36,6 +36,18 @@ class Runway
                     $resource->hidden($config['hidden']);
                 }
 
+                if (isset($config['route'])) {
+                    $resource->route($config['route']);
+                }
+
+                if (isset($config['template'])) {
+                    $resource->template($config['template']);
+                }
+
+                if (isset($config['layout'])) {
+                    $resource->layout($config['layout']);
+                }
+
                 return [$handle => $resource];
             })
             ->toArray();
@@ -55,6 +67,20 @@ class Runway
         if (! $resource) {
             // TODO: replace with ResourceNotFound
             throw new ModelNotFound("Runway could not find [{$resourceHandle}]. Please ensure its configured properly and you're using the correct handle.");
+        }
+
+        return $resource;
+    }
+
+    public static function findResourceByModel(object $model): ?Resource
+    {
+        $resource = collect(static::$resources)->filter(function (Resource $resource) use ($model) {
+            return get_class($resource->model()) === get_class($model);
+        })->first();
+
+        if (! $resource) {
+            // TODO: replace with ResourceNotFound
+            throw new ModelNotFound("Runway could not find [{$model}]. Please ensure its configured properly and you're using the correct model.");
         }
 
         return $resource;
