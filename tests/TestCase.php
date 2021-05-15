@@ -26,6 +26,7 @@ abstract class TestCase extends OrchestraTestCase
     {
         parent::setUp();
 
+        $this->runLaravelMigrations();
         $this->loadMigrationsFrom(__DIR__.'/__fixtures__/database/migrations');
 
         if ($this->shouldFakeVersion) {
@@ -107,6 +108,12 @@ abstract class TestCase extends OrchestraTestCase
                                         ],
                                     ],
                                     [
+                                        'handle' => 'slug',
+                                        'field' => [
+                                            'type' => 'slug'
+                                        ],
+                                    ],
+                                    [
                                         'handle' => 'body',
                                         'field' => [
                                             'type' => 'textarea'
@@ -134,6 +141,7 @@ abstract class TestCase extends OrchestraTestCase
                             'direction' => 'desc',
                         ],
                     ],
+                    'route' => '/posts/{{ slug }}',
                 ],
 
                 Author::class => [
@@ -172,8 +180,9 @@ abstract class TestCase extends OrchestraTestCase
 
         for ($i = 0; $i < $count; $i++) {
             $items[] = Post::create(array_merge($attributes, [
-                'title' => join(' ', $this->faker->words(6)),
-                'body' => join(' ', $this->faker->paragraphs(10)),
+                'title'     => $title = join(' ', $this->faker->words(6)),
+                'slug'      => str_slug($title),
+                'body'      => join(' ', $this->faker->paragraphs(10)),
                 'author_id' => $this->authorFactory()->id,
             ]));
         }
@@ -204,7 +213,7 @@ class Post extends Model implements Responsable
     use RunwayRoutes;
 
     protected $fillable = [
-        'title', 'body', 'author_id',
+        'title', 'slug', 'body', 'author_id',
     ];
 
     public function author()

@@ -3,7 +3,6 @@
 namespace DoubleThreeDigital\Runway\Tests\Tags;
 
 use DoubleThreeDigital\Runway\Tags\RunwayTag;
-use DoubleThreeDigital\Runway\Tests\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Statamic\Facades\Antlers;
 
