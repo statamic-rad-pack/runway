@@ -10,7 +10,8 @@ This repository contains the source code of Runway. While Runway is free and doe
 
 1. Install via Composer `composer require doublethreedigital/runway`
 2. Publish the configuration file `php artisan vendor:publish --tag="runway-config"`
-3. Configure the blueprint for each of the Eloquent models you wish to use with Runway.
+3. Run your database migrations `php artisan migrate`
+4. Configure the blueprint for each of the Eloquent models you wish to use with Runway.
 
 ## Configuration
 
@@ -207,23 +208,58 @@ At it's core, Runway provides Control Panel views for each of your models so you
 
 ### Routing
 
-Runway can optionally be setup to serve front-end routes for your Eloquent models.
+Ever found yourself in a situation where you just want to display one of your Eloquent models on the front-end of your Statamic site and have them treated exactly like entries? Well, that's exactly where I found myself, so I built it...
 
-For example, say you store your products in the database and you want to display them on your site. This is the perfect use case for Runway's routing.
+The routing feature is purley optional and can be configured on 'resource by resource' basis. Meaning you can have routing enabled on one resource but not another.
 
 #### Enabling routing
 
-TODO
+> Before getting started, please ensure you've ran `php artisan migrate`. Runway will need to migrate a table to store compiled URIs.
 
-1. Add config option
-2. Add trait and interface to model
-3. Run command
+First things first, you'll need to add a `route` configuration option to your models with the URI structure you wish to use for the resource. You can use Antlers for any dynamic segments you need, like for a slug or for a date.
 
-#### Making use of routing
+```php
+// config/runway.php
 
-TODO
+'route' => '/products/{{ slug }}',
+```
 
-### Antler Tags
+Next, you'll need to add the `RunwayRoutes` trait and the `Responsable` interface to your Eloquent model.
+
+```php
+// app/Models/Product.php
+
+use DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes;
+use Illuminate\Contracts\Support\Responsable;
+
+class Product extends Model implements Responsable
+{
+    use RunwayRoutes;
+```
+
+Last but not least, please run `php please runway:rebuild-uris`. This command will go through all your models and build a cache of compiled URIs based on your URI structure (you'll find these in your `runway_uris` table).
+
+#### Changing the template/layout used
+
+By default, Runway will assume you want to use `default` and `layout` as your template and layout respectively. However, this isn't always the case so there's configuration options for both.
+
+```php
+// config/runway.php
+
+'template' => 'products.index',
+'layout' => 'layouts.shop',
+```
+
+#### Available variables
+
+Inside your view, you'll have access to:
+
+* All of the fields configured in your blueprint (with augmentation of course)
+* Any fields not in your blueprint but configured in your model, like `created_at` and `updated_at`
+* Any variables provided by [the Cascade](https://statamic.dev/cascade#content)
+* `url` - the URL of the current page
+
+### Antlers Tag
 
 In addition to letting you create, view & update Eloquent records, Runway also provides a useful tag that allows you to output Eloquent records right in your front-end.
 
@@ -348,7 +384,13 @@ protected $casts = [
 ];
 ```
 
-> The above documentation on Bard also applies for any other fieldtypes that output arrays. Such as the Array fieldtype, Grids and Replicators.
+> The above documentation on Bard also applies for any other fieldtypes that output arrays. Such as the Array fieldtype, the Grid fieldtype and the Replicator fieldtype.
+
+**What's the `runway_uris` table for?**
+
+The `runway_uris` table is created when you install Runway. It's used as a 'lookup table' for Runway's front-end routing feature.
+
+Essentially, because we allow you to use Antlers to build your URI structure, we need somewhere to store the parsed versions of those for each model. The `runway_uris` table stores the parsed version of the URI along with the related model.
 
 ## Security
 
