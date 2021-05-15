@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway\Tests\Routing;
 
-use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tests\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
