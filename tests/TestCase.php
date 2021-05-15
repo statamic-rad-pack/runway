@@ -2,7 +2,9 @@
 
 namespace DoubleThreeDigital\Runway\Tests;
 
+use DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes;
 use DoubleThreeDigital\Runway\ServiceProvider;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -197,8 +199,10 @@ abstract class TestCase extends OrchestraTestCase
     }
 }
 
-class Post extends Model
+class Post extends Model implements Responsable
 {
+    use RunwayRoutes;
+
     protected $fillable = [
         'title', 'body', 'author_id',
     ];
