@@ -6,10 +6,13 @@ use DoubleThreeDigital\Runway\Models\RunwayUri;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Console\Command;
+use Statamic\Console\RunsInPlease;
 use Statamic\View\Antlers\Parser;
 
 class RebuildUriCache extends Command
 {
+    use RunsInPlease;
+
     /**
      * The name and signature of the console command.
      *
