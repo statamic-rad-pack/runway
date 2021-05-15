@@ -6,3 +6,6 @@ package-lock.json
 .php_cs.cache
 .idea
 tests/__fixtures__/users/.yaml
+
+resources/dist/js/*.js
+resources/dist/mix-manifest.json
