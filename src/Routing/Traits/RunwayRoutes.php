@@ -17,6 +17,10 @@ trait RunwayRoutes
 
     public function route()
     {
+        if (! $this->runwayUri) {
+            return null;
+        }
+
         return $this->runwayUri->uri;
     }
 
