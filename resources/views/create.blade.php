@@ -11,7 +11,7 @@
         initial-title="Create {{ $resource->singular() }}"
         action="{{ $action }}"
         method="post"
-        :resource-has-routes="{{ $resource->route() !== null }}"
+        :resource-has-routes="{{ $resource->hasRouting() }}"
         :is-creating="true"
     ></runway-publish-form>
 @endsection

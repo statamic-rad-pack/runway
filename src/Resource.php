@@ -137,6 +137,12 @@ class Resource
             ->args(func_get_args());
     }
 
+    public function hasRouting(): bool
+    {
+        return ! is_null($this->route())
+            && in_array('DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes', class_uses($this->model()));
+    }
+
     public function primaryKey()
     {
         return $this->model()->getKeyName();

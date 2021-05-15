@@ -78,11 +78,12 @@ trait RunwayRoutes
     {
         static::saved(function ($model) {
             $resource = Runway::findResourceByModel($model);
-            $augmentedModel = AugmentedRecord::augment($model, $resource->blueprint());
 
-            if (! $resource->route()) {
+            if (! $resource->hasRouting()) {
                 return;
             }
+
+            $augmentedModel = AugmentedRecord::augment($model, $resource->blueprint());
 
             $uri = (new Parser)
                 ->parse($resource->route(), $augmentedModel)

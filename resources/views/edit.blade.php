@@ -11,7 +11,7 @@
         initial-title="Edit {{ $resource->singular() }}"
         action="{{ $action }}"
         method="post"
-        :resource-has-routes="{{ $resource->route() !== null }}"
+        :resource-has-routes="{{ $resource->hasRouting() }}"
         permalink="{{ $permalink }}"
         :is-creating="false"
     ></runway-publish-form>

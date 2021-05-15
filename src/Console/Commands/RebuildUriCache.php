@@ -56,7 +56,7 @@ class RebuildUriCache extends Command
             ->each(function (Resource $resource) {
                 $this->info("Building {$resource->name()} URIs");
 
-                if (! $resource->route()) {
+                if (! $resource->hasRouting()) {
                     $this->warn("Skipping {$resource->name()}, routing not configured.");
 
                     return;
