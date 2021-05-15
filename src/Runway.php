@@ -12,7 +12,7 @@ class Runway
 
     public static function discoverResources()
     {
-        static::$resources = collect(config('runway.models'))
+        static::$resources = collect(config('runway.resources'))
             ->mapWithKeys(function ($config, $model) {
                 $handle = Str::lower(class_basename($model));
 

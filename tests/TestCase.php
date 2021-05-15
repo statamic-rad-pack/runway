@@ -98,7 +98,7 @@ abstract class TestCase extends OrchestraTestCase
         ]);
 
         $app['config']->set('runway', [
-            'models' => [
+            'resources' => [
                 Post::class => [
                     'name' => 'Posts',
                     'blueprint' => [

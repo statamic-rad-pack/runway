@@ -28,7 +28,7 @@ class FrontendRoutingTest extends TestCase
         $this->markTestIncomplete();
 
         // TODO: find way of mocking the template & rebooting Runway's resources
-        Config::set('runway.models.' . Post::class . '.template', 'custom');
+        Config::set('runway.resources.' . Post::class . '.template', 'custom');
 
         $post = $this->postFactory();
         $runwayUri = $post->fresh()->runwayUri;
@@ -47,7 +47,7 @@ class FrontendRoutingTest extends TestCase
         $this->markTestIncomplete();
 
         // TODO: find way of mocking the template & rebooting Runway's resources
-        Config::set('runway.models.' . Post::class . '.layout', 'blog-layout');
+        Config::set('runway.resources.' . Post::class . '.layout', 'blog-layout');
 
         $post = $this->postFactory();
         $runwayUri = $post->fresh()->runwayUri;
