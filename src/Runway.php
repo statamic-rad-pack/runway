@@ -40,6 +40,14 @@ class Runway
                     $resource->route($config['route']);
                 }
 
+                if (isset($config['template'])) {
+                    $resource->template($config['template']);
+                }
+
+                if (isset($config['layout'])) {
+                    $resource->layout($config['layout']);
+                }
+
                 return [$handle => $resource];
             })
             ->toArray();

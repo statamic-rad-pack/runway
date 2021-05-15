@@ -21,6 +21,8 @@ class Resource
     protected $cpIcon;
     protected $hidden;
     protected $route;
+    protected $template;
+    protected $layout;
 
     public function handle($handle = null)
     {
@@ -134,6 +136,24 @@ class Resource
     public function route($route = null)
     {
         return $this->fluentlyGetOrSet('route')
+            ->args(func_get_args());
+    }
+
+    public function template($template = null)
+    {
+        return $this->fluentlyGetOrSet('template')
+            ->getter(function ($value) {
+                return $value ?? 'default';
+            })
+            ->args(func_get_args());
+    }
+
+    public function layout($layout = null)
+    {
+        return $this->fluentlyGetOrSet('layout')
+            ->getter(function ($value) {
+                return $value ?? 'layout';
+            })
             ->args(func_get_args());
     }
 

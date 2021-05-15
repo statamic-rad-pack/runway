@@ -43,12 +43,12 @@ trait RunwayRoutes
 
     public function template(): string
     {
-        return 'default';
+        return Runway::findResourceByModel($this)->template();
     }
 
     public function layout(): string
     {
-        return 'layout';
+        return Runway::findResourceByModel($this)->layout();
     }
 
     public function id()
