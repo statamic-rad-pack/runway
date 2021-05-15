@@ -26,7 +26,9 @@ trait RunwayRoutes
 
     public function routeData()
     {
-        return [];
+        return [
+            'id' => $this->{$this->getKeyName()},
+        ];
     }
 
     public function uri()
@@ -39,12 +41,12 @@ trait RunwayRoutes
         return (new ResourceResponse($this))->toResponse($request);
     }
 
-    public function template()
+    public function template(): string
     {
         return 'default';
     }
 
-    public function layout()
+    public function layout(): string
     {
         return 'layout';
     }
@@ -59,16 +61,7 @@ trait RunwayRoutes
         return $this->getAttributeValue($this->getRouteKeyName());
     }
 
-    public function asResource()
-    {
-        return Runway::findResourceByModel($this);
-    }
-
-    public function toAugmentedArray()
-    {
-        return AugmentedRecord::augment($this, $this->asResource()->blueprint());
-    }
-
+    /** @return \Illuminate\Database\Eloquent\Relations\MorphOne */
     public function runwayUri()
     {
         return $this->morphOne(RunwayUri::class, 'model');
@@ -101,7 +94,9 @@ trait RunwayRoutes
         });
 
         static::deleting(function ($model) {
-            $model->runwayUri()->delete();
+            if ($model->runwayUri) {
+                $model->runwayUri()->delete();
+            }
         });
     }
 }

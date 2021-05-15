@@ -2,6 +2,8 @@
 
 namespace DoubleThreeDigital\Runway\Routing;
 
+use DoubleThreeDigital\Runway\AugmentedRecord;
+use DoubleThreeDigital\Runway\Runway;
 use Facades\Statamic\View\Cascade;
 use Illuminate\Contracts\Support\Responsable;
 use Statamic\Events\ResponseCreated;
@@ -65,7 +67,10 @@ class ResourceResponse implements Responsable
         $contents = (new View)
             ->template($this->data->template())
             ->layout($this->data->layout())
-            ->with($this->data->toAugmentedArray())
+            ->with(AugmentedRecord::augment(
+                $this->data,
+                Runway::findResourceByModel($this->data)->blueprint()
+            ))
             ->cascadeContent($this->data)
             ->render();
 
