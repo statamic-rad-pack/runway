@@ -93,6 +93,10 @@ abstract class TestCase extends OrchestraTestCase
             'directory' => __DIR__.'/__fixtures__/users',
         ]);
 
+        $app['config']->set('view.paths', [
+            __DIR__.'/__fixtures__/resources/views',
+        ]);
+
         $app['config']->set('runway', [
             'models' => [
                 Post::class => [
