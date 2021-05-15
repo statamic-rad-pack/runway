@@ -6,6 +6,7 @@ use DoubleThreeDigital\Runway\Http\Requests\StoreRequest;
 use DoubleThreeDigital\Runway\Http\Requests\UpdateRequest;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Http\Request;
+use Statamic\CP\Breadcrumbs;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 
@@ -68,6 +69,14 @@ class ResourceController extends CpController
         $fields = $fields->preProcess();
 
         return view('runway::create', [
+            'breadcrumbs' => new Breadcrumbs([
+                [
+                    'text' => $resource->plural(),
+                    'url' => cp_route('runway.index', [
+                        'resourceHandle' => $resource->handle(),
+                    ]),
+                ],
+            ]),
             'resource'  => $resource,
             'blueprint' => $blueprint->toPublishArray(),
             'values'    => $fields->values(),
@@ -102,7 +111,6 @@ class ResourceController extends CpController
         $record->save();
 
         return [
-            'record'    => $record->toArray(),
             'redirect'  => cp_route('runway.edit', [
                 'resourceHandle'  => $resource->handle(),
                 'record' => $record->{$resource->primaryKey()},
@@ -136,6 +144,14 @@ class ResourceController extends CpController
         $fields = $blueprint->fields()->addValues($values)->preProcess();
 
         return view('runway::edit', [
+            'breadcrumbs' => new Breadcrumbs([
+                [
+                    'text' => $resource->plural(),
+                    'url' => cp_route('runway.index', [
+                        'resourceHandle' => $resource->handle(),
+                    ]),
+                ],
+            ]),
             'resource'  => $resource,
             'blueprint' => $blueprint->toPublishArray(),
             'values'    => $fields->values(),
@@ -144,6 +160,7 @@ class ResourceController extends CpController
                 'resourceHandle'  => $resource->handle(),
                 'record' => $record->{$resource->primaryKey()},
             ]),
+            'permalink' => $record->uri(),
         ]);
     }
 
@@ -174,6 +191,7 @@ class ResourceController extends CpController
 
         return [
             'record' => $record->toArray(),
+            'resource_handle' => $resource->handle(),
         ];
     }
 
