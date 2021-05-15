@@ -8,6 +8,8 @@ class ResourceRoutingRepository
 {
     public function findByUri(string $uri)
     {
+        // TODO: check model assosiated with model still has routing enabled.
+
         $runwayUri = RunwayUri::where('uri', $uri)->first();
 
         if (! $runwayUri) {

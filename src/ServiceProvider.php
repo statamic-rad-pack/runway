@@ -26,6 +26,10 @@ class ServiceProvider extends AddonServiceProvider
         RunwayTag::class,
     ];
 
+    protected $scripts = [
+        __DIR__.'/../resources/dist/js/cp.js',
+    ];
+
     public function boot()
     {
         parent::boot();
