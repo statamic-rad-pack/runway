@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway;
 
-use DoubleThreeDigital\Runway\Tags\RunwayTag;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\Permission;
 use Statamic\Providers\AddonServiceProvider;
@@ -23,11 +22,15 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $tags = [
-        RunwayTag::class,
+        Tags\RunwayTag::class,
     ];
 
     protected $scripts = [
         __DIR__.'/../resources/dist/js/cp.js',
+    ];
+
+    protected $updateScripts = [
+        UpdateScripts\ModelsToResources::class,
     ];
 
     public function boot()
