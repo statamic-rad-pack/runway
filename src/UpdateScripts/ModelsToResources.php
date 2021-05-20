@@ -2,9 +2,10 @@
 
 namespace DoubleThreeDigital\Runway\UpdateScripts;
 
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+
 use Statamic\UpdateScripts\UpdateScript;
+use Illuminate\Support\Facades\Artisan;
 
 class ModelsToResources extends UpdateScript
 {
