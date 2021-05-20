@@ -16,7 +16,7 @@ Runway 2 introduces some minor breaking changes. Including a minimum requirement
 * Resources aren't just a big old arrays anymore 😅
 * The Publish Forms in the CP are now Runway's (to allow for extra functionality)
 
-## v2.0.0-beta.2 (2021-xx-xx)
+## v2.0.0-beta.2 (2021-05-20)
 
 ### What's new
 
