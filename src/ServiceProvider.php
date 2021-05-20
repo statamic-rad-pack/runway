@@ -51,31 +51,36 @@ class ServiceProvider extends AddonServiceProvider
         Statamic::booted(function () {
             Runway::discoverResources();
 
-            Nav::extend(function ($nav) {
-                foreach (Runway::allResources() as $resource) {
-                    if ($resource->hidden()) {
-                        continue;
-                    }
-
-                    $nav->content($resource->name())
-                        ->icon($resource->cpIcon())
-                        ->route('runway.index', ['resourceHandle' => $resource->handle()]);
-                }
-            });
-
-            foreach (Runway::allResources() as $resource) {
-                Permission::register("View {$resource->plural()}", function ($permission) use ($resource) {
-                    $permission->children([
-                        Permission::make("Edit {$resource->plural()}")->children([
-                            Permission::make("Create new {$resource->singular()}"),
-                            Permission::make("Delete {$resource->singular()}"),
-                        ]),
-                    ]);
-                })->group('Runway');
-            }
+            $this->registerPermissions();
 
             $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
                 ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
         });
+    }
+
+    protected function registerPermissions()
+    {
+        Nav::extend(function ($nav) {
+            foreach (Runway::allResources() as $resource) {
+                if ($resource->hidden()) {
+                    continue;
+                }
+
+                $nav->content($resource->name())
+                    ->icon($resource->cpIcon())
+                    ->route('runway.index', ['resourceHandle' => $resource->handle()]);
+            }
+        });
+
+        foreach (Runway::allResources() as $resource) {
+            Permission::register("View {$resource->plural()}", function ($permission) use ($resource) {
+                $permission->children([
+                    Permission::make("Edit {$resource->plural()}")->children([
+                        Permission::make("Create new {$resource->singular()}"),
+                        Permission::make("Delete {$resource->singular()}"),
+                    ]),
+                ]);
+            })->group('Runway');
+        }
     }
 }
