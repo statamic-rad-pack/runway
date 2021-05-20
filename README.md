@@ -388,6 +388,22 @@ The `runway_uris` table is created when you install Runway. It's used as a 'look
 
 Essentially, because we allow you to use Antlers to build your URI structure, we need somewhere to store the parsed versions of those for each model. The `runway_uris` table stores the parsed version of the URI along with the related model.
 
+If you're not using the Runway's front-end routing feature, you may disable the migrations in your config.
+
+```php
+/*
+|--------------------------------------------------------------------------
+| Disable Migrations?
+|--------------------------------------------------------------------------
+|
+| Should Runway's migrations be disabled?
+| (eg. not automatically run when you next vendor:publish)
+|
+*/
+
+'disable_migrations' => false,
+```
+
 **Unexpected data found. Trailing data**
 
 Sometimes if you have a `date` or `datetime` column in your model, you may get an exception from Carbon regarding 'trailing data'. This can be sorted by casting the column to a `datetime` field in your Eloquent model, like so:

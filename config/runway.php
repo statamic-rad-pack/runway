@@ -57,5 +57,4 @@ return [
 
     'disable_migrations' => false,
 
-
 ];
