@@ -4,19 +4,24 @@
 
 ## v2.0.0 (2021-xx-xx)
 
+Runway 2 introduces some minor breaking changes. Including a minimum requirement for Statamic 3.1 and the fact `models` are now called `resources` in the config (which our upgrade script should automate for you).
+
 ### What's new?
 
-* Front-end routing
+* [Front-end routing](https://github.com/doublethreedigital/runway/tree/2.0#routing)
 
 ### What's improved?
 
-* `Models` -> `Resources` (just like in Laravel Nova)
-* We've refactored the way we deal with resources, they're now an object instead of a big old array.
-* We've taken control of the CP Publish Forms
+* Models are now 'Resources' - this will be reflected in your config file, it's essentially to stop you getting mixed up between a Runway Model and an Eloquent model
+* Resources aren't just a big old arrays anymore 😅
+* The Publish Forms in the CP are now Runway's (to allow for extra functionality)
 
 ## v2.0.0-beta.2 (2021-xx-xx)
 
-TODO
+### What's new
+
+* Upgrade script to change `models` to `resources` in config
+* Ability to disable Runway's migrations
 
 ## v2.0.0-beta.1 (2021-05-15)
 
