@@ -10,8 +10,7 @@ This repository contains the source code of Runway. While Runway is free and doe
 
 1. Install via Composer `composer require doublethreedigital/runway`
 2. Publish the configuration file `php artisan vendor:publish --tag="runway-config"`
-3. Run your database migrations `php artisan migrate`
-4. Configure the blueprint for each of the Eloquent models you wish to use with Runway.
+3. Configure each of the 'resources' you'd like to be available through Runway.
 
 ## Configuration
 
@@ -68,7 +67,7 @@ return [
 ];
 ```
 
-To configure the models you'd like to use Runway with, just create a new item in the the `models` array, with the model's class name as the key and with a value like so:
+To configure the models you'd like to use Runway with, just create a new item in the the `resources` array, with the model's class name as the key and with a value like so:
 
 ```php
 [
@@ -78,7 +77,7 @@ To configure the models you'd like to use Runway with, just create a new item in
 ],
 ```
 
-For each of the models, there's various configuration options available:
+For each of the resources, there's various configuration options available:
 
 ### `name`
 This will be the name displayed throughout the Control Panel for this resource. We recommend you use a plural for this.
@@ -140,7 +139,7 @@ Bear in mind that at the moment, blueprints in the root of `resources/blueprint`
 
 ### `hidden`
 
-If you wish to hide a model from the Control Panel navigation, add the `hidden` key to your model in the Runway config.
+If you wish to hide a resource from the Control Panel navigation, add the `hidden` key to the resource in your config.
 
 ```php
 'hidden' => true,
@@ -148,7 +147,7 @@ If you wish to hide a model from the Control Panel navigation, add the `hidden` 
 
 ### `listing`
 
-Inside `listing`, you can control certain aspects of how the model's listing table displays records. You can currently configure the listing columns and the sort order of columns in the table.
+Inside `listing`, you can control certain aspects of how the resource's listing table displays records. You can currently configure the listing columns and the sort order of columns in the table.
 
 ```php
 'listing' => [
@@ -170,7 +169,7 @@ Inside `listing`, you can control certain aspects of how the model's listing tab
 
 **In the future, the plan is to replace this concept with [Actions](https://statamic.dev/extending/actions#content), the same way it works for collections. This means this feature will probably be removed in future versions.**
 
-If you need to add some sort of button to your model listing page, like for a CSV export or something similar, you can add your own 'listing button'.
+If you need to add some sort of button to your resource listing page, like for a CSV export or something similar, you can add your own 'listing button'.
 
 ![Banner](https://raw.githubusercontent.com/doublethreedigital/runway/master/listing-buttons.png)
 
@@ -203,11 +202,11 @@ class YourController extends Controller
 
 ### Control Panel
 
-At it's core, Runway provides Control Panel views for each of your models so you can view, create, update and delete Eloquent records. All the basic [CRUD](https://www.codecademy.com/articles/what-is-crud) actions you need.
+At it's core, Runway provides Control Panel views for each of your resources so you can view, create, update and delete Eloquent records. All the basic [CRUD](https://www.codecademy.com/articles/what-is-crud) actions you need.
 
 ### Routing
 
-Ever found yourself in a situation where you just want to display one of your Eloquent models on the front-end of your Statamic site and have them treated exactly like entries? Well, that's exactly where I found myself, so I built it...
+Ever found yourself in a situation where you just want to display one of your Runway resources on the front-end of your Statamic site and have them treated exactly like entries? Well, that's exactly where I found myself, so I built it...
 
 The routing feature is purley optional and can be configured on 'resource by resource' basis. Meaning you can have routing enabled on one resource but not another.
 
@@ -215,7 +214,7 @@ The routing feature is purley optional and can be configured on 'resource by res
 
 > Before getting started, please ensure you've ran `php artisan migrate`. Runway will need to migrate a table to store compiled URIs.
 
-First things first, you'll need to add a `route` configuration option to your models with the URI structure you wish to use for the resource. You can use Antlers for any dynamic segments you need, like for a slug or for a date.
+First things first, you'll need to add a `route` configuration option to your resource with the URI structure you wish to use for the resource. You can use Antlers for any dynamic segments you need, like for a slug or for a date.
 
 ```php
 // config/runway.php
@@ -236,7 +235,7 @@ class Product extends Model implements Responsable
     use RunwayRoutes;
 ```
 
-Last but not least, please run `php please runway:rebuild-uris`. This command will go through all your models and build a cache of compiled URIs based on your URI structure (you'll find these in your `runway_uris` table).
+Last but not least, please run `php please runway:rebuild-uris`. This command will loop through all your models and build a cache of compiled URIs based on your URI structure (you'll find these in your `runway_uris` table).
 
 #### Changing the template/layout used
 
@@ -340,27 +339,25 @@ You can also use pagination with the Runway tag if you need to. Bear in mind, yo
 
 ![BelongsTo Fieldtype](https://raw.githubusercontent.com/doublethreedigital/runway/master/belongs-to-fieldtype.png)
 
-Recently, a Belongs To fieldtype has been added to Runway. It allows you to select a record from a specified model. The record's primary key will then be saved.
+Recently, a Belongs To fieldtype has been added to Runway. It allows you to select a record from a specified resource. The record's primary key will then be saved.
 
-You can use the BelongsTo fieldtype in any blueprint. Whether it be inside an entry or inside a blueprint you're using for a Runway model, it should all work.
+You can use the BelongsTo fieldtype in any blueprint. Whether it be inside an entry or inside a blueprint you're using for a Runway resource, it should all work.
 
 ### Permissions
 
 ![Permissions](https://raw.githubusercontent.com/doublethreedigital/runway/master/permissions.png)
 
-Runway provides some permissions to limit which users have access to view, create, edit and delete your model records. You can configure these permissions in the same way you can with built-in Statamic permissions. [Read the Statamic Docs](https://statamic.dev/users#permissions).
+Runway provides some permissions to limit which users have access to view, create, edit and delete your records. You can configure these permissions in the same way you can with built-in Statamic permissions. [Read the Statamic Docs](https://statamic.dev/users#permissions).
 
 ### Knowledge Base
 
-**Unexpected data found. Trailing data**
+**What's the difference between Runway and the Eloquent driver?**
 
-Sometimes if you have a `date` or `datetime` column in your model, you may get an exception from Carbon regarding 'trailing data'. This can be sorted by casting the column to a `datetime` field in your Eloquent model, like so:
+This is a fairly common question I get asked so thought I'd address it here once and for all.
 
-```php
-protected $casts = [
-    'publish_at' => 'datetime',
-];
-```
+Essentially, the [Eloquent driver](https://github.com/statamic/eloquent-driver) allows you to switch out ALL of your collections & entries to the database. There's no way to only move X but not move Y, it's either all or nothing.
+
+Whereas Runway allows you to specifically choose what you want in the database and you can leverage the beast that is Eloquent. Personally, I've used Runway in Statamic sites that I've added extra functionality to, like a payment form. For security reasons, I've kept the payments in the database. It's worked great for that as well!
 
 **Using Bard**
 
@@ -390,6 +387,16 @@ protected $casts = [
 The `runway_uris` table is created when you install Runway. It's used as a 'lookup table' for Runway's front-end routing feature.
 
 Essentially, because we allow you to use Antlers to build your URI structure, we need somewhere to store the parsed versions of those for each model. The `runway_uris` table stores the parsed version of the URI along with the related model.
+
+**Unexpected data found. Trailing data**
+
+Sometimes if you have a `date` or `datetime` column in your model, you may get an exception from Carbon regarding 'trailing data'. This can be sorted by casting the column to a `datetime` field in your Eloquent model, like so:
+
+```php
+protected $casts = [
+    'publish_at' => 'datetime',
+];
+```
 
 ## Security
 
