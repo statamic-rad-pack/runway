@@ -21,12 +21,12 @@ class ServiceProvider extends AddonServiceProvider
         'cp' => __DIR__ . '/../routes/cp.php',
     ];
 
-    protected $tags = [
-        Tags\RunwayTag::class,
-    ];
-
     protected $scripts = [
         __DIR__.'/../resources/dist/js/cp.js',
+    ];
+
+    protected $tags = [
+        Tags\RunwayTag::class,
     ];
 
     protected $updateScripts = [
@@ -39,7 +39,10 @@ class ServiceProvider extends AddonServiceProvider
 
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'runway');
         $this->mergeConfigFrom(__DIR__.'/../config/runway.php', 'runway');
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+
+        if (! config('runway.disable_migrations')) {
+            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        }
 
         $this->publishes([
             __DIR__.'/../config/runway.php' => config_path('runway.php'),
