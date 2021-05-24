@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## v2.0.0 (2021-xx-xx)
+## v2.0.0 (2021-05-24)
 
 Runway 2 introduces some minor breaking changes. Including a minimum requirement for Statamic 3.1 and the fact `models` are now called `resources` in the config (which our upgrade script should automate for you).
 
