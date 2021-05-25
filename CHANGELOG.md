@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.0.2 (2021-05-25)
+
+### What's fixed
+
+* Another fix for the `dist/js/cp.js` error
+
 ## v2.0.1 (2021-05-25)
 
 ### What's fixed
