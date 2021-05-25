@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a478997224b1aea174a98751c2f8e218",
+    "content-hash": "e47252085eafd0b711d117af869b44e6",
     "packages": [
         {
             "name": "brick/math",
@@ -2333,16 +2333,16 @@
         },
         {
             "name": "pixelfear/composer-dist-plugin",
-            "version": "v0.1.4",
+            "version": "v0.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pixelfear/composer-dist-plugin.git",
-                "reference": "d63f03a2ee2152e19d6936456c7075362cfd4cdf"
+                "reference": "f1cec1e14d026eb898f985a22dfb140ae0d74d6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pixelfear/composer-dist-plugin/zipball/d63f03a2ee2152e19d6936456c7075362cfd4cdf",
-                "reference": "d63f03a2ee2152e19d6936456c7075362cfd4cdf",
+                "url": "https://api.github.com/repos/pixelfear/composer-dist-plugin/zipball/f1cec1e14d026eb898f985a22dfb140ae0d74d6c",
+                "reference": "f1cec1e14d026eb898f985a22dfb140ae0d74d6c",
                 "shasum": ""
             },
             "require": {
@@ -2366,7 +2366,7 @@
             "description": "Downloads distributable assets to be used in packages so you don't have to commit them.",
             "support": {
                 "issues": "https://github.com/pixelfear/composer-dist-plugin/issues",
-                "source": "https://github.com/pixelfear/composer-dist-plugin/tree/master"
+                "source": "https://github.com/pixelfear/composer-dist-plugin/tree/v0.1.5"
             },
             "funding": [
                 {
@@ -2374,7 +2374,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-06-10T21:09:47+00:00"
+            "time": "2021-05-20T15:49:08+00:00"
         },
         {
             "name": "psr/container",
