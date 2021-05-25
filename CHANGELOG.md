@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v2.0.1 (2021-05-25)
+
 ### What's fixed
 
 * Fixed undefined method `uri()` exception when editing record.
