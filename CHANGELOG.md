@@ -7,6 +7,7 @@
 * Fixed undefined method `uri()` exception when editing record.
 * Now ignores the `.png` files when pulling down a release. (Probably not noticable)
 * Only boots into the `DataRepository` if routing is enabled on at least one resource.
+* *Hopefully* fix the `Can't locate path <.../dist/js/cp.js>` error when installing.
 
 ## v2.0.0 (2021-05-24)
 

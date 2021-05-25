@@ -21,6 +21,10 @@
             "providers": [
                 "DoubleThreeDigital\\Runway\\ServiceProvider"
             ]
+        },
+        "download-dist": {
+            "url": "https://github.com/doublethreedigital/simple-commerce/releases/download/{$version}/dist.tar.gz",
+            "path": "resources/dist"
         }
     },
     "require": {
