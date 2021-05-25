@@ -160,7 +160,9 @@ class ResourceController extends CpController
                 'resourceHandle'  => $resource->handle(),
                 'record' => $record->{$resource->primaryKey()},
             ]),
-            'permalink' => $record->uri(),
+            'permalink' => $resource->hasRouting()
+                ? $record->uri()
+                : null,
         ]);
     }
 
