@@ -85,4 +85,12 @@ class Runway
 
         return $resource;
     }
+
+    public static function usesRouting(): bool
+    {
+        return static::allResources()
+            ->filter
+            ->hasRouting()
+            ->count() >= 1;
+    }
 }

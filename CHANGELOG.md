@@ -5,6 +5,8 @@
 ### What's fixed
 
 * Fixed undefined method `uri()` exception when editing record.
+* Now ignores the `.png` files when pulling down a release. (Probably not noticable)
+* Only boots into the `DataRepository` if routing is enabled on at least one resource.
 
 ## v2.0.0 (2021-05-24)
 

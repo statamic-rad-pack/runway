@@ -53,8 +53,10 @@ class ServiceProvider extends AddonServiceProvider
 
             $this->registerPermissions();
 
-            $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
-                ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
+            if (Runway::usesRouting()) {
+                $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
+                    ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
+            }
         });
     }
 
