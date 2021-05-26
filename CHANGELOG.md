@@ -37,6 +37,22 @@ Runway 2 introduces some minor breaking changes. Including a minimum requirement
 * Resources aren't just a big old arrays anymore 😅
 * The Publish Forms in the CP are now Runway's (to allow for extra functionality)
 
+### Upgrade Guide
+
+Upgrading to v2.0 is reasonably simple. In your `composer.json` file, update the `doublethreedigital/runway` version constraint:
+
+```json
+"doublethreedigital/runway": "2.0.*"
+```
+
+Then run:
+
+```
+composer update doublethreedigital/runway --with-dependencies
+```
+
+Because of the magic of Statamic's new [Upgrade Scripts](https://statamic.dev/upgrade-guide-3-0-to-3-1#update-scripts), all config changes will be automatically made.
+
 ## v2.0.0-beta.2 (2021-05-20)
 
 ### What's new
