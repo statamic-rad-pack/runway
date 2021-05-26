@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.0.3 (2021-05-26)
+
+### What's fixed
+
+* White screen on publish form pages #36
+
 ## v2.0.2 (2021-05-25)
 
 ### What's fixed
