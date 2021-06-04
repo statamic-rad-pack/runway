@@ -22,6 +22,7 @@
 
         <publish-container
             ref="container"
+            name="base"
             :blueprint="blueprint"
             :values="values"
             :meta="meta"
