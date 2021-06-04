@@ -40,6 +40,7 @@
 
                 <publish-sections
                     :read-only="readOnly"
+                    :enable-sidebar="shouldShowSidebar"
                     @updated="setFieldValue"
                     @meta-updated="setFieldMeta"
                     @focus="$refs.container.$emit('focus', $event)"
@@ -88,10 +89,22 @@ export default {
             title: this.initialTitle,
 
             readonly: false, // TODO: might do this in the future
-            shouldShowSidebar: true, // not sure where this comes from
 
             saving: false,
+            containerWidth: null,
         }
+    },
+
+    computed: {
+        enableSidebar() {
+            return this.blueprint.sections.map(section => section.handle).includes('sidebar')
+        },
+
+        shouldShowSidebar() {
+            return this.enableSidebar
+
+            // return this.enableSidebar && this.containerWidth > 920
+        },
     },
 
     methods: {
