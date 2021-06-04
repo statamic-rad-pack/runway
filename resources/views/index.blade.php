@@ -65,7 +65,7 @@
                                             ]) }}">{{ $column['fieldtype']->preProcessIndex($record->{$column['handle']}) }}</a>
                                         </div>
                                     @else
-                                        {{ $column['fieldtype']->preProcessIndex($record->{$column['handle']}) }}
+                                        {!! $column['fieldtype']->preProcessIndex($record->{$column['handle']}) !!}
                                     @endif
                                 </td>
                             @endforeach

@@ -68,9 +68,17 @@ class BaseFieldtype extends Relationship
 
         return collect($data)
             ->map(function ($item) use ($resource) {
+                $column = $resource->listingColumns()[0];
+
+                $fieldtype = $resource->blueprint()->field($column)->fieldtype();
                 $record = $resource->model()->firstWhere($resource->primaryKey(), $item);
 
-                return $record->{collect($resource->listingColumns())->first()};
+                $url = cp_route('runway.edit', [
+                    'resourceHandle' => $resource->handle(),
+                    'record' => $record->{$resource->routeKey()},
+                ]);
+
+                return "<a href='{$url}'>{$fieldtype->preProcessIndex($record->{$column})}</a>";
             })
             ->join(', ');
     }
