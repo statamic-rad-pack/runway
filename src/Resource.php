@@ -79,12 +79,31 @@ class Resource
     public function listingColumns()
     {
         return $this->fluentlyGetOrSet('listingColumns')
+            ->getter(function ($value) {
+                if (! $value) {
+                    return [
+                        $this->primaryKey(),
+                    ];
+                }
+
+                return $value;
+            })
             ->args(func_get_args());
     }
 
     public function listingSort()
     {
         return $this->fluentlyGetOrSet('listingSort')
+            ->getter(function ($value) {
+                if (! $value) {
+                    return [
+                        'column' => $this->primaryKey(),
+                        'direction' => 'ASC',
+                    ];
+                }
+
+                return $value;
+            })
             ->args(func_get_args());
     }
 

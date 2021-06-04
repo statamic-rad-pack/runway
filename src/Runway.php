@@ -20,9 +20,15 @@ class Runway
                     ->handle($handle)
                     ->model($model)
                     ->name($config['name'])
-                    ->blueprint($config['blueprint'])
-                    ->listingColumns($config['listing']['columns'])
-                    ->listingSort($config['listing']['sort']);
+                    ->blueprint($config['blueprint']);
+
+                if (isset($config['listing']['columns'])) {
+                    $resource->listingColumns($config['listing']['columns']);
+                }
+
+                if (isset($config['listing']['sort'])) {
+                    $resource->listingSort($config['listing']['sort']);
+                }
 
                 if (isset($config['listing']['buttons'])) {
                     $resource->listingButtons($config['listing']['blueprints']);
