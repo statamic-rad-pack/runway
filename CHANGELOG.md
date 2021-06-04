@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## v2.0.4 (2021-06-04)
+
+### What's fixed
+
+* If there's no sidebar, we won't try and show one #38
+* Fix an issue where the slug fieldtype failed to load #31
+* Actually process fieldtypes in the resource listing #37
+
+### What's improved
+
+* Runway now has some defaults for 'Listing Columns' and 'Listing Sort', in case its not present in the config
+* The Belongs To fieldtype will now give you a link to edit the related model
+
 ## v2.0.3 (2021-05-26)
 
 ### What's fixed
