@@ -44,6 +44,7 @@ class ResourceController extends CpController
                     'handle' => $columnKey,
                     'title'  => !$field ? $columnKey : $field->display(),
                     'has_link' => $resource->listingColumns()[0] === $columnKey,
+                    'fieldtype' => $field->fieldtype(),
                 ];
             })
             ->toArray();

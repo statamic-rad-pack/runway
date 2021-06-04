@@ -62,10 +62,10 @@
                                             <a href="{{ cp_route('runway.edit', [
                                                 'resourceHandle' => $resource->handle(),
                                                 'record' => $record->{$resource->routeKey()}
-                                            ]) }}">{{ $record->{$column['handle']} }}</a>
+                                            ]) }}">{{ $column['fieldtype']->preProcessIndex($record->{$column['handle']}) }}</a>
                                         </div>
                                     @else
-                                        {{ $record->{$column['handle']} }}
+                                        {{ $column['fieldtype']->preProcessIndex($record->{$column['handle']}) }}
                                     @endif
                                 </td>
                             @endforeach
