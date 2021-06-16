@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.0.5 (2021-06-16)
+
+### What's fixed
+
+* Fixed issues around 'primary key' stuff #39
+
 ## v2.0.4 (2021-06-04)
 
 ### What's fixed
