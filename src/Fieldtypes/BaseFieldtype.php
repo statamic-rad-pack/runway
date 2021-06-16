@@ -112,7 +112,7 @@ class BaseFieldtype extends Relationship
         $record = $resource->model()->firstWhere($resource->primaryKey(), $id);
 
         return [
-            'id'    => $record->id,
+            'id'    => $record->getKey(),
             'title' => $record->{collect($resource->listingColumns())->first()},
         ];
     }
