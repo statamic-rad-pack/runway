@@ -5,6 +5,7 @@ namespace DoubleThreeDigital\Runway\Http\Controllers;
 use DoubleThreeDigital\Runway\Http\Requests\StoreRequest;
 use DoubleThreeDigital\Runway\Http\Requests\UpdateRequest;
 use DoubleThreeDigital\Runway\Runway;
+use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Http\Request;
 use Statamic\CP\Breadcrumbs;
 use Statamic\Facades\User;
@@ -136,6 +137,10 @@ class ResourceController extends CpController
 
             if ($value instanceof \Carbon\Carbon) {
                 $value = $value->format('Y-m-d H:i');
+            }
+
+            if (Json::isJson($value)) {
+                $value = json_decode($value, true);
             }
 
             $values[$fieldKey] = $value;
