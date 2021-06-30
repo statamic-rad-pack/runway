@@ -119,7 +119,9 @@ export default {
                     this.$refs.container.saved()
 
                     if (this.isCreating) {
-                        window.location.href = response.data.redirect
+                        this.$nextTick(() => {
+                            window.location.href = response.data.redirect
+                        });
                     } else {
                         this.$toast.success(__('Saved'))
                     }
