@@ -30,10 +30,6 @@ class ResourceController extends CpController
         $listingConfig = [
             'preferencesPrefix' => "runway.{$resource->handle()}",
             'requestUrl' => cp_route('runway.listing-api', ['resourceHandle' => $resource->handle()]),
-            // 'editUrl' => cp_route('runway.edit', ['resourceHandle' => $resource->handle(), 're']),
-            // 'deleteUrl' => cp_route('runway.destroy', ['resourceHandle' => $resource->handle()]),
-            'editUrl' => 'runway/'.$resource->handle(),
-            'deleteUrl' => 'runway/'.$resource->handle(),
             'listingUrl' => cp_route('runway.index', ['resourceHandle' => $resource->handle()]),
         ];
 
