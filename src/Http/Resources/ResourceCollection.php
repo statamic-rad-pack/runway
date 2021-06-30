@@ -54,9 +54,12 @@ class ResourceCollection extends LaravelResourceCollection
         return [
             'data' => $this->collection->map(function ($rowModel) use ($columns, $handle) {
                 $row = $rowModel->toArray();
-                foreach ($row as $key=>$value)
-                    if (!in_array($key, $columns))
+
+                foreach ($row as $key => $value) {
+                    if (! in_array($key, $columns)) {
                         unset($row[$key]);
+                    }
+                }
 
                 $row['editUrl'] = cp_route('runway.edit', ['resourceHandle' => $handle, 'record' => $rowModel->getKey()]);
                 $row['_id'] = $rowModel->getKey();
