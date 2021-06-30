@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway;
 
 use Carbon\CarbonInterface;
+use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Fields\Blueprint;
 
@@ -16,6 +17,10 @@ class AugmentedRecord
             ->map(function ($value, $key) use ($blueprint) {
                 if ($value instanceof CarbonInterface) {
                     return $value->format('Y-m-d H:i');
+                }
+
+                if (Json::isJson($value)) {
+                    $value = json_decode($value, true);
                 }
 
                 if ($blueprint->hasField($key)) {
