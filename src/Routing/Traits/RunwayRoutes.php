@@ -86,8 +86,6 @@ trait RunwayRoutes
                     'uri' => $uri,
                 ]);
             } else {
-                // dd($uri);
-
                 $model->runwayUri()->create([
                     'uri' => $uri,
                 ]);
