@@ -73,7 +73,6 @@
                                     :text="__('Delete')"
                                     class="warning"
                                     @click="confirmDeleteRow(row._id, index)"
-                                    v-if="listingConfig.deleteUrl !== undefined"
                                 />
                             </dropdown-list>
 
