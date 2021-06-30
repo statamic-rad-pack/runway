@@ -9,7 +9,8 @@
         <a class="btn-primary" href="{{ cp_route('runway.create', ['resourceHandle' => $resource->handle()]) }}">Create {{ $resource->singular() }}</a>
     </div>
 
-   <runway-listing-view
+    @if ($recordCount > 0)
+    <runway-listing-view
         :filters="{{ $filters->toJson() }}"
         :listing-config="{{
             collect([
@@ -20,6 +21,13 @@
                 'listingUrl' => 'runway/'.$resource->handle(),
             ])->toJson()
         }}"
-    ></runway-listing-view>
+     ></runway-listing-view>
+     @else
+        @include('statamic::partials.create-first', [
+            'resource' => $title,
+            'svg' => 'empty/collection',
+            'route' => cp_route('runway.create', ['resourceHandle' => $resource->handle()]),
+        ])
+     @endif
 
 @endsection

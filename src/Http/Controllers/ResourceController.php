@@ -26,11 +26,14 @@ class ResourceController extends CpController
         }
 
         $columns = $this->buildColumns($resource, $blueprint);
+        
+        $count = $resource->model()
+            ->count();
 
         return view('runway::index', [
             'title'    => $resource->name(),
             'resource' => $resource,
-            'records'  => collect([]),
+            'recordCount'  => $count,
             'columns'  => $columns,
             'filters'  => Scope::filters($resourceHandle),
         ]);
