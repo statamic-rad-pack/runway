@@ -124,6 +124,7 @@ export default {
       preferencesPrefix: this.listingConfig.preferencesPrefix ?? "runway",
       requestUrl: this.listingConfig.requestUrl,
       columns: this.columns,
+      meta: {},
     };
   },
 }
