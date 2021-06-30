@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v2.0.6 (2021-06-30)
+
+### What's fixed
+
+* Fixes issue with dirty state when creating model #41
+* If it's a JSON field, make sure it's decoded before passing it to the publish form #40
+
 ## v2.0.5 (2021-06-16)
 
 ### What's fixed
