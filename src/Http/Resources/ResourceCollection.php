@@ -40,11 +40,15 @@ class ResourceCollection extends LaravelResourceCollection
 
     public function toArray($request)
     {
-        $columns = $this->columns->pluck('field');
+        $columns = $this->columns->pluck('field')->toArray();
 
         return [
             'data' => $this->collection->map(function ($row) use ($columns) {
-                return array_intersect_key($row->toArray(), $columns->toArray());
+                $row = $row->toArray();
+                foreach ($row as $key=>$value)
+                    if (!in_array($key, $columns))
+                        unset($row[$key]);
+                return $row;
             }),
             'meta' => [
                 'columns' => $this->columns,
