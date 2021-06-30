@@ -61,7 +61,6 @@
                         :column-preferences-key="preferencesKey('columns')"
                         @sorted="sorted"
                     >
-
                         <template slot="actions" slot-scope="{ row, index }">
                             <dropdown-list>
                                 <dropdown-item
