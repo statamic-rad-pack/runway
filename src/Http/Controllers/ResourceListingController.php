@@ -41,6 +41,7 @@ class ResourceListingController extends CpController
 
         return (new ResourceCollection($results))
             ->setColumns($columns)
+            ->setResourceHandle($resourceHandle)
             ->setColumnPreferenceKey('runway.'.$resourceHandle.'.columns');
     }
 
