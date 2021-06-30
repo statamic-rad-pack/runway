@@ -11,6 +11,7 @@ class ResourceCollection extends LaravelResourceCollection
     public $collects;
 
     protected $columnPreferenceKey;
+    protected $resourceHandle;
 
     public function setColumnPreferenceKey($key)
     {
@@ -38,16 +39,28 @@ class ResourceCollection extends LaravelResourceCollection
         return $this;
     }
 
+    public function setResourceHandle($handle)
+    {
+        $this->resourceHandle = $handle;
+
+        return $this;
+    }
+
     public function toArray($request)
     {
         $columns = $this->columns->pluck('field')->toArray();
+        $handle = $this->resourceHandle;
 
         return [
-            'data' => $this->collection->map(function ($row) use ($columns) {
-                $row = $row->toArray();
+            'data' => $this->collection->map(function ($rowModel) use ($columns, $handle) {
+                $row = $rowModel->toArray();
                 foreach ($row as $key=>$value)
                     if (!in_array($key, $columns))
                         unset($row[$key]);
+
+                $row['editUrl'] = cp_route('runway.edit', ['resourceHandle' => $handle, 'record' => $rowModel->getKey()]);
+                $row['_id'] = $rowModel->getKey();
+
                 return $row;
             }),
             'meta' => [

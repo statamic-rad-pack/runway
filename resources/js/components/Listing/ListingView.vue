@@ -61,23 +61,18 @@
                         :column-preferences-key="preferencesKey('columns')"
                         @sorted="sorted"
                     >
-                        <template slot="cell-label" slot-scope="{ row }">
-                            <a
-                                :href="cp_url(listingConfig.editUrl + row.id)"
-                            >{{ row.label }}</a>
-                        </template>
 
                         <template slot="actions" slot-scope="{ row, index }">
                             <dropdown-list>
                                 <dropdown-item
                                     :text="__('Edit')"
-                                    :redirect="cp_url(listingConfig.editUrl + row.id)"
+                                    :redirect="row.editUrl"
                                 />
 
                                 <dropdown-item
                                     :text="__('Delete')"
                                     class="warning"
-                                    @click="confirmDeleteRow(row.id, index)"
+                                    @click="confirmDeleteRow(row._id, index)"
                                     v-if="listingConfig.deleteUrl !== undefined"
                                 />
                             </dropdown-list>
