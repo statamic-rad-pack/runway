@@ -54,7 +54,8 @@
                                     class="flex items-center justify-center btn-flat w-full mx-1 px-1"
                                     v-if="permalink"
                                     :href="permalink"
-                                    target="_blank">
+                                    target="_blank"
+                                >
                                     <svg-icon name="external-link" class="w-5 h-5 mr-1" />
                                     <span>{{ __('Visit URL') }}</span>
                                 </a>
@@ -121,7 +122,7 @@ export default {
                     if (this.isCreating) {
                         this.$nextTick(() => {
                             window.location.href = response.data.redirect
-                        });
+                        })
                     } else {
                         this.$toast.success(__('Saved'))
                     }
