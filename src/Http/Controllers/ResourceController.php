@@ -10,7 +10,6 @@ use Statamic\CP\Breadcrumbs;
 use Statamic\Facades\Scope;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
-use Statamic\Http\Requests\FilteredRequest;
 
 class ResourceController extends CpController
 {
@@ -30,7 +29,7 @@ class ResourceController extends CpController
 
         $listingConfig = [
             'preferencesPrefix' => "runway.{$resource->handle()}",
-            'requestUrl' => cp_route('runway.api', ['resourceHandle' => $resource->handle()]),
+            'requestUrl' => cp_route('runway.listing-api', ['resourceHandle' => $resource->handle()]),
             // 'editUrl' => cp_route('runway.edit', ['resourceHandle' => $resource->handle(), 're']),
             // 'deleteUrl' => cp_route('runway.destroy', ['resourceHandle' => $resource->handle()]),
             'editUrl' => 'runway/'.$resource->handle(),
@@ -46,40 +45,6 @@ class ResourceController extends CpController
             'filters'  => Scope::filters($resourceHandle),
             'listingConfig' => $listingConfig,
         ]);
-    }
-
-    public function api(FilteredRequest $request, $resourceHandle)
-    {
-        $resource = Runway::findResource($resourceHandle);
-        $blueprint = $resource->blueprint();
-
-        if (! User::current()->hasPermission("View {$resource->plural()}") && ! User::current()->isSuper()) {
-            abort('403');
-        }
-
-        $sortField = $request->input('sort', $resource->listingSort()['column']);
-        $sortDirection = $request->input('order', $resource->listingSort()['direction']);
-
-        $query = $resource->model()
-            ->orderBy($sortField, $sortDirection);
-
-        if ($searchQuery = $request->input('search')) {
-            $query->where(function ($query) use ($searchQuery, $blueprint) {
-                $wildcard = '%'.$searchQuery.'%';
-
-                foreach ($blueprint->fields()->items()->toArray() as $field) {
-                    $query->orWhere($field['handle'], 'LIKE', $wildcard);
-                }
-            });
-        }
-
-        $results = $query->paginate($request->input('perPage', config('statamic.cp.pagination_size')));
-
-        $columns = $this->buildColumns($resource, $blueprint);
-
-        return (new ResourceCollection($results))
-            ->setColumns($columns)
-            ->setColumnPreferenceKey('runway.'.$resourceHandle.'.columns');
     }
 
     public function create(Request $request, $resourceHandle)
@@ -243,7 +208,11 @@ class ResourceController extends CpController
         ]))->with('success', "{$resource->singular()} deleted");
     }
 
-    private function buildColumns($resource, $blueprint)
+    /**
+     * This method is a duplicate of code in the `ResourceListingController`.
+     * Update both if you make any changes.
+     */
+    protected function buildColumns($resource, $blueprint)
     {
         return collect($resource->listingColumns())
             ->map(function ($columnKey) use ($resource, $blueprint) {
