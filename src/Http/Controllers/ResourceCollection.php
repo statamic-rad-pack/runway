@@ -19,12 +19,6 @@ class ResourceCollection extends LaravelResourceCollection
         return $this;
     }
 
-    public function setModel($model)
-    {
-        $this->collects = $model;
-        return $this;
-    }
-
     public function setColumns($columns)
     {
         $listing_columns = [];

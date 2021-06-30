@@ -14,11 +14,11 @@
         :filters="{{ $filters->toJson() }}"
         :listing-config="{{
             collect([
-                'preferencesPrefix' => 'oopla.bonuses',
-                'requestUrl' => 'runway/'.$resource->handle().'/api',
-                'editUrl' => 'runway/'.$resource->handle(),
-                'deleteUrl' => 'runway/'.$resource->handle(),
-                'listingUrl' => 'runway/'.$resource->handle(),
+                'preferencesPrefix' => 'runway.{{ $resource->handle() }}',
+                'requestUrl' => '{{ cp_route('runway.api', ['resourceHandle' => $resource->handle()]) }}',
+                'editUrl' => '{{ cp_route('runway.edit', ['resourceHandle' => $resource->handle()]) }}',
+                'deleteUrl' => '{{ cp_route('runway.destroy', ['resourceHandle' => $resource->handle()]) }}',
+                'listingUrl' => '{{ cp_route('runway.index', ['resourceHandle' => $resource->handle()]) }}',
             ])->toJson()
         }}"
      ></runway-listing-view>

@@ -26,7 +26,7 @@ class ResourceController extends CpController
         }
 
         $columns = $this->buildColumns($resource, $blueprint);
-        
+
         $count = $resource->model()
             ->count();
 
@@ -48,8 +48,8 @@ class ResourceController extends CpController
             abort('403');
         }
 
-        $sortField = request('sort', $resource->listingSort()['column']);
-        $sortDirection = request('order', $resource->listingSort()['direction']);
+        $sortField = $request->input('sort', $resource->listingSort()['column']);
+        $sortDirection = $request->input('order', $resource->listingSort()['direction']);
 
         $query = $resource->model()
             ->orderBy($sortField, $sortDirection);
@@ -64,13 +64,12 @@ class ResourceController extends CpController
             });
         }
 
-        $results = $query->paginate(request('perPage'));
+        $results = $query->paginate($request->input('perPage', config('statamic.cp.pagination_size')));
 
         $columns = $this->buildColumns($resource, $blueprint);
 
         return (new ResourceCollection($results))
             ->setColumns($columns)
-            ->setModel($resource->model()::class)
             ->setColumnPreferenceKey('runway.'.$resourceHandle.'.columns');
     }
 

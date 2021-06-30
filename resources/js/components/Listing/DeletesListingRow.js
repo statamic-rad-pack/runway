@@ -5,9 +5,6 @@ export default {
     };
   },
 
-  computed: {
-  },
-
   methods: {
     confirmDeleteRow(id, index) {
       this.deletingRow = { id, index };
