@@ -25,10 +25,18 @@ class ResourceController extends CpController
             abort('403');
         }
 
+        $count = $resource->model()->count();
         $columns = $this->buildColumns($resource, $blueprint);
 
-        $count = $resource->model()
-            ->count();
+        $listingConfig = [
+            'preferencesPrefix' => "runway.{$resource->handle()}",
+            'requestUrl' => cp_route('runway.api', ['resourceHandle' => $resource->handle()]),
+            // 'editUrl' => cp_route('runway.edit', ['resourceHandle' => $resource->handle(), 're']),
+            // 'deleteUrl' => cp_route('runway.destroy', ['resourceHandle' => $resource->handle()]),
+            'editUrl' => 'runway/'.$resource->handle(),
+            'deleteUrl' => 'runway/'.$resource->handle(),
+            'listingUrl' => cp_route('runway.index', ['resourceHandle' => $resource->handle()]),
+        ];
 
         return view('runway::index', [
             'title'    => $resource->name(),
@@ -36,6 +44,7 @@ class ResourceController extends CpController
             'recordCount'  => $count,
             'columns'  => $columns,
             'filters'  => Scope::filters($resourceHandle),
+            'listingConfig' => $listingConfig,
         ]);
     }
 

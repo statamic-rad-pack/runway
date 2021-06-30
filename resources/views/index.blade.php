@@ -12,15 +12,7 @@
     @if ($recordCount > 0)
     <runway-listing-view
         :filters="{{ $filters->toJson() }}"
-        :listing-config="{{
-            collect([
-                'preferencesPrefix' => 'runway.{{ $resource->handle() }}',
-                'requestUrl' => '{{ cp_route('runway.api', ['resourceHandle' => $resource->handle()]) }}',
-                'editUrl' => '{{ cp_route('runway.edit', ['resourceHandle' => $resource->handle()]) }}',
-                'deleteUrl' => '{{ cp_route('runway.destroy', ['resourceHandle' => $resource->handle()]) }}',
-                'listingUrl' => '{{ cp_route('runway.index', ['resourceHandle' => $resource->handle()]) }}',
-            ])->toJson()
-        }}"
+        :listing-config='@json($listingConfig)'
      ></runway-listing-view>
      @else
         @include('statamic::partials.create-first', [
