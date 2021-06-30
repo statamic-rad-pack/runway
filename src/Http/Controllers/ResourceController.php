@@ -5,11 +5,12 @@ namespace DoubleThreeDigital\Runway\Http\Controllers;
 use DoubleThreeDigital\Runway\Http\Requests\StoreRequest;
 use DoubleThreeDigital\Runway\Http\Requests\UpdateRequest;
 use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Http\Request;
 use Statamic\CP\Breadcrumbs;
+use Statamic\Facades\Scope;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
+use Statamic\Http\Requests\FilteredRequest;
 
 class ResourceController extends CpController
 {
@@ -24,10 +25,33 @@ class ResourceController extends CpController
             abort('403');
         }
 
-        $query = $resource->model()
-            ->orderBy($resource->listingSort()['column'], $resource->listingSort()['direction']);
+        $columns = $this->buildColumns($resource, $blueprint);
 
-        if ($searchQuery = $request->input('query')) {
+        return view('runway::index', [
+            'title'    => $resource->name(),
+            'resource' => $resource,
+            'records'  => collect([]),
+            'columns'  => $columns,
+            'filters'  => Scope::filters($resourceHandle),
+        ]);
+    }
+
+    public function api(FilteredRequest $request, $resourceHandle)
+    {
+        $resource = Runway::findResource($resourceHandle);
+        $blueprint = $resource->blueprint();
+
+        if (! User::current()->hasPermission("View {$resource->plural()}") && ! User::current()->isSuper()) {
+            abort('403');
+        }
+
+        $sortField = request('sort', $resource->listingSort()['column']);
+        $sortDirection = request('order', $resource->listingSort()['direction']);
+
+        $query = $resource->model()
+            ->orderBy($sortField, $sortDirection);
+
+        if ($searchQuery = $request->input('search')) {
             $query->where(function ($query) use ($searchQuery, $blueprint) {
                 $wildcard = '%'.$searchQuery.'%';
 
@@ -37,25 +61,14 @@ class ResourceController extends CpController
             });
         }
 
-        $columns = collect($resource->listingColumns())
-            ->map(function ($columnKey) use ($resource, $blueprint) {
-                $field = $blueprint->field($columnKey);
+        $results = $query->paginate(request('perPage'));
 
-                return [
-                    'handle' => $columnKey,
-                    'title'  => !$field ? $columnKey : $field->display(),
-                    'has_link' => $resource->listingColumns()[0] === $columnKey,
-                    'fieldtype' => $field->fieldtype(),
-                ];
-            })
-            ->toArray();
+        $columns = $this->buildColumns($resource, $blueprint);
 
-        return view('runway::index', [
-            'title'    => $resource->name(),
-            'resource' => $resource,
-            'records'  => $query->paginate(config('statamic.cp.pagination_size')),
-            'columns'  => $columns,
-        ]);
+        return (new ResourceCollection($results))
+            ->setColumns($columns)
+            ->setModel($resource->model()::class)
+            ->setColumnPreferenceKey('runway.'.$resourceHandle.'.columns');
     }
 
     public function create(Request $request, $resourceHandle)
@@ -217,5 +230,20 @@ class ResourceController extends CpController
         return redirect(cp_route('runway.index', [
             'resourceHandle' => $resource->handle(),
         ]))->with('success', "{$resource->singular()} deleted");
+    }
+
+    private function buildColumns($resource, $blueprint)
+    {
+        return collect($resource->listingColumns())
+            ->map(function ($columnKey) use ($resource, $blueprint) {
+                $field = $blueprint->field($columnKey);
+
+                return [
+                    'handle' => $columnKey,
+                    'title'  => !$field ? $columnKey : $field->display(),
+                    'has_link' => $resource->listingColumns()[0] === $columnKey,
+                ];
+            })
+            ->toArray();
     }
 }

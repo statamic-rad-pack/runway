@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::name('runway.')->prefix('runway')->group(function () {
     Route::get('/{resourceHandle}', [ResourceController::class, 'index'])->name('index');
+    Route::get('/{resourceHandle}/api', [ResourceController::class, 'api'])->name('api');
     Route::post('/{resourceHandle}/listing-buttons', [ResourceListingButtonController::class, 'index'])->name('listing-buttons');
 
     Route::get('/{resourceHandle}/create', [ResourceController::class, 'create'])->name('create');
