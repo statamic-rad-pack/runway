@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+## v2.0.7 (2021-07-01)
+
+### What's new
+
+* You can now use Cmd + S (or Ctrl + S) to save when using Runway's Publish Form #50
+* We now actually show the validation error when you run into one using Runway's Publish Form #49
+
+### What's fixed
+
+* If `max_items` is set to `1` on the Runway fieldtype, just return the single model as augmented, not a `Collection`
+
+---
+
+*Thanks [John Carter](https://github.com/johncarter-) for the new additions :)*
+
 ## v2.0.6 (2021-06-30)
 
 ### What's fixed
