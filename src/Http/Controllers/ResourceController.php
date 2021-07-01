@@ -200,9 +200,7 @@ class ResourceController extends CpController
 
         $record->delete();
 
-        return redirect(cp_route('runway.index', [
-            'resourceHandle' => $resource->handle(),
-        ]))->with('success', "{$resource->singular()} deleted");
+        return true;
     }
 
     /**

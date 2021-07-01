@@ -62,9 +62,7 @@
                         @sorted="sorted"
                     >
                         <template :slot="primaryColumn" slot-scope="{ row, value }">
-                          <a :href="row.editUrl">{{
-                            value
-                          }}</a>
+                            <a :href="row.editUrl">{{ value }}</a>
                         </template>
 
                         <template slot="actions" slot-scope="{ row, index }">
@@ -77,24 +75,22 @@
                                 <dropdown-item
                                     :text="__('Delete')"
                                     class="warning"
-                                    @click="confirmDeleteRow(row._id, index)"
+                                    @click="confirmDeleteRow(row._id, index, row.deleteUrl)"
                                     v-if="true"
                                 />
                             </dropdown-list>
-
                         </template>
                     </data-list-table>
-                    
+
                     <confirmation-modal
-                        v-if="confirmDeleteRow !== false"
+                        v-if="deletingRow !== false"
                         :title="__('Delete')"
                         :bodyText="__('Are you sure you want to delete this item?')"
                         :buttonText="__('Delete')"
                         :danger="true"
-                        @confirm="deleteRow(listingConfig.listingUrl)"
+                        @confirm="deleteRow()"
                         @cancel="cancelDeleteRow"
                     ></confirmation-modal>
-                    
                 </div>
             </div>
         </data-list>
@@ -110,11 +106,10 @@
 </template>
 
 <script>
-import DeletesListingRow from './DeletesListingRow.js';
 import Listing from '../../../../vendor/statamic/cms/resources/js/components/Listing.vue';
 
 export default {
-    mixins: [Listing, DeletesListingRow],
+    mixins: [Listing],
 
     props: {
         listingConfig: Array,
@@ -139,7 +134,39 @@ export default {
             columns: this.columns,
             meta: {},
             primaryColumn: `cell-${primaryColumn}`,
-        };
+            deletingRow: false,
+        }
+    },
+
+    methods: {
+        confirmDeleteRow(id, index, deleteUrl) {
+            this.deletingRow = { id, index, deleteUrl }
+        },
+
+        deleteRow(message) {
+            const id = this.deletingRow.id;
+            message = message || __("Deleted");
+
+            this.$axios
+                .delete(this.deletingRow.deleteUrl)
+                .then(() => {
+                    let i = _.indexOf(this.items, _.findWhere(this.rows, { id }))
+                    this.items.splice(i, 1)
+                    this.deletingRow = false
+                    this.$toast.success(message)
+
+                    // location.reload()
+                })
+                .catch((e) => {
+                    this.$toast.error(
+                        e.response ? e.response.data.message : __("Something went wrong")
+                    )
+                })
+        },
+
+        cancelDeleteRow() {
+            this.deletingRow = false;
+        },
     },
 }
 </script>

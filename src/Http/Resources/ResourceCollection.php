@@ -62,6 +62,7 @@ class ResourceCollection extends LaravelResourceCollection
                 }
 
                 $row['editUrl'] = cp_route('runway.edit', ['resourceHandle' => $handle, 'record' => $rowModel->getKey()]);
+                $row['deleteUrl'] = cp_route('runway.destroy', ['resourceHandle' => $handle, 'record' => $rowModel->getKey()]);
                 $row['_id'] = $rowModel->getKey();
 
                 return $row;
