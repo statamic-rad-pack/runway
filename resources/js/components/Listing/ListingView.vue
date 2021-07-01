@@ -108,35 +108,36 @@
 </template>
 
 <script>
-import DeletesListingRow from "./DeletesListingRow.js";
-import Listing from '../../../../../../../vendor/statamic/cms/resources/js/components/Listing.vue';
+import DeletesListingRow from './DeletesListingRow.js';
+import Listing from '../../../../vendor/statamic/cms/resources/js/components/Listing.vue';
 
 export default {
-  mixins: [Listing, DeletesListingRow],
+    mixins: [Listing, DeletesListingRow],
 
-  props: {
-    listingConfig: Array,
-    columns: Array,
-  },
+    props: {
+        listingConfig: Array,
+        columns: Array,
+    },
 
-  data() {
+    data() {
+        let primaryColumn = ''
 
-    let primaryColumn = '';
-    if (this.columns) {
-        this.columns.forEach((column) => {
-          if (column.has_link)
-            primaryColumn = column.handle;
-        });
-    }
+        if (this.columns) {
+            this.columns.forEach((column) => {
+                if (column.has_link)
+                    primaryColumn = column.handle
+                }
+            )
+        }
 
-    return {
-      listingKey: "id",
-      preferencesPrefix: this.listingConfig.preferencesPrefix ?? "runway",
-      requestUrl: this.listingConfig.requestUrl,
-      columns: this.columns,
-      meta: {},
-      primaryColumn: 'cell-' + primaryColumn,
-    };
-  },
+        return {
+            listingKey: 'id',
+            preferencesPrefix: this.listingConfig.preferencesPrefix ?? 'runway',
+            requestUrl: this.listingConfig.requestUrl,
+            columns: this.columns,
+            meta: {},
+            primaryColumn: `cell-${primaryColumn}`,
+        };
+    },
 }
 </script>
