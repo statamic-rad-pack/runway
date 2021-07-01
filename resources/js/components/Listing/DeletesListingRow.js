@@ -15,7 +15,7 @@ export default {
             message = message || __("Deleted");
 
             this.$axios
-                .delete(cp_url(`${resourceRoute}/${id}`))
+                .delete(`${resourceRoute}/${id}`)
                 .then(() => {
                     let i = _.indexOf(this.items, _.findWhere(this.rows, { id }))
                     this.items.splice(i, 1)

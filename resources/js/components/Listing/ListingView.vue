@@ -82,17 +82,19 @@
                                 />
                             </dropdown-list>
 
-                            <confirmation-modal
-                                v-if="deletingRow !== false"
-                                :title="__('Delete')"
-                                :bodyText="__('Are you sure you want to delete this item?')"
-                                :buttonText="__('Delete')"
-                                :danger="true"
-                                @confirm="deleteRow(listingConfig.listingUrl)"
-                                @cancel="cancelDeleteRow"
-                            ></confirmation-modal>
                         </template>
                     </data-list-table>
+                    
+                    <confirmation-modal
+                        v-if="confirmDeleteRow !== false"
+                        :title="__('Delete')"
+                        :bodyText="__('Are you sure you want to delete this item?')"
+                        :buttonText="__('Delete')"
+                        :danger="true"
+                        @confirm="deleteRow(listingConfig.listingUrl)"
+                        @cancel="cancelDeleteRow"
+                    ></confirmation-modal>
+                    
                 </div>
             </div>
         </data-list>
