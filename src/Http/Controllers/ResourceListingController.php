@@ -40,9 +40,9 @@ class ResourceListingController extends CpController
         $columns = $this->buildColumns($resource, $blueprint);
 
         return (new ResourceCollection($results))
+            ->setColumnPreferenceKey('runway.'.$resourceHandle.'.columns')
             ->setColumns($columns)
-            ->setResourceHandle($resourceHandle)
-            ->setColumnPreferenceKey('runway.'.$resourceHandle.'.columns');
+            ->setResourceHandle($resourceHandle);
     }
 
     /**
