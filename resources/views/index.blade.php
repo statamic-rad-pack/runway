@@ -18,6 +18,7 @@
         <runway-listing-view
             :filters="{{ $filters->toJson() }}"
             :listing-config='@json($listingConfig)'
+            :columns='@json($columns)'
         ></runway-listing-view>
      @else
         @include('statamic::partials.create-first', [

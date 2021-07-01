@@ -61,6 +61,12 @@
                         :column-preferences-key="preferencesKey('columns')"
                         @sorted="sorted"
                     >
+                        <template :slot="primaryColumn" slot-scope="{ row, value }">
+                          <a :href="row.editUrl">{{
+                            value
+                          }}</a>
+                        </template>
+
                         <template slot="actions" slot-scope="{ row, index }">
                             <dropdown-list>
                                 <dropdown-item
@@ -72,6 +78,7 @@
                                     :text="__('Delete')"
                                     class="warning"
                                     @click="confirmDeleteRow(row._id, index)"
+                                    v-if="true"
                                 />
                             </dropdown-list>
 
@@ -102,22 +109,33 @@
 
 <script>
 import DeletesListingRow from "./DeletesListingRow.js";
-import Listing from '../../../../vendor/statamic/cms/resources/js/components/Listing.vue';
+import Listing from '../../../../../../../vendor/statamic/cms/resources/js/components/Listing.vue';
 
 export default {
   mixins: [Listing, DeletesListingRow],
 
   props: {
     listingConfig: Array,
+    columns: Array,
   },
 
   data() {
+
+    let primaryColumn = '';
+    if (this.columns) {
+        this.columns.forEach((column) => {
+          if (column.has_link)
+            primaryColumn = column.handle;
+        });
+    }
+
     return {
       listingKey: "id",
       preferencesPrefix: this.listingConfig.preferencesPrefix ?? "runway",
       requestUrl: this.listingConfig.requestUrl,
       columns: this.columns,
       meta: {},
+      primaryColumn: 'cell-' + primaryColumn,
     };
   },
 }
