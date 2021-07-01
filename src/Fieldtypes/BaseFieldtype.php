@@ -87,11 +87,17 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        return collect($values)->map(function ($recordId) use ($resource) {
+        $result = collect($values)->map(function ($recordId) use ($resource) {
             $record = $resource->model()->firstWhere($resource->primaryKey(), $recordId);
 
             return $resource->augment($record);
-        })->toArray();
+        });
+
+        if ($this->config('max_items') === 1) {
+            return $result->first();
+        }
+
+        return $result->toArray();
     }
 
     protected function getColumns()
