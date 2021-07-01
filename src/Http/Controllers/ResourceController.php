@@ -39,7 +39,7 @@ class ResourceController extends CpController
             'resource' => $resource,
             'recordCount'  => $count,
             'columns'  => $columns,
-            'filters'  => Scope::filters($resourceHandle),
+            'filters'  => Scope::filters('runway'.$resourceHandle),
             'listingConfig' => $listingConfig,
         ]);
     }
