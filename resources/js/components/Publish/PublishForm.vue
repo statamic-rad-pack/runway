@@ -91,7 +91,8 @@ export default {
             title: this.initialTitle,
 
             readonly: false, // TODO: might do this in the future
-
+            
+            errors: {},
             saving: false,
             containerWidth: null,
             saveKeyBinding: null,
