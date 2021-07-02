@@ -8,6 +8,7 @@ use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Http\Request;
 use Statamic\CP\Breadcrumbs;
+use Statamic\Facades\Scope;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 
@@ -24,37 +25,22 @@ class ResourceController extends CpController
             abort('403');
         }
 
-        $query = $resource->model()
-            ->orderBy($resource->listingSort()['column'], $resource->listingSort()['direction']);
+        $count = $resource->model()->count();
+        $columns = $this->buildColumns($resource, $blueprint);
 
-        if ($searchQuery = $request->input('query')) {
-            $query->where(function ($query) use ($searchQuery, $blueprint) {
-                $wildcard = '%'.$searchQuery.'%';
-
-                foreach ($blueprint->fields()->items()->toArray() as $field) {
-                    $query->orWhere($field['handle'], 'LIKE', $wildcard);
-                }
-            });
-        }
-
-        $columns = collect($resource->listingColumns())
-            ->map(function ($columnKey) use ($resource, $blueprint) {
-                $field = $blueprint->field($columnKey);
-
-                return [
-                    'handle' => $columnKey,
-                    'title'  => !$field ? $columnKey : $field->display(),
-                    'has_link' => $resource->listingColumns()[0] === $columnKey,
-                    'fieldtype' => $field->fieldtype(),
-                ];
-            })
-            ->toArray();
+        $listingConfig = [
+            'preferencesPrefix' => "runway.{$resource->handle()}",
+            'requestUrl' => cp_route('runway.listing-api', ['resourceHandle' => $resource->handle()]),
+            'listingUrl' => cp_route('runway.index', ['resourceHandle' => $resource->handle()]),
+        ];
 
         return view('runway::index', [
             'title'    => $resource->name(),
             'resource' => $resource,
-            'records'  => $query->paginate(config('statamic.cp.pagination_size')),
+            'recordCount'  => $count,
             'columns'  => $columns,
+            'filters'  => Scope::filters('runway'.$resourceHandle),
+            'listingConfig' => $listingConfig,
         ]);
     }
 
@@ -214,8 +200,25 @@ class ResourceController extends CpController
 
         $record->delete();
 
-        return redirect(cp_route('runway.index', [
-            'resourceHandle' => $resource->handle(),
-        ]))->with('success', "{$resource->singular()} deleted");
+        return true;
+    }
+
+    /**
+     * This method is a duplicate of code in the `ResourceListingController`.
+     * Update both if you make any changes.
+     */
+    protected function buildColumns($resource, $blueprint)
+    {
+        return collect($resource->listingColumns())
+            ->map(function ($columnKey) use ($resource, $blueprint) {
+                $field = $blueprint->field($columnKey);
+
+                return [
+                    'handle' => $columnKey,
+                    'title'  => !$field ? $columnKey : $field->display(),
+                    'has_link' => $resource->listingColumns()[0] === $columnKey,
+                ];
+            })
+            ->toArray();
     }
 }

@@ -22,8 +22,8 @@ class ResourceControllerTest extends TestCase
             ->assertOk()
             ->assertViewIs('runway::index')
             ->assertSee([
-                $posts[0]->title,
-                $posts[1]->title,
+                'listing-config',
+                'columns',
             ]);
     }
 
@@ -109,8 +109,7 @@ class ResourceControllerTest extends TestCase
 
         $this->actingAs($user)
             ->delete(cp_route('runway.destroy', ['resourceHandle' => 'post', 'record' => $post->id]))
-            ->assertRedirect('/cp/runway/post')
-            ->assertSessionHas('success');
+            ->assertOK();
 
         $this->assertDatabaseMissing('posts', [
             'id' => $post->id,
