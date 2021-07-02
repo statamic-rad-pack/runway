@@ -7,12 +7,12 @@
         <data-list
             v-if="!initializing"
             class="mb-4"
-            :visible-columns="columns"
             :columns="columns"
             :rows="items"
             :sort="false"
             :sort-column="sortColumn"
             :sort-direction="sortDirection"
+            @visible-columns-updated="visibleColumns = $event"
         >
             <div slot-scope="{ hasSelections }">
                 <div class="card p-0 relative">
@@ -140,6 +140,7 @@ export default {
 
     methods: {
         confirmDeleteRow(id, index, deleteUrl) {
+            this.visibleColumns = this.columns.filter(column => column.visible)
             this.deletingRow = { id, index, deleteUrl }
         },
 
@@ -166,6 +167,9 @@ export default {
 
         cancelDeleteRow() {
             this.deletingRow = false;
+            setTimeout(() => { 
+                this.visibleColumns = this.columns.filter(column => column.visible)
+            }, 50);
         },
     },
 }
