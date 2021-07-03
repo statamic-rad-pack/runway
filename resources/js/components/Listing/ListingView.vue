@@ -62,14 +62,14 @@
                         @sorted="sorted"
                     >
                         <template :slot="primaryColumn" slot-scope="{ row, value }">
-                            <a :href="row.editUrl">{{ value }}</a>
+                            <a :href="row.edit_url">{{ value }}</a>
                         </template>
 
                         <template slot="actions" slot-scope="{ row, index }">
                             <dropdown-list>
                                 <dropdown-item
                                     :text="__('Edit')"
-                                    :redirect="row.editUrl"
+                                    :redirect="row.edit_url"
                                 />
 
                                 <dropdown-item
@@ -167,7 +167,7 @@ export default {
 
         cancelDeleteRow() {
             this.deletingRow = false;
-            setTimeout(() => { 
+            setTimeout(() => {
                 this.visibleColumns = this.columns.filter(column => column.visible)
             }, 50);
         },
