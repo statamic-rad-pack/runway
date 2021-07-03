@@ -2,20 +2,24 @@
 
 ## Unreleased
 
-## v2.0.7 (2021-07-01)
+## v2.1.0 (2021-07-03)
+
+**⚠️ This update contains breaking changes.**
 
 ### What's new
 
-* You can now use Cmd + S (or Ctrl + S) to save when using Runway's Publish Form #50
-* We now actually show the validation error when you run into one using Runway's Publish Form #49
+* A brand new Listing table for your models, just like the one used for entries #15
+* You can now use real [Actions](https://statamic.dev/extending/actions#content), instead of 'Listing buttons'
 
-### What's fixed
+### Breaking changes
 
-* If `max_items` is set to `1` on the Runway fieldtype, just return the single model as augmented, not a `Collection`
+**Listing Columns & Sorting**
 
----
+The `listing.columns` and `listing.sort` configuration options have been removed. Columns and sorting are now configured from the listing table itself, in the same way it works for entries.
 
-*Thanks [John Carter](https://github.com/johncarter-) for the new additions :)*
+**Listing buttons**
+
+This release removes the 'listing buttons' functionality, in place of Statamic's [Actions](https://statamic.dev/extending/actions#content) feature. Any listing buttons will no longer work. It's recommended you refactor into an Action during the upgrade process.
 
 ## v2.0.6 (2021-06-30)
 
