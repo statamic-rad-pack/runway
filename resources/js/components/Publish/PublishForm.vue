@@ -91,9 +91,11 @@ export default {
             title: this.initialTitle,
 
             readonly: false, // TODO: might do this in the future
-
+            
+            errors: {},
             saving: false,
             containerWidth: null,
+            saveKeyBinding: null,
         }
     },
 
@@ -165,5 +167,16 @@ export default {
             this.$progress.loading(`runway-publish-form`, saving);
         },
     },
+
+    mounted() {
+        this.saveKeyBinding = this.$keys.bindGlobal(['mod+s', 'mod+return'], e => {
+            e.preventDefault();
+            this.save();
+        });
+    },
+
+    destroyed() {
+        this.saveKeyBinding.destroy();
+    }
 }
 </script>
