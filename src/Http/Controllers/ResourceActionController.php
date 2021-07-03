@@ -17,6 +17,13 @@ class ResourceActionController extends ActionController
         return parent::run($request);
     }
 
+    public function bulkActionsList(Request $request, $resourceHandle)
+    {
+        $this->resource = Runway::findResource($resourceHandle);
+
+        return parent::bulkActions($request);
+    }
+
     protected function getSelectedItems($items, $context)
     {
         return $items->map(function ($item) {

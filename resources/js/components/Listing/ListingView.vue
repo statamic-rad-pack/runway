@@ -50,7 +50,11 @@
                         v-text="__('No results')"
                     />
 
-                    <!-- TODO: Bulk actions -->
+                    <!-- <data-list-bulk-actions
+                        :url="actionUrl"
+                        @started="actionStarted"
+                        @completed="actionCompleted"
+                    /> -->
 
                     <data-list-table
                         v-show="items.length"

@@ -20,6 +20,15 @@ class Delete extends Action
         return $item instanceof Model;
     }
 
+    public function visibleToBulk($items)
+    {
+        if ($items->whereInstanceOf(Model::class)->count() !== $items->count()) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function authorize($user, $item)
     {
         $resource = Runway::findResourceByModel($item);

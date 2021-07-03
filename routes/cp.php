@@ -10,6 +10,7 @@ Route::name('runway.')->prefix('runway')->group(function () {
 
     Route::get('/{resourceHandle}/listing-api', [ResourceListingController::class, 'index'])->name('listing-api');
     Route::post('/{resourceHandle}/actions', [ResourceActionController::class, 'runAction'])->name('actions.run');
+    Route::post('/{resourceHandle}/actions/list', [ResourceActionController::class, 'bulkActionsList'])->name('actions.bulk');
 
     Route::get('/{resourceHandle}/create', [ResourceController::class, 'create'])->name('create');
     Route::post('/{resourceHandle}/create', [ResourceController::class, 'store'])->name('store');
