@@ -6,7 +6,7 @@ use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Foundation\Http\FormRequest;
 use Statamic\Facades\User;
 
-class StoreRequest extends FormRequest
+class CreateRequest extends FormRequest
 {
     public function authorize()
     {
@@ -18,10 +18,6 @@ class StoreRequest extends FormRequest
 
     public function rules()
     {
-        return Runway::findResource($this->resourceHandle)
-            ->blueprint()
-            ->fields()
-            ->validator()
-            ->rules();
+        return [];
     }
 }
