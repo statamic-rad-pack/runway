@@ -68,14 +68,12 @@ To configure the models you'd like to use Runway with, just create a new item in
 For each of the resources, there's various configuration options available:
 
 #### `name`
+
 This will be the name displayed throughout the Control Panel for this resource. We recommend you use a plural for this.
 
 #### `blueprint`
-This is where you can define the fields & sections for your model's blueprint. You can use any available fieldtypes with any of their configuration options. You can optionally add validation rules if you'd like and they'll be used when saving or updating the record.
 
-Make sure that you create a field for each of the required columns in your database or else you'll run into issues when saving. The handle for the field should match up with the column name in the database.
-
-An example of a field configuration looks like this:
+The `blueprint` option allows you to define the fields you'd like Runway to make available (and augment) in your Listing views, Publish Forms and via the front-end routing feature. An example config may look similar to this:
 
 ```php
 'blueprint' => [
@@ -117,13 +115,56 @@ An example of a field configuration looks like this:
 ],
 ```
 
-If you prefer, you can also create a normal blueprint file in `resources/blueprints` and reference it inside your config.
+If you'd prefer to keep your blueprint out of the config, you may instead specify the 'namespace' of a blueprint (it's location in `resources/blueprints`). These blueprint files are not currently editable inside the Control Panel.
 
 ```php
 'blueprint' => 'orders',
 ```
 
-Bear in mind that at the moment, blueprints in the root of `resources/blueprint` won't be displayed as editable in the Control Panel.
+Make sure that the handles of the fields are the same as the column names in your database. You can use pretty much any fieldtype you wish with Runway, you'll just need to make sure the column types match out with what's outputted by Statamic/Runway. We've provided a mapping table below that'll tell you which column types to use for different fieldtypes.
+
+| Fieldtype    | Column Type                                  | Notes                                                                                                                                                                            |
+|--------------|----------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Array        | json                                         |                                                                                                                                                                                  |
+| Assets       | string/json                                  |                                                                                                                                                                                  |
+| Bard         | json/string                                  | string if 'Display HTML' is true                                                                                                                                                 |
+| Button Group | string                                       |                                                                                                                                                                                  |
+| Checkboxes   | json                                         |                                                                                                                                                                                  |
+| Code         | string                                       |                                                                                                                                                                                  |
+| Collections  | string/json                                  | allow multiple / max 1                                                                                                                                                           |
+| Color        | string                                       |                                                                                                                                                                                  |
+| Date         | string/range                                 | Format is specified field configuration options. Ranges are should be stored as json.                                                                                            |
+| Entries      | string/json                                  | allow multiple / max 1                                                                                                                                                           |
+| Fieldset     | depends on field being imported by field set | You can import a fieldset into runway using 'import' => 'fieldset_handle' as a field. It is your responsibvility to match the fieldtypes within that field set to your migration |
+| Float        | float                                        |                                                                                                                                                                                  |
+| Grid         | json                                         |                                                                                                                                                                                  |
+| Hidden       | string                                       |                                                                                                                                                                                  |
+| HTML         | -                                            | UI only                                                                                                                                                                          |
+| Integer      | integer                                      |                                                                                                                                                                                  |
+| Link         | json                                         |                                                                                                                                                                                  |
+| List         | json                                         |                                                                                                                                                                                  |
+| Markdown     | string                                       |                                                                                                                                                                                  |
+| Radio        | string                                       |                                                                                                                                                                                  |
+| Range        | string                                       |                                                                                                                                                                                  |
+| Replicator   | json                                         |                                                                                                                                                                                  |
+| Revealer     | -                                            | UI only                                                                                                                                                                          |
+| Section      | -                                            | UI only                                                                                                                                                                          |
+| Select       | string/integer/json                          |                                                                                                                                                                                  |
+| Structures   | json                                         |                                                                                                                                                                                  |
+| Table        | json                                         |                                                                                                                                                                                  |
+| Tags         | json                                         |                                                                                                                                                                                  |
+| Template     | string                                       |                                                                                                                                                                                  |
+| Terms        | string/json                                  |                                                                                                                                                                                  |
+| Text         | string                                       |                                                                                                                                                                                  |
+| Textarea     | string                                       |                                                                                                                                                                                  |
+| Time         | string                                       |                                                                                                                                                                                  |
+| Toggle       | boolean                                      |                                                                                                                                                                                  |
+| Users        | string/integer/json                          |                                                                                                                                                                                  |
+| Video        | string                                       |                                                                                                                                                                                  |
+| YAML         | string                                       |                                                                                                                                                                                  |
+| Belongs To   | integer/string                               | Usually a bigInteger, but depends on your eloquent relationship definitions.                                                                                                     |
+
+When writing your migrations, please ensure that fields not required in your blueprint should be `->nullable()` in the migration. Otherwise, you'll end up with a nasty error.
 
 #### `hidden`
 
