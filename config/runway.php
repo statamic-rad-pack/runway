@@ -30,19 +30,6 @@ return [
         //             ],
         //         ],
         //     ],
-
-        //     'listing' => [
-        //         'columns' => [
-        //             'order_number',
-        //             'price',
-        //         ],
-
-        //         'sort' => [
-        //             'column' => 'paid_at',
-        //             'direction' => 'desc',
-        //         ],
-        //     ],
-        // ],
     ],
 
     /*
