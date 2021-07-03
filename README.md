@@ -429,6 +429,27 @@ protected $casts = [
 ];
 ```
 
+**How do I add a custom CP route for the Runway Resource?**
+
+1. Make sure your resource is configured to be `'hidden' => true`.
+2. Then in your `app\Providers\AppServiceProvider.php` add the following code:
+
+```php
+    //...
+
+    public function boot()
+    {
+        Nav::extend(function ($nav) {
+            $nav->EloquentContent('My Model')
+                ->route('runway.index', ['resourceHandle' => 'mymodel']) // resourceHandle is the lowercase Class name of your model e.g. MyModel is mymodel
+                ->icon('<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1V2zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5H2zm13-3H1v2h14V2zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                </svg>');
+        });
+
+        //...
+```
+
 ## Security
 
 From a security perspective, the latest version only will receive a security release if a vulnerability is found.
