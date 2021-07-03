@@ -12,7 +12,7 @@ class DestroyRequest extends FormRequest
     {
         $resource = Runway::findResource($this->resourceHandle);
 
-        return User::current()->hasPermission("Edit {$resource->plural()}")
+        return User::current()->hasPermission("Delete {$resource->plural()}")
             || User::current()->isSuper();
     }
 
