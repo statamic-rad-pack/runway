@@ -12,7 +12,6 @@ use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Http\Request;
 use Statamic\CP\Breadcrumbs;
 use Statamic\Facades\Scope;
-use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 
 class ResourceController extends CpController
@@ -35,6 +34,7 @@ class ResourceController extends CpController
             'columns'       => $this->buildColumns($resource, $blueprint),
             'filters'       => Scope::filters("runway{$resourceHandle}"),
             'listingConfig' => $listingConfig,
+            'actionUrl'     => cp_route('runway.actions.run', ['resourceHandle' => $resourceHandle]),
         ]);
     }
 

@@ -19,6 +19,7 @@
             :filters="{{ $filters->toJson() }}"
             :listing-config='@json($listingConfig)'
             :columns='@json($columns)'
+            action-url="{{ $actionUrl }}"
         ></runway-listing-view>
      @else
         @include('statamic::partials.create-first', [

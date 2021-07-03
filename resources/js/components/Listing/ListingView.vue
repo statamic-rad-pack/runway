@@ -50,6 +50,8 @@
                         v-text="__('No results')"
                     />
 
+                    <!-- TODO: Bulk actions -->
+
                     <data-list-table
                         v-show="items.length"
                         :allow-bulk-actions="false"
@@ -68,15 +70,24 @@
                         <template slot="actions" slot-scope="{ row, index }">
                             <dropdown-list>
                                 <dropdown-item
+                                    v-if="row.viewable && row.permalink"
+                                    :text="__('View')"
+                                    :redirect="row.permalink"
+                                />
+
+                                <dropdown-item
                                     :text="__('Edit')"
                                     :redirect="row.edit_url"
                                 />
 
-                                <dropdown-item
-                                    :text="__('Delete')"
-                                    class="warning"
-                                    @click="confirmDeleteRow(row._id, index, row.deleteUrl)"
-                                    v-if="true"
+                                <div class="divider" v-if="row.actions.length" />
+
+                                <data-list-inline-actions
+                                    :item="row._id"
+                                    :url="actionUrl"
+                                    :actions="row.actions"
+                                    @started="actionStarted"
+                                    @completed="actionCompleted"
                                 />
                             </dropdown-list>
                         </template>
@@ -114,6 +125,7 @@ export default {
     props: {
         listingConfig: Array,
         columns: Array,
+        actionUrl: String,
     },
 
     data() {
