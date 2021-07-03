@@ -16,7 +16,7 @@ class ResourceListingController extends CpController
         $blueprint = $resource->blueprint();
 
         if (! User::current()->hasPermission("View {$resource->plural()}") && ! User::current()->isSuper()) {
-            abort('403');
+            abort(403);
         }
 
         $sortField = $request->input('sort', $resource->listingSort()['column']);

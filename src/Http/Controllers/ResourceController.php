@@ -22,7 +22,7 @@ class ResourceController extends CpController
         $blueprint = $resource->blueprint();
 
         if (! User::current()->hasPermission("View {$resource->plural()}") && ! User::current()->isSuper()) {
-            abort('403');
+            abort(403);
         }
 
         $count = $resource->model()->count();
@@ -49,7 +49,7 @@ class ResourceController extends CpController
         $resource = Runway::findResource($resourceHandle);
 
         if (! User::current()->hasPermission("Create new {$resource->plural()}") && ! User::current()->isSuper()) {
-            abort('403');
+            abort(403);
         }
 
         $blueprint = $resource->blueprint();
@@ -79,7 +79,7 @@ class ResourceController extends CpController
         $record = $resource->model();
 
         if (! User::current()->hasPermission("Create new {$resource->plural()}") && ! User::current()->isSuper()) {
-            abort('403');
+            abort(403);
         }
 
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
@@ -112,7 +112,7 @@ class ResourceController extends CpController
         $record = $resource->model()->where($resource->routeKey(), $record)->first();
 
         if (! User::current()->hasPermission("Edit {$resource->singular()}") && ! User::current()->isSuper()) {
-            abort('403');
+            abort(403);
         }
 
         $values = [];
@@ -164,7 +164,7 @@ class ResourceController extends CpController
         $record = $resource->model()->where($resource->routeKey(), $record)->first();
 
         if (! User::current()->hasPermission("Edit {$resource->singular()}") && ! User::current()->isSuper()) {
-            abort('403');
+            abort(403);
         }
 
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
@@ -195,7 +195,7 @@ class ResourceController extends CpController
         $record = $resource->model()->where($resource->routeKey(), $record)->first();
 
         if (! User::current()->hasPermission("Delete {$resource->singular()}") && ! User::current()->isSuper()) {
-            abort('403');
+            abort(403);
         }
 
         $record->delete();
