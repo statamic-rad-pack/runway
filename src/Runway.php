@@ -22,10 +22,6 @@ class Runway
                     ->name($config['name'])
                     ->blueprint($config['blueprint']);
 
-                if (isset($config['listing']['sort'])) {
-                    $resource->listingSort($config['listing']['sort']);
-                }
-
                 if (isset($config['listing']['buttons'])) {
                     $resource->listingButtons($config['listing']['blueprints']);
                 }

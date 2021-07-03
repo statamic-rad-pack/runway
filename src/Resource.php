@@ -82,22 +82,6 @@ class Resource
         })->pluck('handle')->toArray();
     }
 
-    public function listingSort()
-    {
-        return $this->fluentlyGetOrSet('listingSort')
-            ->getter(function ($value) {
-                if (! $value) {
-                    return [
-                        'column' => $this->primaryKey(),
-                        'direction' => 'ASC',
-                    ];
-                }
-
-                return $value;
-            })
-            ->args(func_get_args());
-    }
-
     public function listingButtons($listingButtons = null)
     {
         return $this->fluentlyGetOrSet('listingButtons')
@@ -194,7 +178,6 @@ class Resource
             'model'           => $this->model(),
             'name'            => $this->name(),
             'blueprint'       => $this->blueprint(),
-            'listing_sort'    => $this->listingSort(),
             'listing_buttons' => $this->listingButtons(),
             'cp_icon'         => $this->cpIcon(),
             'hidden'          => $this->hidden(),
