@@ -15,9 +15,6 @@ class Resource
     protected $model;
     protected $name;
     protected $blueprint;
-    protected $listingColumns;
-    protected $listingSort;
-    protected $listingButtons;
     protected $cpIcon;
     protected $hidden;
     protected $route;
@@ -76,48 +73,11 @@ class Resource
             ->args(func_get_args());
     }
 
-    public function listingColumns()
+    public function listableColumns()
     {
-        return $this->fluentlyGetOrSet('listingColumns')
-            ->getter(function ($value) {
-                if (! $value) {
-                    return [
-                        $this->primaryKey(),
-                    ];
-                }
-
-                return $value;
-            })
-            ->args(func_get_args());
-    }
-
-    public function listingSort()
-    {
-        return $this->fluentlyGetOrSet('listingSort')
-            ->getter(function ($value) {
-                if (! $value) {
-                    return [
-                        'column' => $this->primaryKey(),
-                        'direction' => 'ASC',
-                    ];
-                }
-
-                return $value;
-            })
-            ->args(func_get_args());
-    }
-
-    public function listingButtons($listingButtons = null)
-    {
-        return $this->fluentlyGetOrSet('listingButtons')
-            ->getter(function ($value) {
-                if (! $value) {
-                    return [];
-                }
-
-                return $value;
-            })
-            ->args(func_get_args());
+        return $this->blueprint()->fields()->items()->reject(function ($field) {
+            return isset($field['field']['listable']) && $field['field']['listable'] === 'hidden';
+        })->pluck('handle')->toArray();
     }
 
     public function cpIcon($cpIcon = null)
@@ -203,9 +163,6 @@ class Resource
             'model'           => $this->model(),
             'name'            => $this->name(),
             'blueprint'       => $this->blueprint(),
-            'listing_columns' => $this->listingColumns(),
-            'listing_sort'    => $this->listingSort(),
-            'listing_buttons' => $this->listingButtons(),
             'cp_icon'         => $this->cpIcon(),
             'hidden'          => $this->hidden(),
             'route'           => $this->route(),

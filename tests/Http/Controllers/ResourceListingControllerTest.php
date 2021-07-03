@@ -36,14 +36,14 @@ class ResourceListingControllerTest extends TestCase
                 'data' => [
                     [
                         'title' => $posts[0]->title,
-                        'editUrl' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
-                        'deleteUrl' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
+                        'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
+                        'delete_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
                         '_id' => $posts[0]->id,
                     ],
                     [
                         'title' => $posts[1]->title,
-                        'editUrl' => 'http://localhost/cp/runway/post/'.$posts[1]->id,
-                        'deleteUrl' => 'http://localhost/cp/runway/post/'.$posts[1]->id,
+                        'edit_url' => 'http://localhost/cp/runway/post/'.$posts[1]->id,
+                        'delete_url' => 'http://localhost/cp/runway/post/'.$posts[1]->id,
                         '_id' => $posts[1]->id,
                     ],
                 ],
@@ -72,8 +72,8 @@ class ResourceListingControllerTest extends TestCase
                 'data' => [
                     [
                         'title' => $posts[0]->title,
-                        'editUrl' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
-                        'deleteUrl' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
+                        'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
+                        'delete_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
                         '_id' => $posts[0]->id,
                     ],
                 ],

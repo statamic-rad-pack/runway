@@ -2,6 +2,9 @@
 
 namespace DoubleThreeDigital\Runway\Http\Controllers;
 
+use DoubleThreeDigital\Runway\Http\Requests\CreateRequest;
+use DoubleThreeDigital\Runway\Http\Requests\EditRequest;
+use DoubleThreeDigital\Runway\Http\Requests\IndexRequest;
 use DoubleThreeDigital\Runway\Http\Requests\StoreRequest;
 use DoubleThreeDigital\Runway\Http\Requests\UpdateRequest;
 use DoubleThreeDigital\Runway\Runway;
@@ -9,48 +12,35 @@ use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Http\Request;
 use Statamic\CP\Breadcrumbs;
 use Statamic\Facades\Scope;
-use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 
 class ResourceController extends CpController
 {
-    // TODO: need to put requests in place for authorization and validation
-
-    public function index(Request $request, $resourceHandle)
+    public function index(IndexRequest $request, $resourceHandle)
     {
         $resource = Runway::findResource($resourceHandle);
         $blueprint = $resource->blueprint();
 
-        if (! User::current()->hasPermission("View {$resource->plural()}") && ! User::current()->isSuper()) {
-            abort('403');
-        }
-
-        $count = $resource->model()->count();
-        $columns = $this->buildColumns($resource, $blueprint);
-
         $listingConfig = [
             'preferencesPrefix' => "runway.{$resource->handle()}",
-            'requestUrl' => cp_route('runway.listing-api', ['resourceHandle' => $resource->handle()]),
-            'listingUrl' => cp_route('runway.index', ['resourceHandle' => $resource->handle()]),
+            'requestUrl'        => cp_route('runway.listing-api', ['resourceHandle' => $resource->handle()]),
+            'listingUrl'        => cp_route('runway.index', ['resourceHandle' => $resource->handle()]),
         ];
 
         return view('runway::index', [
-            'title'    => $resource->name(),
-            'resource' => $resource,
-            'recordCount'  => $count,
-            'columns'  => $columns,
-            'filters'  => Scope::filters('runway'.$resourceHandle),
+            'title'         => $resource->name(),
+            'resource'      => $resource,
+            'recordCount'   => $resource->model()->count(),
+            'columns'       => $this->buildColumns($resource, $blueprint),
+            'filters'       => Scope::filters("runway{$resourceHandle}"),
             'listingConfig' => $listingConfig,
+            'actionUrl'     => cp_route('runway.actions.run', ['resourceHandle' => $resourceHandle]),
         ]);
     }
 
-    public function create(Request $request, $resourceHandle)
+    public function create(CreateRequest $request, $resourceHandle)
     {
         $resource = Runway::findResource($resourceHandle);
-
-        if (! User::current()->hasPermission("Create new {$resource->plural()}") && ! User::current()->isSuper()) {
-            abort('403');
-        }
 
         $blueprint = $resource->blueprint();
         $fields = $blueprint->fields();
@@ -78,10 +68,6 @@ class ResourceController extends CpController
         $resource = Runway::findResource($resourceHandle);
         $record = $resource->model();
 
-        if (! User::current()->hasPermission("Create new {$resource->plural()}") && ! User::current()->isSuper()) {
-            abort('403');
-        }
-
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
             if ($field->type() === 'section') {
                 continue;
@@ -106,14 +92,10 @@ class ResourceController extends CpController
         ];
     }
 
-    public function edit(Request $request, $resourceHandle, $record)
+    public function edit(EditRequest $request, $resourceHandle, $record)
     {
         $resource = Runway::findResource($resourceHandle);
         $record = $resource->model()->where($resource->routeKey(), $record)->first();
-
-        if (! User::current()->hasPermission("Edit {$resource->singular()}") && ! User::current()->isSuper()) {
-            abort('403');
-        }
 
         $values = [];
         $blueprintFieldKeys = $resource->blueprint()->fields()->all()->keys()->toArray();
@@ -163,10 +145,6 @@ class ResourceController extends CpController
         $resource = Runway::findResource($resourceHandle);
         $record = $resource->model()->where($resource->routeKey(), $record)->first();
 
-        if (! User::current()->hasPermission("Edit {$resource->singular()}") && ! User::current()->isSuper()) {
-            abort('403');
-        }
-
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
             if ($field->type() === 'section') {
                 continue;
@@ -194,10 +172,6 @@ class ResourceController extends CpController
         $resource = Runway::findResource($resourceHandle);
         $record = $resource->model()->where($resource->routeKey(), $record)->first();
 
-        if (! User::current()->hasPermission("Delete {$resource->singular()}") && ! User::current()->isSuper()) {
-            abort('403');
-        }
-
         $record->delete();
 
         return true;
@@ -209,14 +183,14 @@ class ResourceController extends CpController
      */
     protected function buildColumns($resource, $blueprint)
     {
-        return collect($resource->listingColumns())
+        return collect($resource->listableColumns())
             ->map(function ($columnKey) use ($resource, $blueprint) {
                 $field = $blueprint->field($columnKey);
 
                 return [
                     'handle' => $columnKey,
                     'title'  => !$field ? $columnKey : $field->display(),
-                    'has_link' => $resource->listingColumns()[0] === $columnKey,
+                    'has_link' => $resource->listableColumns()[0] === $columnKey,
                 ];
             })
             ->toArray();

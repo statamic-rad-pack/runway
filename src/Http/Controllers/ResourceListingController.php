@@ -16,11 +16,11 @@ class ResourceListingController extends CpController
         $blueprint = $resource->blueprint();
 
         if (! User::current()->hasPermission("View {$resource->plural()}") && ! User::current()->isSuper()) {
-            abort('403');
+            abort(403);
         }
 
-        $sortField = $request->input('sort', $resource->listingSort()['column']);
-        $sortDirection = $request->input('order', $resource->listingSort()['direction']);
+        $sortField     = $request->input('sort', $resource->primaryKey());
+        $sortDirection = $request->input('order', 'ASC');
 
         $query = $resource->model()
             ->orderBy($sortField, $sortDirection);
@@ -51,14 +51,14 @@ class ResourceListingController extends CpController
      */
     protected function buildColumns($resource, $blueprint)
     {
-        return collect($resource->listingColumns())
+        return collect($resource->listableColumns())
             ->map(function ($columnKey) use ($resource, $blueprint) {
                 $field = $blueprint->field($columnKey);
 
                 return [
                     'handle' => $columnKey,
                     'title'  => !$field ? $columnKey : $field->display(),
-                    'has_link' => $resource->listingColumns()[0] === $columnKey,
+                    'has_link' => $resource->listableColumns()[0] === $columnKey,
                 ];
             })
             ->toArray();

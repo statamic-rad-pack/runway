@@ -45,10 +45,10 @@ class BaseFieldtype extends Relationship
         $resource = Runway::findResource($this->config('resource'));
 
         return $resource->model()
-            ->orderBy($resource->listingSort()['column'], $resource->listingSort()['direction'])
+            ->orderBy($resource->primaryKey(), 'ASC')
             ->get()
             ->map(function ($record) use ($resource) {
-                return collect($resource->listingColumns())
+                return collect($resource->listableColumns())
                     ->mapWithKeys(function ($columnKey) use ($record) {
                         return [$columnKey => $record->{$columnKey}];
                     })
@@ -68,7 +68,7 @@ class BaseFieldtype extends Relationship
 
         return collect($data)
             ->map(function ($item) use ($resource) {
-                $column = $resource->listingColumns()[0];
+                $column = $resource->listableColumns()[0];
 
                 $fieldtype = $resource->blueprint()->field($column)->fieldtype();
                 $record = $resource->model()->firstWhere($resource->primaryKey(), $item);
@@ -104,7 +104,7 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        return collect($resource->listingColumns())
+        return collect($resource->listableColumns())
             ->map(function ($columnKey) {
                 return Column::make($columnKey);
             })
@@ -119,7 +119,7 @@ class BaseFieldtype extends Relationship
 
         return [
             'id'    => $record->getKey(),
-            'title' => $record->{collect($resource->listingColumns())->first()},
+            'title' => $record->{collect($resource->listableColumns())->first()},
         ];
     }
 }
