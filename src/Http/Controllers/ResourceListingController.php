@@ -51,14 +51,14 @@ class ResourceListingController extends CpController
      */
     protected function buildColumns($resource, $blueprint)
     {
-        return collect($resource->listingColumns())
+        return collect($resource->listableColumns())
             ->map(function ($columnKey) use ($resource, $blueprint) {
                 $field = $blueprint->field($columnKey);
 
                 return [
                     'handle' => $columnKey,
                     'title'  => !$field ? $columnKey : $field->display(),
-                    'has_link' => $resource->listingColumns()[0] === $columnKey,
+                    'has_link' => $resource->listableColumns()[0] === $columnKey,
                 ];
             })
             ->toArray();
