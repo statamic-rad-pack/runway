@@ -50,6 +50,12 @@
                         v-text="__('No results')"
                     />
 
+                    <!-- <data-list-bulk-actions
+                        :url="actionUrl"
+                        @started="actionStarted"
+                        @completed="actionCompleted"
+                    /> -->
+
                     <data-list-table
                         v-show="items.length"
                         :allow-bulk-actions="false"
@@ -62,21 +68,30 @@
                         @sorted="sorted"
                     >
                         <template :slot="primaryColumn" slot-scope="{ row, value }">
-                            <a :href="row.editUrl">{{ value }}</a>
+                            <a :href="row.edit_url">{{ value }}</a>
                         </template>
 
                         <template slot="actions" slot-scope="{ row, index }">
                             <dropdown-list>
                                 <dropdown-item
-                                    :text="__('Edit')"
-                                    :redirect="row.editUrl"
+                                    v-if="row.viewable && row.permalink"
+                                    :text="__('View')"
+                                    :redirect="row.permalink"
                                 />
 
                                 <dropdown-item
-                                    :text="__('Delete')"
-                                    class="warning"
-                                    @click="confirmDeleteRow(row._id, index, row.deleteUrl)"
-                                    v-if="true"
+                                    :text="__('Edit')"
+                                    :redirect="row.edit_url"
+                                />
+
+                                <div class="divider" v-if="row.actions.length" />
+
+                                <data-list-inline-actions
+                                    :item="row._id"
+                                    :url="actionUrl"
+                                    :actions="row.actions"
+                                    @started="actionStarted"
+                                    @completed="actionCompleted"
                                 />
                             </dropdown-list>
                         </template>
@@ -114,6 +129,7 @@ export default {
     props: {
         listingConfig: Array,
         columns: Array,
+        actionUrl: String,
     },
 
     data() {
@@ -167,7 +183,7 @@ export default {
 
         cancelDeleteRow() {
             this.deletingRow = false;
-            setTimeout(() => { 
+            setTimeout(() => {
                 this.visibleColumns = this.columns.filter(column => column.visible)
             }, 50);
         },

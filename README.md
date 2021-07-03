@@ -49,19 +49,6 @@ return [
         //             ],
         //         ],
         //     ],
-
-        //     'listing' => [
-        //         'columns' => [
-        //             'order_number',
-        //             'price',
-        //         ],
-
-        //         'sort' => [
-        //             'column' => 'paid_at',
-        //             'direction' => 'desc',
-        //         ],
-        //     ],
-        // ],
     ],
 
 ];
@@ -73,16 +60,17 @@ To configure the models you'd like to use Runway with, just create a new item in
 [
     'name' => 'Orders',
     'blueprint' => [...],
-    'listing' => [...],
 ],
 ```
 
+### Available configuration options
+
 For each of the resources, there's various configuration options available:
 
-### `name`
+#### `name`
 This will be the name displayed throughout the Control Panel for this resource. We recommend you use a plural for this.
 
-### `blueprint`
+#### `blueprint`
 This is where you can define the fields & sections for your model's blueprint. You can use any available fieldtypes with any of their configuration options. You can optionally add validation rules if you'd like and they'll be used when saving or updating the record.
 
 Make sure that you create a field for each of the required columns in your database or else you'll run into issues when saving. The handle for the field should match up with the column name in the database.
@@ -137,7 +125,7 @@ If you prefer, you can also create a normal blueprint file in `resources/bluepri
 
 Bear in mind that at the moment, blueprints in the root of `resources/blueprint` won't be displayed as editable in the Control Panel.
 
-### `hidden`
+#### `hidden`
 
 If you wish to hide a resource from the Control Panel navigation, add the `hidden` key to the resource in your config.
 
@@ -145,64 +133,29 @@ If you wish to hide a resource from the Control Panel navigation, add the `hidde
 'hidden' => true,
 ```
 
-### `listing`
+#### `listing`
 
-Inside `listing`, you can control certain aspects of how the resource's listing table displays records. You can currently configure the listing columns and the sort order of columns in the table.
+You may also customise certain aspects of the CP Listing, like the icon used in the navigation.
 
 ```php
 'listing' => [
-    'columns' => [
-        'order_number',
-        'price',
-    ],
-
-    'sort' => [
-        'column' => 'paid_at',
-        'direction' => 'desc',
-    ],
-
     'cp_icon' => 'icon-name-or-inline-svg',
 ],
-```
-
-#### Listing buttons
-
-**In the future, the plan is to replace this concept with [Actions](https://statamic.dev/extending/actions#content), the same way it works for collections. This means this feature will probably be removed in future versions.**
-
-If you need to add some sort of button to your resource listing page, like for a CSV export or something similar, you can add your own 'listing button'.
-
-![Banner](https://raw.githubusercontent.com/doublethreedigital/runway/master/listing-buttons.png)
-
-```php
-'listing' => [
-    ...
-
-    'buttons' => [
-        'Export as CSV' => YourController::class,
-    ],
-],
-```
-
-When a user clicks the button, it will run the specified controller's `__invoke` method. Make sure to add any logic you need into there!
-
-```php
-use DoubleThreeDigital\Runway\Resource;
-use Illuminate\Http\Request;
-
-class YourController extends Controller
-{
-    public function __invoke(Request $request, Resource $resource)
-    {
-        // Your code..
-    }
-}
 ```
 
 ## Usage
 
 ### Control Panel
 
-At it's core, Runway provides Control Panel views for each of your resources so you can view, create, update and delete Eloquent records. All the basic [CRUD](https://www.codecademy.com/articles/what-is-crud) actions you need.
+At it's core, Runway provides the ability for you to view, create and update Eloquent models. Basically all of the CRUD stuff that you need.
+
+Unless you've disabled it, each of your models will display in the CP Navigation. Clicking on one of them will show you a listing table, pretty similar to the one used for collection entries. You can search, set filters, show specific columns. All of that good stuff.
+
+#### Actions
+
+Runway provides full support for [Actions](https://statamic.dev/extending/actions#content) which allow you to preform tasks on items, using the 'three dots' button the right hand side of the listing row.
+
+By default, you'll see a 'View', 'Edit' and 'Delete' button there but you can add more if you wish. Documentation on using Actions can be found on [statamic.dev](https://statamic.dev/extending/actions#content).
 
 ### Routing
 
