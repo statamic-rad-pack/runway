@@ -21,11 +21,16 @@
             "providers": [
                 "DoubleThreeDigital\\Runway\\ServiceProvider"
             ]
+        },
+        "download-dist": {
+            "url": "https://github.com/doublethreedigital/runway/releases/download/{$version}/dist.tar.gz",
+            "path": "resources/dist"
         }
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "statamic/cms": "^3.0 || ^3.1"
+        "pixelfear/composer-dist-plugin": "^0.1.5",
+        "statamic/cms": "3.1.*"
     },
     "require-dev": {
         "nunomaduro/collision": "^4.2",

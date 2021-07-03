@@ -1,16 +1,20 @@
 <?php
 
-use DoubleThreeDigital\Runway\Http\Controllers\ModelController;
-use DoubleThreeDigital\Runway\Http\Controllers\ModelListingButtonController;
+use DoubleThreeDigital\Runway\Http\Controllers\ResourceActionController;
+use DoubleThreeDigital\Runway\Http\Controllers\ResourceController;
+use DoubleThreeDigital\Runway\Http\Controllers\ResourceListingController;
 use Illuminate\Support\Facades\Route;
 
 Route::name('runway.')->prefix('runway')->group(function () {
-    Route::get('/{model}', [ModelController::class, 'index'])->name('index');
-    Route::post('/{model}/listing-buttons', [ModelListingButtonController::class, 'index'])->name('listing-buttons');
+    Route::get('/{resourceHandle}', [ResourceController::class, 'index'])->name('index');
 
-    Route::get('/{model}/create', [ModelController::class, 'create'])->name('create');
-    Route::post('/{model}/create', [ModelController::class, 'store'])->name('store');
-    Route::get('/{model}/{record}', [ModelController::class, 'edit'])->name('edit');
-    Route::post('/{model}/{record}', [ModelController::class, 'update'])->name('update');
-    Route::delete('/{model}/{record}', [ModelController::class, 'destroy'])->name('destroy');
+    Route::get('/{resourceHandle}/listing-api', [ResourceListingController::class, 'index'])->name('listing-api');
+    Route::post('/{resourceHandle}/actions', [ResourceActionController::class, 'runAction'])->name('actions.run');
+    Route::post('/{resourceHandle}/actions/list', [ResourceActionController::class, 'bulkActionsList'])->name('actions.bulk');
+
+    Route::get('/{resourceHandle}/create', [ResourceController::class, 'create'])->name('create');
+    Route::post('/{resourceHandle}/create', [ResourceController::class, 'store'])->name('store');
+    Route::get('/{resourceHandle}/{record}', [ResourceController::class, 'edit'])->name('edit');
+    Route::post('/{resourceHandle}/{record}', [ResourceController::class, 'update'])->name('update');
+    Route::delete('/{resourceHandle}/{record}', [ResourceController::class, 'destroy'])->name('destroy');
 });

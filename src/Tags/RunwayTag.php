@@ -2,24 +2,23 @@
 
 namespace DoubleThreeDigital\Runway\Tags;
 
-use DoubleThreeDigital\Runway\AugmentedRecord;
-use DoubleThreeDigital\Runway\Support\ModelFinder;
-use Statamic\Fields\Field;
+use DoubleThreeDigital\Runway\Resource;
+use DoubleThreeDigital\Runway\Runway;
 use Statamic\Tags\Tags;
 
 class RunwayTag extends Tags
 {
     protected static $handle = 'runway';
 
-    public function wildcard($model = null)
+    public function wildcard($resourceHandle = null)
     {
-        $model = ModelFinder::find(
-            $this->params->has('model') ? $this->params->get('model') : $model
+        $resource = Runway::findResource(
+            $this->params->has('resource') ? $this->params->get('resource') : $resourceHandle
         );
 
-        $blueprint = $model['blueprint'];
+        $blueprint = $resource->blueprint();
 
-        $query = (new $model['model']())->query();
+        $query = $resource->model()->query();
 
         if ($this->params->has('where') && $where = $this->params->get('where')) {
             $query->where(explode(':', $where)[0], explode(':', $where)[1]);
@@ -40,28 +39,22 @@ class RunwayTag extends Tags
         }
 
         if (! $this->params->has('as')) {
-            return $this->augmentRecords($results, $blueprint);
+            return $this->augmentRecords($results, $resource);
         }
 
         return [
-            $this->params->get('as') => $this->augmentRecords($results, $blueprint),
+            $this->params->get('as') => $this->augmentRecords($results, $resource),
             'paginate'   => isset($paginator) ? $paginator->toArray() : null,
             'no_results' => collect($results)->isEmpty(),
         ];
     }
 
-    protected function augmentRecords($query, $blueprint)
+    protected function augmentRecords($query, Resource $resource)
     {
         return collect($query)
-            ->map(function ($record, $key) use ($blueprint) {
-                return $this->augmentRecord($record, $blueprint);
+            ->map(function ($record, $key) use ($resource) {
+                return $resource->augment($record);
             })
             ->toArray();
-    }
-
-    // TODO: replace calls to this method with the real deal
-    protected function augmentRecord($record, $blueprint)
-    {
-        return AugmentedRecord::augment($record, $blueprint);
     }
 }

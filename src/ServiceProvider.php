@@ -2,8 +2,6 @@
 
 namespace DoubleThreeDigital\Runway;
 
-use DoubleThreeDigital\Runway\Support\ModelFinder;
-use DoubleThreeDigital\Runway\Tags\RunwayTag;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\Permission;
 use Statamic\Providers\AddonServiceProvider;
@@ -11,6 +9,14 @@ use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
+    protected $actions = [
+        Actions\Delete::class,
+    ];
+
+    protected $commands = [
+        Console\Commands\RebuildUriCache::class,
+    ];
+
     protected $fieldtypes = [
         Fieldtypes\BelongsToFieldtype::class,
     ];
@@ -19,8 +25,16 @@ class ServiceProvider extends AddonServiceProvider
         'cp' => __DIR__ . '/../routes/cp.php',
     ];
 
+    protected $scripts = [
+        __DIR__.'/../resources/dist/js/cp.js',
+    ];
+
     protected $tags = [
-        RunwayTag::class,
+        Tags\RunwayTag::class,
+    ];
+
+    protected $updateScripts = [
+        UpdateScripts\ModelsToResources::class,
     ];
 
     public function boot()
@@ -30,35 +44,49 @@ class ServiceProvider extends AddonServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'runway');
         $this->mergeConfigFrom(__DIR__.'/../config/runway.php', 'runway');
 
+        if (! config('runway.disable_migrations')) {
+            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        }
+
         $this->publishes([
             __DIR__.'/../config/runway.php' => config_path('runway.php'),
         ], 'runway-config');
 
         Statamic::booted(function () {
-            ModelFinder::bootModels();
+            Runway::discoverResources();
 
-            Nav::extend(function ($nav) {
-                foreach (ModelFinder::all() as $model) {
-                    if ($model['hidden']) {
-                        continue;
-                    }
+            $this->registerPermissions();
 
-                    $nav->content($model['name'])
-                        ->icon($model['cp_icon'])
-                        ->route('runway.index', ['model' => $model['_handle']]);
-                }
-            });
-
-            foreach (ModelFinder::all() as $model) {
-                Permission::register("View {$model['_handle']}", function ($permission) use ($model) {
-                    $permission->children([
-                        Permission::make("Edit {$model['_handle']}")->children([
-                            Permission::make("Create new {$model['_handle']}"),
-                            Permission::make("Delete {$model['_handle']}"),
-                        ]),
-                    ]);
-                })->group('Runway');
+            if (Runway::usesRouting()) {
+                $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
+                    ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
             }
         });
+    }
+
+    protected function registerPermissions()
+    {
+        Nav::extend(function ($nav) {
+            foreach (Runway::allResources() as $resource) {
+                if ($resource->hidden()) {
+                    continue;
+                }
+
+                $nav->content($resource->name())
+                    ->icon($resource->cpIcon())
+                    ->route('runway.index', ['resourceHandle' => $resource->handle()]);
+            }
+        });
+
+        foreach (Runway::allResources() as $resource) {
+            Permission::register("View {$resource->plural()}", function ($permission) use ($resource) {
+                $permission->children([
+                    Permission::make("Edit {$resource->plural()}")->children([
+                        Permission::make("Create new {$resource->singular()}"),
+                        Permission::make("Delete {$resource->singular()}"),
+                    ]),
+                ]);
+            })->group('Runway');
+        }
     }
 }

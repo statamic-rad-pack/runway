@@ -1,0 +1,67 @@
+name: Release
+
+# This workflow tags a release, builds front-end assets and sends various notifications & webhooks when a release has been created.
+# How to use:
+# 1. Create a git tag - `git tag <version number>`
+# 2. Push tags to the origin - `git push origin --tags`
+# 3. This Github Action will do its stuff...
+# 4. Then it will pull the latest notes from CHANGELOG.md and add them to the release.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: Prepare & Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+          tools: composer:v2
+
+      - name: Install NPM Dependencies
+        run: npm install
+
+      - name: Install Composer Dependencies
+        run: composer install
+
+      - name: Compile assets
+        run: npm run production
+
+      - name: Create zip
+        run: cd resources && tar -czvf dist.tar.gz dist
+
+      - name: Get Changelog
+        id: changelog
+        uses: statamic/changelog-action@v1
+        with:
+          version: ${{ github.ref }}
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: ${{ steps.changelog.outputs.text }}
+          prerelease: ${{ contains(github.ref, '-beta') }}
+
+      - name: Upload zip to release
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./resources/dist.tar.gz
+          asset_name: dist.tar.gz
+          asset_content_type: application/tar+gz

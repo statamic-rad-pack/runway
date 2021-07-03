@@ -4,15 +4,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Eloquent Models
+    | Resources
     |--------------------------------------------------------------------------
     |
-    | Configure the eloquent models you wish to be editable with Runway and
-    | the fields you want on the model's blueprint.
+    | Configure the resources (models) you'd like to be available in Runway.
     |
     */
 
-    'models' => [
+    'resources' => [
         // \App\Models\Order::class => [
         //     'name' => 'Orders',
 
@@ -31,19 +30,18 @@ return [
         //             ],
         //         ],
         //     ],
-
-        //     'listing' => [
-        //         'columns' => [
-        //             'order_number',
-        //             'price',
-        //         ],
-
-        //         'sort' => [
-        //             'column' => 'paid_at',
-        //             'direction' => 'desc',
-        //         ],
-        //     ],
-        // ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Disable Migrations?
+    |--------------------------------------------------------------------------
+    |
+    | Should Runway's migrations be disabled?
+    | (eg. not automatically run when you next vendor:publish)
+    |
+    */
+
+    'disable_migrations' => false,
 
 ];
