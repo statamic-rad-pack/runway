@@ -166,6 +166,27 @@ Make sure that the handles of the fields are the same as the column names in you
 
 When writing your migrations, please ensure that fields not required in your blueprint should be `->nullable()` in the migration. Otherwise, you'll end up with a nasty error.
 
+As a general rule of thumb, if something saves as an array when saving as YAML, you should probably use a `json` column and cast that in your model, like below:
+
+**Bard, Array, Grid, Replicator fieldtypes**
+
+Bard, Array, Grid, Replicator all save as an array in Statamic flat files, so these fieldtypes should be set as a JSON column in your Laravel migration.
+
+1. Setup your field in your config or blueprint.
+2. Create a column in your migration for your field using the `json` column type:
+
+```php
+$table->json('my_bard_content')->nullable();
+```
+
+3. In your Eloquent model, cast the column to JSON.
+
+```php
+protected $casts = [
+    'my_bard_content' => 'json',
+];
+```
+
 #### `hidden`
 
 If you wish to hide a resource from the Control Panel navigation, add the `hidden` key to the resource in your config.
