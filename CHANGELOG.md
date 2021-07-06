@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.1 (2021-07-06)
+
+### What's fixed
+
+* Listing rows will now be properly displayed with `preProcessIndex` (it'll fix the display of Date fields) #52
+
 ## v2.1.0 (2021-07-03)
 
 **⚠️ This update contains breaking changes.**

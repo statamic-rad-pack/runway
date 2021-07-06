@@ -65,6 +65,10 @@ class ResourceCollection extends LaravelResourceCollection
                     if (! in_array($key, $columns)) {
                         unset($row[$key]);
                     }
+
+                    if ($this->runwayResource->blueprint()->hasField($key)) {
+                        $row[$key] = $this->runwayResource->blueprint()->field($key)->setValue($value)->preProcessIndex()->value();
+                    }
                 }
 
                 $row['_id'] = $record->getKey();
