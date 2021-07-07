@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v2.1.2 (2021-07-07)
+
+### What's fixed
+
+* You'll no longer get an error when editing a model if you have `getRouteKeyName` defined on your model. #53
+* Fixed an issue where a fieldtype's `Index` component would not be rendered #52
+
 ## v2.1.1 (2021-07-06)
 
 ### What's fixed
