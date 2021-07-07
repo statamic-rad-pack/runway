@@ -25,15 +25,12 @@ class ResourceCollection extends LaravelResourceCollection
         return $this;
     }
 
-    public function setColumns($columns)
+    public function setColumns($originalColumns)
     {
-        $listingColumns = [];
-
-        foreach ($columns as $column) {
-            $listingColumns[] = Column::make($column['handle'])->label($column['title']);
-        }
-
-        $columns = new Columns($listingColumns);
+        $columns = $this->runwayResource->blueprint()->columns()
+            ->filter(function ($column) use ($originalColumns) {
+                return in_array($column->field, collect($originalColumns)->pluck('handle')->toArray());
+            });
 
         if ($key = $this->columnPreferenceKey) {
             $columns->setPreferred($key);
