@@ -300,7 +300,13 @@ class GenerateMigration extends Command
                 }
 
                 if ($column['default'] !== null) {
-                    // $code .= '->default(' . $column['default'] . ')';
+                    if (is_string($column['default'])) {
+                        $code .= '->default(\'' . $column['default'] . '\')';
+                    }
+
+                    if (is_int($column['default']) || is_float($column['default'])) {
+                        $code .= '->default(' . $column['default'] . ')';
+                    }
                 }
 
                 return $code . ';';
