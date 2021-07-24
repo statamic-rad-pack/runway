@@ -168,6 +168,22 @@ When writing your migrations, please ensure that fields not required in your blu
 
 As a general rule of thumb, if something saves as an array when saving as YAML, you should probably use a `json` column and cast that in your model, like below:
 
+##### Generating a migration from your blueprint
+
+If you already have a blueprint and you'd like to generate a migration from the fields in there, you can use the following command:
+
+```
+php please runway:generate-migrations resource-handle
+```
+
+If you'd like to generate for all resources, you can use the following:
+
+```
+php please runway:generate-migrations
+```
+
+This command will generate the right columns based on the `max_items` configuration on fields, the defaults set and whether or not fields have the `required` validation rule.
+
 **Bard, Array, Grid, Replicator fieldtypes**
 
 Bard, Array, Grid, Replicator all save as an array in Statamic flat files, so these fieldtypes should be set as a JSON column in your Laravel migration.
