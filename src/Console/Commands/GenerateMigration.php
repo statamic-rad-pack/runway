@@ -5,7 +5,9 @@ namespace DoubleThreeDigital\Runway\Console\Commands;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 use Statamic\Console\RunsInPlease;
 use Statamic\Fields\Field;
 use Illuminate\Support\Str;
@@ -237,7 +239,11 @@ class GenerateMigration extends Command
             })
             ->all();
 
-        $this->generateNewTableMigration($resource, $columns);
+        if (Schema::hasTable($resource->databaseTable())) {
+            $errorMessages[] = "Table [{$resource->databaseTable()}] already exists. Runway is not smart enough yet to update existing migrations. Sorry!";
+        } else {
+            $this->generateNewTableMigration($resource, $columns);
+        }
 
         if (count($errorMessages) === 0) {
             $this->line("✔️ {$resource->name()}");
@@ -302,13 +308,13 @@ class GenerateMigration extends Command
             ->join(PHP_EOL);
 
         $migrationContents = Str::of($migrationContents)
-            ->replace('{{ClassName}}', "Create{$resource->plural()}Table")
-            ->replace('{{TableName}}', Str::lower($resource->plural()))
+            ->replace('{{ClassName}}', 'Create'.Str::title($resource->databaseTable()).'Table')
+            ->replace('{{TableName}}', $resource->databaseTable())
             ->replace('{{TableColumns}}', $columnCode)
             ->__toString();
 
         File::put(
-            $migrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_'.Str::lower($resource->plural()).'_tables.php',
+            $migrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_'.$resource->databaseTable().'_tables.php',
             $migrationContents
         );
 
