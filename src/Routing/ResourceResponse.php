@@ -61,7 +61,7 @@ class ResourceResponse implements Responsable
 
     protected function contents()
     {
-        $contents = (new View)
+        $contents = (new View())
             ->template($this->data->template())
             ->layout($this->data->layout())
             ->with(

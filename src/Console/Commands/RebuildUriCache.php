@@ -67,7 +67,7 @@ class RebuildUriCache extends Command
                 $resource->model()->all()->each(function ($model) use ($resource) {
                     $this->line("{$resource->name()}: {$model->{$resource->primaryKey()}}");
 
-                    $uri = (new Parser)
+                    $uri = (new Parser())
                         ->parse($resource->route(), $resource->augment($model))
                         ->__toString();
 
