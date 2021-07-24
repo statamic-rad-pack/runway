@@ -35,7 +35,8 @@
     },
     "require-dev": {
         "nunomaduro/collision": "^4.2",
-        "orchestra/testbench": "^4.0|^5.0|^6.0"
+        "orchestra/testbench": "^4.0|^5.0|^6.0",
+        "spatie/test-time": "^1.2"
     },
     "scripts": {
         "lint": [
