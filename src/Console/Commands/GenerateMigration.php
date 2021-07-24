@@ -234,40 +234,10 @@ class GenerateMigration extends Command
                 if (is_null($column['type'])) {
                     $errorMessages[] = "Field [{$column['name']}] could not be matched with a column type.";
                 }
-            });
-
-        // Create our migration
-        $migrationContents = File::get(__DIR__.'/stubs/create_table_migration.php.stub');
-
-        $columnCode = collect($columns)
-            ->map(function ($column) {
-                $code = '$table->'.$column['type'].'(\''.$column['name'].'\')';
-
-                if ($column['nullable']) {
-                    $code .= '->nullable()';
-                }
-
-                if ($column['default'] !== null) {
-                    // $code .= '->default(' . $column['default'] . ')';
-                }
-
-                return $code . ';';
             })
-            ->join(PHP_EOL);
+            ->all();
 
-        $migrationContents = Str::of($migrationContents)
-            ->replace('{{ClassName}}', "Create{$resource->plural()}Table")
-            ->replace('{{TableName}}', Str::lower($resource->plural()))
-            ->replace('{{TableColumns}}', $columnCode)
-            ->__toString();
-
-        File::put(
-            $migrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_'.Str::lower($resource->plural()).'_tables.php',
-            $migrationContents
-        );
-
-        $process = new Process(['./vendor/bin/php-cs-fixer', 'fix', $migrationPath, '--rules=@PSR2,@PhpCsFixer'], base_path());
-        $process->run();
+        $this->generateNewTableMigration($resource, $columns);
 
         // Output
         if (count($errorMessages) === 0) {
@@ -310,5 +280,40 @@ class GenerateMigration extends Command
         }
 
         return true;
+    }
+
+    protected function generateNewTableMigration(Resource $resource, array $columns)
+    {
+        $migrationContents = File::get(__DIR__.'/stubs/create_table_migration.php.stub');
+
+        $columnCode = collect($columns)
+            ->map(function ($column) {
+                $code = '$table->'.$column['type'].'(\''.$column['name'].'\')';
+
+                if ($column['nullable']) {
+                    $code .= '->nullable()';
+                }
+
+                if ($column['default'] !== null) {
+                    // $code .= '->default(' . $column['default'] . ')';
+                }
+
+                return $code . ';';
+            })
+            ->join(PHP_EOL);
+
+        $migrationContents = Str::of($migrationContents)
+            ->replace('{{ClassName}}', "Create{$resource->plural()}Table")
+            ->replace('{{TableName}}', Str::lower($resource->plural()))
+            ->replace('{{TableColumns}}', $columnCode)
+            ->__toString();
+
+        File::put(
+            $migrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_'.Str::lower($resource->plural()).'_tables.php',
+            $migrationContents
+        );
+
+        $process = new Process(['./vendor/bin/php-cs-fixer', 'fix', $migrationPath, '--rules=@PSR2,@PhpCsFixer'], base_path());
+        $process->run();
     }
 }
