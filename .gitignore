@@ -9,3 +9,4 @@ tests/__fixtures__/users/.yaml
 
 resources/dist/js/*.js
 resources/dist/mix-manifest.json
+.php-cs-fixer.cache
