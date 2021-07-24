@@ -5,9 +5,11 @@ namespace DoubleThreeDigital\Runway\Console\Commands;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 use Statamic\Console\RunsInPlease;
 use Statamic\Fields\Field;
+use Illuminate\Support\Str;
+use Symfony\Component\Process\Process;
 
 class GenerateMigration extends Command
 {
@@ -234,8 +236,40 @@ class GenerateMigration extends Command
                 }
             });
 
-        // TODO: Actually create the migration file..
+        // Create our migration
+        $migrationContents = File::get(__DIR__.'/stubs/create_table_migration.php.stub');
 
+        $columnCode = collect($columns)
+            ->map(function ($column) {
+                $code = '$table->'.$column['type'].'(\''.$column['name'].'\')';
+
+                if ($column['nullable']) {
+                    $code .= '->nullable()';
+                }
+
+                if ($column['default'] !== null) {
+                    // $code .= '->default(' . $column['default'] . ')';
+                }
+
+                return $code . ';';
+            })
+            ->join(PHP_EOL);
+
+        $migrationContents = Str::of($migrationContents)
+            ->replace('{{ClassName}}', "Create{$resource->plural()}Table")
+            ->replace('{{TableName}}', Str::lower($resource->plural()))
+            ->replace('{{TableColumns}}', $columnCode)
+            ->__toString();
+
+        File::put(
+            $migrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_'.Str::lower($resource->plural()).'_tables.php',
+            $migrationContents
+        );
+
+        $process = new Process(['./vendor/bin/php-cs-fixer', 'fix', $migrationPath, '--rules=@PSR2,@PhpCsFixer'], base_path());
+        $process->run();
+
+        // Output
         if (count($errorMessages) === 0) {
             $this->line("✔️ {$resource->name()}");
             $this->line("");
