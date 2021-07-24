@@ -239,7 +239,6 @@ class GenerateMigration extends Command
 
         $this->generateNewTableMigration($resource, $columns);
 
-        // Output
         if (count($errorMessages) === 0) {
             $this->line("✔️ {$resource->name()}");
             $this->line("");
