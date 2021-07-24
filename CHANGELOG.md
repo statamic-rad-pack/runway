@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.3 (2021-07-24)
+
+### What's new
+
+* You can now generate migrations from an existing blueprint #56
+
 ## v2.1.2 (2021-07-07)
 
 ### What's fixed
