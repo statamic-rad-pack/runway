@@ -77,7 +77,7 @@ trait RunwayRoutes
                 return;
             }
 
-            $uri = (new Parser)
+            $uri = (new Parser())
                 ->parse($resource->route(), $resource->augment($model))
                 ->__toString();
 

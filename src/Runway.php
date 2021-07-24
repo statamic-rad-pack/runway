@@ -16,7 +16,7 @@ class Runway
             ->mapWithKeys(function ($config, $model) {
                 $handle = Str::lower(class_basename($model));
 
-                $resource = (new Resource)
+                $resource = (new Resource())
                     ->handle($handle)
                     ->model($model)
                     ->name($config['name'])
@@ -46,7 +46,7 @@ class Runway
             })
             ->toArray();
 
-        return new static;
+        return new static();
     }
 
     public static function allResources(): Collection
