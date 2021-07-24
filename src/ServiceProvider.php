@@ -14,6 +14,7 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $commands = [
+        Console\Commands\GenerateMigration::class,
         Console\Commands\RebuildUriCache::class,
     ];
 

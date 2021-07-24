@@ -29,12 +29,14 @@
     },
     "require": {
         "php": "^7.4 || ^8.0",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "pixelfear/composer-dist-plugin": "^0.1.5",
         "statamic/cms": "3.1.*"
     },
     "require-dev": {
         "nunomaduro/collision": "^4.2",
-        "orchestra/testbench": "^4.0|^5.0|^6.0"
+        "orchestra/testbench": "^4.0|^5.0|^6.0",
+        "spatie/test-time": "^1.2"
     },
     "scripts": {
         "lint": [
