@@ -18,9 +18,17 @@ class Runway
 
                 $resource = (new Resource())
                     ->handle($handle)
-                    ->model($model)
-                    ->name($config['name'])
-                    ->blueprint($config['blueprint']);
+                    ->model($model);
+
+                if (isset($config['name'])) {
+                    $resource->name($config['name']);
+                } else {
+                    $resource->name(Str::title($handle));
+                }
+
+                if (isset($config['blueprint'])) {
+                    $resource->blueprint($config['blueprint']);
+                }
 
                 if (isset($config['listing']['cp_icon'])) {
                     $resource->cpIcon($config['listing']['cp_icon']);
