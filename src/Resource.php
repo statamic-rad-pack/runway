@@ -103,6 +103,13 @@ class Resource
 
                 return $value;
             })
+            ->getter(function ($value) {
+                if (! $this->blueprint()) {
+                    return true;
+                }
+
+                return $value;
+            })
             ->args(func_get_args());
     }
 
