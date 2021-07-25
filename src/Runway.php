@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway;
 
 use DoubleThreeDigital\Runway\Exceptions\ModelNotFound;
+use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -67,8 +68,7 @@ class Runway
         $resource = collect(static::$resources)->get($resourceHandle);
 
         if (! $resource) {
-            // TODO: replace with ResourceNotFound
-            throw new ModelNotFound("Runway could not find [{$resourceHandle}]. Please ensure its configured properly and you're using the correct handle.");
+            throw new ResourceNotFound($resourceHandle);
         }
 
         return $resource;
@@ -81,8 +81,7 @@ class Runway
         })->first();
 
         if (! $resource) {
-            // TODO: replace with ResourceNotFound
-            throw new ModelNotFound("Runway could not find [{$model}]. Please ensure its configured properly and you're using the correct model.");
+            throw new ResourceNotFound(get_class($model));
         }
 
         return $resource;
