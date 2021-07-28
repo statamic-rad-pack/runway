@@ -18,7 +18,7 @@
         <runway-listing-view
             :filters="{{ $filters->toJson() }}"
             :listing-config='@json($listingConfig)'
-            :columns='@json($columns)'
+            :initial-columns='@json($columns)'
             action-url="{{ $actionUrl }}"
         ></runway-listing-view>
      @else
