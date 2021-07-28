@@ -127,7 +127,7 @@ export default {
     mixins: [Listing],
 
     props: {
-        listingConfig: Array,
+        listingConfig: Object,
         columns: Array,
         actionUrl: String,
     },
