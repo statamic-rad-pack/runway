@@ -128,15 +128,15 @@ export default {
 
     props: {
         listingConfig: Object,
-        columns: Array,
+        initialColumns: Array,
         actionUrl: String,
     },
 
     data() {
         let primaryColumn = ''
 
-        if (this.columns) {
-            this.columns.forEach((column) => {
+        if (this.initialColumns) {
+            this.initialColumns.forEach((column) => {
                 if (column.has_link)
                     primaryColumn = column.handle
                 }
@@ -147,7 +147,7 @@ export default {
             listingKey: 'id',
             preferencesPrefix: this.listingConfig.preferencesPrefix ?? 'runway',
             requestUrl: this.listingConfig.requestUrl,
-            columns: this.columns,
+            columns: this.initialColumns,
             meta: {},
             primaryColumn: `cell-${primaryColumn}`,
             deletingRow: false,
