@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## v2.1.4 (2021-07-29)
+
+### What's fixed
+
+* Updated the way we handle dates on the edit resource page #60
+* Runway will now throw the `ResourceNotFound` exception when a resource can not be found.
+* Fixed a console error that popped up when configuring listing columns #61
+* Little tiny other fix (probably didn't affect anyone - was related to something inside Runway's Vue components) #59
+
 ## v2.1.3 (2021-07-24)
 
 ### What's new
