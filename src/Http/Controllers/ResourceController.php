@@ -104,7 +104,13 @@ class ResourceController extends CpController
             $value = $record->{$fieldKey};
 
             if ($value instanceof \Carbon\Carbon) {
-                $value = $value->format('Y-m-d H:i');
+                $format = $defaultFormat = 'Y-m-d H:i';
+
+                if ($field = $resource->blueprint()->field($fieldKey)) {
+                    $format = $field->get('format', $defaultFormat);
+                }
+
+                $value = $value->format($format);
             }
 
             if (Json::isJson($value)) {

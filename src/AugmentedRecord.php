@@ -14,9 +14,18 @@ class AugmentedRecord
         $resource = Runway::findResourceByModel($record);
 
         return collect($record)
-            ->map(function ($value, $key) use ($blueprint) {
+            ->map(function ($value, $key) use ($record, $resource, $blueprint) {
+
+                $value = $record->{$key} ?? $value;
+
                 if ($value instanceof CarbonInterface) {
-                    return $value->format('Y-m-d H:i');
+                    $format = $defaultFormat = 'Y-m-d H:i';
+
+                    if ($field = $resource->blueprint()->field($key)) {
+                        $format = $field->get('format', $defaultFormat);
+                    }
+
+                    return $value->format($format);
                 }
 
                 if (Json::isJson($value)) {
