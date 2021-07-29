@@ -19,10 +19,9 @@ class AugmentedRecord
                 $value = $record->{$key} ?? $value;
 
                 if ($value instanceof CarbonInterface) {
-                    $field = $resource->blueprint()->field($key);
-
                     $format = $defaultFormat = 'Y-m-d H:i';
-                    if ($field) {
+
+                    if ($field = $resource->blueprint()->field($key)) {
                         $format = $field->get('format', $defaultFormat);
                     }
 

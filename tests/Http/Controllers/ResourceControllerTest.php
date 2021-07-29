@@ -78,6 +78,47 @@ class ResourceControllerTest extends TestCase
             ->assertSee($post->body);
     }
 
+    /**
+     * @test
+     * @dataProvider dateTimeProvider
+     */
+    public function can_edit_resource_with_datetime_field(array $options)
+    {
+        // Override the config to add the created_at field
+        $configKey = 'runway.resources.' . Post::class . '.blueprint.sections.main.fields';
+        $fields = $this->app['config']->get($configKey, []);
+
+        $fields[] = [
+            'handle' => 'created_at',
+            'field'  => array_filter($options),
+        ];
+
+        $this->app['config']->set($configKey, $fields);
+
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+        $post = $this->postFactory();
+
+        /** @var Resource $resource */
+        $resource = Runway::findResource('post');
+        $record = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
+
+        $this->assertEquals($post->getKey(), $record->getKey());
+
+        $response = $this->actingAs($user)
+            ->get(cp_route('runway.edit', [
+                'resourceHandle' => 'post',
+                'record'         => $post->id,
+            ]))
+            ->assertOk();
+
+        $this->assertEquals(
+            $post->created_at->format($options['expected_format'] ?? $options['format'] ??  'Y-m-d'),
+            $response->viewData('values')->get('created_at')
+        );
+    }
+
     /** @test */
     public function can_update_resource()
     {
@@ -117,44 +158,6 @@ class ResourceControllerTest extends TestCase
         $this->assertDatabaseMissing('posts', [
             'id' => $post->id,
         ]);
-    }
-
-    /**
-     * @test
-     * @dataProvider dateTimeProvider
-     */
-    public function can_edit_resource_with_datetime_field(array $options)
-    {
-        // Override the config to add the created_at field
-        $configKey = 'runway.resources.' . Post::class . '.blueprint.sections.main.fields';
-        $fields = $this->app['config']->get($configKey, []);
-        $fields[] = [
-            'handle' => 'created_at',
-            'field'  => array_filter($options),
-        ];
-        $this->app['config']->set($configKey, $fields);
-        Runway::discoverResources();
-
-        $user = User::make()->makeSuper()->save();
-
-        $post = $this->postFactory();
-        /** @var Resource $resource */
-        $resource = Runway::findResource('post');
-        $record = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
-
-        $this->assertEquals($post->getKey(), $record->getKey());
-
-        $response = $this->actingAs($user)
-            ->get(cp_route('runway.edit', [
-                'resourceHandle' => 'post',
-                'record'         => $post->id
-            ]))
-            ->assertOk();
-
-        $this->assertEquals(
-            $post->created_at->format($options['expected_format'] ?? $options['format'] ??  'Y-m-d'),
-            $response->viewData('values')->get('created_at')
-        );
     }
 
     public function dateTimeProvider()

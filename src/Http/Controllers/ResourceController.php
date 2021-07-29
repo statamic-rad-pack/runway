@@ -10,10 +10,8 @@ use DoubleThreeDigital\Runway\Http\Requests\UpdateRequest;
 use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Statamic\CP\Breadcrumbs;
 use Statamic\Facades\Scope;
-use Statamic\Fieldtypes\Date;
 use Statamic\Http\Controllers\CP\CpController;
 
 class ResourceController extends CpController
@@ -106,11 +104,9 @@ class ResourceController extends CpController
             $value = $record->{$fieldKey};
 
             if ($value instanceof \Carbon\Carbon) {
-                /** @var Date $field */
-                $field = $resource->blueprint()->field($fieldKey);
                 $format = $defaultFormat = 'Y-m-d H:i';
 
-                if ($field) {
+                if ($field = $resource->blueprint()->field($fieldKey)) {
                     $format = $field->get('format', $defaultFormat);
                 }
 
