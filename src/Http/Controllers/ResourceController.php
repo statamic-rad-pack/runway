@@ -138,7 +138,7 @@ class ResourceController extends CpController
             'meta'      => $fields->meta(),
             'action'    => cp_route('runway.update', [
                 'resourceHandle'  => $resource->handle(),
-                'record' => $record->{$resource->primaryKey()},
+                'record' => $record->{$resource->routeKey()},
             ]),
             'permalink' => $resource->hasRouting()
                 ? $record->uri()
