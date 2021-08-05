@@ -23,7 +23,7 @@
         ></runway-listing-view>
      @else
         @include('statamic::partials.create-first', [
-            'resource' => $title,
+            'resource' => $resource->singular(),
             'svg' => 'empty/collection',
             'route' => cp_route('runway.create', ['resourceHandle' => $resource->handle()]),
         ])
