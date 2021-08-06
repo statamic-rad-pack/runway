@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v2.1.5 (2021-07-30)
+
+### What's fixed
+
+* Runway will now no longer 'double encode' JSON if you've added a cast to your model #62
+* Fixed issue where updating models wouldn't work, if your model had a custom route key set
+
 ## v2.1.4 (2021-07-29)
 
 ### What's fixed
