@@ -7,9 +7,12 @@ use DoubleThreeDigital\Runway\Runway;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
+use Statamic\Query\Scopes\Filters\Concerns\QueriesFilters;
 
 class ResourceListingController extends CpController
 {
+    use QueriesFilters;
+
     public function index(FilteredRequest $request, $resourceHandle)
     {
         $resource = Runway::findResource($resourceHandle);
