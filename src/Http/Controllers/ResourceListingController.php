@@ -26,13 +26,17 @@ class ResourceListingController extends CpController
             ->orderBy($sortField, $sortDirection);
 
         if ($searchQuery = $request->input('search')) {
-            $query->where(function ($query) use ($searchQuery, $blueprint) {
-                $wildcard = '%'.$searchQuery.'%';
+            if ($query->hasNamedScope('runwaySearch')) {
+                $query->runwaySearch($searchQuery);
+            } else {
+                $query->where(function ($query) use ($searchQuery, $blueprint) {
+                    $wildcard = '%' . $searchQuery . '%';
 
-                foreach ($blueprint->fields()->items()->toArray() as $field) {
-                    $query->orWhere($field['handle'], 'LIKE', $wildcard);
-                }
-            });
+                    foreach ($blueprint->fields()->items()->toArray() as $field) {
+                        $query->orWhere($field['handle'], 'LIKE', $wildcard);
+                    }
+                });
+            }
         }
 
         $results = $query->paginate($request->input('perPage', config('statamic.cp.pagination_size')));

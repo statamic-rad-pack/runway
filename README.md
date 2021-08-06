@@ -221,6 +221,16 @@ You may also customise certain aspects of the CP Listing, like the icon used in 
 ],
 ```
 
+You can also customize the way the CP search works in the Listing page, by adding a scope named `runwaySearch` to your model.
+If there is no scope set, Runway will do a simple `orWhere` query on your model's fields.
+
+```php
+public function scopeRunwaySearch($query, $search)
+{
+    $query->where('some_field', $search);
+}
+```
+
 ## Usage
 
 ### Control Panel
