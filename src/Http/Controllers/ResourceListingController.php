@@ -25,6 +25,13 @@ class ResourceListingController extends CpController
         $query = $resource->model()
             ->orderBy($sortField, $sortDirection);
 
+        $activeFilterBadges = $this->queryFilters($query, $request->filters, [
+            'collection' => $resourceHandle,
+            'blueprints' => [
+                $blueprint
+            ],
+        ]);
+
         if ($searchQuery = $request->input('search')) {
             $query->where(function ($query) use ($searchQuery, $blueprint) {
                 $wildcard = '%'.$searchQuery.'%';
@@ -42,7 +49,10 @@ class ResourceListingController extends CpController
         return (new ResourceCollection($results))
             ->setResourceHandle($resourceHandle)
             ->setColumnPreferenceKey('runway.'.$resourceHandle.'.columns')
-            ->setColumns($columns);
+            ->setColumns($columns)
+            ->additional(['meta' => [
+                'activeFilterBadges' => $activeFilterBadges,
+            ]]);
     }
 
     /**
