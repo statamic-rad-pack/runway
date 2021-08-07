@@ -96,6 +96,7 @@ class BaseFieldtype extends Relationship
         });
     }
 
+    // Augments the value for front-end use
     public function augment($values)
     {
         $resource = Runway::findResource($this->config('resource'));
@@ -113,6 +114,7 @@ class BaseFieldtype extends Relationship
         return $result->toArray();
     }
 
+    // Provides the columns used if you're in 'Stacks' mode
     protected function getColumns()
     {
         $resource = Runway::findResource($this->config('resource'));
@@ -125,6 +127,7 @@ class BaseFieldtype extends Relationship
             ->toArray();
     }
 
+    // Provides the initial state after loading the fieldtype on a saved entry/model
     protected function toItemArray($id)
     {
         $resource = Runway::findResource($this->config('resource'));
