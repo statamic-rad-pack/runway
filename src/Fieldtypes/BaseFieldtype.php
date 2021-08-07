@@ -40,6 +40,7 @@ class BaseFieldtype extends Relationship
         ];
     }
 
+    // Provides the dropdown options
     public function getIndexItems($request)
     {
         $resource = Runway::findResource($this->config('resource'));
@@ -48,16 +49,22 @@ class BaseFieldtype extends Relationship
             ->orderBy($resource->primaryKey(), 'ASC')
             ->get()
             ->map(function ($record) use ($resource) {
+                $firstListableColumn = $resource->listableColumns()[0];
+
                 return collect($resource->listableColumns())
                     ->mapWithKeys(function ($columnKey) use ($record) {
                         return [$columnKey => $record->{$columnKey}];
                     })
-                    ->merge(['id' => $record->{$resource->primaryKey()}])
+                    ->merge([
+                        'id' => $record->{$resource->primaryKey()},
+                        'title' => $record->{$firstListableColumn},
+                    ])
                     ->toArray();
             })
             ->filter()->values();
     }
 
+    // This shows the values in the listing table
     public function preProcessIndex($data)
     {
         $resource = Runway::findResource($this->config('resource'));
