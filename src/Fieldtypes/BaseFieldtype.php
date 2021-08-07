@@ -60,27 +60,33 @@ class BaseFieldtype extends Relationship
 
     public function preProcessIndex($data)
     {
+        $resource = Runway::findResource($this->config('resource'));
+
         if (! $data) {
             return null;
         }
 
-        $resource = Runway::findResource($this->config('resource'));
+        if ($this->config('max_items') === 1) {
+            $data = [$data];
+        }
 
-        return collect($data)
-            ->map(function ($item) use ($resource) {
-                $column = $resource->listableColumns()[0];
+        return collect($data)->map(function ($item) use ($resource) {
+            $column = $resource->listableColumns()[0];
 
-                $fieldtype = $resource->blueprint()->field($column)->fieldtype();
-                $record = $resource->model()->firstWhere($resource->primaryKey(), $item);
+            $fieldtype = $resource->blueprint()->field($column)->fieldtype();
+            $record = $resource->model()->firstWhere($resource->primaryKey(), $item);
 
-                $url = cp_route('runway.edit', [
-                    'resourceHandle' => $resource->handle(),
-                    'record' => $record->{$resource->routeKey()},
-                ]);
+            $url = cp_route('runway.edit', [
+                'resourceHandle' => $resource->handle(),
+                'record' => $record->{$resource->routeKey()},
+            ]);
 
-                return "<a href='{$url}'>{$fieldtype->preProcessIndex($record->{$column})}</a>";
-            })
-            ->join(', ');
+            return [
+                'id' => $record->{$resource->primaryKey()},
+                'title' => $fieldtype->preProcessIndex($record->{$column}),
+                'edit_url' => $url,
+            ];
+        });
     }
 
     public function augment($values)
