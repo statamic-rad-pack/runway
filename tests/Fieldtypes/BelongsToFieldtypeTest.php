@@ -47,19 +47,17 @@ class BelongsToFieldtypeTest extends TestCase
     /** @test */
     public function can_get_pre_process_index()
     {
-        $authors = $this->authorFactory(5);
+        $author = $this->authorFactory();
 
-        $preProcessIndex = $this->fieldtype->preProcessIndex(
-            collect($authors)->pluck('id')->toArray()
-        );
+        $preProcessIndex = $this->fieldtype->preProcessIndex($author->id);
 
-        $this->assertIsString($preProcessIndex);
+        $this->assertTrue($preProcessIndex instanceof Collection);
 
-        $this->assertStringContainsString($authors[0]->name, $preProcessIndex);
-        $this->assertStringContainsString($authors[1]->name, $preProcessIndex);
-        $this->assertStringContainsString($authors[2]->name, $preProcessIndex);
-        $this->assertStringContainsString($authors[3]->name, $preProcessIndex);
-        $this->assertStringContainsString($authors[4]->name, $preProcessIndex);
+        $this->assertSame($preProcessIndex->first(), [
+            'id' => $author->id,
+            'title' => $author->name,
+            'edit_url' => 'http://localhost/cp/runway/author/1',
+        ]);
     }
 
     /** @test */
