@@ -30,7 +30,7 @@ If you discover a security vulnerability within Runway, please report it [via em
 
 * [**Documentation**](https://runway.duncanmcclean.com): First-party documentation
 * [**Issue Tracker**](https://github.com/doublethreedigital/runway/issues): Find & report bugs in Runway
-* [**Email**](mailto:duncan@doublethree.digital): Support from the developer behind the addon
+* [**Email**](mailto:help@doublethree.digital): Support from the developer behind the addon
 
 ---
 
