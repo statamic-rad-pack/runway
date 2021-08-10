@@ -32,7 +32,7 @@ class ResourceController extends CpController
             'resource'      => $resource,
             'recordCount'   => $resource->model()->count(),
             'columns'       => $this->buildColumns($resource, $blueprint),
-            'filters'       => Scope::filters("runway{$resourceHandle}"),
+            'filters'       => Scope::filters("runway_{$resourceHandle}"),
             'listingConfig' => $listingConfig,
             'actionUrl'     => cp_route('runway.actions.run', ['resourceHandle' => $resourceHandle]),
         ]);
