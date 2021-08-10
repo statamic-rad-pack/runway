@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## v2.1.6 (2021-08-10)
+
+### What's new
+
+* Launched a [new documentation site](https://runway.duncanmcclean.com) for Runway! 🚀
+* Added support for filters in the Listing Table #66
+* For resources with multiple words in their handle, like `FooBar`, you can now reference them in Antlers with `{{ runway:foo_bar }}` #69
+* You can now override the handle of a resource, just add `handle` to the resource's config
+* You can now use a custom scope to handle Runway searches (useful for querying related models) #65
+
+### What's fixed
+
+* When a resource has no results, show a plural title
+
 ## v2.1.5 (2021-07-30)
 
 ### What's fixed
