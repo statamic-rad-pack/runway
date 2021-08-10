@@ -5,6 +5,7 @@ namespace DoubleThreeDigital\Runway\Tags;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Statamic\Tags\Tags;
+use Illuminate\Support\Str;
 
 class RunwayTag extends Tags
 {
@@ -13,10 +14,8 @@ class RunwayTag extends Tags
     public function wildcard($resourceHandle = null)
     {
         $resource = Runway::findResource(
-            $this->params->has('resource') ? $this->params->get('resource') : $resourceHandle
+            $this->params->has('resource') ? Str::studly($this->params->get('resource')) : Str::studly($resourceHandle)
         );
-
-        $blueprint = $resource->blueprint();
 
         $query = $resource->model()->query();
 

@@ -2,8 +2,11 @@
 
 namespace DoubleThreeDigital\Runway\Tests\Tags;
 
+use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tags\RunwayTag;
+use DoubleThreeDigital\Runway\Tests\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
+use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Antlers;
 
 class RunwayTagTest extends TestCase
@@ -157,5 +160,31 @@ class RunwayTagTest extends TestCase
 
         $this->assertSame((string) $usage[0]['title'], $posts[0]['title']);
         $this->assertSame((string) $usage[1]['title'], $posts[1]['title']);
+    }
+
+    /** @test */
+    public function can_get_records_with_studly_case_resource_handle()
+    {
+        Config::set('runway.resources', [
+            Post::class => [
+                'handle' => 'BlogPosts',
+                'blueprint' => [],
+            ],
+        ]);
+
+        Runway::discoverResources();
+
+        $posts = $this->postFactory(5);
+
+        $this->tag->setParameters([]);
+        $usage = $this->tag->wildcard('blog_posts');
+
+        $this->assertSame(5, count($usage));
+
+        $this->assertSame((string) $usage[0]['title'], $posts[0]->title);
+        $this->assertSame((string) $usage[1]['title'], $posts[1]->title);
+        $this->assertSame((string) $usage[2]['title'], $posts[2]->title);
+        $this->assertSame((string) $usage[3]['title'], $posts[3]->title);
+        $this->assertSame((string) $usage[4]['title'], $posts[4]->title);
     }
 }
