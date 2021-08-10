@@ -17,6 +17,10 @@ class Runway
             ->mapWithKeys(function ($config, $model) {
                 $handle = Str::lower(class_basename($model));
 
+                if (isset($config['handle'])) {
+                    $handle = $config['handle'];
+                }
+
                 $resource = (new Resource())
                     ->handle($handle)
                     ->model($model);
