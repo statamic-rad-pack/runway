@@ -40,6 +40,7 @@ class BaseFieldtype extends Relationship
         ];
     }
 
+    // Provides the dropdown options
     public function getIndexItems($request)
     {
         $resource = Runway::findResource($this->config('resource'));
@@ -48,41 +49,54 @@ class BaseFieldtype extends Relationship
             ->orderBy($resource->primaryKey(), 'ASC')
             ->get()
             ->map(function ($record) use ($resource) {
+                $firstListableColumn = $resource->listableColumns()[0];
+
                 return collect($resource->listableColumns())
                     ->mapWithKeys(function ($columnKey) use ($record) {
                         return [$columnKey => $record->{$columnKey}];
                     })
-                    ->merge(['id' => $record->{$resource->primaryKey()}])
+                    ->merge([
+                        'id' => $record->{$resource->primaryKey()},
+                        'title' => $record->{$firstListableColumn},
+                    ])
                     ->toArray();
             })
             ->filter()->values();
     }
 
+    // This shows the values in the listing table
     public function preProcessIndex($data)
     {
+        $resource = Runway::findResource($this->config('resource'));
+
         if (! $data) {
             return null;
         }
 
-        $resource = Runway::findResource($this->config('resource'));
+        if ($this->config('max_items') === 1) {
+            $data = [$data];
+        }
 
-        return collect($data)
-            ->map(function ($item) use ($resource) {
-                $column = $resource->listableColumns()[0];
+        return collect($data)->map(function ($item) use ($resource) {
+            $column = $resource->listableColumns()[0];
 
-                $fieldtype = $resource->blueprint()->field($column)->fieldtype();
-                $record = $resource->model()->firstWhere($resource->primaryKey(), $item);
+            $fieldtype = $resource->blueprint()->field($column)->fieldtype();
+            $record = $resource->model()->firstWhere($resource->primaryKey(), $item);
 
-                $url = cp_route('runway.edit', [
-                    'resourceHandle' => $resource->handle(),
-                    'record' => $record->{$resource->routeKey()},
-                ]);
+            $url = cp_route('runway.edit', [
+                'resourceHandle' => $resource->handle(),
+                'record' => $record->{$resource->routeKey()},
+            ]);
 
-                return "<a href='{$url}'>{$fieldtype->preProcessIndex($record->{$column})}</a>";
-            })
-            ->join(', ');
+            return [
+                'id' => $record->{$resource->primaryKey()},
+                'title' => $fieldtype->preProcessIndex($record->{$column}),
+                'edit_url' => $url,
+            ];
+        });
     }
 
+    // Augments the value for front-end use
     public function augment($values)
     {
         $resource = Runway::findResource($this->config('resource'));
@@ -100,6 +114,7 @@ class BaseFieldtype extends Relationship
         return $result->toArray();
     }
 
+    // Provides the columns used if you're in 'Stacks' mode
     protected function getColumns()
     {
         $resource = Runway::findResource($this->config('resource'));
@@ -112,6 +127,7 @@ class BaseFieldtype extends Relationship
             ->toArray();
     }
 
+    // Provides the initial state after loading the fieldtype on a saved entry/model
     protected function toItemArray($id)
     {
         $resource = Runway::findResource($this->config('resource'));
