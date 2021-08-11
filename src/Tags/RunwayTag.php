@@ -2,6 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Tags;
 
+use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Statamic\Tags\Tags;
@@ -13,9 +14,15 @@ class RunwayTag extends Tags
 
     public function wildcard($resourceHandle = null)
     {
-        $resource = Runway::findResource(
-            $this->params->has('resource') ? Str::studly($this->params->get('resource')) : Str::studly($resourceHandle)
-        );
+        try {
+            $resource = Runway::findResource(
+                $this->params->has('resource') ? Str::studly($this->params->get('resource')) : Str::studly($resourceHandle)
+            );
+        } catch (ResourceNotFound $e) {
+            $resource = Runway::findResource(
+                $this->params->has('resource') ? Str::lower($this->params->get('resource')) : Str::lower($resourceHandle)
+            );
+        }
 
         $query = $resource->model()->query();
 
