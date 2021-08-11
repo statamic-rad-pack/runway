@@ -212,7 +212,7 @@ abstract class TestCase extends OrchestraTestCase
     }
 }
 
-class Post extends Model implements Responsable
+class Post extends Model
 {
     use RunwayRoutes;
 

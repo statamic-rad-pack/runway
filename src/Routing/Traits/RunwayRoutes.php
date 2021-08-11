@@ -42,6 +42,11 @@ trait RunwayRoutes
         return $this->routingModel()->uri();
     }
 
+    public function toResponse($request)
+    {
+        return $this->routingModel()->toResponse($request);
+    }
+
     public function template(): string
     {
         return $this->routingModel()->template();
