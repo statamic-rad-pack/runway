@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v2.1.8 (2021-08-11)
+
+Re-tag of previous release, v2.1.7.
+
 ## v2.1.7 (2021-08-11)
 
 ### What's fixed
