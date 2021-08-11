@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.7 (2021-08-11)
+
+### What's fixed
+
+* Fixed an issue where the `Responsable` interface on models was causing issues (eg. with Inertia.js) #71
+
 ## v2.1.6 (2021-08-10)
 
 ### What's new
