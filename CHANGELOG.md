@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v2.1.9 (2021-08-11)
+
+### What's fixed
+
+* If you still have the `Responsable` interface on a model, you shouldn't get an error
+* Fixed issue with old usage of Runway tag
+
 ## v2.1.8 (2021-08-11)
 
 Re-tag of previous release, v2.1.7.
