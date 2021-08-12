@@ -57,11 +57,6 @@ trait RunwayRoutes
         return $this->routingModel()->layout();
     }
 
-    public function id()
-    {
-        return $this->routingModel()->id();
-    }
-
     public function getRouteKey()
     {
         return $this->routingModel()->getRouteKey();

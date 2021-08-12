@@ -68,7 +68,7 @@ class ResourceResponse implements Responsable
                 Runway::findResourceByModel($this->data)
                     ->augment($this->data)
             )
-            ->cascadeContent($this->data)
+            // ->cascadeContent($this->data)
             ->render();
 
         return $contents;
