@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.10 (2021-08-12)
+
+### What's fixed
+
+* Fixed another bug affecting third-party packages (Laravel Nova this time)
+
 ## v2.1.9 (2021-08-11)
 
 ### What's fixed
