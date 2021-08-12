@@ -137,7 +137,7 @@ export default {
 
         if (this.initialColumns) {
             this.initialColumns.forEach((column) => {
-                if (column.has_link)
+                if (! column.has_link)
                     primaryColumn = column.handle
                 }
             )
