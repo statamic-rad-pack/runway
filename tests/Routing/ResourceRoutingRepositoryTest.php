@@ -19,7 +19,7 @@ class ResourceRoutingRepositoryTest extends TestCase
 
         $findByUri = Data::findByUri("/posts/{$post->slug}");
 
-        $this->assertSame($post->fresh()->id, $findByUri->id());
+        $this->assertSame($post->fresh()->id, $findByUri->id);
         $this->assertTrue($findByUri instanceof RoutingModel);
     }
 
@@ -32,7 +32,7 @@ class ResourceRoutingRepositoryTest extends TestCase
 
         $findByUri = Data::findByUri("/posts/{$posts[0]->slug}");
 
-        $this->assertSame($posts[0]->id, $findByUri->id());
+        $this->assertSame($posts[0]->id, $findByUri->id);
         $this->assertTrue($findByUri instanceof RoutingModel);
     }
 
