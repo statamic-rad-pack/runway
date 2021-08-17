@@ -1,6 +1,10 @@
+<!-- statamic:hide -->
+
 ![Banner](https://raw.githubusercontent.com/doublethreedigital/runway/master/banner.png)
 
 ## Runway
+
+<!-- /statamic:hide -->
 
 Runway allows you to easilly manage your Eloquent models straight from your Statamic Control Panel. Runway also gives you the option of outputting your Eloquent models in your Antlers templates. No need for a custom tag, it's all built-in.
 
@@ -32,9 +36,13 @@ If you discover a security vulnerability within Runway, please report it [via em
 * [**Issue Tracker**](https://github.com/doublethreedigital/runway/issues): Find & report bugs in Runway
 * [**Email**](mailto:help@doublethree.digital): Support from the developer behind the addon
 
+<!-- statamic:hide -->
+
 ---
 
 <p>
 <a href="https://statamic.com"><img src="https://img.shields.io/badge/Statamic-3.0+-FF269E?style=for-the-badge" alt="Compatible with Statamic v3"></a>
 <a href="https://packagist.org/packages/doublethreedigital/runway/stats"><img src="https://img.shields.io/packagist/v/doublethreedigital/runway?style=for-the-badge" alt="Runway on Packagist"></a>
 </p>
+
+<!-- /statamic:hide -->
