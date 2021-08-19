@@ -65,7 +65,9 @@ class Resource
                 }
 
                 if (is_array($value)) {
-                    return \Statamic\Facades\Blueprint::make()->setContents($value);
+                    return \Statamic\Facades\Blueprint::make()
+                        ->setHandle($this->handle())
+                        ->setContents($value);
                 }
 
                 return $value;
