@@ -156,9 +156,11 @@ export default {
             this.$refs.container.setFieldValue(handle, value)
         },
 
-        setFieldMeta(state, payload) {
-            const { handle, value } = payload
-            state.meta[handle] = value
+        setFieldMeta(handle, value) {
+            this.$store.dispatch(`publish/${this.name}/setFieldMeta`, {
+                handle, value,
+                user: Statamic.user.id
+            })
         },
     },
 
