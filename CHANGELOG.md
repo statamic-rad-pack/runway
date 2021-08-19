@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## v2.1.18 (2021-08-19)
+
+**Why have you missed a couple of versions?** I tagged v2.1.7 as v2.1.17 by mistake and so to fix that, I'm tagging this as v2.1.18 which should make Packagist (and everywhere else) happy.
+
+### What's new
+
+* Support for [Statamic 3.2](https://statamic.com/blog/statamic-3.2-beta)
+
+### What's fixed
+
+* Fixed issue where the first field in a blueprint would be used as a primary column, where it should actually be a Relationship fieldtype.
+
 ## v2.1.10 (2021-08-12)
 
 ### What's fixed
