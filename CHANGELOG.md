@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.19 (2021-08-20)
+
+### What's fixed
+
+* Fixed issues with 'primary columns' in the listing table
+
 ## v2.1.18 (2021-08-19)
 
 **Why have you missed a couple of versions?** I tagged v2.1.7 as v2.1.17 by mistake and so to fix that, I'm tagging this as v2.1.18 which should make Packagist (and everywhere else) happy.
