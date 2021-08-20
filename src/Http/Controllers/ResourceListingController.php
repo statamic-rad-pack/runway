@@ -3,7 +3,9 @@
 namespace DoubleThreeDigital\Runway\Http\Controllers;
 
 use DoubleThreeDigital\Runway\Http\Resources\ResourceCollection;
+use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Support\Facades\Auth;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
@@ -66,16 +68,23 @@ class ResourceListingController extends CpController
      * This method is a duplicate of code in the `ResourceController`.
      * Update both if you make any changes.
      */
-    protected function buildColumns($resource, $blueprint)
+    protected function buildColumns(Resource $resource, $blueprint)
     {
+        $preferredFirstColumn = isset(Auth::user()->preferences()['runway'][$resource->handle()]['columns'])
+            ? Auth::user()->preferences()['runway'][$resource->handle()]['columns'][0]
+            : $resource->listableColumns()[0];
+
         return collect($resource->listableColumns())
-            ->map(function ($columnKey) use ($resource, $blueprint) {
+            ->map(function ($columnKey) use ($resource, $blueprint, $preferredFirstColumn) {
                 $field = $blueprint->field($columnKey);
 
                 return [
                     'handle' => $columnKey,
-                    'title'  => !$field ? $columnKey : $field->display(),
-                    'has_link' => $resource->listableColumns()[0] === $columnKey,
+                    'title'  => $field
+                        ? $field->display()
+                        : $field,
+                    'has_link' => $preferredFirstColumn === $columnKey,
+                    'is_primary_column' => $preferredFirstColumn === $columnKey,
                 ];
             })
             ->toArray();
