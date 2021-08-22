@@ -2,9 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Tests\Fieldtypes;
 
-use DoubleThreeDigital\Runway\Tests\Post;
 use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
-use DoubleThreeDigital\Runway\Tests\Author;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Request;
