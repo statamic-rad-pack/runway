@@ -13,9 +13,16 @@ class AugmentedRecord
     {
         $resource = Runway::findResourceByModel($record);
 
-        return collect($record)
-            ->map(function ($value, $key) use ($record, $resource, $blueprint) {
+        $modelKeyValue = $record->toArray();
 
+        $resourceKeyValue = $resource->blueprint()->fields()->items()->pluck('handle')
+            ->mapWithKeys(function ($fieldHandle) use ($record) {
+                return [$fieldHandle => $record->{$fieldHandle}];
+            });
+
+        return collect($modelKeyValue)
+            ->merge($resourceKeyValue)
+            ->map(function ($value, $key) use ($record, $resource, $blueprint) {
                 $value = $record->{$key} ?? $value;
 
                 if ($value instanceof CarbonInterface) {
