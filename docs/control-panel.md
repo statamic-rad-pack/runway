@@ -4,7 +4,7 @@ title: 'Control Panel'
 
 One of Runway’s core features is the Control Panel integration. Runway will create listing and publish form pages for each of your resources.
 
-![Screenshot of Control Panel Listing View](/assets/cp-listing-view.png)
+![Screenshot of Control Panel Listing View](/img/runway/cp-listing-view.png)
 
 The Control Panel functionality is built to work in exactly the same way you’d expect with entries. You can set filters, define scopes and use custom actions.
 
@@ -25,7 +25,7 @@ Technically, you can’t fully disable Runway’s CP feature. However, what you 
 
 
 ## Custom Icon for CP Nav Item
-Runway has a rather generic icon for resources in the Control Panel Nav. Feel free to change this to something else that better suits your use case (in fact, I’d encourage it). 
+Runway has a rather generic icon for resources in the Control Panel Nav. Feel free to change this to something else that better suits your use case (in fact, I’d encourage it).
 
 You can either provide the name of an existing icon [packaged into Statamic Core](https://github.com/statamic/cms/tree/3.1/resources/svg) or inline the SVG as a string.
 
@@ -44,7 +44,7 @@ You can either provide the name of an existing icon [packaged into Statamic Core
 
 
 ## Permissions
-![Screenshot of Runway's User Permissions](/assets/cp-user-permissions.png)
+![Screenshot of Runway's User Permissions](/img/runway/cp-user-permissions.png)
 
 If you have other users who are not ‘super users’, you may wish to also give them permission to view_create_update specific resources.
 

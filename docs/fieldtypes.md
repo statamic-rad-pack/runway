@@ -5,7 +5,7 @@ title: Fieldtypes
 Runway provides a couple of fieldtypes, mostly for things like Eloquent relations.
 
 ## BelongsTo fieldtype
-![Screenshot of BelongsTo fieldtype](/assets/belongs-to-fieldtype.png)
+![Screenshot of BelongsTo fieldtype](/img/runway/belongs-to-fieldtype.png)
 
 This fieldtypes allows you to select a single model for a `belongsTo` Eloquent relationship.
 

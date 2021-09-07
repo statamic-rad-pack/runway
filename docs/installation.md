@@ -30,7 +30,7 @@ The configuration file will now be located at `config/runway.php`. You may now c
 In the Control Panel, open the ‘Addons’ page, then search for ‘Runway’. Go into Runway’s addon page and hit ‘Install’.
 
 
-![Runway in the Statamic CP](/assets/statamic-cp-addons-runway.png)
+![Runway in the Statamic CP](/img/runway/statamic-cp-addons-runway.png)
 
 Next, open up your Terminal and run the following command which will publish the default configuration file.
 
