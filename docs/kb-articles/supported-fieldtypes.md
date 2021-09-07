@@ -2,7 +2,7 @@
 title: 'Supported Fieldtypes'
 ---
 
-> This page isn't very pretty at the moment (the table is broken...). You're best viewing this page [directly on GitHub](https://github.com/doublethreedigital/runway/blob/2.1/docs/kb-articles/supported-fieldtypes.md).
+**This page isn't very pretty at the moment (the table is broken...). You're best viewing this page [directly on GitHub](https://github.com/doublethreedigital/runway/blob/2.1/docs/kb-articles/supported-fieldtypes.md).**
 
 Runway supports pretty much ALL fieldtypes available in Statamic, including Bard.
 
