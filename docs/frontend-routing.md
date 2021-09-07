@@ -5,7 +5,7 @@ title: 'Front-end Routing'
 Front-end routing is honestly my favourite feature in Runway. It lets you setup front-end routes for your Eloquent models - behind the scenes, it works pretty much the exact same way as it does for entries.
 
 ## Enabling
-> Before getting started, ensure you’ve run `php artisan migrate`. Runway comes with a `runway_uris` table which will be used to store all of the front-end URIs.  
+> Before getting started, ensure you’ve run `php artisan migrate`. Runway comes with a `runway_uris` table which will be used to store all of the front-end URIs.
 
 First things first, add a `route` key to your resource config, with the URI structure you want to use. Feel free to use Antlers in there for anything dynamic, like a slug or a date.
 
@@ -15,15 +15,14 @@ First things first, add a `route` key to your resource config, with the URI stru
 'route' => '/products/{{ slug }}',
 ```
 
-Next, add the `RunwayRoutes` trait and the `Responsable` interface to your Eloquent model. 
+Next, add the `RunwayRoutes` trait to your Eloquent model.
 
 ```php
 // app/Models/Product.php
 
 use DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes;
-use Illuminate\Contracts\Support\Responsable;
 
-class Product extends Model implements Responsable
+class Product extends Model
 {
     use RunwayRoutes;
 ```
