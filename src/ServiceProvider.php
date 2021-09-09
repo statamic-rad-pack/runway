@@ -20,6 +20,7 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $fieldtypes = [
         Fieldtypes\BelongsToFieldtype::class,
+        Fieldtypes\HasManyFieldtype::class,
     ];
 
     protected $routes = [

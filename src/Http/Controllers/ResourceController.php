@@ -71,11 +71,11 @@ class ResourceController extends CpController
         $record = $resource->model();
 
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
-            if ($field->type() === 'section') {
+            $processedValue = $field->fieldtype()->process($request->get($fieldKey));
+
+            if ($field->type() === 'section' || $field->type() === 'has_many') {
                 continue;
             }
-
-            $processedValue = $field->fieldtype()->process($request->get($fieldKey));
 
             if (is_array($processedValue) && !$record->hasCast($fieldKey, ['array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])) {
                 $processedValue = json_encode($processedValue);
@@ -154,11 +154,11 @@ class ResourceController extends CpController
         $record = $resource->model()->where($resource->routeKey(), $record)->first();
 
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
-            if ($field->type() === 'section') {
+            $processedValue = $field->fieldtype()->process($request->get($fieldKey));
+
+            if ($field->type() === 'section' || $field->type() === 'has_many') {
                 continue;
             }
-
-            $processedValue = $field->fieldtype()->process($request->get($fieldKey));
 
             if (is_array($processedValue) && !$record->hasCast($fieldKey, ['array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])) {
                 $processedValue = json_encode($processedValue);

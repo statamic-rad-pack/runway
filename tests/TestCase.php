@@ -160,6 +160,14 @@ abstract class TestCase extends OrchestraTestCase
                                             'type' => 'text',
                                         ],
                                     ],
+                                    // [
+                                    //     'handle' => 'posts',
+                                    //     'field' => [
+                                    //         'type' => 'has_many',
+                                    //         'resource' => 'post',
+                                    //         'mode' => 'select',
+                                    //     ],
+                                    // ],
                                 ],
                             ],
                         ],
@@ -234,6 +242,6 @@ class Author extends Model
 
     public function posts()
     {
-        return $this->hasMany(Author::class);
+        return $this->hasMany(Post::class);
     }
 }

@@ -3,6 +3,8 @@
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Runway;
+use DoubleThreeDigital\Runway\Tests\Post;
+use Illuminate\Database\Eloquent\Model;
 use Statamic\CP\Column;
 use Statamic\Fieldtypes\Relationship;
 
@@ -81,7 +83,12 @@ class BaseFieldtype extends Relationship
             $column = $resource->listableColumns()[0];
 
             $fieldtype = $resource->blueprint()->field($column)->fieldtype();
-            $record = $resource->model()->firstWhere($resource->primaryKey(), $item);
+
+            if (! $item instanceof Model) {
+                $record = $resource->model()->firstWhere($resource->primaryKey(), $item);
+            } else {
+                $record = $item;
+            }
 
             $url = cp_route('runway.edit', [
                 'resourceHandle' => $resource->handle(),
@@ -101,11 +108,22 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        $result = collect($values)->map(function ($recordId) use ($resource) {
-            $record = $resource->model()->firstWhere($resource->primaryKey(), $recordId);
+        $result = collect($values)
+            ->map(function ($item) use ($resource) {
+                if (is_array($item) && isset($item[$resource->primaryKey()])) {
+                    return $item[$resource->primaryKey()];
+                }
 
-            return $resource->augment($record);
-        });
+                return $item;
+            })
+
+            ->map(function ($record) use ($resource) {
+                if (! $record instanceof Model) {
+                    $record = $resource->model()->firstWhere($resource->primaryKey(), $record);
+                }
+
+                return $resource->augment($record);
+            });
 
         if ($this->config('max_items') === 1) {
             return $result->first();
@@ -131,7 +149,12 @@ class BaseFieldtype extends Relationship
     protected function toItemArray($id)
     {
         $resource = Runway::findResource($this->config('resource'));
-        $record = $resource->model()->firstWhere($resource->primaryKey(), $id);
+
+        if (! $id instanceof Model) {
+            $record = $resource->model()->firstWhere($resource->primaryKey(), $id);
+        } else {
+            $record = $id;
+        }
 
         return [
             'id'    => $record->getKey(),
