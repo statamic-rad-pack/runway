@@ -68,6 +68,10 @@ class ResourceCollection extends LaravelResourceCollection
                     }
                 }
 
+                foreach ($this->runwayResource->blueprint()->fields()->except(array_keys($row))->all() as $key => $field) {
+                    $row[$key] = $field->setValue($record->{$key})->preProcessIndex()->value();
+                }
+
                 $row['_id'] = $record->getKey();
                 $row['edit_url'] = cp_route('runway.edit', ['resourceHandle' => $handle, 'record' => $record->getRouteKey()]);
                 $row['delete_url'] = cp_route('runway.destroy', ['resourceHandle' => $handle, 'record' => $record->getRouteKey()]);
