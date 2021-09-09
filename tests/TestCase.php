@@ -160,14 +160,14 @@ abstract class TestCase extends OrchestraTestCase
                                             'type' => 'text',
                                         ],
                                     ],
-                                    [
-                                        'handle' => 'posts',
-                                        'field' => [
-                                            'type' => 'has_many',
-                                            'resource' => 'post',
-                                            'mode' => 'select',
-                                        ],
-                                    ],
+                                    // [
+                                    //     'handle' => 'posts',
+                                    //     'field' => [
+                                    //         'type' => 'has_many',
+                                    //         'resource' => 'post',
+                                    //         'mode' => 'select',
+                                    //     ],
+                                    // ],
                                 ],
                             ],
                         ],
