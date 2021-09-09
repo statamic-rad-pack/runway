@@ -3,7 +3,6 @@
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Runway;
-use Illuminate\Support\Arr;
 
 class HasManyFieldtype extends BaseFieldtype
 {
