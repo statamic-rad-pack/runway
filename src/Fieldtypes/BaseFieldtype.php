@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Runway;
+use DoubleThreeDigital\Runway\Tests\Post;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\CP\Column;
 use Statamic\Fieldtypes\Relationship;
@@ -115,8 +116,11 @@ class BaseFieldtype extends Relationship
 
                 return $item;
             })
-            ->map(function ($recordId) use ($resource) {
-                $record = $resource->model()->firstWhere($resource->primaryKey(), $recordId);
+
+            ->map(function ($record) use ($resource) {
+                if (! $record instanceof Model) {
+                    $record = $resource->model()->firstWhere($resource->primaryKey(), $record);
+                }
 
                 return $resource->augment($record);
             });
@@ -145,7 +149,12 @@ class BaseFieldtype extends Relationship
     protected function toItemArray($id)
     {
         $resource = Runway::findResource($this->config('resource'));
-        $record = $resource->model()->firstWhere($resource->primaryKey(), $id);
+
+        if (! $id instanceof Model) {
+            $record = $resource->model()->firstWhere($resource->primaryKey(), $id);
+        } else {
+            $record = $id;
+        }
 
         return [
             'id'    => $record->getKey(),

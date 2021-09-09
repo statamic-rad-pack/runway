@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway;
 
 use Carbon\CarbonInterface;
+use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
 use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Fields\Blueprint;
@@ -40,7 +41,15 @@ class AugmentedRecord
                 }
 
                 if ($blueprint->hasField($key)) {
-                    return $blueprint->field($key)->setValue($value)->augment()->value();
+                    /** @var \Statamic\Fields\Field $field */
+                    $field = $blueprint->field($key);
+
+                    // HasMany is special...
+                    if ($field->fieldtype() instanceof HasManyFieldtype) {
+                        $value = $record->{$key};
+                    }
+
+                    return $field->setValue($value)->augment()->value();
                 }
 
                 return $value;
