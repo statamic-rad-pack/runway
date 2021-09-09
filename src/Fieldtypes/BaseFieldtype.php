@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Database\Eloquent\Model;
 use Statamic\CP\Column;
 use Statamic\Fieldtypes\Relationship;
 
@@ -81,7 +82,12 @@ class BaseFieldtype extends Relationship
             $column = $resource->listableColumns()[0];
 
             $fieldtype = $resource->blueprint()->field($column)->fieldtype();
-            $record = $resource->model()->firstWhere($resource->primaryKey(), $item);
+
+            if (! $item instanceof Model) {
+                $record = $resource->model()->firstWhere($resource->primaryKey(), $item);
+            } else {
+                $record = $item;
+            }
 
             $url = cp_route('runway.edit', [
                 'resourceHandle' => $resource->handle(),
