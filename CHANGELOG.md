@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.21 (2021-09-09)
+
+### What's new
+
+* Added HasMany fieldtype #74
+
 ## v2.1.20 (2021-08-27)
 
 ### What's fixed
