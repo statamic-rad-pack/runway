@@ -91,7 +91,7 @@ export default {
             title: this.initialTitle,
 
             readonly: false, // TODO: might do this in the future
-            
+
             errors: {},
             saving: false,
             containerWidth: null,
@@ -157,7 +157,7 @@ export default {
         },
 
         setFieldMeta(handle, value) {
-            this.$store.dispatch(`publish/${this.name}/setFieldMeta`, {
+            this.$store.dispatch(`publish/base/setFieldMeta`, {
                 handle, value,
                 user: Statamic.user.id
             })

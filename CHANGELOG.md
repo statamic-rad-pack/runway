@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.20 (2021-08-27)
+
+### What's fixed
+
+* Fixed issue with the post-select state of dropdown fieldtypess #67
+
 ## v2.1.19 (2021-08-20)
 
 ### What's fixed
