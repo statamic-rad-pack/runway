@@ -155,6 +155,13 @@ class BaseFieldtype extends Relationship
         } else {
             $record = $id;
         }
+        
+        if (is_null($record)) {
+            return [
+                'id' => $id,
+                'title' => $id . ' (not found)',
+            ];
+        }
 
         return [
             'id'    => $record->getKey(),
