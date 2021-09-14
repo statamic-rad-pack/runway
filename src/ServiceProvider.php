@@ -10,7 +10,7 @@ use Statamic\Statamic;
 class ServiceProvider extends AddonServiceProvider
 {
     protected $actions = [
-        Actions\Delete::class,
+        Actions\DeleteModel::class,
     ];
 
     protected $commands = [

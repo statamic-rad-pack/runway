@@ -6,7 +6,7 @@ use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Actions\Action;
 
-class Delete extends Action
+class DeleteModel extends Action
 {
     protected $dangerous = true;
 
