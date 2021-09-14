@@ -156,6 +156,14 @@ class BaseFieldtype extends Relationship
             $record = $id;
         }
 
+        if (! $record) {
+            return [
+                'id' => $id,
+                'title' => $id,
+                'invalid' => true,
+            ];
+        }
+
         return [
             'id'    => $record->getKey(),
             'title' => $record->{collect($resource->listableColumns())->first()},
