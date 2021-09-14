@@ -155,11 +155,12 @@ class BaseFieldtype extends Relationship
         } else {
             $record = $id;
         }
-        
-        if (is_null($record)) {
+
+        if (! $record) {
             return [
                 'id' => $id,
-                'title' => $id . ' (not found)',
+                'title' => $id,
+                'invalid' => true,
             ];
         }
 
