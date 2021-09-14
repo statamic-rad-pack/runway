@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v2.1.22 (2021-09-14)
+
+### What's fixed
+
+* Fieldtype values are now flagged as invalid if model can't be found #78
+* Fixed issue where 'Delete' action would not be available anywhere, apart from in Runway #79
+
 ## v2.1.21 (2021-09-09)
 
 ### What's new
