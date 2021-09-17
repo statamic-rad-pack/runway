@@ -90,6 +90,10 @@ class BaseFieldtype extends Relationship
                 $record = $item;
             }
 
+            if (! $record) {
+                return null;
+            }
+
             $url = cp_route('runway.edit', [
                 'resourceHandle' => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},
