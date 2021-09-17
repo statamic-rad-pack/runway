@@ -125,27 +125,36 @@ class ResourceController extends CpController
         $blueprint = $resource->blueprint();
         $fields = $blueprint->fields()->addValues($values)->preProcess();
 
-        return view('runway::edit', [
-            'breadcrumbs' => new Breadcrumbs([
+        $viewData = [
+            'title' => "Edit {$resource->singular()}",
+            'action' => $action = cp_route('runway.update', [
+                'resourceHandle'  => $resource->handle(),
+                'record' => $record->{$resource->routeKey()},
+            ]),
+            'method' => 'POST',
+            'breadcrumbs' => (new Breadcrumbs([
                 [
                     'text' => $resource->plural(),
                     'url' => cp_route('runway.index', [
                         'resourceHandle' => $resource->handle(),
                     ]),
                 ],
-            ]),
+            ]))->toJson(),
             'resource'  => $resource,
             'blueprint' => $blueprint->toPublishArray(),
             'values'    => $fields->values(),
             'meta'      => $fields->meta(),
-            'action'    => cp_route('runway.update', [
-                'resourceHandle'  => $resource->handle(),
-                'record' => $record->{$resource->routeKey()},
-            ]),
             'permalink' => $resource->hasRouting()
                 ? $record->uri()
                 : null,
-        ]);
+            'resourceHasRoutes' => $resource->hasRouting(),
+        ];
+
+        if ($request->wantsJson()) {
+            return $viewData;
+        }
+
+        return view('runway::edit', $viewData);
     }
 
     public function update(UpdateRequest $request, $resourceHandle, $record)
@@ -171,6 +180,9 @@ class ResourceController extends CpController
 
         return [
             'record' => $record->toArray(),
+            'data' => array_merge($record->toArray(), [
+                'title' => $record->{$resource->listableColumns()[0]},
+            ]),
             'resource_handle' => $resource->handle(),
         ];
     }

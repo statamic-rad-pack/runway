@@ -22,7 +22,7 @@
 
         <publish-container
             ref="container"
-            name="base"
+            :name="publishContainer"
             :blueprint="blueprint"
             :values="values"
             :meta="meta"
@@ -81,6 +81,7 @@ export default {
         resourceHasRoutes: Boolean,
         permalink: String,
         isCreating: Boolean,
+        publishContainer: String,
     },
 
     data() {
@@ -120,6 +121,7 @@ export default {
                 .then((response) => {
                     this.saving = false
                     this.$refs.container.saved()
+                    this.$emit('saved', response)
 
                     if (this.isCreating) {
                         this.$nextTick(() => {
@@ -157,7 +159,7 @@ export default {
         },
 
         setFieldMeta(handle, value) {
-            this.$store.dispatch(`publish/base/setFieldMeta`, {
+            this.$store.dispatch(`publish/${this.publishContainer}/setFieldMeta`, {
                 handle, value,
                 user: Statamic.user.id
             })

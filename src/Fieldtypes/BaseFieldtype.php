@@ -3,7 +3,6 @@
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\Post;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\CP\Column;
 use Statamic\Fieldtypes\Relationship;
@@ -168,9 +167,15 @@ class BaseFieldtype extends Relationship
             ];
         }
 
+        $editUrl = cp_route('runway.edit', [
+            'resourceHandle' => $resource->handle(),
+            'record' => $record->{$resource->routeKey()},
+        ]);
+
         return [
             'id'    => $record->getKey(),
             'title' => $record->{collect($resource->listableColumns())->first()},
+            'edit_url' => $editUrl,
         ];
     }
 }
