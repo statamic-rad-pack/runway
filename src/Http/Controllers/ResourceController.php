@@ -48,7 +48,9 @@ class ResourceController extends CpController
         $fields = $blueprint->fields();
         $fields = $fields->preProcess();
 
-        return view('runway::create', [
+        $viewData = [
+            'title' => "Create {$resource->singular()}",
+            'action' => cp_route('runway.store', ['resourceHandle' => $resource->handle()]),
             'breadcrumbs' => new Breadcrumbs([
                 [
                     'text' => $resource->plural(),
@@ -61,8 +63,15 @@ class ResourceController extends CpController
             'blueprint' => $blueprint->toPublishArray(),
             'values'    => $fields->values(),
             'meta'      => $fields->meta(),
-            'action'    => cp_route('runway.store', ['resourceHandle' => $resource->handle()]),
-        ]);
+            'permalink' => null,
+            'resourceHasRoutes' => $resource->hasRouting(),
+        ];
+
+        if ($request->wantsJson()) {
+            return $viewData;
+        }
+
+        return view('runway::create', $viewData);
     }
 
     public function store(StoreRequest $request, $resourceHandle)
@@ -87,7 +96,8 @@ class ResourceController extends CpController
         $record->save();
 
         return [
-            'redirect'  => cp_route('runway.edit', [
+            'data' => $this->getReturnData($resource, $record),
+            'redirect' => cp_route('runway.edit', [
                 'resourceHandle'  => $resource->handle(),
                 'record' => $record->{$resource->primaryKey()},
             ]),
@@ -127,19 +137,18 @@ class ResourceController extends CpController
 
         $viewData = [
             'title' => "Edit {$resource->singular()}",
-            'action' => $action = cp_route('runway.update', [
+            'action' => cp_route('runway.update', [
                 'resourceHandle'  => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},
             ]),
-            'method' => 'POST',
-            'breadcrumbs' => (new Breadcrumbs([
+            'breadcrumbs' => new Breadcrumbs([
                 [
                     'text' => $resource->plural(),
                     'url' => cp_route('runway.index', [
                         'resourceHandle' => $resource->handle(),
                     ]),
                 ],
-            ]))->toJson(),
+            ]),
             'resource'  => $resource,
             'blueprint' => $blueprint->toPublishArray(),
             'values'    => $fields->values(),
@@ -179,11 +188,7 @@ class ResourceController extends CpController
         $record->save();
 
         return [
-            'record' => $record->toArray(),
-            'data' => array_merge($record->toArray(), [
-                'title' => $record->{$resource->listableColumns()[0]},
-            ]),
-            'resource_handle' => $resource->handle(),
+            'data' => $this->getReturnData($resource, $record),
         ];
     }
 
@@ -221,5 +226,16 @@ class ResourceController extends CpController
                 ];
             })
             ->toArray();
+    }
+
+    protected function getReturnData($resource, $record)
+    {
+        return array_merge($record->toArray(), [
+            'title' => $record->{$resource->listableColumns()[0]},
+            'edit_url' => cp_route('runway.edit', [
+                'resourceHandle'  => $resource->handle(),
+                'record' => $record->{$resource->routeKey()},
+            ]),
+        ]);
     }
 }

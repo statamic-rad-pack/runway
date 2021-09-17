@@ -4,13 +4,12 @@
 
 @section('content')
     <runway-publish-form
-        :breadcrumbs="{{ $breadcrumbs }}"
+        :breadcrumbs="{{ $breadcrumbs->toJson() }}"
         :initial-blueprint='@json($blueprint)'
         :initial-meta='@json($meta)'
         :initial-values='@json($values)'
         initial-title="{{ $title }}"
         action="{{ $action }}"
-        method="{{ $method }}"
         :resource-has-routes="{{ $resourceHasRoutes ? 'true' : 'false' }}"
         permalink="{{ $permalink }}"
         :is-creating="false"

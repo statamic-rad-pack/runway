@@ -34,6 +34,10 @@ class HasManyFieldtype extends BaseFieldtype
         $resource = Runway::findResource(request()->route('resourceHandle'));
         $record = $resource->model()->firstWhere($resource->routeKey(), (int) request()->route('record'));
 
+        if (! $record) {
+            return null;
+        }
+
         $relatedResource = Runway::findResource($this->config('resource'));
         $relatedField = $record->{$this->field()->handle()}();
 

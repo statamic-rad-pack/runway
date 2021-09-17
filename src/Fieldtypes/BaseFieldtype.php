@@ -21,7 +21,6 @@ class BaseFieldtype extends Relationship
         'initialMeta' => 'meta',
         'initialTitle' => 'title',
         'action' => 'action',
-        'method' => 'method',
         'resourceHasRoutes' => 'resourceHasRoutes',
         'permalink' => 'permalink',
     ];
@@ -190,6 +189,20 @@ class BaseFieldtype extends Relationship
             'id'    => $record->getKey(),
             'title' => $record->{collect($resource->listableColumns())->first()},
             'edit_url' => $editUrl,
+        ];
+    }
+
+    protected function getCreatables()
+    {
+        $resource = Runway::findResource($this->config('resource'));
+
+        return [
+            [
+                'title' => $resource->singular(),
+                'url' => cp_route('runway.create', [
+                    'resourceHandle'  => $resource->handle(),
+                ])
+            ]
         ];
     }
 }

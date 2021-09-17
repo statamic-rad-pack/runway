@@ -77,7 +77,6 @@ export default {
         initialMeta: Object,
         initialTitle: String,
         action: String,
-        method: String,
         resourceHasRoutes: Boolean,
         permalink: String,
         isCreating: Boolean,
@@ -117,13 +116,13 @@ export default {
             this.saving = true
             this.clearErrors()
 
-            this.$axios[this.method](this.action, this.values)
+            this.$axios.patch(this.action, this.values)
                 .then((response) => {
                     this.saving = false
                     this.$refs.container.saved()
                     this.$emit('saved', response)
 
-                    if (this.isCreating) {
+                    if (this.isCreating && this.publishContainer === 'base') {
                         this.$nextTick(() => {
                             window.location.href = response.data.redirect
                         })
