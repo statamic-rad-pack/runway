@@ -4,6 +4,12 @@ namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 class BelongsToFieldtype extends BaseFieldtype
 {
+    protected $canEdit = true;
+    protected $canCreate = false; // TODO
+    protected $canSearch = true;
+
+    // protected $formComponent = 'entry-publish-form';
+
     protected function configFieldItems(): array
     {
         $config = [
