@@ -4,22 +4,6 @@ namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 class BelongsToFieldtype extends BaseFieldtype
 {
-    protected $canEdit = true;
-    protected $canCreate = true;
-    protected $canSearch = true;
-    protected $formComponent = 'runway-publish-form';
-
-    protected $formComponentProps = [
-        'initialBlueprint' => 'blueprint',
-        'initialValues' => 'values',
-        'initialMeta' => 'meta',
-        'initialTitle' => 'title',
-        'action' => 'action',
-        'method' => 'method',
-        'resourceHasRoutes' => 'resourceHasRoutes',
-        'permalink' => 'permalink',
-    ];
-
     protected function configFieldItems(): array
     {
         $config = [
