@@ -21,6 +21,7 @@ class BaseFieldtype extends Relationship
         'initialMeta' => 'meta',
         'initialTitle' => 'title',
         'action' => 'action',
+        'method' => 'method',
         'resourceHasRoutes' => 'resourceHasRoutes',
         'permalink' => 'permalink',
     ];

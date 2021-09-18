@@ -10,6 +10,7 @@
         :initial-values='@json($values)'
         initial-title="{{ $title }}"
         action="{{ $action }}"
+        method="{{ $method }}"
         :resource-has-routes="{{ $resourceHasRoutes ? 'true' : 'false' }}"
         permalink="{{ $permalink }}"
         :is-creating="false"

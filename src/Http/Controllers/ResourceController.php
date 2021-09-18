@@ -51,6 +51,7 @@ class ResourceController extends CpController
         $viewData = [
             'title' => "Create {$resource->singular()}",
             'action' => cp_route('runway.store', ['resourceHandle' => $resource->handle()]),
+            'method' => 'POST',
             'breadcrumbs' => new Breadcrumbs([
                 [
                     'text' => $resource->plural(),
@@ -151,6 +152,7 @@ class ResourceController extends CpController
                 'resourceHandle'  => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},
             ]),
+            'method' => 'PATCH',
             'breadcrumbs' => new Breadcrumbs([
                 [
                     'text' => $resource->plural(),

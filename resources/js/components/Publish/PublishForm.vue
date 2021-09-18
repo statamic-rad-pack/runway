@@ -77,6 +77,7 @@ export default {
         initialMeta: Object,
         initialTitle: String,
         action: String,
+        method: String,
         resourceHasRoutes: Boolean,
         permalink: String,
         isCreating: Boolean,
@@ -116,7 +117,12 @@ export default {
             this.saving = true
             this.clearErrors()
 
-            this.$axios.patch(this.action, this.values)
+            this.$axios({
+                method: this.method,
+                url: this.action,
+                data: this.values,
+            })
+            // this.$axios[this.method](this.action, this.values)
                 .then((response) => {
                     this.saving = false
                     this.$refs.container.saved()
