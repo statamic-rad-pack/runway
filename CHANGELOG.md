@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.23 (2021-09-18)
+
+### What's new
+
+* You can now create/edit models from Runway's relationship fieldtypes #76
+
 ## v2.1.22 (2021-09-14)
 
 ### What's fixed
