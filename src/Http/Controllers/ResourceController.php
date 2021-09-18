@@ -48,7 +48,10 @@ class ResourceController extends CpController
         $fields = $blueprint->fields();
         $fields = $fields->preProcess();
 
-        return view('runway::create', [
+        $viewData = [
+            'title' => "Create {$resource->singular()}",
+            'action' => cp_route('runway.store', ['resourceHandle' => $resource->handle()]),
+            'method' => 'POST',
             'breadcrumbs' => new Breadcrumbs([
                 [
                     'text' => $resource->plural(),
@@ -57,16 +60,25 @@ class ResourceController extends CpController
                     ]),
                 ],
             ]),
-            'resource'  => $resource,
+            'resource' => $resource,
             'blueprint' => $blueprint->toPublishArray(),
-            'values'    => $fields->values(),
-            'meta'      => $fields->meta(),
-            'action'    => cp_route('runway.store', ['resourceHandle' => $resource->handle()]),
-        ]);
+            'values' => $fields->values(),
+            'meta' => $fields->meta(),
+            'permalink' => null,
+            'resourceHasRoutes' => $resource->hasRouting(),
+        ];
+
+        if ($request->wantsJson()) {
+            return $viewData;
+        }
+
+        return view('runway::create', $viewData);
     }
 
     public function store(StoreRequest $request, $resourceHandle)
     {
+        $postCreatedHooks = [];
+
         $resource = Runway::findResource($resourceHandle);
         $record = $resource->model();
 
@@ -74,6 +86,10 @@ class ResourceController extends CpController
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
 
             if ($field->type() === 'section' || $field->type() === 'has_many') {
+                if ($field->type() === 'has_many' && $processedValue) {
+                    $postCreatedHooks[] = $processedValue;
+                }
+
                 continue;
             }
 
@@ -86,10 +102,15 @@ class ResourceController extends CpController
 
         $record->save();
 
+        foreach ($postCreatedHooks as $postCreatedHook) {
+            $postCreatedHook($resource, $record);
+        }
+
         return [
-            'redirect'  => cp_route('runway.edit', [
+            'data' => $this->getReturnData($resource, $record),
+            'redirect' => cp_route('runway.edit', [
                 'resourceHandle'  => $resource->handle(),
-                'record' => $record->{$resource->primaryKey()},
+                'record' => $record->{$resource->routeKey()},
             ]),
         ];
     }
@@ -125,7 +146,13 @@ class ResourceController extends CpController
         $blueprint = $resource->blueprint();
         $fields = $blueprint->fields()->addValues($values)->preProcess();
 
-        return view('runway::edit', [
+        $viewData = [
+            'title' => "Edit {$resource->singular()}",
+            'action' => cp_route('runway.update', [
+                'resourceHandle'  => $resource->handle(),
+                'record' => $record->{$resource->routeKey()},
+            ]),
+            'method' => 'PATCH',
             'breadcrumbs' => new Breadcrumbs([
                 [
                     'text' => $resource->plural(),
@@ -134,18 +161,21 @@ class ResourceController extends CpController
                     ]),
                 ],
             ]),
-            'resource'  => $resource,
+            'resource' => $resource,
             'blueprint' => $blueprint->toPublishArray(),
-            'values'    => $fields->values(),
-            'meta'      => $fields->meta(),
-            'action'    => cp_route('runway.update', [
-                'resourceHandle'  => $resource->handle(),
-                'record' => $record->{$resource->routeKey()},
-            ]),
+            'values' => $fields->values(),
+            'meta' => $fields->meta(),
             'permalink' => $resource->hasRouting()
                 ? $record->uri()
                 : null,
-        ]);
+            'resourceHasRoutes' => $resource->hasRouting(),
+        ];
+
+        if ($request->wantsJson()) {
+            return $viewData;
+        }
+
+        return view('runway::edit', $viewData);
     }
 
     public function update(UpdateRequest $request, $resourceHandle, $record)
@@ -170,8 +200,7 @@ class ResourceController extends CpController
         $record->save();
 
         return [
-            'record' => $record->toArray(),
-            'resource_handle' => $resource->handle(),
+            'data' => $this->getReturnData($resource, $record),
         ];
     }
 
@@ -201,7 +230,7 @@ class ResourceController extends CpController
 
                 return [
                     'handle' => $columnKey,
-                    'title'  => $field
+                    'title' => $field
                         ? $field->display()
                         : $field,
                     'has_link' => $preferredFirstColumn === $columnKey,
@@ -209,5 +238,19 @@ class ResourceController extends CpController
                 ];
             })
             ->toArray();
+    }
+
+    /**
+     * Build an array with the correct return data for the inline publish forms.
+     */
+    protected function getReturnData($resource, $record)
+    {
+        return array_merge($record->toArray(), [
+            'title' => $record->{$resource->listableColumns()[0]},
+            'edit_url' => cp_route('runway.edit', [
+                'resourceHandle'  => $resource->handle(),
+                'record' => $record->{$resource->routeKey()},
+            ]),
+        ]);
     }
 }

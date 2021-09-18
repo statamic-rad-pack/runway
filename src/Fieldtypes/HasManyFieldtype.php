@@ -34,6 +34,29 @@ class HasManyFieldtype extends BaseFieldtype
         $resource = Runway::findResource(request()->route('resourceHandle'));
         $record = $resource->model()->firstWhere($resource->routeKey(), (int) request()->route('record'));
 
+        // If we're adding HasMany relations on a model that doesn't exist yet,
+        // return a closure that will be run post-save.
+        if (! $record) {
+            return function ($resource, $record) use ($data) {
+                $relatedResource = Runway::findResource($this->config('resource'));
+                $relatedField = $record->{$this->field()->handle()}();
+
+                $relatedField
+                    ->each(function ($model) use ($relatedField) {
+                        $model->update([
+                            $relatedField->getForeignKeyName() => null,
+                        ]);
+                    });
+
+                collect($data)
+                    ->each(function ($relatedId) use ($record, $relatedResource, $relatedField) {
+                        $relatedResource->model()->find($relatedId)->update([
+                            $relatedField->getForeignKeyName() => $record->id,
+                        ]);
+                    });
+            };
+        }
+
         $relatedResource = Runway::findResource($this->config('resource'));
         $relatedField = $record->{$this->field()->handle()}();
 

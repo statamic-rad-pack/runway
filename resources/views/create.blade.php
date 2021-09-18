@@ -8,10 +8,11 @@
         :initial-blueprint='@json($blueprint)'
         :initial-meta='@json($meta)'
         :initial-values='@json($values)'
-        initial-title="Create {{ $resource->singular() }}"
+        initial-title="{{ $title }}"
         action="{{ $action }}"
-        method="post"
-        :resource-has-routes="{{ $resource->hasRouting() ? 'true' : 'false' }}"
+        method="{{ $method }}"
+        :resource-has-routes="{{ $resourceHasRoutes ? 'true' : 'false' }}"
         :is-creating="true"
+        publish-container="base"
     ></runway-publish-form>
 @endsection

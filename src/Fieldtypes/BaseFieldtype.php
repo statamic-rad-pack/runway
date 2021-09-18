@@ -3,15 +3,28 @@
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\Post;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\CP\Column;
 use Statamic\Fieldtypes\Relationship;
 
 class BaseFieldtype extends Relationship
 {
-    protected $canCreate = false;
+    protected $canEdit = true;
+    protected $canCreate = true;
+    protected $canSearch = true;
     protected $categories = ['relationship'];
+    protected $formComponent = 'runway-publish-form';
+
+    protected $formComponentProps = [
+        'initialBlueprint' => 'blueprint',
+        'initialValues' => 'values',
+        'initialMeta' => 'meta',
+        'initialTitle' => 'title',
+        'action' => 'action',
+        'method' => 'method',
+        'resourceHasRoutes' => 'resourceHasRoutes',
+        'permalink' => 'permalink',
+    ];
 
     protected function configFieldItems(): array
     {
@@ -168,9 +181,29 @@ class BaseFieldtype extends Relationship
             ];
         }
 
+        $editUrl = cp_route('runway.edit', [
+            'resourceHandle' => $resource->handle(),
+            'record' => $record->{$resource->routeKey()},
+        ]);
+
         return [
             'id'    => $record->getKey(),
             'title' => $record->{collect($resource->listableColumns())->first()},
+            'edit_url' => $editUrl,
+        ];
+    }
+
+    protected function getCreatables()
+    {
+        $resource = Runway::findResource($this->config('resource'));
+
+        return [
+            [
+                'title' => $resource->singular(),
+                'url' => cp_route('runway.create', [
+                    'resourceHandle'  => $resource->handle(),
+                ])
+            ]
         ];
     }
 }

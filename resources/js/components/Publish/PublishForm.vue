@@ -22,7 +22,7 @@
 
         <publish-container
             ref="container"
-            name="base"
+            :name="publishContainer"
             :blueprint="blueprint"
             :values="values"
             :meta="meta"
@@ -81,6 +81,7 @@ export default {
         resourceHasRoutes: Boolean,
         permalink: String,
         isCreating: Boolean,
+        publishContainer: String,
     },
 
     data() {
@@ -116,12 +117,17 @@ export default {
             this.saving = true
             this.clearErrors()
 
-            this.$axios[this.method](this.action, this.values)
+            this.$axios({
+                method: this.method,
+                url: this.action,
+                data: this.values,
+            })
                 .then((response) => {
                     this.saving = false
                     this.$refs.container.saved()
+                    this.$emit('saved', response)
 
-                    if (this.isCreating) {
+                    if (this.isCreating && this.publishContainer === 'base') {
                         this.$nextTick(() => {
                             window.location.href = response.data.redirect
                         })
@@ -157,7 +163,7 @@ export default {
         },
 
         setFieldMeta(handle, value) {
-            this.$store.dispatch(`publish/base/setFieldMeta`, {
+            this.$store.dispatch(`publish/${this.publishContainer}/setFieldMeta`, {
                 handle, value,
                 user: Statamic.user.id
             })
