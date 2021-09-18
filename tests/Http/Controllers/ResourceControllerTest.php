@@ -127,7 +127,7 @@ class ResourceControllerTest extends TestCase
         $post = $this->postFactory();
 
         $this->actingAs($user)
-            ->post(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
+            ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -135,8 +135,7 @@ class ResourceControllerTest extends TestCase
             ])
             ->assertOk()
             ->assertJsonStructure([
-                'record',
-                'resource_handle',
+                'data',
             ]);
 
         $post->refresh();
