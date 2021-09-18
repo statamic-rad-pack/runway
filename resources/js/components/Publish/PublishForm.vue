@@ -122,7 +122,6 @@ export default {
                 url: this.action,
                 data: this.values,
             })
-            // this.$axios[this.method](this.action, this.values)
                 .then((response) => {
                     this.saving = false
                     this.$refs.container.saved()
