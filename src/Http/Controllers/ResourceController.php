@@ -76,6 +76,8 @@ class ResourceController extends CpController
 
     public function store(StoreRequest $request, $resourceHandle)
     {
+        $postCreatedHooks = [];
+
         $resource = Runway::findResource($resourceHandle);
         $record = $resource->model();
 
@@ -83,6 +85,10 @@ class ResourceController extends CpController
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
 
             if ($field->type() === 'section' || $field->type() === 'has_many') {
+                if ($field->type() === 'has_many' && $processedValue) {
+                    $postCreatedHooks[] = $processedValue;
+                }
+
                 continue;
             }
 
@@ -94,6 +100,10 @@ class ResourceController extends CpController
         }
 
         $record->save();
+
+        foreach ($postCreatedHooks as $postCreatedHook) {
+            $postCreatedHook($resource, $record);
+        }
 
         return [
             'data' => $this->getReturnData($resource, $record),
