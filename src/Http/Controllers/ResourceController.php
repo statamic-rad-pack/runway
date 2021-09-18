@@ -59,10 +59,10 @@ class ResourceController extends CpController
                     ]),
                 ],
             ]),
-            'resource'  => $resource,
+            'resource' => $resource,
             'blueprint' => $blueprint->toPublishArray(),
-            'values'    => $fields->values(),
-            'meta'      => $fields->meta(),
+            'values' => $fields->values(),
+            'meta' => $fields->meta(),
             'permalink' => null,
             'resourceHasRoutes' => $resource->hasRouting(),
         ];
@@ -159,10 +159,10 @@ class ResourceController extends CpController
                     ]),
                 ],
             ]),
-            'resource'  => $resource,
+            'resource' => $resource,
             'blueprint' => $blueprint->toPublishArray(),
-            'values'    => $fields->values(),
-            'meta'      => $fields->meta(),
+            'values' => $fields->values(),
+            'meta' => $fields->meta(),
             'permalink' => $resource->hasRouting()
                 ? $record->uri()
                 : null,
@@ -228,7 +228,7 @@ class ResourceController extends CpController
 
                 return [
                     'handle' => $columnKey,
-                    'title'  => $field
+                    'title' => $field
                         ? $field->display()
                         : $field,
                     'has_link' => $preferredFirstColumn === $columnKey,
@@ -238,6 +238,9 @@ class ResourceController extends CpController
             ->toArray();
     }
 
+    /**
+     * Build an array with the correct return data for the inline publish forms.
+     */
     protected function getReturnData($resource, $record)
     {
         return array_merge($record->toArray(), [
