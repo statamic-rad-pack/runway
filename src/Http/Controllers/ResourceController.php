@@ -99,7 +99,7 @@ class ResourceController extends CpController
             'data' => $this->getReturnData($resource, $record),
             'redirect' => cp_route('runway.edit', [
                 'resourceHandle'  => $resource->handle(),
-                'record' => $record->{$resource->primaryKey()},
+                'record' => $record->{$resource->routeKey()},
             ]),
         ];
     }
