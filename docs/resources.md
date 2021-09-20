@@ -49,9 +49,9 @@ The next thing you’ll want to do is create a blueprint for your model.
 ### Creating a new blueprint
 Unfortunately, you can’t yet create/edit blueprints used for Runway in the Control Panel but it’s something we’re hoping comes in the future (it’s a Statamic Core change).
 
-However, we can workaround it for now. Instead, create a new blueprint for one of your collections, taxonomies etc (it doesn’t matter). 
+However, we can workaround it for now. Instead, create a new blueprint for one of your collections, taxonomies etc (it doesn’t matter).
 
-When creating it, add in all the fields you need. Remember that the field handles need to match up with the column names, otherwise bad things will happen. 
+When creating it, add in all the fields you need. Remember that the field handles need to match up with the column names, otherwise bad things will happen.
 
 Once created via the CP, you’ll find the blueprint’s YAML file in a folder somewhere, probably something like `resources/blueprints/collections/pages/my-special-blueprint.yaml`.
 
@@ -93,6 +93,24 @@ You may also run this same command for all resources pending a migration.
 php please runway:generate-migrations
 ```
 
+### Generating blueprints from your database
+If you've already got an Eloquent model setup, Runway can help you turn it into a blueprint!
+
+Before you can generate, you'll need to install the [`doctrine/dbal`](https://github.com/doctrine/dbal) package as it'll be used by Runway to analyse your database columns. You'll also need to have migrated your database already.
+
+As well as having your model setup, you will also need to add the resource(s) to your `config/runway.php` config.
+
+To generate a blueprint for a specific resource:
+
+```
+php please runway:generate-blueprints resource-handle
+```
+
+You may also run this same command for all resources:
+
+```
+php please runway:generate-blueprints
+```
 
 ## Configuring resources
 There’s about a dozen configuration options available for resources, they are all documented below.
@@ -111,7 +129,7 @@ If you’d like to hide the CP Nav Item that’s registered for this model, just
 ],
 ```
 
-> Bear in mind, this will just hide the Nav Item for the CP interface, it won’t actually get rid of the routes being registered. If someone knows where to look, they could still use the CP to manage your models (they could guess the URL).  
+> Bear in mind, this will just hide the Nav Item for the CP interface, it won’t actually get rid of the routes being registered. If someone knows where to look, they could still use the CP to manage your models (they could guess the URL).
 
 
 ### CP Nav Icon
@@ -164,7 +182,7 @@ You may also specify the `template` and `layout` you want to use when front-end 
 ## Actions
 In much the same way with entries, you can create custom Actions which will be usable in the listing tables provided by Runway.
 
-You can register them in the same way as you normally would. 
+You can register them in the same way as you normally would.
 
 The only thing that’s different is the fact that instead of filtering down to just `Entry` objects for example, you can filter by your model, like `Order`.
 
