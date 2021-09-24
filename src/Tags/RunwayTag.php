@@ -37,6 +37,10 @@ class RunwayTag extends Tags
 
                 foreach ($scopeArguments as $key => $scopeArgument) {
                     if ($fromContext = $this->context->get($scopeArgument)) {
+                        if ($fromContext instanceof \Statamic\Fields\Value) {
+                            $fromContext = $fromContext->raw();
+                        }
+
                         $scopeArguments[$key] = $fromContext;
                     }
                 }
