@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.26 (2021-09-24)
+
+### What's new
+
+* You can now use Eloquent Query Scopes with the Runway tag #82
+
 ## v2.1.25 (2021-09-24)
 
 ### What's new
