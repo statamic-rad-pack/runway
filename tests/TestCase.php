@@ -233,6 +233,13 @@ class Post extends Model
         $query->whereIn('title', ['Pasta', 'Apple', 'Burger']);
     }
 
+    public function scopeFruit($query, $smth)
+    {
+        if ($smth === 'idoo') {
+            $query->whereIn('title', ['Apple']);
+        }
+    }
+
     public function author()
     {
         return $this->belongsTo(Author::class);
