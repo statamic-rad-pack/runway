@@ -63,6 +63,26 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
+    public function can_get_records_with_with_parameter()
+    {
+        $posts = $this->postFactory(5);
+
+        $posts[0]->update(['title' => 'tiger']);
+
+        $this->tag->setParameters([
+            'with' => 'author',
+        ]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertSame(5, count($usage));
+        $this->assertSame((string) $usage[0]['title'], 'tiger');
+
+        $this->assertIsArray($usage[0]['author']);
+        $this->assertSame($usage[0]['author']['name'], $posts[0]->author->name);
+    }
+
+    /** @test */
     public function can_get_records_with_sort_parameter()
     {
         $posts = $this->postFactory(2);
