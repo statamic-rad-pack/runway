@@ -5,8 +5,8 @@ namespace DoubleThreeDigital\Runway\Tags;
 use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
-use Statamic\Tags\Tags;
 use Illuminate\Support\Str;
+use Statamic\Tags\Tags;
 
 class RunwayTag extends Tags
 {
@@ -28,6 +28,10 @@ class RunwayTag extends Tags
 
         if ($this->params->has('where') && $where = $this->params->get('where')) {
             $query->where(explode(':', $where)[0], explode(':', $where)[1]);
+        }
+
+        if ($with = $this->params->get('with')) {
+            $query->with($with);
         }
 
         if ($this->params->has('sort')) {
