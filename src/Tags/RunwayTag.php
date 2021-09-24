@@ -31,7 +31,7 @@ class RunwayTag extends Tags
         }
 
         if ($with = $this->params->get('with')) {
-            $query->with($with);
+            $query->with(explode('|', $with));
         }
 
         if ($this->params->has('sort')) {
