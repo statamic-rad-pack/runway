@@ -26,6 +26,29 @@ class RunwayTag extends Tags
 
         $query = $resource->model()->query();
 
+        if ($scopes = $this->params->get('scope')) {
+            $scopes = explode('|', $scopes);
+
+            foreach ($scopes as $scope) {
+                $scopeName = explode(':', $scope)[0];
+                $scopeArguments = isset(explode(':', $scope)[1])
+                    ? explode(',', explode(':', $scope)[1])
+                    : [];
+
+                foreach ($scopeArguments as $key => $scopeArgument) {
+                    if ($fromContext = $this->context->get($scopeArgument)) {
+                        if ($fromContext instanceof \Statamic\Fields\Value) {
+                            $fromContext = $fromContext->raw();
+                        }
+
+                        $scopeArguments[$key] = $fromContext;
+                    }
+                }
+
+                $query->{$scopeName}(...$scopeArguments);
+            }
+        }
+
         if ($this->params->has('where') && $where = $this->params->get('where')) {
             $query->where(explode(':', $where)[0], explode(':', $where)[1]);
         }
