@@ -46,6 +46,27 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
+    public function can_get_records_with_scope_parameter()
+    {
+        $posts = $this->postFactory(5);
+
+        $posts[0]->update(['title' => 'Pasta']);
+        $posts[2]->update(['title' => 'Apple']);
+        $posts[4]->update(['title' => 'Burger']);
+
+        $this->tag->setParameters([
+            'scope' => 'food',
+        ]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertSame(3, count($usage));
+        $this->assertSame((string) $usage[0]['title'], 'Pasta');
+        $this->assertSame((string) $usage[1]['title'], 'Apple');
+        $this->assertSame((string) $usage[2]['title'], 'Burger');
+    }
+
+    /** @test */
     public function can_get_records_with_where_parameter()
     {
         $posts = $this->postFactory(5);

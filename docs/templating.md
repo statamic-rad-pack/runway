@@ -28,6 +28,23 @@ You may use the `sort` parameter to adjust the order of the results.
 {{ /runway:post }}
 ```
 
+### Eloquent Scopes
+If you've defined a scope on your Eloquent model and you want to filter by that in your front-end you may use the `scope` parameter.
+
+```php
+public function scopeFood($query)
+{
+    $query->whereIn('title', ['Pasta', 'Apple', 'Burger']);
+}
+```
+
+```antlers
+{{ runway:post scope="food" }}
+	<h2>{{ title }}</h2>
+	<p>{{ intro_text }}</p>
+{{ /runway:post }}
+```
+
 ### Filtering
 Just like with the collection tag, you may filter your results like so:
 

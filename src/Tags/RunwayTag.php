@@ -26,6 +26,10 @@ class RunwayTag extends Tags
 
         $query = $resource->model()->query();
 
+        if ($scope = $this->params->get('scope')) {
+            $query->{$scope}();
+        }
+
         if ($this->params->has('where') && $where = $this->params->get('where')) {
             $query->where(explode(':', $where)[0], explode(':', $where)[1]);
         }
