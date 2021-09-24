@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.25 (2021-09-24)
+
+### What's new
+
+* You can now eager load relationships using the `with` parameter on the Runway tag #84
+
 ## v2.1.24 (2021-09-20)
 
 ### What's new
