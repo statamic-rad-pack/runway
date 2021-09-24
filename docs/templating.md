@@ -32,6 +32,8 @@ You may use the `sort` parameter to adjust the order of the results.
 If you've defined a scope on your Eloquent model and you want to filter by that in your front-end you may use the `scope` parameter.
 
 ```php
+// app/Models/Post.php
+
 public function scopeFood($query)
 {
     $query->whereIn('title', ['Pasta', 'Apple', 'Burger']);
