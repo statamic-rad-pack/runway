@@ -47,6 +47,20 @@ public function scopeFood($query)
 {{ /runway:post }}
 ```
 
+If you need to you can provide arguments to the scope like so:
+
+```antlers
+{{ runway:post scope="food:argument" }}
+```
+
+In the above example, `argument` can either be a string or we'll grab it from 'the context' (the available variables) if we can find it.
+
+You may also provide multiple scopes, if that's something you need...
+
+```antlers
+{{ runway:post scope="food:argument|fastfood" }}
+```
+
 ### Filtering
 Just like with the collection tag, you may filter your results like so:
 
