@@ -38,6 +38,22 @@ Just like with the collection tag, you may filter your results like so:
 {{ /runway:post }}
 ```
 
+### Eager Loading
+If your model has a relationship that you'd like to bring into the template, you may specify the `with` parameter.
+
+```antlers
+{{ runway:post with="user" }}
+	<h2>{{ title }}</h2>
+	<p>By {{ user:name }}</p>
+{{ /runway:post }}
+```
+
+You can specify multiple relationships to eager load, just separate with pipes.
+
+```antlers
+{{ runway:post with="user|comments" }}
+```
+
 ### Limiting
 If you only want X number of results returned instead of ALL of them, you may specify a `limit`.
 
@@ -58,7 +74,7 @@ As [with the collection tag](https://statamic.dev/tags/collection#scope), you ma
 		<p>{{ intro_text }}</p>
 	{{ /posts }}
 {{ /runway:post }}
-``` 
+```
 
 ### Pagination
 If you want to paginate your results onto multiple pages, you can use the `paginate` parameter, along with [scoping](#scoping) and [limiting](#limiting).
