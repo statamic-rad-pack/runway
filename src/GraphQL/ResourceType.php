@@ -6,7 +6,6 @@ use DoubleThreeDigital\Runway\Resource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Statamic\Facades\GraphQL;
-use Statamic\GraphQL\Fields\DateField;
 use Rebing\GraphQL\Support\Type;
 
 class ResourceType extends Type
@@ -21,6 +20,8 @@ class ResourceType extends Type
 
     public function fields(): array
     {
+        ray($this->resource->blueprint()->fields()->toGql());
+
         return $this->resource->blueprint()->fields()->toGql()
             ->merge($this->nonBlueprintFields())
             ->map(function ($arr) {
@@ -30,6 +31,7 @@ class ResourceType extends Type
 
                 return $arr;
             })
+            ->ray()
             ->all();
     }
 
@@ -65,7 +67,6 @@ class ResourceType extends Type
                 }
 
                 if ($column->getType() instanceof \Doctrine\DBAL\Types\DateTimeType) {
-                    // return new DateField;
                     $type = GraphQL::string();
                 }
 
