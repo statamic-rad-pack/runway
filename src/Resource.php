@@ -20,6 +20,7 @@ class Resource
     protected $route;
     protected $template;
     protected $layout;
+    protected $graphqlEnabled;
 
     public function handle($handle = null)
     {
@@ -135,6 +136,15 @@ class Resource
         return $this->fluentlyGetOrSet('layout')
             ->getter(function ($value) {
                 return $value ?? 'layout';
+            })
+            ->args(func_get_args());
+    }
+
+    public function graphqlEnabled($graphqlEnabled = null)
+    {
+        return $this->fluentlyGetOrSet('graphqlEnabled')
+            ->getter(function ($graphqlEnabled) {
+                return $graphqlEnabled ?? false;
             })
             ->args(func_get_args());
     }

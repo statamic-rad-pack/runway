@@ -55,6 +55,10 @@ class Runway
                     $resource->layout($config['layout']);
                 }
 
+                if (isset($config['graphql'])) {
+                    $resource->graphqlEnabled($config['graphql']);
+                }
+
                 return [$handle => $resource];
             })
             ->toArray();
