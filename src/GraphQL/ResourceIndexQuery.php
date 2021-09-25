@@ -9,9 +9,12 @@ use Statamic\Facades\GraphQL;
 use Statamic\GraphQL\Queries\Query;
 use Illuminate\Support\Str;
 use Statamic\GraphQL\Types\JsonArgument;
+use Statamic\Tags\Concerns\QueriesConditions;
 
 class ResourceIndexQuery extends Query
 {
+    use QueriesConditions;
+
     protected $resource;
 
     public function __construct(Resource $resource)
@@ -63,18 +66,19 @@ class ResourceIndexQuery extends Query
                 })->values()->all();
             }
 
-            // ray($definitions);
 
             foreach ($definitions as $definition) {
                 $condition = array_keys($definition)[0];
                 $value = array_values($definition)[0];
 
-                // Statamic has a `QueriesConditions` class where it does this stuff
-                // but since we need to query slighly differently, we've just done
-                // it ourselves.
+                // The plan is to use the QueriesConditions method soon but I'm
+                // just waiting on a PR to be merged first... so until then,
+                // I'll do the queries myself
+                //
+                // https://github.com/statamic/cms/pull/4312
 
-                // If you need any of the conditions I've missed out, please PR
-                // them or open an issue.
+                // $query = $this->queryCondition($query, $field, $condition, $value);
+
                 switch ($condition) {
                     case 'equals':
                         $query = $query->where($field, $value);
