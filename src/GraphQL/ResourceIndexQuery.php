@@ -31,6 +31,7 @@ class ResourceIndexQuery extends Query
             'limit' => GraphQL::int(),
             'page' => GraphQL::int(),
             'filter' => GraphQL::type(JsonArgument::NAME),
+            'sort' => GraphQL::listOf(GraphQL::string()),
         ];
     }
 
@@ -39,6 +40,7 @@ class ResourceIndexQuery extends Query
         $query = $this->resource->model();
 
         $query = $this->filterQuery($query, $args['filter'] ?? []);
+        $query = $this->sortQuery($query, $args['sort'] ?? []);
 
         return $query->paginate(
             $args['limit'] ?? null,
@@ -157,6 +159,25 @@ class ResourceIndexQuery extends Query
                         break;
                 }
             }
+        }
+
+        return $query;
+    }
+
+    protected function sortQuery($query, $sorts)
+    {
+        if (empty($sorts)) {
+            $sorts = ['id'];
+        }
+
+        foreach ($sorts as $sort) {
+            $order = 'asc';
+
+            if (Str::contains($sort, ' ')) {
+                [$sort, $order] = explode(' ', $sort);
+            }
+
+            $query = $query->orderBy($sort, $order);
         }
 
         return $query;
