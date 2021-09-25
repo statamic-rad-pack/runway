@@ -3,6 +3,8 @@
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Runway;
+use GraphQL\Type\Definition\ResolveInfo;
+use Statamic\Facades\GraphQL;
 
 class HasManyFieldtype extends BaseFieldtype
 {
@@ -75,5 +77,17 @@ class HasManyFieldtype extends BaseFieldtype
             });
 
         return null;
+    }
+
+    public function toGqlType()
+    {
+        $resource = Runway::findResource($this->config('resource'));
+
+        return [
+            'type' => GraphQL::listOf(GraphQL::type("runway.graphql.types.{$resource->handle()}")),
+            'resolve' => function ($model, $args, $context, ResolveInfo $info) use ($resource) {
+                return $model->{$info->fieldName};
+            },
+        ];
     }
 }
