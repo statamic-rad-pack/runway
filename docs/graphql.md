@@ -25,6 +25,8 @@ GraphQL must be enabled for each of the resources you wish to query. It's as sim
 
 You must also ensure you have [GraphQL enabled](https://statamic.dev/graphql#enable-graphql) in Statamic as well for it to be available to you.
 
+> As a side note, please ensure you've installed the `doctrine/dbal` package, Runway uses it for reviewing your database columns. To install it, run `composer require doctrine/dbal`
+
 ## Queries
 
 For each resource, there's two kinds of queries you can do. An 'index' query and a 'show' query:
