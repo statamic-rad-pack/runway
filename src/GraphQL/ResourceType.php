@@ -3,10 +3,13 @@
 namespace DoubleThreeDigital\Runway\GraphQL;
 
 use DoubleThreeDigital\Runway\Resource;
+use DoubleThreeDigital\Runway\Runway;
+use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Statamic\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type;
+use Illuminate\Support\Str;
 
 class ResourceType extends Type
 {
@@ -20,8 +23,6 @@ class ResourceType extends Type
 
     public function fields(): array
     {
-        ray($this->resource->blueprint()->fields()->toGql());
-
         return $this->resource->blueprint()->fields()->toGql()
             ->merge($this->nonBlueprintFields())
             ->map(function ($arr) {
@@ -31,13 +32,18 @@ class ResourceType extends Type
 
                 return $arr;
             })
-            ->ray()
             ->all();
     }
 
     protected function resolver()
     {
-        return function (Model $model, $args, $context, $info) {
+        return function ($model, $args, $context, ResolveInfo $info) {
+            if (! $model instanceof Model) {
+                $resource = Runway::findResource(Str::replace('runway.graphql.types.', '', $info->parentType->name));
+
+                $model = $resource->model()->firstWhere($resource->primaryKey(), $model);
+            }
+
             return $model->{$info->fieldName};
         };
     }
