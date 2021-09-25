@@ -1,5 +1,5 @@
 ---
-title: GraphQL
+title: GraphQL API
 ---
 
 GraphQL is an awesome way to fetch just the right information you need from your backend. It's commonly used in 'headless' environments.
