@@ -113,7 +113,6 @@ class ServiceProvider extends AddonServiceProvider
                     return new \DoubleThreeDigital\Runway\GraphQL\ResourceType($resource);
                 });
 
-                // TODO: Add docblocks to this facade in core
                 GraphQL::addType("runway.graphql.types.{$resource->handle()}");
                 GraphQL::addQuery("runway.graphql.queries.{$resource->handle()}.index");
                 GraphQL::addQuery("runway.graphql.queries.{$resource->handle()}.show");
