@@ -77,6 +77,9 @@ class ResourceType extends Type
                     'type' => $type,
                 ];
             })
+            ->reject(function ($item) {
+                return is_null($item['type']);
+            })
             ->toArray();
     }
 }
