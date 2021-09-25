@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.27 (2021-09-25)
+
+### What's new
+
+* 🎉 GraphQL API ([read the docs](https://runway.duncanmcclean.com/graphql)) #86 #54
+
 ## v2.1.26 (2021-09-24)
 
 ### What's new
