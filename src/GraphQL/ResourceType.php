@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Schema;
 use Statamic\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type;
 use Illuminate\Support\Str;
+use Statamic\Fields\Field;
 
 class ResourceType extends Type
 {
@@ -25,6 +26,11 @@ class ResourceType extends Type
     {
         return $this->resource->blueprint()->fields()->toGql()
             ->merge($this->nonBlueprintFields())
+            ->mapWithKeys(function ($value, $key) {
+                return [
+                    Str::replace('_id', '', $key) => $value
+                ];
+            })
             ->map(function ($arr) {
                 if (is_array($arr)) {
                     $arr['resolve'] = $arr['resolve'] ?? $this->resolver();
