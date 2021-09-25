@@ -116,11 +116,6 @@ class ServiceProvider extends AddonServiceProvider
                     return new \DoubleThreeDigital\Runway\GraphQL\ResourceShowQuery($resource);
                 });
 
-                // $this->app->bind("runway.graphql.types.{$resource->handle()}", function () use ($resource) {
-                //     return new \DoubleThreeDigital\Runway\GraphQL\ResourceType($resource);
-                // });
-
-                // GraphQL::addType("runway.graphql.types.{$resource->handle()}");
                 GraphQL::addQuery("runway.graphql.queries.{$resource->handle()}.index");
                 GraphQL::addQuery("runway.graphql.queries.{$resource->handle()}.show");
             });
