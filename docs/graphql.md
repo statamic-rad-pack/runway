@@ -56,7 +56,7 @@ Example of a show query:
 
 ```graphql
 {
-    products(id: 2) {
+    products(id: "2") {
         id
         name
         price
@@ -71,7 +71,7 @@ If you're using the 'Belongs To' or 'Has Many' fieldtypes provided by Runway, yo
 
 ```graphql
 {
-  product(id: 2) {
+  product(id: "2") {
     id
     name
     brand {

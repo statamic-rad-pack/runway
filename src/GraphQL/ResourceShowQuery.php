@@ -26,13 +26,12 @@ class ResourceShowQuery extends Query
     public function args(): array
     {
         return [
-            'id' => GraphQL::nonNull(GraphQL::int()),
+            $this->resource->primaryKey() => GraphQL::nonNull(GraphQL::id()),
         ];
     }
 
     public function resolve($root, $args)
     {
-        // TODO: make work with different foreign keys
-        return $this->resource->model()->find($args['id']);
+        return $this->resource->model()->find($args[$this->resource->primaryKey()]);
     }
 }
