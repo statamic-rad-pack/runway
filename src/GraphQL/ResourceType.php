@@ -60,6 +60,10 @@ class ResourceType extends Type
                     $type = GraphQL::int();
                 }
 
+                if ($column->getType() instanceof \Doctrine\DBAL\Types\StringType) {
+                    $type = GraphQL::string();
+                }
+
                 if ($column->getType() instanceof \Doctrine\DBAL\Types\DateTimeType) {
                     // return new DateField;
                     $type = GraphQL::string();
