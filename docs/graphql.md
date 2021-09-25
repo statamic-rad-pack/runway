@@ -27,7 +27,7 @@ You must also ensure you have [GraphQL enabled](https://statamic.dev/graphql#ena
 
 ## Queries
 
-For each resource, there's two kinds of queries you can do. An 'index' query and a 'show' query.
+For each resource, there's two kinds of queries you can do. An 'index' query and a 'show' query:
 
 ### Index Query
 
@@ -72,7 +72,7 @@ If you're using the 'Belongs To' or 'Has Many' fieldtypes provided by Runway, yo
   product(id: 2) {
     id
     name
-    brand_id {
+    brand {
       id
       name
       created_at
@@ -81,3 +81,9 @@ If you're using the 'Belongs To' or 'Has Many' fieldtypes provided by Runway, yo
   }
 }
 ```
+
+Notice that in the above example, we have a 'Belongs To' fieldtype which we're querying as simply `brand`, instead of `brand_id`. Runway removes the `_id` for you so you can build a nice, clean query.
+
+## Filtering and Sorting
+
+You may also filter & sort results the same way you would with the built-in queries. [Review the Statamic Docs](https://statamic.dev/graphql#filtering).
