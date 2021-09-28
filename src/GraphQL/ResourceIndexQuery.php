@@ -40,10 +40,10 @@ class ResourceIndexQuery extends Query
 
     public function resolve($root, $args)
     {
-        $query = $this->resource->model();
+        $query = $this->resource->model()->newQuery();
 
-        $query = $this->filterQuery($query, $args['filter'] ?? []);
-        $query = $this->sortQuery($query, $args['sort'] ?? []);
+        $this->filterQuery($query, $args['filter'] ?? []);
+        $this->sortQuery($query, $args['sort'] ?? []);
 
         return $query->paginate(
             $args['limit'] ?? null,
@@ -66,106 +66,13 @@ class ResourceIndexQuery extends Query
                 })->values()->all();
             }
 
-
             foreach ($definitions as $definition) {
                 $condition = array_keys($definition)[0];
                 $value = array_values($definition)[0];
 
-                // The plan is to use the QueriesConditions method soon but I'm
-                // just waiting on a PR to be merged first... so until then,
-                // I'll do the queries myself
-                //
-                // https://github.com/statamic/cms/pull/4312
-
-                // $query = $this->queryCondition($query, $field, $condition, $value);
-
-                switch ($condition) {
-                    case 'equals':
-                        $query = $query->where($field, $value);
-                        break;
-
-                    case 'null':
-                        $query = $query->where($field, null);
-                        break;
-
-                    case 'isset':
-                        $query = $query->where($field, '!==', null);
-                        break;
-
-                    case 'contains':
-                        $query = $query->where($field, 'LIKE', "%{$value}%");
-                        break;
-
-                    case 'doesnt_contain':
-                        // TODO
-                        break;
-
-                    case 'in':
-                        $query = $query->whereIn($field, $value);
-                        break;
-
-                    case 'not_in':
-                        $query = $query->whereNotIn($field, $value);
-                        break;
-
-                    // doesnt_begin_with
-                    // ends_with
-                    // doesnt_end_with
-                    // greater_than
-
-                    case 'gt':
-                        $query = $query->where($field, '>', $value);
-                        break;
-
-                    // less_than
-
-                    case 'lt':
-                        $query = $query->where($field, '<', $value);
-                        break;
-
-                    // greater_than_or_equal_to
-
-                    case 'gte':
-                        $query = $query->where($field, '>=', $value);
-                        break;
-
-                    // less_than_or_equal_to
-
-                    case 'lte':
-                        $query = $query->where($field, '<=', $value);
-                        break;
-
-                    // matches
-                    // match
-
-                    case 'regex':
-                        //
-                        break;
-
-                    case 'doesnt_match':
-                        $query = $query->where($field, '!=', $value);
-                        break;
-
-                    // is_alpha
-                    // is_alpha_numeric
-                    // is_numeric
-                    // is_url
-                    // is_embeddable
-                    // is_email
-                    // is_after
-                    // is_future
-                    // is_before
-                    // is_past
-                    // is_numberwang
-
-                    default:
-                        # code...
-                        break;
-                }
+                $this->queryCondition($query, $field, $condition, $value);
             }
         }
-
-        return $query;
     }
 
     protected function sortQuery($query, $sorts)
@@ -183,7 +90,5 @@ class ResourceIndexQuery extends Query
 
             $query = $query->orderBy($sort, $order);
         }
-
-        return $query;
     }
 }
