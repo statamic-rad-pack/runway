@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### What's fixed
+
+* GrapphQL queries now use the built-in `QueriesConditions` trait for filtering, not some custom code
+
 ## v2.1.27 (2021-09-25)
 
 ### What's new
