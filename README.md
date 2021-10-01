@@ -1,6 +1,6 @@
 <!-- statamic:hide -->
 
-![Banner](https://raw.githubusercontent.com/doublethreedigital/runway/master/banner.png)
+![Banner](https://raw.githubusercontent.com/doublethreedigital/runway/2.1/banner.png)
 
 ## Runway
 
