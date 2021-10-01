@@ -6,23 +6,84 @@
 
 <!-- /statamic:hide -->
 
-Runway allows you to easilly manage your Eloquent models straight from your Statamic Control Panel. Runway also gives you the option of outputting your Eloquent models in your Antlers templates. No need for a custom tag, it's all built-in.
+Runway gives you the option of displaying & managing your Eloquent models in Statamic sites.
 
-This repository contains the source code of Runway. While Runway is free and doesn't require you to purchase a license, consider [sponsoring Duncan](https://github.com/sponsors/duncanmcclean) to support the ongoing maintenance and development of new features.
+### Control Panel integration
 
-## Features
+Runway fits right into the Control Panel - enabling you to create, edit and view your models. In most cases, you'll not notice the difference between an entry in the CP and an Eloquent model in the CP. 
 
-* [Control Panel interface](https://runway.duncanmcclean.com/control-panel)
-* [Front-end routing](https://runway.duncanmcclean.com/front-end-routing)
-* [Antlers tag](https://runway.duncanmcclean.com/templating)
-* [Relationship Fieldtypes](https://runway.duncanmcclean.com/fieldtypes)
-* And more... Runway is always accepting [feature requests](https://github.com/doublethreedigital/runway/issues/new?assignees=&labels=feature+request&template=feature_request.yml)
+* [Review documentation](https://runway.duncanmcclean.com/control-panel)
+
+### Front-end routing
+
+Need to show your models on the front-end of your site? No problem - Runway's got that under control. Simply tell Runway the route you'd like to use and it'll serve up the front-end for you.
+
+```php
+// config/runway.php
+
+return [
+    'resources' => [
+        \App\Models\Product::class => [
+            'route' => '/products/{{ slug }}',
+        ],
+    ],
+];
+```
+
+* [Review documentation](https://runway.duncanmcclean.com/front-end-routing)
+
+### Antlers templating
+
+In addition to front-end routing, you may also use Runway's tag to loop through your models and display the results. The tag supports filtering, using Eloquent scopes and sorting.
+
+```antlers
+{{ runway:products }}
+    <h2>{{ name }}</h2>
+    <p>Price: {{ price }}</p>
+{{ /runway:products }}
+```
+
+* [Review documentation](https://runway.duncanmcclean.com/templating)
+
+### GraphQL API (new)
+
+If you're a GraphQL fan, you're now able to fetch your models via GraphQL. Runway will augment the fields just like you'd expect.
+
+```graphql
+{
+    products(limit: 25, sort: "name") {
+        data {
+            id
+            name
+            price
+            description
+        }
+    }
+}
+```
 
 ## Installation
 
-1. Install with Composer `composer require doublethreedigital/runway`
-2. Publish the configuration file `php artisan vendor:publish --tag="runway-config"`
-3. [Configure each of the 'resources'](https://runway.duncanmcclean.com/resources) you'd like to be available through Runway.
+First, run this command which will require Runway as a dependency of your app.
+
+```
+composer require doublethreedigital/runway
+```
+
+Once installed, you’ll want to publish the default configuration file.
+
+```
+php artisan vendor:publish --tag="runway-config"
+```
+
+Now, [configure each of the 'resources'](https://runway.duncanmcclean.com/resources) you'd like to be available through Runway.
+
+## Sponsor
+
+This addon is open-source, meaning anyone can use this addon in their sites for **free**! 
+
+However, maintaining and developing new features for open-source projects can take quite a bit of time. If you're using Runway in your production environment, please [consider sponsoring me](https://github.com/sponsors/duncanmcclean) (Duncan McClean) for a couple dollars a month.
+
 
 ## Security
 
