@@ -64,7 +64,7 @@ If you're a GraphQL fan, you're now able to fetch your models via GraphQL. Runwa
 
 ## Installation
 
-First, run this command which will require Runway as a dependency of your app.
+First, require Runway as a Composer dependency:
 
 ```
 composer require doublethreedigital/runway
