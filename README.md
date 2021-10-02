@@ -78,7 +78,11 @@ php artisan vendor:publish --tag="runway-config"
 
 Now, [configure each of the 'resources'](https://runway.duncanmcclean.com/resources) you'd like to be available through Runway.
 
-## Sponsor
+## Documentation
+
+There's full documentation of Runway over on it's [documentation site](https://runway.duncanmcclean.com).
+
+## Sponsor Duncan
 
 This addon is open-source, meaning anyone can use this addon in their sites for **free**! 
 
@@ -87,15 +91,9 @@ However, maintaining and developing new features for open-source projects can ta
 
 ## Security
 
-From a security perspective, the latest version only will receive a security release if a vulnerability is found.
+Only the latest version of Runway (v2.1) will receive security updates if a vulnerability is found. 
 
-If you discover a security vulnerability within Runway, please report it [via email](mailto:duncan@doublethree.digital) straight away. Please don't report security issues in the issue tracker.
-
-## Resources
-
-* [**Documentation**](https://runway.duncanmcclean.com): First-party documentation
-* [**Issue Tracker**](https://github.com/doublethreedigital/runway/issues): Find & report bugs in Runway
-* [**Email**](mailto:help@doublethree.digital): Support from the developer behind the addon
+If you discover a security vulnerability, please report it to Duncan straight away, [via email](mailto:duncan@doublethree.digital). Please don't report security issues through GitHub Issues.
 
 <!-- statamic:hide -->
 
