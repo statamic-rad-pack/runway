@@ -126,7 +126,7 @@ class ResourceController extends CpController
         foreach ($blueprintFieldKeys as $fieldKey) {
             $value = $record->{$fieldKey};
 
-            if ($value instanceof \Carbon\Carbon) {
+            if ($value instanceof \Carbon\Carbon || $value instanceof \Carbon\CarbonImmutable) {
                 $format = $defaultFormat = 'Y-m-d H:i';
 
                 if ($field = $resource->blueprint()->field($fieldKey)) {
