@@ -62,13 +62,15 @@ class HasManyFieldtype extends BaseFieldtype
         $relatedResource = Runway::findResource($this->config('resource'));
         $relatedField = $record->{$this->field()->handle()}();
 
+        // I don't understand this code, why are you updating the reference? The `id` won't change.
         $relatedField
-            ->each(function ($model) use ($relatedField) {
+            ->each(function ($model) use ($record, $relatedField) {
                 $model->update([
-                    $relatedField->getForeignKeyName() => null,
+                    $relatedField->getForeignKeyName() => $record->id,
                 ]);
             });
 
+        // and why update it again???
         collect($data)
             ->each(function ($relatedId) use ($record, $relatedResource, $relatedField) {
                 $relatedResource->model()->find($relatedId)->update([
