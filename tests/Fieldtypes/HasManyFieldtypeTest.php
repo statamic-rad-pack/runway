@@ -135,4 +135,19 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertArrayHasKey('title', $getItemData[1]);
         $this->assertArrayNotHasKey('created_at', $getItemData[1]);
     }
+
+    /**
+     * @test
+     */
+    public function it_can_save_model_with_has_many_relation()
+    {
+        $posts = $this->postFactory(5);
+        $author = $this->authorFactory();
+
+        foreach ($posts as $post) {
+            $post->update(['author_id' => $author->id]);
+        }
+
+        $this->assertTrue($author->update(['name' => 'Foo Bar']));
+    }
 }
