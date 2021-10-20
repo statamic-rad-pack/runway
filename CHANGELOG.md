@@ -2,9 +2,12 @@
 
 ## Unreleased
 
+## v2.1.28 (2021-10-20)
+
 ### What's fixed
 
-* GrapphQL queries now use the built-in `QueriesConditions` trait for filtering, not some custom code
+* Fixed an issue viewing resources in the CP, where casting dates to `date_immutable` would cause issues. #89
+* GraphQL queries now use the built-in `QueriesConditions` trait for filtering, not custom code
 
 ## v2.1.27 (2021-09-25)
 
