@@ -2,6 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Http\Controllers;
 
+use Carbon\CarbonInterface;
 use DoubleThreeDigital\Runway\Http\Requests\CreateRequest;
 use DoubleThreeDigital\Runway\Http\Requests\EditRequest;
 use DoubleThreeDigital\Runway\Http\Requests\IndexRequest;
@@ -126,7 +127,7 @@ class ResourceController extends CpController
         foreach ($blueprintFieldKeys as $fieldKey) {
             $value = $record->{$fieldKey};
 
-            if ($value instanceof \Carbon\CarbonInterface) {
+            if ($value instanceof CarbonInterface) {
                 $format = $defaultFormat = 'Y-m-d H:i';
 
                 if ($field = $resource->blueprint()->field($fieldKey)) {
