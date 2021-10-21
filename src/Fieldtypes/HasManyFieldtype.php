@@ -8,6 +8,8 @@ use Statamic\Facades\GraphQL;
 
 class HasManyFieldtype extends BaseFieldtype
 {
+    protected $itemComponent = 'hasmany-related-item';
+
     protected function configFieldItems(): array
     {
         $config = [
@@ -43,36 +45,46 @@ class HasManyFieldtype extends BaseFieldtype
                 $relatedResource = Runway::findResource($this->config('resource'));
                 $relatedField = $record->{$this->field()->handle()}();
 
-                $relatedField
-                    ->each(function ($model) use ($relatedField) {
-                        $model->update([
-                            $relatedField->getForeignKeyName() => null,
-                        ]);
-                    });
-
+                // Add anything new
                 collect($data)
                     ->each(function ($relatedId) use ($record, $relatedResource, $relatedField) {
-                        $relatedResource->model()->find($relatedId)->update([
-                            $relatedField->getForeignKeyName() => $record->id,
+                        $model = $relatedResource->model()->find($relatedId);
+
+                        $model->update([
+                            $relatedField->getForeignKeyName() => $record->{$relatedResource->primaryKey()},
                         ]);
                     });
             };
         }
 
+        $deleted = [];
         $relatedResource = Runway::findResource($this->config('resource'));
         $relatedField = $record->{$this->field()->handle()}();
 
-        $relatedField
-            ->each(function ($model) use ($relatedField) {
-                $model->update([
-                    $relatedField->getForeignKeyName() => null,
-                ]);
+        // Delete any deleted models
+        collect($relatedField->get())
+            ->reject(function ($model) use ($data) {
+                return in_array($model->id, $data);
+            })
+            ->each(function ($model) use ($relatedResource, &$deleted) {
+                $deleted[] = $model->{$relatedResource->primaryKey()};
+
+                $model->delete();
             });
 
+        // Add anything new
         collect($data)
+            ->reject(function ($relatedId) use ($relatedResource, $relatedField) {
+                return $relatedField->get()->pluck($relatedResource->primaryKey())->contains($relatedId);
+            })
+            ->reject(function ($relatedId) use ($deleted) {
+                return in_array($relatedId, $deleted);
+            })
             ->each(function ($relatedId) use ($record, $relatedResource, $relatedField) {
-                $relatedResource->model()->find($relatedId)->update([
-                    $relatedField->getForeignKeyName() => $record->id,
+                $model = $relatedResource->model()->find($relatedId);
+
+                $model->update([
+                    $relatedField->getForeignKeyName() => $record->{$relatedResource->primaryKey()},
                 ]);
             });
 
