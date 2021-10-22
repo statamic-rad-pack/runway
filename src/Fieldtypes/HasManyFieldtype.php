@@ -4,6 +4,7 @@ namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Runway;
 use GraphQL\Type\Definition\ResolveInfo;
+use Illuminate\Support\Facades\Request;
 use Statamic\Facades\GraphQL;
 
 class HasManyFieldtype extends BaseFieldtype
@@ -36,7 +37,7 @@ class HasManyFieldtype extends BaseFieldtype
     public function process($data)
     {
         $resource = Runway::findResource(request()->route('resourceHandle'));
-        $record = $resource->model()->firstWhere($resource->routeKey(), (int) request()->route('record'));
+        $record = $resource->model()->firstWhere($resource->routeKey(), (int) Request::route('record'));
 
         // If we're adding HasMany relations on a model that doesn't exist yet,
         // return a closure that will be run post-save.
