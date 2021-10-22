@@ -5,9 +5,10 @@ namespace DoubleThreeDigital\Runway\Tests\Fieldtypes;
 use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Request;
 use Statamic\Fields\Field;
 
 class HasManyFieldtypeTest extends TestCase
@@ -57,7 +58,7 @@ class HasManyFieldtypeTest extends TestCase
             $post->update(['author_id' => $author->id]);
         }
 
-        $getIndexItems = $this->fieldtype->getIndexItems(new Request());
+        $getIndexItems = $this->fieldtype->getIndexItems(new HttpRequest());
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Collection);
@@ -84,6 +85,30 @@ class HasManyFieldtypeTest extends TestCase
             'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
         ]);
     }
+
+    // /** @test */
+    // public function can_process_and_add_relations_to_model()
+    // {
+    //     $posts = $this->postFactory(10);
+    //     $author = $this->authorFactory();
+
+    //     foreach ($posts as $post) {
+    //         // $post->update(['author_id' => $author->id]);
+    //     }
+
+    //     Request::shouldReceive('route')
+    //         ->once()
+    //         ->with('record')
+    //         ->andReturn($author->id);
+
+    //     $process = $this->fieldtype->process(collect($posts)->pluck('id')->toArray());
+
+    //     $this->assertSame($preProcessIndex->first(), [
+    //         'id' => $posts[0]->id,
+    //         'title' => $posts[0]->title,
+    //         'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
+    //     ]);
+    // }
 
     /** @test */
     public function can_get_augment_value()
