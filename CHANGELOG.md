@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.29 (2021-10-22)
+
+### What's improved
+
+* Made some improvements to the Belongs To fieldtype, fixing an issue in the process #93 #91
+
 ## v2.1.28 (2021-10-20)
 
 ### What's fixed
