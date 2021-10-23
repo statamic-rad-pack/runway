@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.30 (2021-10-23)
+
+### What's fixed
+
+* Fixed a few round edges with permissions #94
+
 ## v2.1.29 (2021-10-22)
 
 ### What's improved
