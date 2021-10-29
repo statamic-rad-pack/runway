@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.31 (2021-10-29)
+
+### What's improved
+
+* Enabled Bulk Actions on the Runway Listing Table #87
+
 ## v2.1.30 (2021-10-23)
 
 ### What's fixed
