@@ -50,15 +50,15 @@
                         v-text="__('No results')"
                     />
 
-                    <!-- <data-list-bulk-actions
+                    <data-list-bulk-actions
                         :url="actionUrl"
                         @started="actionStarted"
                         @completed="actionCompleted"
-                    /> -->
+                    />
 
                     <data-list-table
                         v-show="items.length"
-                        :allow-bulk-actions="false"
+                        :allow-bulk-actions="true"
                         :loading="loading"
                         :reorderable="false"
                         :sortable="true"
@@ -87,7 +87,7 @@
                                 <div class="divider" v-if="row.actions.length" />
 
                                 <data-list-inline-actions
-                                    :item="row._id"
+                                    :item="row.id"
                                     :url="actionUrl"
                                     :actions="row.actions"
                                     @started="actionStarted"
