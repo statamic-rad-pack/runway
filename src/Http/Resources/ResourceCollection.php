@@ -72,7 +72,7 @@ class ResourceCollection extends LaravelResourceCollection
                     $row[$key] = $field->setValue($record->{$key})->preProcessIndex()->value();
                 }
 
-                $row['_id'] = $record->getKey();
+                $row['id'] = $record->getKey();
                 $row['edit_url'] = cp_route('runway.edit', ['resourceHandle' => $handle, 'record' => $record->getRouteKey()]);
                 $row['delete_url'] = cp_route('runway.destroy', ['resourceHandle' => $handle, 'record' => $record->getRouteKey()]);
                 $row['permalink'] = $this->runwayResource->hasRouting() ? $record->uri() : null;
