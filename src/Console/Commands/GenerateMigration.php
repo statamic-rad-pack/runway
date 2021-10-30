@@ -320,7 +320,7 @@ class GenerateMigration extends Command
             ->__toString();
 
         File::put(
-            $migrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_'.$resource->databaseTable().'_tables.php',
+            $migrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_'.$resource->databaseTable().'_table.php',
             $migrationContents
         );
 
