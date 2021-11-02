@@ -102,6 +102,7 @@ If you discover a security vulnerability, please report it to Duncan straight aw
 <p>
 <a href="https://statamic.com"><img src="https://img.shields.io/badge/Statamic-3.0+-FF269E?style=for-the-badge" alt="Compatible with Statamic v3"></a>
 <a href="https://packagist.org/packages/doublethreedigital/runway/stats"><img src="https://img.shields.io/packagist/v/doublethreedigital/runway?style=for-the-badge" alt="Runway on Packagist"></a>
+<a href="https://tuple.app"><img src="https://img.shields.io/badge/Pairing%20with-Tuple-5A67D8?style=for-the-badge" alt="Pairing with Tuple"></a>
 </p>
 
 <!-- /statamic:hide -->
