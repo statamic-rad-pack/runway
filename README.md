@@ -45,7 +45,7 @@ In addition to front-end routing, you may also use Runway's tag to loop through 
 
 * [Review documentation](https://runway.duncanmcclean.com/templating)
 
-### GraphQL API (new)
+### GraphQL API
 
 If you're a GraphQL fan, you're now able to fetch your models via GraphQL. Runway will augment the fields just like you'd expect.
 
