@@ -6,6 +6,7 @@ use DoubleThreeDigital\Runway\Models\RunwayUri;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 use Statamic\Console\RunsInPlease;
 use Statamic\View\Antlers\Parser;
 
@@ -70,6 +71,8 @@ class RebuildUriCache extends Command
                     $uri = (new Parser())
                         ->parse($resource->route(), $resource->augment($model))
                         ->__toString();
+
+                    $uri = Str::start($uri, '/');
 
                     $model->runwayUri()->create([
                         'uri' => $uri,

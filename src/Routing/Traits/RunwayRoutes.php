@@ -5,6 +5,7 @@ namespace DoubleThreeDigital\Runway\Routing\Traits;
 use DoubleThreeDigital\Runway\Models\RunwayUri;
 use DoubleThreeDigital\Runway\Routing\RoutingModel;
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Support\Str;
 use Statamic\Routing\Routable;
 use Statamic\View\Antlers\Parser;
 
@@ -82,6 +83,8 @@ trait RunwayRoutes
             $uri = (new Parser())
                 ->parse($resource->route(), $resource->augment($model))
                 ->__toString();
+
+            $uri = Str::start($uri, '/');
 
             if ($model->runwayUri()->exists()) {
                 $model->runwayUri()->first()->update([
