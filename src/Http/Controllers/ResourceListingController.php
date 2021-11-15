@@ -24,7 +24,7 @@ class ResourceListingController extends CpController
             abort(403);
         }
 
-        $sortField     = $request->input('sort', $resource->primaryKey());
+        $sortField = $request->input('sort', $resource->primaryKey());
         $sortDirection = $request->input('order', 'ASC');
 
         $query = $resource->model()
@@ -33,7 +33,7 @@ class ResourceListingController extends CpController
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
             'collection' => $resourceHandle,
             'blueprints' => [
-                $blueprint
+                $blueprint,
             ],
         ]);
 
