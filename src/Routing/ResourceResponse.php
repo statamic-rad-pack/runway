@@ -31,7 +31,7 @@ class ResourceResponse implements Responsable
         $response = response()
             ->make($this->contents());
 
-        ResponseCreated::dispatch($response);
+        ResponseCreated::dispatch($response, $this->data);
 
         return $response;
     }
