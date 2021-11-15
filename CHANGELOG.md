@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v2.1.33 (2021-11-15)
+
+### What's fixed
+
+* Fixed 'Too few arguments' error with `ResponseCreated` event
+* Fixed URIs being saved in a bad format if you don't start your route with `/` #98
+
 ## v2.1.32 (2021-10-30)
 
 ### What's fixed
