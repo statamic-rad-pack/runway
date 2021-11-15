@@ -5,8 +5,11 @@ namespace DoubleThreeDigital\Runway\Http\Controllers;
 use DoubleThreeDigital\Runway\Http\Resources\ResourceCollection;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Statamic\Facades\User;
+use Statamic\Fields\Blueprint;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
 use Statamic\Query\Scopes\Filters\Concerns\QueriesFilters;
@@ -38,17 +41,15 @@ class ResourceListingController extends CpController
         ]);
 
         if ($searchQuery = $request->input('search')) {
-            if ($query->hasNamedScope('runwaySearch')) {
-                $query->runwaySearch($searchQuery);
-            } else {
-                $query->where(function ($query) use ($searchQuery, $blueprint) {
-                    $wildcard = '%' . $searchQuery . '%';
-
-                    foreach ($blueprint->fields()->items()->toArray() as $field) {
-                        $query->orWhere($field['handle'], 'LIKE', $wildcard);
-                    }
-                });
-            }
+            $query->when(
+                $query->hasNamedScope('runwaySearch'),
+                function ($query) use ($searchQuery) {
+                    $query->runwaySearch($searchQuery);
+                },
+                function ($query) use ($searchQuery, $blueprint) {
+                    $this->addLikeSearch($blueprint, $searchQuery, $query);
+                }
+            );
         }
 
         $results = $query->paginate($request->input('perPage', config('statamic.cp.pagination_size')));
@@ -88,5 +89,22 @@ class ResourceListingController extends CpController
                 ];
             })
             ->toArray();
+    }
+
+    private function addLikeSearch(Blueprint $blueprint, string $searchQuery, Builder $query): void
+    {
+        foreach ($this->searchableFields($blueprint) as $field) {
+            $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
+        }
+    }
+
+    private function searchableFields(Blueprint $blueprint): Collection
+    {
+        return $blueprint
+            ->fields()
+            ->items()
+            ->reject(function (array $field) {
+                return $field['field']['type'] == 'has_many';
+            });
     }
 }
