@@ -93,18 +93,12 @@ class ResourceListingController extends CpController
 
     private function addLikeSearch(Blueprint $blueprint, string $searchQuery, Builder $query): void
     {
-        foreach ($this->searchableFields($blueprint) as $field) {
+        $searchableFields = $blueprint->fields()->items()->reject(function (array $field) {
+            return $field['field']['type'] === 'has_many';
+        });
+
+        foreach ($searchableFields as $field) {
             $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
         }
-    }
-
-    private function searchableFields(Blueprint $blueprint): Collection
-    {
-        return $blueprint
-            ->fields()
-            ->items()
-            ->reject(function (array $field) {
-                return $field['field']['type'] == 'has_many';
-            });
     }
 }
