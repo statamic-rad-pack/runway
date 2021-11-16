@@ -5,8 +5,11 @@ namespace DoubleThreeDigital\Runway\Http\Controllers;
 use DoubleThreeDigital\Runway\Http\Resources\ResourceCollection;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Statamic\Facades\User;
+use Statamic\Fields\Blueprint;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
 use Statamic\Query\Scopes\Filters\Concerns\QueriesFilters;
@@ -24,7 +27,7 @@ class ResourceListingController extends CpController
             abort(403);
         }
 
-        $sortField     = $request->input('sort', $resource->primaryKey());
+        $sortField = $request->input('sort', $resource->primaryKey());
         $sortDirection = $request->input('order', 'ASC');
 
         $query = $resource->model()
@@ -33,22 +36,26 @@ class ResourceListingController extends CpController
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
             'collection' => $resourceHandle,
             'blueprints' => [
-                $blueprint
+                $blueprint,
             ],
         ]);
 
         if ($searchQuery = $request->input('search')) {
-            if ($query->hasNamedScope('runwaySearch')) {
-                $query->runwaySearch($searchQuery);
-            } else {
-                $query->where(function ($query) use ($searchQuery, $blueprint) {
-                    $wildcard = '%' . $searchQuery . '%';
+            $query->when(
+                $query->hasNamedScope('runwaySearch'),
+                function ($query) use ($searchQuery) {
+                    $query->runwaySearch($searchQuery);
+                },
+                function ($query) use ($searchQuery, $blueprint) {
+                    $searchableFields = $blueprint->fields()->items()->reject(function (array $field) {
+                        return $field['field']['type'] === 'has_many';
+                    });
 
-                    foreach ($blueprint->fields()->items()->toArray() as $field) {
-                        $query->orWhere($field['handle'], 'LIKE', $wildcard);
+                    foreach ($searchableFields as $field) {
+                        $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
                     }
-                });
-            }
+                }
+            );
         }
 
         $results = $query->paginate($request->input('perPage', config('statamic.cp.pagination_size')));
