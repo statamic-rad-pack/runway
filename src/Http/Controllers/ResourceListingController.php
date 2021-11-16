@@ -47,13 +47,11 @@ class ResourceListingController extends CpController
                     $query->runwaySearch($searchQuery);
                 },
                 function ($query) use ($searchQuery, $blueprint) {
-                    $searchableFields = $blueprint->fields()->items()->reject(function (array $field) {
+                    $blueprint->fields()->items()->reject(function (array $field) {
                         return $field['field']['type'] === 'has_many';
-                    });
-
-                    foreach ($searchableFields as $field) {
+                    })->each(function (array $field) use ($query, $searchQuery) {
                         $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
-                    }
+                    });
                 }
             );
         }
