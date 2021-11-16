@@ -47,7 +47,13 @@ class ResourceListingController extends CpController
                     $query->runwaySearch($searchQuery);
                 },
                 function ($query) use ($searchQuery, $blueprint) {
-                    $this->addLikeSearch($blueprint, $searchQuery, $query);
+                    $searchableFields = $blueprint->fields()->items()->reject(function (array $field) {
+                        return $field['field']['type'] === 'has_many';
+                    });
+
+                    foreach ($searchableFields as $field) {
+                        $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
+                    }
                 }
             );
         }
@@ -89,16 +95,5 @@ class ResourceListingController extends CpController
                 ];
             })
             ->toArray();
-    }
-
-    private function addLikeSearch(Blueprint $blueprint, string $searchQuery, Builder $query): void
-    {
-        $searchableFields = $blueprint->fields()->items()->reject(function (array $field) {
-            return $field['field']['type'] === 'has_many';
-        });
-
-        foreach ($searchableFields as $field) {
-            $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
-        }
     }
 }
