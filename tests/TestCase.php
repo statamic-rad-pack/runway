@@ -193,12 +193,12 @@ abstract class TestCase extends OrchestraTestCase
         $items = [];
 
         for ($i = 0; $i < $count; $i++) {
-            $items[] = Post::create(array_merge($attributes, [
+            $items[] = Post::create(array_merge([
                 'title'     => $title = join(' ', $this->faker->words(6)),
                 'slug'      => str_slug($title),
                 'body'      => join(' ', $this->faker->paragraphs(10)),
                 'author_id' => $this->authorFactory()->id,
-            ]));
+            ], $attributes));
         }
 
         return count($items) === 1
@@ -211,9 +211,9 @@ abstract class TestCase extends OrchestraTestCase
         $items = [];
 
         for ($i = 0; $i < $count; $i++) {
-            $items[] = Author::create(array_merge($attributes, [
+            $items[] = Author::create(array_merge([
                 'name' => $this->faker->name(),
-            ]));
+            ], $attributes));
         }
 
         return count($items) === 1
