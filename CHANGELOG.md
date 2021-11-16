@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.34 (2021-11-16)
+
+### What's fixed
+
+* Fixed issue when searching a resource with a 'Has Many' fieldtype #99 #100 by @edalzell
+
 ## v2.1.33 (2021-11-15)
 
 ### What's fixed
