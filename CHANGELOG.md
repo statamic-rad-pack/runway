@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.35 (2021-11-24)
+
+### What's fixed
+
+* Fixed CP permission issues #101 by @edalzell
+
 ## v2.1.34 (2021-11-16)
 
 ### What's fixed
