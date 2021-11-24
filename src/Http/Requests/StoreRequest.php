@@ -12,7 +12,7 @@ class StoreRequest extends FormRequest
     {
         $resource = Runway::findResource($this->resourceHandle);
 
-        return User::current()->hasPermission("Create new {$resource->plural()}")
+        return User::current()->hasPermission("Create new {$resource->singular()}")
             || User::current()->isSuper();
     }
 
