@@ -4,6 +4,7 @@ namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Runway;
 use GraphQL\Type\Definition\ResolveInfo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Request;
 use Statamic\Facades\GraphQL;
 
@@ -46,21 +47,33 @@ class HasManyFieldtype extends BaseFieldtype
                 $relatedResource = Runway::findResource($this->config('resource'));
                 $relatedField = $record->{$this->field()->handle()}();
 
-                // Add anything new
-                collect($data)
-                    ->each(function ($relatedId) use ($record, $relatedResource, $relatedField) {
-                        $model = $relatedResource->model()->find($relatedId);
+                // Many to many relation
+                if ($relatedField instanceof BelongsToMany) {
+                    $record->{$this->field()->handle()}()->sync($data);
+                } else {
+                    // Add anything new
+                    collect($data)
+                        ->each(function ($relatedId) use ($record, $relatedResource, $relatedField) {
+                            $model = $relatedResource->model()->find($relatedId);
 
-                        $model->update([
-                            $relatedField->getForeignKeyName() => $record->{$relatedResource->primaryKey()},
-                        ]);
-                    });
+                            $model->update([
+                                $relatedField->getForeignKeyName() => $record->{$relatedResource->primaryKey()},
+                            ]);
+                        });
+                }
             };
         }
 
         $deleted = [];
         $relatedResource = Runway::findResource($this->config('resource'));
         $relatedField = $record->{$this->field()->handle()}();
+
+        // Many to many relation
+        if ($relatedField instanceof BelongsToMany) {
+            $record->{$this->field()->handle()}()->sync($data);
+
+            return null;
+        }
 
         // Delete any deleted models
         collect($relatedField->get())
