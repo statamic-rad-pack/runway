@@ -7,10 +7,9 @@ use DoubleThreeDigital\Runway\Runway;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
-use Statamic\Facades\GraphQL;
-use Rebing\GraphQL\Support\Type;
 use Illuminate\Support\Str;
-use Statamic\Fields\Field;
+use Rebing\GraphQL\Support\Type;
+use Statamic\Facades\GraphQL;
 
 class ResourceType extends Type
 {
@@ -28,7 +27,7 @@ class ResourceType extends Type
             ->merge($this->nonBlueprintFields())
             ->mapWithKeys(function ($value, $key) {
                 return [
-                    Str::replace('_id', '', $key) => $value
+                    Str::replace('_id', '', $key) => $value,
                 ];
             })
             ->map(function ($arr) {

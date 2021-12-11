@@ -4,9 +4,9 @@ namespace DoubleThreeDigital\Runway\GraphQL;
 
 use DoubleThreeDigital\Runway\Resource;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Support\Str;
 use Statamic\Facades\GraphQL;
 use Statamic\GraphQL\Queries\Query;
-use Illuminate\Support\Str;
 
 class ResourceShowQuery extends Query
 {

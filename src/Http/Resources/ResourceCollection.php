@@ -4,8 +4,6 @@ namespace DoubleThreeDigital\Runway\Http\Resources;
 
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Http\Resources\Json\ResourceCollection as LaravelResourceCollection;
-use Statamic\CP\Column;
-use Statamic\CP\Columns;
 use Statamic\Facades\Action;
 use Statamic\Facades\User;
 

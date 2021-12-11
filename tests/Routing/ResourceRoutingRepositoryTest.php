@@ -3,7 +3,6 @@
 namespace DoubleThreeDigital\Runway\Tests\Routing;
 
 use DoubleThreeDigital\Runway\Routing\RoutingModel;
-use DoubleThreeDigital\Runway\Tests\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Statamic\Facades\Data;
 
@@ -39,7 +38,7 @@ class ResourceRoutingRepositoryTest extends TestCase
     /** @test */
     public function cant_find_by_uri_if_no_matching_uri()
     {
-        $findByUri = Data::findByUri("/posts/some-absolute-jibber-jabber");
+        $findByUri = Data::findByUri('/posts/some-absolute-jibber-jabber');
 
         $this->assertNull($findByUri);
     }

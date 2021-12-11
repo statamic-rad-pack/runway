@@ -22,7 +22,7 @@ class GenerateMigrationTest extends TestCase
         Config::set('runway', [
             'resources' => [
                 Food::class => [
-                    ''
+                    '',
                 ],
             ],
         ]);
@@ -74,7 +74,7 @@ class GenerateMigrationTest extends TestCase
             ->artisan('runway:generate-migrations', [
                 'resource' => 'food',
             ])
-            ->expectsQuestion("Should we run your migrations?", 'no')
+            ->expectsQuestion('Should we run your migrations?', 'no')
             ->execute();
 
         // Assert migration now exists

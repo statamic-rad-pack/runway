@@ -60,7 +60,7 @@ class RoutingModel implements Responsable
     {
         return $this->model->getAttributeValue($this->model->getRouteKeyName());
     }
-    
+
     public function __get($key)
     {
         return $this->model->{$key};

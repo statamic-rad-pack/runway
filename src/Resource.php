@@ -4,8 +4,8 @@ namespace DoubleThreeDigital\Runway;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
-use Statamic\Support\Traits\FluentlyGetsAndSets;
 use Illuminate\Support\Str;
+use Statamic\Support\Traits\FluentlyGetsAndSets;
 
 class Resource
 {
@@ -33,7 +33,7 @@ class Resource
         return $this->fluentlyGetOrSet('model')
             ->setter(function ($value) {
                 if (! $value instanceof Model) {
-                    return (new $value());
+                    return new $value();
                 }
 
                 return $value;

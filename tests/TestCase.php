@@ -4,7 +4,6 @@ namespace DoubleThreeDigital\Runway\Tests;
 
 use DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes;
 use DoubleThreeDigital\Runway\ServiceProvider;
-use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -110,19 +109,19 @@ abstract class TestCase extends OrchestraTestCase
                                     [
                                         'handle' => 'title',
                                         'field' => [
-                                            'type' => 'text'
+                                            'type' => 'text',
                                         ],
                                     ],
                                     [
                                         'handle' => 'slug',
                                         'field' => [
-                                            'type' => 'slug'
+                                            'type' => 'slug',
                                         ],
                                     ],
                                     [
                                         'handle' => 'body',
                                         'field' => [
-                                            'type' => 'textarea'
+                                            'type' => 'textarea',
                                         ],
                                     ],
                                     [

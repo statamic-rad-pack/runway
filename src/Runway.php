@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway;
 
-use DoubleThreeDigital\Runway\Exceptions\ModelNotFound;
 use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;

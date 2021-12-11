@@ -4,11 +4,11 @@ namespace DoubleThreeDigital\Runway\GraphQL;
 
 use DoubleThreeDigital\Runway\Resource;
 use GraphQL\Type\Definition\Type;
-use Statamic\Support\Arr;
+use Illuminate\Support\Str;
 use Statamic\Facades\GraphQL;
 use Statamic\GraphQL\Queries\Query;
-use Illuminate\Support\Str;
 use Statamic\GraphQL\Types\JsonArgument;
+use Statamic\Support\Arr;
 use Statamic\Tags\Concerns\QueriesConditions;
 
 class ResourceIndexQuery extends Query

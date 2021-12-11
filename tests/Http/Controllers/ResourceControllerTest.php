@@ -85,7 +85,7 @@ class ResourceControllerTest extends TestCase
     public function can_edit_resource_with_datetime_field(array $options)
     {
         // Override the config to add the created_at field
-        $configKey = 'runway.resources.' . Post::class . '.blueprint.sections.main.fields';
+        $configKey = 'runway.resources.'.Post::class.'.blueprint.sections.main.fields';
         $fields = $this->app['config']->get($configKey, []);
 
         $fields[] = [
@@ -100,7 +100,7 @@ class ResourceControllerTest extends TestCase
         $user = User::make()->makeSuper()->save();
         $post = $this->postFactory();
 
-        /** @var Resource $resource */
+        /** @var resource $resource */
         $resource = Runway::findResource('post');
         $record = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
 
@@ -114,7 +114,7 @@ class ResourceControllerTest extends TestCase
             ->assertOk();
 
         $this->assertEquals(
-            $post->created_at->format($options['expected_format'] ?? $options['format'] ??  'Y-m-d'),
+            $post->created_at->format($options['expected_format'] ?? $options['format'] ?? 'Y-m-d'),
             $response->viewData('values')->get('created_at')
         );
     }
@@ -180,7 +180,7 @@ class ResourceControllerTest extends TestCase
                 'expected_format' => 'Y-m-d H:i',
                 'time_enabled' => true,
                 'time_required' => false,
-            ]]
+            ]],
         ];
     }
 }
