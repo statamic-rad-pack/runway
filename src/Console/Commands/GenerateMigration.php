@@ -8,9 +8,9 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Statamic\Console\RunsInPlease;
 use Statamic\Fields\Field;
-use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 
 class GenerateMigration extends Command
@@ -29,10 +29,10 @@ class GenerateMigration extends Command
      *
      * @var string
      */
-    protected $description = "Generate migrations from your blueprints";
+    protected $description = 'Generate migrations from your blueprints';
 
     /**
-     * The matching table for fieldtypes -> database columns
+     * The matching table for fieldtypes -> database columns.
      *
      * @var array
      */
@@ -183,8 +183,8 @@ class GenerateMigration extends Command
      */
     public function handle()
     {
-        $this->info("Generating migrations...");
-        $this->line("");
+        $this->info('Generating migrations...');
+        $this->line('');
 
         $resources = [];
 
@@ -203,11 +203,11 @@ class GenerateMigration extends Command
             $this->generateForResource($resource);
         }
 
-        if ($this->ask("Should we run your migrations?")) {
+        if ($this->ask('Should we run your migrations?')) {
             Artisan::call('migrate');
         }
 
-        $this->info("✔️ Done");
+        $this->info('✔️ Done');
     }
 
     protected function generateForResource(Resource $resource)
@@ -247,7 +247,7 @@ class GenerateMigration extends Command
 
         if (count($errorMessages) === 0) {
             $this->line("✔️ {$resource->name()}");
-            $this->line("");
+            $this->line('');
         } else {
             $this->line("❌ {$resource->name()}");
 
@@ -255,7 +255,7 @@ class GenerateMigration extends Command
                 $this->comment($errorMessage);
             }
 
-            $this->line("");
+            $this->line('');
         }
     }
 
@@ -301,15 +301,15 @@ class GenerateMigration extends Command
 
                 if ($column['default'] !== null) {
                     if (is_string($column['default'])) {
-                        $code .= '->default(\'' . $column['default'] . '\')';
+                        $code .= '->default(\''.$column['default'].'\')';
                     }
 
                     if (is_int($column['default']) || is_float($column['default'])) {
-                        $code .= '->default(' . $column['default'] . ')';
+                        $code .= '->default('.$column['default'].')';
                     }
                 }
 
-                return $code . ';';
+                return $code.';';
             })
             ->join(PHP_EOL);
 

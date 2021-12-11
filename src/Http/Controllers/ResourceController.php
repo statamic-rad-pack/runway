@@ -94,7 +94,7 @@ class ResourceController extends CpController
                 continue;
             }
 
-            if (is_array($processedValue) && !$record->hasCast($fieldKey, ['array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])) {
+            if (is_array($processedValue) && ! $record->hasCast($fieldKey, ['array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])) {
                 $processedValue = json_encode($processedValue);
             }
 
@@ -191,7 +191,7 @@ class ResourceController extends CpController
                 continue;
             }
 
-            if (is_array($processedValue) && !$record->hasCast($fieldKey, ['array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])) {
+            if (is_array($processedValue) && ! $record->hasCast($fieldKey, ['array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])) {
                 $processedValue = json_encode($processedValue);
             }
 
@@ -226,7 +226,7 @@ class ResourceController extends CpController
             : $resource->listableColumns()[0];
 
         return collect($resource->listableColumns())
-            ->map(function ($columnKey) use ($resource, $blueprint, $preferredFirstColumn) {
+            ->map(function ($columnKey) use ($blueprint, $preferredFirstColumn) {
                 $field = $blueprint->field($columnKey);
 
                 return [

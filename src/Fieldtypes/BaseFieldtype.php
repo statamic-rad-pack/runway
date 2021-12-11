@@ -202,8 +202,8 @@ class BaseFieldtype extends Relationship
                 'title' => $resource->singular(),
                 'url' => cp_route('runway.create', [
                     'resourceHandle'  => $resource->handle(),
-                ])
-            ]
+                ]),
+            ],
         ];
     }
 }

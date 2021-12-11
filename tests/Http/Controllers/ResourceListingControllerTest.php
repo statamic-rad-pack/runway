@@ -137,7 +137,7 @@ class ResourceListingControllerTest extends TestCase
         $posts = $this->postFactory(15);
 
         $this->actingAs($user)
-            ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']) . '?perPage=5')
+            ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']).'?perPage=5')
             ->assertOk()
             ->assertJson([
                 'meta' => [

@@ -6,8 +6,8 @@ use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
-use Statamic\Console\RunsInPlease;
 use Illuminate\Support\Str;
+use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Blueprint;
 
 class GenerateBlueprint extends Command
@@ -26,10 +26,10 @@ class GenerateBlueprint extends Command
      *
      * @var string
      */
-    protected $description = "Generate blueprints from your models";
+    protected $description = 'Generate blueprints from your models';
 
     /**
-     * The matching table for column types -> fieldtypes
+     * The matching table for column types -> fieldtypes.
      *
      * @var array
      */
@@ -127,11 +127,11 @@ class GenerateBlueprint extends Command
      */
     public function handle()
     {
-        $this->info("Generating blueprints...");
-        $this->line("");
+        $this->info('Generating blueprints...');
+        $this->line('');
 
         if (! class_exists('Doctrine\DBAL\Exception')) {
-            return $this->line("❌ Failed. Please install `doctrine/dbal` and try again. `composer require doctrine/dbal`");
+            return $this->line('❌ Failed. Please install `doctrine/dbal` and try again. `composer require doctrine/dbal`');
         }
 
         $resources = [];
@@ -151,7 +151,7 @@ class GenerateBlueprint extends Command
             $this->generateForResource($resource);
         }
 
-        $this->info("✔️ Done");
+        $this->info('✔️ Done');
     }
 
     protected function generateForResource(Resource $resource)
@@ -168,7 +168,7 @@ class GenerateBlueprint extends Command
                 return [
                     'name' => $column->getName(),
                     'type' => $this->getMatchingFieldtype($column),
-                    'nullable' => !$column->getNotnull(),
+                    'nullable' => ! $column->getNotnull(),
                     'default' => $column->getDefault(),
                     'original_column' => $column,
                 ];
@@ -184,7 +184,7 @@ class GenerateBlueprint extends Command
 
         if (count($errorMessages) === 0) {
             $this->line("✔️ {$resource->name()}");
-            $this->line("");
+            $this->line('');
         } else {
             $this->line("❌ {$resource->name()}");
 
@@ -192,7 +192,7 @@ class GenerateBlueprint extends Command
                 $this->comment($errorMessage);
             }
 
-            $this->line("");
+            $this->line('');
         }
     }
 

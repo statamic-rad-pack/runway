@@ -5,11 +5,8 @@ namespace DoubleThreeDigital\Runway\Http\Controllers;
 use DoubleThreeDigital\Runway\Http\Resources\ResourceCollection;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Statamic\Facades\User;
-use Statamic\Fields\Blueprint;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
 use Statamic\Query\Scopes\Filters\Concerns\QueriesFilters;
@@ -50,7 +47,7 @@ class ResourceListingController extends CpController
                     $blueprint->fields()->items()->reject(function (array $field) {
                         return $field['field']['type'] === 'has_many';
                     })->each(function (array $field) use ($query, $searchQuery) {
-                        $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
+                        $query->orWhere($field['handle'], 'LIKE', '%'.$searchQuery.'%');
                     });
                 }
             );
@@ -80,7 +77,7 @@ class ResourceListingController extends CpController
             : $resource->listableColumns()[0];
 
         return collect($resource->listableColumns())
-            ->map(function ($columnKey) use ($resource, $blueprint, $preferredFirstColumn) {
+            ->map(function ($columnKey) use ($blueprint, $preferredFirstColumn) {
                 $field = $blueprint->field($columnKey);
 
                 return [
