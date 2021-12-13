@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.36 (2021-12-13)
+
+### What's new
+
+* You can now use the Has Many fieldtype for 'Many to Many' relationships #102 by @psyao
+
 ## v2.1.35 (2021-11-24)
 
 ### What's fixed
