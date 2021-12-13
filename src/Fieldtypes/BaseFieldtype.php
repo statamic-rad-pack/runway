@@ -98,7 +98,7 @@ class BaseFieldtype extends Relationship
             $fieldtype = $resource->blueprint()->field($column)->fieldtype();
 
             if (! $item instanceof Model) {
-                //In a many to many relation item is an array
+                // In a many to many relation item is an array
                 if (is_array($item)) {
                     $item = $item['id'] ?? null;
                 }
