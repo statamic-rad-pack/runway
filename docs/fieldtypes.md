@@ -18,7 +18,7 @@ Also when configuring the fieldtype, you may choose the resource you wish to be 
 
 ## HasMany fieldtype
 
-This fieldtype allows you to select multiple models for a `hasMany` Eloquent relationship.
+This fieldtype allows you to select multiple models for a `hasMany` or `morphedByMany` Eloquent relationship.
 
 ### Configuration
 
