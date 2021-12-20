@@ -12,9 +12,9 @@ use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Statamic\CP\Breadcrumbs;
 use Statamic\Facades\Scope;
+use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 
 class ResourceController extends CpController
@@ -221,8 +221,8 @@ class ResourceController extends CpController
      */
     protected function buildColumns(Resource $resource, $blueprint)
     {
-        $preferredFirstColumn = isset(Auth::user()->preferences()['runway'][$resource->handle()]['columns'])
-            ? Auth::user()->preferences()['runway'][$resource->handle()]['columns'][0]
+        $preferredFirstColumn = isset(User::current()->preferences()['runway'][$resource->handle()]['columns'])
+            ? User::current()->preferences()['runway'][$resource->handle()]['columns'][0]
             : $resource->listableColumns()[0];
 
         return collect($resource->listableColumns())

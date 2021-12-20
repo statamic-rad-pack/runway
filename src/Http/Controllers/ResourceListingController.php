@@ -5,7 +5,6 @@ namespace DoubleThreeDigital\Runway\Http\Controllers;
 use DoubleThreeDigital\Runway\Http\Resources\ResourceCollection;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
-use Illuminate\Support\Facades\Auth;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
@@ -72,8 +71,8 @@ class ResourceListingController extends CpController
      */
     protected function buildColumns(Resource $resource, $blueprint)
     {
-        $preferredFirstColumn = isset(Auth::user()->preferences()['runway'][$resource->handle()]['columns'])
-            ? Auth::user()->preferences()['runway'][$resource->handle()]['columns'][0]
+        $preferredFirstColumn = isset(User::current()->preferences()['runway'][$resource->handle()]['columns'])
+            ? User::current()->preferences()['runway'][$resource->handle()]['columns'][0]
             : $resource->listableColumns()[0];
 
         return collect($resource->listableColumns())
