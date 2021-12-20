@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.1.37 (2021-12-20)
+
+### What's new
+
+* Fixed issue viewing listing tables when using Eloquent users
+
 ## v2.1.36 (2021-12-13)
 
 ### What's new
