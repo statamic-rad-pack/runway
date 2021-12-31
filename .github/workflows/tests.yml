@@ -22,8 +22,8 @@ jobs:
             framework: ^7.30.4
             testbench: 5.*
           - laravel: 6.*
-            testbench: 4.*
             framework: ^6.20.14
+            testbench: 4.*
         exclude:
           - laravel: 7.*
             php: 8.1
