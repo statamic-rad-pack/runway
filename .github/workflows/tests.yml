@@ -16,11 +16,14 @@ jobs:
         os: [ubuntu-latest]
         include:
           - laravel: 8.*
+            framework: ^8.24.0
             testbench: 6.*
           - laravel: 7.*
+            framework: ^7.30.4
             testbench: 5.*
           - laravel: 6.*
             testbench: 4.*
+            framework: ^6.20.14
         exclude:
           - laravel: 7.*
             php: 8.1
