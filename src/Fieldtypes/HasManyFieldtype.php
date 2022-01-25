@@ -29,6 +29,11 @@ class HasManyFieldtype extends BaseFieldtype
     // Pre-process the data before it gets sent to the publish page
     public function preProcess($data)
     {
+        $resourceHandle = request()->route('resourceHandle');
+
+        if (!$resourceHandle)
+            return $data;       
+        
         return collect($data)
             ->pluck('id')
             ->toArray();
@@ -37,7 +42,12 @@ class HasManyFieldtype extends BaseFieldtype
     // Process the data before it gets saved
     public function process($data)
     {
-        $resource = Runway::findResource(request()->route('resourceHandle'));
+        $resourceHandle = request()->route('resourceHandle');
+
+        if (!$resourceHandle)
+            return $data;        
+        
+        $resource = Runway::findResource($resourceHandle);
         $record = $resource->model()->firstWhere($resource->routeKey(), (int) Request::route('record'));
 
         // If we're adding HasMany relations on a model that doesn't exist yet,
