@@ -31,8 +31,9 @@ class HasManyFieldtype extends BaseFieldtype
     {
         $resourceHandle = request()->route('resourceHandle');
 
-        if (!$resourceHandle)
-            return $data;       
+        if (! $resourceHandle) {
+            return $data;      
+        }
         
         return collect($data)
             ->pluck('id')
@@ -44,8 +45,9 @@ class HasManyFieldtype extends BaseFieldtype
     {
         $resourceHandle = request()->route('resourceHandle');
 
-        if (!$resourceHandle)
-            return $data;        
+        if (! $resourceHandle) {
+            return $data;      
+        }      
         
         $resource = Runway::findResource($resourceHandle);
         $record = $resource->model()->firstWhere($resource->routeKey(), (int) Request::route('record'));
