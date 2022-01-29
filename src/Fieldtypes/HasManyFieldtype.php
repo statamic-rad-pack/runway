@@ -29,6 +29,7 @@ class HasManyFieldtype extends BaseFieldtype
     // Pre-process the data before it gets sent to the publish page
     public function preProcess($data)
     {
+        // Determine whether or not this field is on a resource or a collection
         $resourceHandle = request()->route('resourceHandle');
 
         if (! $resourceHandle) {
@@ -43,6 +44,7 @@ class HasManyFieldtype extends BaseFieldtype
     // Process the data before it gets saved
     public function process($data)
     {
+        // Determine whether or not this field is on a resource or a collection
         $resourceHandle = request()->route('resourceHandle');
 
         if (! $resourceHandle) {
