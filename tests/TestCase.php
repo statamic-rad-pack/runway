@@ -58,7 +58,7 @@ abstract class TestCase extends OrchestraTestCase
         $app->make(Manifest::class)->manifest = [
             'doublethreedigital/runway' => [
                 'id'        => 'doublethreedigital/runway',
-                'namespace' => 'DoubleThreeDigital\\Runway',
+                'namespace' => 'DoubleThreeDigital\\Runway\\',
             ],
         ];
     }
