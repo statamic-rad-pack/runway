@@ -8,7 +8,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
 use Statamic\Fields\Field;
 
 class HasManyFieldtypeTest extends TestCase
