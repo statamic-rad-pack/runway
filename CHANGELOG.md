@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## v2.2.0 (2022-01-29)
+
+### What's new
+
+- PHP 8.1 Support
+- You may now add the 'Has Many' fieldtype to entries/taxonomies/globals #109 by @ryanmitchell
+- The HasMany fieldtype now has an option in the Blueprints UI to toggle on/off resource creation #108 by @ryanmitchell
+
+### Breaking changes
+
+- Dropped support for Laravel 6 & Laravel 7. [You should upgrade to Laravel 8](https://laravel.com/docs/8.x/upgrade).
+
 ## v2.1.37 (2021-12-20)
 
 ### What's new
