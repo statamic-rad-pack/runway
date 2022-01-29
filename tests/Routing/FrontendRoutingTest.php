@@ -18,7 +18,7 @@ class FrontendRoutingTest extends TestCase
             ->get($runwayUri->uri)
             ->assertOk()
             ->assertSee($post->title)
-            ->assertSee("TEMPLATE: default")
+            ->assertSee('TEMPLATE: default')
             ->assertSee('LAYOUT: layout');
     }
 
@@ -28,7 +28,7 @@ class FrontendRoutingTest extends TestCase
         $this->markTestIncomplete();
 
         // TODO: find way of mocking the template & rebooting Runway's resources
-        Config::set('runway.resources.' . Post::class . '.template', 'custom');
+        Config::set('runway.resources.'.Post::class.'.template', 'custom');
 
         $post = $this->postFactory();
         $runwayUri = $post->fresh()->runwayUri;
@@ -37,7 +37,7 @@ class FrontendRoutingTest extends TestCase
             ->get($runwayUri->uri)
             ->assertOk()
             ->assertSee($post->title)
-            ->assertSee("TEMPLATE: custom")
+            ->assertSee('TEMPLATE: custom')
             ->assertSee('LAYOUT: layout');
     }
 
@@ -47,7 +47,7 @@ class FrontendRoutingTest extends TestCase
         $this->markTestIncomplete();
 
         // TODO: find way of mocking the template & rebooting Runway's resources
-        Config::set('runway.resources.' . Post::class . '.layout', 'blog-layout');
+        Config::set('runway.resources.'.Post::class.'.layout', 'blog-layout');
 
         $post = $this->postFactory();
         $runwayUri = $post->fresh()->runwayUri;
@@ -56,7 +56,7 @@ class FrontendRoutingTest extends TestCase
             ->get($runwayUri->uri)
             ->assertOk()
             ->assertSee($post->title)
-            ->assertSee("TEMPLATE: default")
+            ->assertSee('TEMPLATE: default')
             ->assertSee('LAYOUT: blog-layout');
     }
 }

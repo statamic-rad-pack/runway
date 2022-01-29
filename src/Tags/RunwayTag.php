@@ -2,8 +2,10 @@
 
 namespace DoubleThreeDigital\Runway\Tags;
 
+use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Support\Str;
 use Statamic\Tags\Tags;
 
 class RunwayTag extends Tags
@@ -12,16 +14,47 @@ class RunwayTag extends Tags
 
     public function wildcard($resourceHandle = null)
     {
-        $resource = Runway::findResource(
-            $this->params->has('resource') ? $this->params->get('resource') : $resourceHandle
-        );
-
-        $blueprint = $resource->blueprint();
+        try {
+            $resource = Runway::findResource(
+                $this->params->has('resource') ? Str::studly($this->params->get('resource')) : Str::studly($resourceHandle)
+            );
+        } catch (ResourceNotFound $e) {
+            $resource = Runway::findResource(
+                $this->params->has('resource') ? Str::lower($this->params->get('resource')) : Str::lower($resourceHandle)
+            );
+        }
 
         $query = $resource->model()->query();
 
+        if ($scopes = $this->params->get('scope')) {
+            $scopes = explode('|', $scopes);
+
+            foreach ($scopes as $scope) {
+                $scopeName = explode(':', $scope)[0];
+                $scopeArguments = isset(explode(':', $scope)[1])
+                    ? explode(',', explode(':', $scope)[1])
+                    : [];
+
+                foreach ($scopeArguments as $key => $scopeArgument) {
+                    if ($fromContext = $this->context->get($scopeArgument)) {
+                        if ($fromContext instanceof \Statamic\Fields\Value) {
+                            $fromContext = $fromContext->raw();
+                        }
+
+                        $scopeArguments[$key] = $fromContext;
+                    }
+                }
+
+                $query->{$scopeName}(...$scopeArguments);
+            }
+        }
+
         if ($this->params->has('where') && $where = $this->params->get('where')) {
             $query->where(explode(':', $where)[0], explode(':', $where)[1]);
+        }
+
+        if ($with = $this->params->get('with')) {
+            $query->with(explode('|', $with));
         }
 
         if ($this->params->has('sort')) {

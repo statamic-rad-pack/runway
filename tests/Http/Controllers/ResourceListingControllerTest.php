@@ -2,8 +2,10 @@
 
 namespace DoubleThreeDigital\Runway\Tests\Http\Controllers;
 
+use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Config;
 use Statamic\Facades\User;
 
 class ResourceListingControllerTest extends TestCase
@@ -38,13 +40,13 @@ class ResourceListingControllerTest extends TestCase
                         'title' => $posts[0]->title,
                         'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
                         'delete_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
-                        '_id' => $posts[0]->id,
+                        'id' => $posts[0]->id,
                     ],
                     [
                         'title' => $posts[1]->title,
                         'edit_url' => 'http://localhost/cp/runway/post/'.$posts[1]->id,
                         'delete_url' => 'http://localhost/cp/runway/post/'.$posts[1]->id,
-                        '_id' => $posts[1]->id,
+                        'id' => $posts[1]->id,
                     ],
                 ],
             ]);
@@ -74,7 +76,54 @@ class ResourceListingControllerTest extends TestCase
                         'title' => $posts[0]->title,
                         'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
                         'delete_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
-                        '_id' => $posts[0]->id,
+                        'id' => $posts[0]->id,
+                    ],
+                ],
+            ]);
+    }
+
+    /** @test */
+    public function can_search_records_with_has_many_relationship()
+    {
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.sections.main.fields', [
+            [
+                'handle' => 'name',
+                'field' => [
+                    'type' => 'text',
+                ],
+            ],
+            [
+                'handle' => 'posts',
+                'field' => [
+                    'type' => 'has_many',
+                    'resource' => 'post',
+                    'mode' => 'select',
+                ],
+            ],
+        ]);
+
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+
+        $author = $this->authorFactory(1, ['name' => 'Colin The Caterpillar']);
+
+        $posts = $this->postFactory(5, ['author_id' => $author->id]);
+
+        $this->actingAs($user)
+            ->get(cp_route('runway.listing-api', [
+                'resourceHandle' => 'author',
+                'search' => 'Colin',
+                'columns' => 'name,posts',
+            ]))
+            ->assertOk()
+            ->assertJson([
+                'data' => [
+                    [
+                        'name' => 'Colin The Caterpillar',
+                        'edit_url' => 'http://localhost/cp/runway/author/'.$author->id,
+                        'delete_url' => 'http://localhost/cp/runway/author/'.$author->id,
+                        'id' => $author->id,
                     ],
                 ],
             ]);
@@ -88,7 +137,7 @@ class ResourceListingControllerTest extends TestCase
         $posts = $this->postFactory(15);
 
         $this->actingAs($user)
-            ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']) . '?perPage=5')
+            ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']).'?perPage=5')
             ->assertOk()
             ->assertJson([
                 'meta' => [

@@ -4,8 +4,8 @@ namespace DoubleThreeDigital\Runway;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
-use Statamic\Support\Traits\FluentlyGetsAndSets;
 use Illuminate\Support\Str;
+use Statamic\Support\Traits\FluentlyGetsAndSets;
 
 class Resource
 {
@@ -20,6 +20,7 @@ class Resource
     protected $route;
     protected $template;
     protected $layout;
+    protected $graphqlEnabled;
 
     public function handle($handle = null)
     {
@@ -32,7 +33,7 @@ class Resource
         return $this->fluentlyGetOrSet('model')
             ->setter(function ($value) {
                 if (! $value instanceof Model) {
-                    return (new $value());
+                    return new $value();
                 }
 
                 return $value;
@@ -65,7 +66,9 @@ class Resource
                 }
 
                 if (is_array($value)) {
-                    return \Statamic\Facades\Blueprint::make()->setContents($value);
+                    return \Statamic\Facades\Blueprint::make()
+                        ->setHandle($this->handle())
+                        ->setContents($value);
                 }
 
                 return $value;
@@ -103,6 +106,13 @@ class Resource
 
                 return $value;
             })
+            ->getter(function ($value) {
+                if (! $this->blueprint()) {
+                    return true;
+                }
+
+                return $value;
+            })
             ->args(func_get_args());
     }
 
@@ -126,6 +136,15 @@ class Resource
         return $this->fluentlyGetOrSet('layout')
             ->getter(function ($value) {
                 return $value ?? 'layout';
+            })
+            ->args(func_get_args());
+    }
+
+    public function graphqlEnabled($graphqlEnabled = null)
+    {
+        return $this->fluentlyGetOrSet('graphqlEnabled')
+            ->getter(function ($graphqlEnabled) {
+                return $graphqlEnabled ?? false;
             })
             ->args(func_get_args());
     }

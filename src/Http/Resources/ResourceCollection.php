@@ -4,8 +4,6 @@ namespace DoubleThreeDigital\Runway\Http\Resources;
 
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Http\Resources\Json\ResourceCollection as LaravelResourceCollection;
-use Statamic\CP\Column;
-use Statamic\CP\Columns;
 use Statamic\Facades\Action;
 use Statamic\Facades\User;
 
@@ -25,15 +23,12 @@ class ResourceCollection extends LaravelResourceCollection
         return $this;
     }
 
-    public function setColumns($columns)
+    public function setColumns($originalColumns)
     {
-        $listingColumns = [];
-
-        foreach ($columns as $column) {
-            $listingColumns[] = Column::make($column['handle'])->label($column['title']);
-        }
-
-        $columns = new Columns($listingColumns);
+        $columns = $this->runwayResource->blueprint()->columns()
+            ->filter(function ($column) use ($originalColumns) {
+                return in_array($column->field, collect($originalColumns)->pluck('handle')->toArray());
+            });
 
         if ($key = $this->columnPreferenceKey) {
             $columns->setPreferred($key);
@@ -65,11 +60,19 @@ class ResourceCollection extends LaravelResourceCollection
                     if (! in_array($key, $columns)) {
                         unset($row[$key]);
                     }
+
+                    if ($this->runwayResource->blueprint()->hasField($key)) {
+                        $row[$key] = $this->runwayResource->blueprint()->field($key)->setValue($value)->preProcessIndex()->value();
+                    }
                 }
 
-                $row['_id'] = $record->getKey();
-                $row['edit_url'] = cp_route('runway.edit', ['resourceHandle' => $handle, 'record' => $record->getKey()]);
-                $row['delete_url'] = cp_route('runway.destroy', ['resourceHandle' => $handle, 'record' => $record->getKey()]);
+                foreach ($this->runwayResource->blueprint()->fields()->except(array_keys($row))->all() as $key => $field) {
+                    $row[$key] = $field->setValue($record->{$key})->preProcessIndex()->value();
+                }
+
+                $row['id'] = $record->getKey();
+                $row['edit_url'] = cp_route('runway.edit', ['resourceHandle' => $handle, 'record' => $record->getRouteKey()]);
+                $row['delete_url'] = cp_route('runway.destroy', ['resourceHandle' => $handle, 'record' => $record->getRouteKey()]);
                 $row['permalink'] = $this->runwayResource->hasRouting() ? $record->uri() : null;
                 $row['editable'] = User::current()->hasPermission("Edit {$this->runwayResource->plural()}") || User::current()->isSuper();
                 $row['viewable'] = User::current()->hasPermission("View {$this->runwayResource->plural()}") || User::current()->isSuper();

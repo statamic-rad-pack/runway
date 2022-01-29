@@ -50,15 +50,15 @@
                         v-text="__('No results')"
                     />
 
-                    <!-- <data-list-bulk-actions
+                    <data-list-bulk-actions
                         :url="actionUrl"
                         @started="actionStarted"
                         @completed="actionCompleted"
-                    /> -->
+                    />
 
                     <data-list-table
                         v-show="items.length"
-                        :allow-bulk-actions="false"
+                        :allow-bulk-actions="true"
                         :loading="loading"
                         :reorderable="false"
                         :sortable="true"
@@ -87,7 +87,7 @@
                                 <div class="divider" v-if="row.actions.length" />
 
                                 <data-list-inline-actions
-                                    :item="row._id"
+                                    :item="row.id"
                                     :url="actionUrl"
                                     :actions="row.actions"
                                     @started="actionStarted"
@@ -127,27 +127,27 @@ export default {
     mixins: [Listing],
 
     props: {
-        listingConfig: Array,
-        columns: Array,
+        listingConfig: Object,
+        initialColumns: Array,
         actionUrl: String,
     },
 
     data() {
         let primaryColumn = ''
 
-        if (this.columns) {
-            this.columns.forEach((column) => {
-                if (column.has_link)
+        if (this.initialColumns) {
+            this.initialColumns.forEach((column) => {
+                if (column.is_primary_column) {
                     primaryColumn = column.handle
                 }
-            )
+            })
         }
 
         return {
             listingKey: 'id',
             preferencesPrefix: this.listingConfig.preferencesPrefix ?? 'runway',
             requestUrl: this.listingConfig.requestUrl,
-            columns: this.columns,
+            columns: this.initialColumns,
             meta: {},
             primaryColumn: `cell-${primaryColumn}`,
             deletingRow: false,

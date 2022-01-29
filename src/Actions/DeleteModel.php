@@ -6,7 +6,7 @@ use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Actions\Action;
 
-class Delete extends Action
+class DeleteModel extends Action
 {
     protected $dangerous = true;
 
@@ -33,7 +33,7 @@ class Delete extends Action
     {
         $resource = Runway::findResourceByModel($item);
 
-        return $user->hasPermission("Delete {$resource->plural()}")
+        return $user->hasPermission("Delete {$resource->singular()}")
             || $user->isSuper();
     }
 

@@ -4,13 +4,13 @@ namespace DoubleThreeDigital\Runway\Tests;
 
 use DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes;
 use DoubleThreeDigital\Runway\ServiceProvider;
-use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use Rebing\GraphQL\GraphQLServiceProvider;
 use Statamic\Extend\Manifest;
 use Statamic\Providers\StatamicServiceProvider;
 use Statamic\Stache\Stores\UsersStore;
@@ -38,6 +38,7 @@ abstract class TestCase extends OrchestraTestCase
     protected function getPackageProviders($app)
     {
         return [
+            GraphQLServiceProvider::class,
             StatamicServiceProvider::class,
             ServiceProvider::class,
         ];
@@ -57,7 +58,7 @@ abstract class TestCase extends OrchestraTestCase
         $app->make(Manifest::class)->manifest = [
             'doublethreedigital/runway' => [
                 'id'        => 'doublethreedigital/runway',
-                'namespace' => 'DoubleThreeDigital\\Runway\\',
+                'namespace' => 'DoubleThreeDigital\\Runway',
             ],
         ];
     }
@@ -108,19 +109,19 @@ abstract class TestCase extends OrchestraTestCase
                                     [
                                         'handle' => 'title',
                                         'field' => [
-                                            'type' => 'text'
+                                            'type' => 'text',
                                         ],
                                     ],
                                     [
                                         'handle' => 'slug',
                                         'field' => [
-                                            'type' => 'slug'
+                                            'type' => 'slug',
                                         ],
                                     ],
                                     [
                                         'handle' => 'body',
                                         'field' => [
-                                            'type' => 'textarea'
+                                            'type' => 'textarea',
                                         ],
                                     ],
                                     [
@@ -160,6 +161,14 @@ abstract class TestCase extends OrchestraTestCase
                                             'type' => 'text',
                                         ],
                                     ],
+                                    // [
+                                    //     'handle' => 'posts',
+                                    //     'field' => [
+                                    //         'type' => 'has_many',
+                                    //         'resource' => 'post',
+                                    //         'mode' => 'select',
+                                    //     ],
+                                    // ],
                                 ],
                             ],
                         ],
@@ -183,12 +192,12 @@ abstract class TestCase extends OrchestraTestCase
         $items = [];
 
         for ($i = 0; $i < $count; $i++) {
-            $items[] = Post::create(array_merge($attributes, [
+            $items[] = Post::create(array_merge([
                 'title'     => $title = join(' ', $this->faker->words(6)),
                 'slug'      => str_slug($title),
                 'body'      => join(' ', $this->faker->paragraphs(10)),
                 'author_id' => $this->authorFactory()->id,
-            ]));
+            ], $attributes));
         }
 
         return count($items) === 1
@@ -201,9 +210,9 @@ abstract class TestCase extends OrchestraTestCase
         $items = [];
 
         for ($i = 0; $i < $count; $i++) {
-            $items[] = Author::create(array_merge($attributes, [
+            $items[] = Author::create(array_merge([
                 'name' => $this->faker->name(),
-            ]));
+            ], $attributes));
         }
 
         return count($items) === 1
@@ -212,13 +221,25 @@ abstract class TestCase extends OrchestraTestCase
     }
 }
 
-class Post extends Model implements Responsable
+class Post extends Model
 {
     use RunwayRoutes;
 
     protected $fillable = [
         'title', 'slug', 'body', 'author_id',
     ];
+
+    public function scopeFood($query)
+    {
+        $query->whereIn('title', ['Pasta', 'Apple', 'Burger']);
+    }
+
+    public function scopeFruit($query, $smth)
+    {
+        if ($smth === 'idoo') {
+            $query->whereIn('title', ['Apple']);
+        }
+    }
 
     public function author()
     {
@@ -234,6 +255,6 @@ class Author extends Model
 
     public function posts()
     {
-        return $this->hasMany(Author::class);
+        return $this->hasMany(Post::class);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Tests\Routing;
 
-use DoubleThreeDigital\Runway\Tests\Post;
+use DoubleThreeDigital\Runway\Routing\RoutingModel;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Statamic\Facades\Data;
 
@@ -19,7 +19,7 @@ class ResourceRoutingRepositoryTest extends TestCase
         $findByUri = Data::findByUri("/posts/{$post->slug}");
 
         $this->assertSame($post->fresh()->id, $findByUri->id);
-        $this->assertTrue($findByUri instanceof Post);
+        $this->assertTrue($findByUri instanceof RoutingModel);
     }
 
     /** @test */
@@ -32,13 +32,13 @@ class ResourceRoutingRepositoryTest extends TestCase
         $findByUri = Data::findByUri("/posts/{$posts[0]->slug}");
 
         $this->assertSame($posts[0]->id, $findByUri->id);
-        $this->assertTrue($findByUri instanceof Post);
+        $this->assertTrue($findByUri instanceof RoutingModel);
     }
 
     /** @test */
     public function cant_find_by_uri_if_no_matching_uri()
     {
-        $findByUri = Data::findByUri("/posts/some-absolute-jibber-jabber");
+        $findByUri = Data::findByUri('/posts/some-absolute-jibber-jabber');
 
         $this->assertNull($findByUri);
     }
