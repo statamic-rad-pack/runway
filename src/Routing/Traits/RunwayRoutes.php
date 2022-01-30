@@ -67,11 +67,6 @@ trait RunwayRoutes
     {
         return $this->morphOne(RunwayUri::class, 'model');
     }
-    
-    public function setSupplement($key, $value)
-    {
-        $this->$key = $value;
-    }
 
     public static function bootRunwayRoutes()
     {
