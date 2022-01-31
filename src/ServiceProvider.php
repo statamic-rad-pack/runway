@@ -5,6 +5,7 @@ namespace DoubleThreeDigital\Runway;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\Permission;
 use Statamic\Providers\AddonServiceProvider;
+use Statamic\Search\Document;
 use Statamic\Search\Searchables;
 use Statamic\Statamic;
 
@@ -97,9 +98,8 @@ class ServiceProvider extends AddonServiceProvider
                 $table = $resource->getTable();
                 // should really lift the fields we need from $config and only return those
                 $return = $return->merge($resource->select('*')->get()->map(function ($result) use ($table) {
-                    return (new Models\SearchDocument)
-                        ->id($result->getKey())
-                        ->table($table)
+                    return (new Document)
+                        ->reference('runway::'.$table.'::'.$result->getKey())
                         ->data([
                             'title' => $result->brand,
                         ]);
