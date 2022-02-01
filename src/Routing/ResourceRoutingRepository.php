@@ -16,6 +16,7 @@ class ResourceRoutingRepository
         foreach (Runway::allResources() as $resource) {
             if ($resource->getTable() == $table) {
                 $model = $resource->find($id)->first();
+
                 return (new SearchResult)->data([
                     'title' => 'aaa',
                     'edit_url' => 'bbb',

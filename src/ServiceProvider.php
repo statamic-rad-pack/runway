@@ -113,6 +113,7 @@ class ServiceProvider extends AddonServiceProvider
                         ]);
                 }));
             }
+
             return $return;
         });
     }
