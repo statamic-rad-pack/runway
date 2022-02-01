@@ -12,12 +12,12 @@ class ResourceRoutingRepository
     {
         // used by search in CP
         [$table, $id] = explode('::', $id, 2);
-        
+
         foreach (Runway::allResources() as $resource) {
             if ($resource->getTable() == $table) {
                 $model = $resource->find($id)->first();
                 return (new SearchResult)->data([
-                    'title' => 'aaa', 
+                    'title' => 'aaa',
                     'edit_url' => 'bbb',
                     'collection' => 'aaaa',
                     'is_entry' => true,
@@ -26,7 +26,7 @@ class ResourceRoutingRepository
                     'container' => '',
                     'is_asset' => false,
                 ]);
-            }    
+            }
         }
     }
 

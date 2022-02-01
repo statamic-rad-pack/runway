@@ -97,12 +97,12 @@ class ServiceProvider extends AddonServiceProvider
             })->group('Runway');
         }
     }
-        
+
     protected function registerSearchables()
     {
         Searchables::register('runway', function ($resource, $config) {
             $return = collect();
-            foreach (Runway::allResources() as $resource) { 
+            foreach (Runway::allResources() as $resource) {
                 $table = $resource->getTable();
                 // should really lift the fields we need from $config and only return those
                 $return = $return->merge($resource->select('*')->get()->map(function ($result) use ($table) {
