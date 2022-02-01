@@ -2,11 +2,11 @@
 
 namespace DoubleThreeDigital\Runway;
 
+use Statamic\Statamic;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
 use Statamic\Facades\Permission;
 use Statamic\Providers\AddonServiceProvider;
-use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -60,6 +60,7 @@ class ServiceProvider extends AddonServiceProvider
             Runway::discoverResources();
 
             $this->registerPermissions();
+            $this->registerNavigation();
             $this->bootGraphQl();
 
             if (Runway::usesRouting()) {
@@ -69,20 +70,26 @@ class ServiceProvider extends AddonServiceProvider
         });
     }
 
-    protected function registerPermissions()
+    protected function registerNavigation()
     {
-        Nav::extend(function ($nav) {
-            foreach (Runway::allResources() as $resource) {
-                if ($resource->hidden()) {
-                    continue;
-                }
-
-                $nav->content($resource->name())
-                    ->icon($resource->cpIcon())
-                    ->route('runway.index', ['resourceHandle' => $resource->handle()]);
+        Nav::extend(function () {
+            $resourcesAuthorized = Runway::allResourcesAuthorized();
+            if ($resourcesAuthorized->isNotEmpty()) {
+                Nav::content('Resources')
+                    ->icon(config('runway.icon'))
+                    ->route('runway.dashboard')
+                    ->children($resourcesAuthorized->map( function ($resourceAuthorized) {
+                        return Nav::item($resourceAuthorized->name())
+                            ->route('runway.index', [
+                                'resourceHandle' => $resourceAuthorized->handle()
+                            ]);
+                    }));
             }
         });
+    }
 
+    protected function registerPermissions()
+    {
         foreach (Runway::allResources() as $resource) {
             Permission::register("View {$resource->plural()}", function ($permission) use ($resource) {
                 $permission->children([

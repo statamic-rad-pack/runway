@@ -4,6 +4,7 @@ namespace DoubleThreeDigital\Runway;
 
 use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 class Runway
@@ -68,6 +69,13 @@ class Runway
     public static function allResources(): Collection
     {
         return collect(static::$resources);
+    }
+
+    public static function allResourcesAuthorized(): Collection
+    {
+        return collect(static::$resources)->filter( function ($resource) {
+            return Gate::allows("View {$resource->plural()}");
+        });
     }
 
     public static function findResource(string $resourceHandle): ?Resource
