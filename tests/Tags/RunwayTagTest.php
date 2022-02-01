@@ -2,8 +2,11 @@
 
 namespace DoubleThreeDigital\Runway\Tests\Tags;
 
+use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tags\RunwayTag;
+use DoubleThreeDigital\Runway\Tests\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
+use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Antlers;
 
 class RunwayTagTest extends TestCase
@@ -43,6 +46,73 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
+    public function can_get_records_with_scope_parameter()
+    {
+        $posts = $this->postFactory(5);
+
+        $posts[0]->update(['title' => 'Pasta']);
+        $posts[2]->update(['title' => 'Apple']);
+        $posts[4]->update(['title' => 'Burger']);
+
+        $this->tag->setParameters([
+            'scope' => 'food',
+        ]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertSame(3, count($usage));
+        $this->assertSame((string) $usage[0]['title'], 'Pasta');
+        $this->assertSame((string) $usage[1]['title'], 'Apple');
+        $this->assertSame((string) $usage[2]['title'], 'Burger');
+    }
+
+    /** @test */
+    public function can_get_records_with_scope_parameter_and_scope_arguments()
+    {
+        $posts = $this->postFactory(5);
+
+        $posts[0]->update(['title' => 'Pasta']);
+        $posts[2]->update(['title' => 'Apple']);
+        $posts[4]->update(['title' => 'Burger']);
+
+        $this->tag->setContext([
+            'fab' => 'idoo',
+        ]);
+
+        $this->tag->setParameters([
+            'scope' => 'fruit:fab',
+        ]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertSame(1, count($usage));
+        $this->assertSame((string) $usage[0]['title'], 'Apple');
+    }
+
+    /** @test */
+    public function can_get_records_with_scope_parameter_and_scope_arguments_and_multiple_scopes()
+    {
+        $posts = $this->postFactory(5);
+
+        $posts[0]->update(['title' => 'Pasta']);
+        $posts[2]->update(['title' => 'Apple']);
+        $posts[4]->update(['title' => 'Burger']);
+
+        $this->tag->setContext([
+            'fab' => 'idoo',
+        ]);
+
+        $this->tag->setParameters([
+            'scope' => 'food|fruit:fab',
+        ]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertSame(1, count($usage));
+        $this->assertSame((string) $usage[0]['title'], 'Apple');
+    }
+
+    /** @test */
     public function can_get_records_with_where_parameter()
     {
         $posts = $this->postFactory(5);
@@ -57,6 +127,26 @@ class RunwayTagTest extends TestCase
 
         $this->assertSame(1, count($usage));
         $this->assertSame((string) $usage[0]['title'], 'penguin');
+    }
+
+    /** @test */
+    public function can_get_records_with_with_parameter()
+    {
+        $posts = $this->postFactory(5);
+
+        $posts[0]->update(['title' => 'tiger']);
+
+        $this->tag->setParameters([
+            'with' => 'author',
+        ]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertSame(5, count($usage));
+        $this->assertSame((string) $usage[0]['title'], 'tiger');
+
+        $this->assertIsArray($usage[0]['author']);
+        $this->assertSame($usage[0]['author']['name'], $posts[0]->author->name);
     }
 
     /** @test */
@@ -157,5 +247,31 @@ class RunwayTagTest extends TestCase
 
         $this->assertSame((string) $usage[0]['title'], $posts[0]['title']);
         $this->assertSame((string) $usage[1]['title'], $posts[1]['title']);
+    }
+
+    /** @test */
+    public function can_get_records_with_studly_case_resource_handle()
+    {
+        Config::set('runway.resources', [
+            Post::class => [
+                'handle' => 'BlogPosts',
+                'blueprint' => [],
+            ],
+        ]);
+
+        Runway::discoverResources();
+
+        $posts = $this->postFactory(5);
+
+        $this->tag->setParameters([]);
+        $usage = $this->tag->wildcard('blog_posts');
+
+        $this->assertSame(5, count($usage));
+
+        $this->assertSame((string) $usage[0]['title'], $posts[0]->title);
+        $this->assertSame((string) $usage[1]['title'], $posts[1]->title);
+        $this->assertSame((string) $usage[2]['title'], $posts[2]->title);
+        $this->assertSame((string) $usage[3]['title'], $posts[3]->title);
+        $this->assertSame((string) $usage[4]['title'], $posts[4]->title);
     }
 }

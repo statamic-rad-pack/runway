@@ -2,75 +2,57 @@
 
 namespace DoubleThreeDigital\Runway\Http\Controllers;
 
+use Carbon\CarbonInterface;
+use DoubleThreeDigital\Runway\Http\Requests\CreateRequest;
+use DoubleThreeDigital\Runway\Http\Requests\EditRequest;
+use DoubleThreeDigital\Runway\Http\Requests\IndexRequest;
 use DoubleThreeDigital\Runway\Http\Requests\StoreRequest;
 use DoubleThreeDigital\Runway\Http\Requests\UpdateRequest;
+use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Http\Request;
 use Statamic\CP\Breadcrumbs;
+use Statamic\Facades\Scope;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 
 class ResourceController extends CpController
 {
-    // TODO: need to put requests in place for authorization and validation
-
-    public function index(Request $request, $resourceHandle)
+    public function index(IndexRequest $request, $resourceHandle)
     {
         $resource = Runway::findResource($resourceHandle);
         $blueprint = $resource->blueprint();
 
-        if (! User::current()->hasPermission("View {$resource->plural()}") && ! User::current()->isSuper()) {
-            abort('403');
-        }
-
-        $query = $resource->model()
-            ->orderBy($resource->listingSort()['column'], $resource->listingSort()['direction']);
-
-        if ($searchQuery = $request->input('query')) {
-            $query->where(function ($query) use ($searchQuery, $blueprint) {
-                $wildcard = '%'.$searchQuery.'%';
-
-                foreach ($blueprint->fields()->items()->toArray() as $field) {
-                    $query->orWhere($field['handle'], 'LIKE', $wildcard);
-                }
-            });
-        }
-
-        $columns = collect($resource->listingColumns())
-            ->map(function ($columnKey) use ($resource, $blueprint) {
-                $field = $blueprint->field($columnKey);
-
-                return [
-                    'handle' => $columnKey,
-                    'title'  => !$field ? $columnKey : $field->display(),
-                    'has_link' => $resource->listingColumns()[0] === $columnKey,
-                    'fieldtype' => $field->fieldtype(),
-                ];
-            })
-            ->toArray();
+        $listingConfig = [
+            'preferencesPrefix' => "runway.{$resource->handle()}",
+            'requestUrl'        => cp_route('runway.listing-api', ['resourceHandle' => $resource->handle()]),
+            'listingUrl'        => cp_route('runway.index', ['resourceHandle' => $resource->handle()]),
+        ];
 
         return view('runway::index', [
-            'title'    => $resource->name(),
-            'resource' => $resource,
-            'records'  => $query->paginate(config('statamic.cp.pagination_size')),
-            'columns'  => $columns,
+            'title'         => $resource->name(),
+            'resource'      => $resource,
+            'recordCount'   => $resource->model()->count(),
+            'columns'       => $this->buildColumns($resource, $blueprint),
+            'filters'       => Scope::filters("runway_{$resourceHandle}"),
+            'listingConfig' => $listingConfig,
+            'actionUrl'     => cp_route('runway.actions.run', ['resourceHandle' => $resourceHandle]),
         ]);
     }
 
-    public function create(Request $request, $resourceHandle)
+    public function create(CreateRequest $request, $resourceHandle)
     {
         $resource = Runway::findResource($resourceHandle);
-
-        if (! User::current()->hasPermission("Create new {$resource->plural()}") && ! User::current()->isSuper()) {
-            abort('403');
-        }
 
         $blueprint = $resource->blueprint();
         $fields = $blueprint->fields();
         $fields = $fields->preProcess();
 
-        return view('runway::create', [
+        $viewData = [
+            'title' => "Create {$resource->singular()}",
+            'action' => cp_route('runway.store', ['resourceHandle' => $resource->handle()]),
+            'method' => 'POST',
             'breadcrumbs' => new Breadcrumbs([
                 [
                     'text' => $resource->plural(),
@@ -79,31 +61,40 @@ class ResourceController extends CpController
                     ]),
                 ],
             ]),
-            'resource'  => $resource,
+            'resource' => $resource,
             'blueprint' => $blueprint->toPublishArray(),
-            'values'    => $fields->values(),
-            'meta'      => $fields->meta(),
-            'action'    => cp_route('runway.store', ['resourceHandle' => $resource->handle()]),
-        ]);
+            'values' => $fields->values(),
+            'meta' => $fields->meta(),
+            'permalink' => null,
+            'resourceHasRoutes' => $resource->hasRouting(),
+        ];
+
+        if ($request->wantsJson()) {
+            return $viewData;
+        }
+
+        return view('runway::create', $viewData);
     }
 
     public function store(StoreRequest $request, $resourceHandle)
     {
+        $postCreatedHooks = [];
+
         $resource = Runway::findResource($resourceHandle);
         $record = $resource->model();
 
-        if (! User::current()->hasPermission("Create new {$resource->plural()}") && ! User::current()->isSuper()) {
-            abort('403');
-        }
-
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
-            if ($field->type() === 'section') {
+            $processedValue = $field->fieldtype()->process($request->get($fieldKey));
+
+            if ($field->type() === 'section' || $field->type() === 'has_many') {
+                if ($field->type() === 'has_many' && $processedValue) {
+                    $postCreatedHooks[] = $processedValue;
+                }
+
                 continue;
             }
 
-            $processedValue = $field->fieldtype()->process($request->get($fieldKey));
-
-            if (is_array($processedValue)) {
+            if (is_array($processedValue) && ! $record->hasCast($fieldKey, ['array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])) {
                 $processedValue = json_encode($processedValue);
             }
 
@@ -112,22 +103,23 @@ class ResourceController extends CpController
 
         $record->save();
 
+        foreach ($postCreatedHooks as $postCreatedHook) {
+            $postCreatedHook($resource, $record);
+        }
+
         return [
-            'redirect'  => cp_route('runway.edit', [
+            'data' => $this->getReturnData($resource, $record),
+            'redirect' => cp_route('runway.edit', [
                 'resourceHandle'  => $resource->handle(),
-                'record' => $record->{$resource->primaryKey()},
+                'record' => $record->{$resource->routeKey()},
             ]),
         ];
     }
 
-    public function edit(Request $request, $resourceHandle, $record)
+    public function edit(EditRequest $request, $resourceHandle, $record)
     {
         $resource = Runway::findResource($resourceHandle);
         $record = $resource->model()->where($resource->routeKey(), $record)->first();
-
-        if (! User::current()->hasPermission("Edit {$resource->singular()}") && ! User::current()->isSuper()) {
-            abort('403');
-        }
 
         $values = [];
         $blueprintFieldKeys = $resource->blueprint()->fields()->all()->keys()->toArray();
@@ -135,8 +127,14 @@ class ResourceController extends CpController
         foreach ($blueprintFieldKeys as $fieldKey) {
             $value = $record->{$fieldKey};
 
-            if ($value instanceof \Carbon\Carbon) {
-                $value = $value->format('Y-m-d H:i');
+            if ($value instanceof CarbonInterface) {
+                $format = $defaultFormat = 'Y-m-d H:i';
+
+                if ($field = $resource->blueprint()->field($fieldKey)) {
+                    $format = $field->get('format', $defaultFormat);
+                }
+
+                $value = $value->format($format);
             }
 
             if (Json::isJson($value)) {
@@ -149,7 +147,13 @@ class ResourceController extends CpController
         $blueprint = $resource->blueprint();
         $fields = $blueprint->fields()->addValues($values)->preProcess();
 
-        return view('runway::edit', [
+        $viewData = [
+            'title' => "Edit {$resource->singular()}",
+            'action' => cp_route('runway.update', [
+                'resourceHandle'  => $resource->handle(),
+                'record' => $record->{$resource->routeKey()},
+            ]),
+            'method' => 'PATCH',
             'breadcrumbs' => new Breadcrumbs([
                 [
                     'text' => $resource->plural(),
@@ -158,18 +162,21 @@ class ResourceController extends CpController
                     ]),
                 ],
             ]),
-            'resource'  => $resource,
+            'resource' => $resource,
             'blueprint' => $blueprint->toPublishArray(),
-            'values'    => $fields->values(),
-            'meta'      => $fields->meta(),
-            'action'    => cp_route('runway.update', [
-                'resourceHandle'  => $resource->handle(),
-                'record' => $record->{$resource->primaryKey()},
-            ]),
+            'values' => $fields->values(),
+            'meta' => $fields->meta(),
             'permalink' => $resource->hasRouting()
                 ? $record->uri()
                 : null,
-        ]);
+            'resourceHasRoutes' => $resource->hasRouting(),
+        ];
+
+        if ($request->wantsJson()) {
+            return $viewData;
+        }
+
+        return view('runway::edit', $viewData);
     }
 
     public function update(UpdateRequest $request, $resourceHandle, $record)
@@ -177,18 +184,14 @@ class ResourceController extends CpController
         $resource = Runway::findResource($resourceHandle);
         $record = $resource->model()->where($resource->routeKey(), $record)->first();
 
-        if (! User::current()->hasPermission("Edit {$resource->singular()}") && ! User::current()->isSuper()) {
-            abort('403');
-        }
-
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
-            if ($field->type() === 'section') {
+            $processedValue = $field->fieldtype()->process($request->get($fieldKey));
+
+            if ($field->type() === 'section' || $field->type() === 'has_many') {
                 continue;
             }
 
-            $processedValue = $field->fieldtype()->process($request->get($fieldKey));
-
-            if (is_array($processedValue)) {
+            if (is_array($processedValue) && ! $record->hasCast($fieldKey, ['array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])) {
                 $processedValue = json_encode($processedValue);
             }
 
@@ -198,8 +201,7 @@ class ResourceController extends CpController
         $record->save();
 
         return [
-            'record' => $record->toArray(),
-            'resource_handle' => $resource->handle(),
+            'data' => $this->getReturnData($resource, $record),
         ];
     }
 
@@ -208,14 +210,48 @@ class ResourceController extends CpController
         $resource = Runway::findResource($resourceHandle);
         $record = $resource->model()->where($resource->routeKey(), $record)->first();
 
-        if (! User::current()->hasPermission("Delete {$resource->singular()}") && ! User::current()->isSuper()) {
-            abort('403');
-        }
-
         $record->delete();
 
-        return redirect(cp_route('runway.index', [
-            'resourceHandle' => $resource->handle(),
-        ]))->with('success', "{$resource->singular()} deleted");
+        return true;
+    }
+
+    /**
+     * This method is a duplicate of code in the `ResourceListingController`.
+     * Update both if you make any changes.
+     */
+    protected function buildColumns(Resource $resource, $blueprint)
+    {
+        $preferredFirstColumn = isset(User::current()->preferences()['runway'][$resource->handle()]['columns'])
+            ? User::current()->preferences()['runway'][$resource->handle()]['columns'][0]
+            : $resource->listableColumns()[0];
+
+        return collect($resource->listableColumns())
+            ->map(function ($columnKey) use ($blueprint, $preferredFirstColumn) {
+                $field = $blueprint->field($columnKey);
+
+                return [
+                    'handle' => $columnKey,
+                    'title' => $field
+                        ? $field->display()
+                        : $field,
+                    'has_link' => $preferredFirstColumn === $columnKey,
+                    'is_primary_column' => $preferredFirstColumn === $columnKey,
+                ];
+            })
+            ->toArray();
+    }
+
+    /**
+     * Build an array with the correct return data for the inline publish forms.
+     */
+    protected function getReturnData($resource, $record)
+    {
+        return array_merge($record->toArray(), [
+            'title' => $record->{$resource->listableColumns()[0]},
+            'edit_url' => cp_route('runway.edit', [
+                'resourceHandle'  => $resource->handle(),
+                'record' => $record->{$resource->routeKey()},
+            ]),
+        ]);
     }
 }

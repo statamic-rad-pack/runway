@@ -31,7 +31,7 @@ class ResourceResponse implements Responsable
         $response = response()
             ->make($this->contents());
 
-        ResponseCreated::dispatch($response);
+        ResponseCreated::dispatch($response, $this->data);
 
         return $response;
     }
@@ -61,14 +61,14 @@ class ResourceResponse implements Responsable
 
     protected function contents()
     {
-        $contents = (new View)
+        $contents = (new View())
             ->template($this->data->template())
             ->layout($this->data->layout())
             ->with(
                 Runway::findResourceByModel($this->data)
                     ->augment($this->data)
             )
-            ->cascadeContent($this->data)
+            // ->cascadeContent($this->data)
             ->render();
 
         return $contents;

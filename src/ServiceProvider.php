@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway;
 
 use Statamic\Facades\CP\Nav;
+use Statamic\Facades\GraphQL;
 use Statamic\Facades\Permission;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Search\Document;
@@ -11,16 +12,23 @@ use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
+    protected $actions = [
+        Actions\DeleteModel::class,
+    ];
+
     protected $commands = [
+        Console\Commands\GenerateBlueprint::class,
+        Console\Commands\GenerateMigration::class,
         Console\Commands\RebuildUriCache::class,
     ];
 
     protected $fieldtypes = [
         Fieldtypes\BelongsToFieldtype::class,
+        Fieldtypes\HasManyFieldtype::class,
     ];
 
     protected $routes = [
-        'cp' => __DIR__ . '/../routes/cp.php',
+        'cp' => __DIR__.'/../routes/cp.php',
     ];
 
     protected $scripts = [

@@ -2,7 +2,7 @@
 
 namespace DoubleThreeDigital\Runway;
 
-use DoubleThreeDigital\Runway\Exceptions\ModelNotFound;
+use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -16,22 +16,22 @@ class Runway
             ->mapWithKeys(function ($config, $model) {
                 $handle = Str::lower(class_basename($model));
 
-                $resource = (new Resource)
+                if (isset($config['handle'])) {
+                    $handle = $config['handle'];
+                }
+
+                $resource = (new Resource())
                     ->handle($handle)
-                    ->model($model)
-                    ->name($config['name'])
-                    ->blueprint($config['blueprint']);
+                    ->model($model);
 
-                if (isset($config['listing']['columns'])) {
-                    $resource->listingColumns($config['listing']['columns']);
+                if (isset($config['name'])) {
+                    $resource->name($config['name']);
+                } else {
+                    $resource->name(Str::title($handle));
                 }
 
-                if (isset($config['listing']['sort'])) {
-                    $resource->listingSort($config['listing']['sort']);
-                }
-
-                if (isset($config['listing']['buttons'])) {
-                    $resource->listingButtons($config['listing']['blueprints']);
+                if (isset($config['blueprint'])) {
+                    $resource->blueprint($config['blueprint']);
                 }
 
                 if (isset($config['listing']['cp_icon'])) {
@@ -54,11 +54,15 @@ class Runway
                     $resource->layout($config['layout']);
                 }
 
+                if (isset($config['graphql'])) {
+                    $resource->graphqlEnabled($config['graphql']);
+                }
+
                 return [$handle => $resource];
             })
             ->toArray();
 
-        return new static;
+        return new static();
     }
 
     public static function allResources(): Collection
@@ -71,8 +75,7 @@ class Runway
         $resource = collect(static::$resources)->get($resourceHandle);
 
         if (! $resource) {
-            // TODO: replace with ResourceNotFound
-            throw new ModelNotFound("Runway could not find [{$resourceHandle}]. Please ensure its configured properly and you're using the correct handle.");
+            throw new ResourceNotFound($resourceHandle);
         }
 
         return $resource;
@@ -85,8 +88,7 @@ class Runway
         })->first();
 
         if (! $resource) {
-            // TODO: replace with ResourceNotFound
-            throw new ModelNotFound("Runway could not find [{$model}]. Please ensure its configured properly and you're using the correct model.");
+            throw new ResourceNotFound(get_class($model));
         }
 
         return $resource;

@@ -40,6 +40,6 @@ class ResourceRoutingRepository
             return null;
         }
 
-        return $runwayUri->model;
+        return $runwayUri->model->routingModel();
     }
 }

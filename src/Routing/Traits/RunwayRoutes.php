@@ -3,15 +3,25 @@
 namespace DoubleThreeDigital\Runway\Routing\Traits;
 
 use DoubleThreeDigital\Runway\Models\RunwayUri;
-use DoubleThreeDigital\Runway\Routing\ResourceResponse;
+use DoubleThreeDigital\Runway\Routing\RoutingModel;
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Support\Str;
 use Statamic\Routing\Routable;
 use Statamic\View\Antlers\Parser;
 
 trait RunwayRoutes
 {
+    protected $routingModel;
+
     use Routable {
         uri as routableUri;
+    }
+
+    public function routingModel()
+    {
+        $this->routingModel = new RoutingModel($this);
+
+        return $this->routingModel;
     }
 
     public function route()
@@ -25,39 +35,32 @@ trait RunwayRoutes
 
     public function routeData()
     {
-        return [
-            'id' => $this->{$this->getKeyName()},
-        ];
+        return $this->routingModel()->routeData();
     }
 
     public function uri()
     {
-        return $this->routableUri();
+        return $this->routingModel()->uri();
     }
 
     public function toResponse($request)
     {
-        return (new ResourceResponse($this))->toResponse($request);
+        return $this->routingModel()->toResponse($request);
     }
 
     public function template(): string
     {
-        return Runway::findResourceByModel($this)->template();
+        return $this->routingModel()->template();
     }
 
     public function layout(): string
     {
-        return Runway::findResourceByModel($this)->layout();
-    }
-
-    public function id()
-    {
-        return $this->getKey();
+        return $this->routingModel()->layout();
     }
 
     public function getRouteKey()
     {
-        return $this->getAttributeValue($this->getRouteKeyName());
+        return $this->routingModel()->getRouteKey();
     }
 
     /**
@@ -77,17 +80,17 @@ trait RunwayRoutes
                 return;
             }
 
-            $uri = (new Parser)
+            $uri = (new Parser())
                 ->parse($resource->route(), $resource->augment($model))
                 ->__toString();
+
+            $uri = Str::start($uri, '/');
 
             if ($model->runwayUri()->exists()) {
                 $model->runwayUri()->first()->update([
                     'uri' => $uri,
                 ]);
             } else {
-                // dd($uri);
-
                 $model->runwayUri()->create([
                     'uri' => $uri,
                 ]);

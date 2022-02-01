@@ -22,7 +22,7 @@
 
         <publish-container
             ref="container"
-            name="base"
+            :name="publishContainer"
             :blueprint="blueprint"
             :values="values"
             :meta="meta"
@@ -54,7 +54,8 @@
                                     class="flex items-center justify-center btn-flat w-full mx-1 px-1"
                                     v-if="permalink"
                                     :href="permalink"
-                                    target="_blank">
+                                    target="_blank"
+                                >
                                     <svg-icon name="external-link" class="w-5 h-5 mr-1" />
                                     <span>{{ __('Visit URL') }}</span>
                                 </a>
@@ -80,6 +81,7 @@ export default {
         resourceHasRoutes: Boolean,
         permalink: String,
         isCreating: Boolean,
+        publishContainer: String,
     },
 
     data() {
@@ -91,8 +93,10 @@ export default {
 
             readonly: false, // TODO: might do this in the future
 
+            errors: {},
             saving: false,
             containerWidth: null,
+            saveKeyBinding: null,
         }
     },
 
@@ -113,13 +117,20 @@ export default {
             this.saving = true
             this.clearErrors()
 
-            this.$axios[this.method](this.action, this.values)
+            this.$axios({
+                method: this.method,
+                url: this.action,
+                data: this.values,
+            })
                 .then((response) => {
                     this.saving = false
                     this.$refs.container.saved()
+                    this.$emit('saved', response)
 
-                    if (this.isCreating) {
-                        window.location.href = response.data.redirect
+                    if (this.isCreating && this.publishContainer === 'base') {
+                        this.$nextTick(() => {
+                            window.location.href = response.data.redirect
+                        })
                     } else {
                         this.$toast.success(__('Saved'))
                     }
@@ -151,9 +162,11 @@ export default {
             this.$refs.container.setFieldValue(handle, value)
         },
 
-        setFieldMeta(state, payload) {
-            const { handle, value } = payload
-            state.meta[handle] = value
+        setFieldMeta(handle, value) {
+            this.$store.dispatch(`publish/${this.publishContainer}/setFieldMeta`, {
+                handle, value,
+                user: Statamic.user.id
+            })
         },
     },
 
@@ -162,5 +175,16 @@ export default {
             this.$progress.loading(`runway-publish-form`, saving);
         },
     },
+
+    mounted() {
+        this.saveKeyBinding = this.$keys.bindGlobal(['mod+s', 'mod+return'], e => {
+            e.preventDefault();
+            this.save();
+        });
+    },
+
+    destroyed() {
+        this.saveKeyBinding.destroy();
+    }
 }
 </script>
