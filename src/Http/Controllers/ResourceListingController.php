@@ -29,6 +29,10 @@ class ResourceListingController extends CpController
         $query = $resource->model()
             ->orderBy($sortField, $sortDirection);
 
+        if ($resource->hasRouting()) {
+            $query->with('runwayUri');
+        }
+
         $blueprint->fields()->items()->filter(function ($field) {
             return $field['field']['type'] === 'belongs_to'
                 || $field['field']['type'] === 'has_many';
