@@ -29,6 +29,24 @@ class ResourceListingController extends CpController
         $query = $resource->model()
             ->orderBy($sortField, $sortDirection);
 
+        if ($resource->hasRouting()) {
+            $query->with('runwayUri');
+        }
+
+        $blueprint->fields()->items()
+            ->filter(function ($field) {
+                return $field['field']['type'] === 'belongs_to'
+                    || $field['field']['type'] === 'has_many';
+            })->map(function ($field) {
+                if (str_contains($field['handle'], '_id')) {
+                    return str_replace('_id', '', $field['handle']);
+                }
+
+                return $field['handle'];
+            })->each(function ($relation) use (&$query) {
+                $query->with($relation);
+            });
+
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
             'collection' => $resourceHandle,
             'blueprints' => [
