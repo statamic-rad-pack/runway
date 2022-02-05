@@ -10,25 +10,28 @@ class ResourceRoutingRepository
 {
     public function find($id)
     {
-        // used by search in CP
-        [$table, $id] = explode('::', $id, 2);
+        [$resourceHandle, $id] = explode('::', $id, 2);
 
-        foreach (Runway::allResources() as $resource) {
-            if ($resource->getTable() == $table) {
-                $model = $resource->find($id)->first();
+        $resource = Runway::findResource($resourceHandle);
+        $record = $resource->model()->firstWhere($resource->primaryKey(), $id);
 
-                return (new SearchResult)->data([
-                    'title' => 'aaa',
-                    'edit_url' => 'bbb',
-                    'collection' => 'aaaa',
-                    'is_entry' => true,
-                    'taxonomy' => null,
-                    'is_term' => false,
-                    'container' => '',
-                    'is_asset' => false,
-                ]);
-            }
+        if (!$record) {
+            return null;
         }
+
+        return (new SearchResult)->data([
+            'title' => $record->{collect($resource->listableColumns())->first()},
+            'edit_url' => cp_route('runway.edit', [
+                'resourceHandle' => $resource->handle(),
+                'record' => $record->getRouteKey(),
+            ]),
+            'collection' => $resource->name(),
+            'is_entry' => true,
+            'taxonomy' => null,
+            'is_term' => false,
+            'container' => '',
+            'is_asset' => false,
+        ]);
     }
 
     public function findByUri(string $uri)
@@ -37,7 +40,7 @@ class ResourceRoutingRepository
 
         $runwayUri = RunwayUri::where('uri', $uri)->first();
 
-        if (! $runwayUri) {
+        if (!$runwayUri) {
             return null;
         }
 
