@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.2.1 (2022-02-05)
+
+### What's improved
+
+- Added some eager loading to 'index queries' #113 #114 by @duncanmcclean and @DanielDarrenJones
+
 ## v2.2.0 (2022-01-29)
 
 ### What's new
