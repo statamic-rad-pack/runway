@@ -59,7 +59,7 @@ class ResourceCollection extends LaravelResourceCollection
                 $row = $record->toArray();
 
                 foreach ($row as $key => $value) {
-                    if (!in_array($key, $columns)) {
+                    if (! in_array($key, $columns)) {
                         unset($row[$key]);
                     }
 
