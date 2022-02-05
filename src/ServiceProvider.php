@@ -2,6 +2,7 @@
 
 namespace DoubleThreeDigital\Runway;
 
+use Closure;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
 use Statamic\Facades\Permission;
@@ -28,11 +29,11 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $routes = [
-        'cp' => __DIR__.'/../routes/cp.php',
+        'cp' => __DIR__ . '/../routes/cp.php',
     ];
 
     protected $scripts = [
-        __DIR__.'/../resources/dist/js/cp.js',
+        __DIR__ . '/../resources/dist/js/cp.js',
     ];
 
     protected $tags = [
@@ -47,15 +48,15 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::boot();
 
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'runway');
-        $this->mergeConfigFrom(__DIR__.'/../config/runway.php', 'runway');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'runway');
+        $this->mergeConfigFrom(__DIR__ . '/../config/runway.php', 'runway');
 
-        if (! config('runway.disable_migrations')) {
-            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        if (!config('runway.disable_migrations')) {
+            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         }
 
         $this->publishes([
-            __DIR__.'/../config/runway.php' => config_path('runway.php'),
+            __DIR__ . '/../config/runway.php' => config_path('runway.php'),
         ], 'runway-config');
 
         Statamic::booted(function () {
@@ -101,20 +102,42 @@ class ServiceProvider extends AddonServiceProvider
     protected function registerSearchables()
     {
         Searchables::register('runway', function ($resource, $config) {
-            $return = collect();
-            foreach (Runway::allResources() as $resource) {
-                $table = $resource->getTable();
-                // should really lift the fields we need from $config and only return those
-                $return = $return->merge($resource->select('*')->get()->map(function ($result) use ($table) {
-                    return (new Document)
-                        ->reference('runway::'.$table.'::'.$result->getKey())
-                        ->data([
-                            'title' => $result->brand,
-                        ]);
-                }));
-            }
+            $documents = collect();
 
-            return $return;
+            Runway::allResources()->each(function (Resource $resource) use ($config, &$documents) {
+                $records = $resource->model()->all();
+
+                $records->each(function ($record) use ($resource, $config, &$documents) {
+                    $fields = $config['fields'];
+                    $transformers = $config['transformers'] ?? [];
+
+                    $fields = collect($fields)
+                        ->mapWithKeys(function ($field) use ($record) {
+                            return [$field => $record->{$field}];
+                        })->flatMap(function ($value, $field) use ($transformers) {
+                            if (!isset($transformers[$field]) || !$transformers[$field] instanceof Closure) {
+                                return [$field => $value];
+                            }
+
+                            $transformedValue = $transformers[$field]($value);
+
+                            if (is_array($transformedValue)) {
+                                return $transformedValue;
+                            }
+
+                            return [$field => $transformedValue];
+                        })
+                        ->all();
+
+                    $documents->push(
+                        (new \Statamic\Search\Document)
+                            ->reference("runway::{$resource->handle()}::{$record->{$resource->primaryKey()}}")
+                            ->data($fields)
+                    );
+                });
+            });
+
+            return $documents;
         });
     }
 
