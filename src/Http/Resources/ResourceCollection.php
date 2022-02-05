@@ -2,6 +2,8 @@
 
 namespace DoubleThreeDigital\Runway\Http\Resources;
 
+use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
+use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Http\Resources\Json\ResourceCollection as LaravelResourceCollection;
 use Statamic\Facades\Action;
@@ -57,11 +59,27 @@ class ResourceCollection extends LaravelResourceCollection
                 $row = $record->toArray();
 
                 foreach ($row as $key => $value) {
-                    if (! in_array($key, $columns)) {
+                    if (!in_array($key, $columns)) {
                         unset($row[$key]);
                     }
 
                     if ($this->runwayResource->blueprint()->hasField($key)) {
+                        if ($this->runwayResource->blueprint()->field($key)->fieldtype() instanceof BelongsToFieldtype) {
+                            $relationName = str_replace('_id', '', $key);
+
+                            if ($record->relationLoaded($relationName)) {
+                                $value = $record->$relationName;
+                            }
+                        }
+
+                        if ($this->runwayResource->blueprint()->field($key)->fieldtype() instanceof HasManyFieldtype) {
+                            $relationName = $key;
+
+                            if ($record->relationLoaded($relationName)) {
+                                $value = $record->$relationName;
+                            }
+                        }
+
                         $row[$key] = $this->runwayResource->blueprint()->field($key)->setValue($value)->preProcessIndex()->value();
                     }
                 }
