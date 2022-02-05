@@ -5,6 +5,7 @@ title: Templating
 There’s no point storing data in a database for it never to be used, is there?
 
 ## Tags
+
 Runway provides a `{{ runway }}` Antlers tag to enable you to get model data for your resources.
 
 For example, if you wish to create a listing/index page for a resource, you can use the tag like shown below:
@@ -19,6 +20,7 @@ For example, if you wish to create a listing/index page for a resource, you can 
 There’s a bunch of helpful parameters you can use on the tag as well…
 
 ### Sorting
+
 You may use the `sort` parameter to adjust the order of the results.
 
 ```antlers
@@ -29,6 +31,7 @@ You may use the `sort` parameter to adjust the order of the results.
 ```
 
 ### Eloquent Scopes
+
 If you've defined a scope on your Eloquent model and you want to filter by that in your front-end you may use the `scope` parameter.
 
 ```php
@@ -62,6 +65,7 @@ You may also provide multiple scopes, if that's something you need...
 ```
 
 ### Filtering
+
 Just like with the collection tag, you may filter your results like so:
 
 ```antlers
@@ -72,6 +76,7 @@ Just like with the collection tag, you may filter your results like so:
 ```
 
 ### Eager Loading
+
 If your model has a relationship that you'd like to bring into the template, you may specify the `with` parameter.
 
 ```antlers
@@ -87,7 +92,10 @@ You can specify multiple relationships to eager load, just separate with pipes.
 {{ runway:post with="user|comments" }}
 ```
 
+> Hot Tip: Eager Loading can make a **massive** difference in the speed of your queries.
+
 ### Limiting
+
 If you only want X number of results returned instead of ALL of them, you may specify a `limit`.
 
 ```antlers
@@ -98,6 +106,7 @@ If you only want X number of results returned instead of ALL of them, you may sp
 ```
 
 ### Scoping
+
 As [with the collection tag](https://statamic.dev/tags/collection#scope), you may use the `as` parameter to scope your results.
 
 ```antlers
@@ -110,6 +119,7 @@ As [with the collection tag](https://statamic.dev/tags/collection#scope), you ma
 ```
 
 ### Pagination
+
 If you want to paginate your results onto multiple pages, you can use the `paginate` parameter, along with [scoping](#scoping) and [limiting](#limiting).
 
 Using the Runway tag with pagination is a little more complicated but it’s not rocket science.
@@ -140,6 +150,7 @@ Using the Runway tag with pagination is a little more complicated but it’s not
 ```
 
 ## Augmentation
+
 All the results output from the Runway tag are ‘augmented’, which essentially means everything is the same as you’d expect if you had the same data in an entry.
 
 The process of augmentation takes a value (from the database in our case) and processes it via the fieldtype into a value appropriate for the front-end.
