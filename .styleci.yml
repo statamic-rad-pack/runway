@@ -2,5 +2,3 @@ preset: laravel
 risky: false
 enabled:
   - concat_with_spaces
-disabled:
-  - cast_spaces
