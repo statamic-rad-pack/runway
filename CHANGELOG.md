@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.2.2 (2022-02-08)
+
+### What's fixed
+
+- Fixed a couple of eager loading issues #116 #117 by @duncanmcclean
+
 ## v2.2.1 (2022-02-05)
 
 ### What's improved
