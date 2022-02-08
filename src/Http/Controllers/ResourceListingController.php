@@ -5,6 +5,7 @@ namespace DoubleThreeDigital\Runway\Http\Controllers;
 use DoubleThreeDigital\Runway\Http\Resources\ResourceCollection;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Support\Str;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
@@ -29,22 +30,28 @@ class ResourceListingController extends CpController
         $query = $resource->model()
             ->orderBy($sortField, $sortDirection);
 
-        if ($resource->hasRouting()) {
-            $query->with('runwayUri');
-        }
-
         $blueprint->fields()->items()
             ->filter(function ($field) {
                 return $field['field']['type'] === 'belongs_to'
                     || $field['field']['type'] === 'has_many';
-            })->map(function ($field) {
+            })
+            ->map(function ($field) {
                 if (str_contains($field['handle'], '_id')) {
                     return str_replace('_id', '', $field['handle']);
                 }
 
+                if (str_contains($field['handle'], '_')) {
+                    return Str::camel($field['handle']);
+                }
+
                 return $field['handle'];
-            })->each(function ($relation) use (&$query) {
-                $query->with($relation);
+            })
+            ->merge(['runwayUri'])
+            ->filter(function ($relationName) use ($resource) {
+                return method_exists($resource->model(), $relationName);
+            })
+            ->each(function ($relationName) use (&$query) {
+                $query->with($relationName);
             });
 
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
@@ -64,7 +71,7 @@ class ResourceListingController extends CpController
                     $blueprint->fields()->items()->reject(function (array $field) {
                         return $field['field']['type'] === 'has_many';
                     })->each(function (array $field) use ($query, $searchQuery) {
-                        $query->orWhere($field['handle'], 'LIKE', '%'.$searchQuery.'%');
+                        $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
                     });
                 }
             );
@@ -76,7 +83,7 @@ class ResourceListingController extends CpController
 
         return (new ResourceCollection($results))
             ->setResourceHandle($resourceHandle)
-            ->setColumnPreferenceKey('runway.'.$resourceHandle.'.columns')
+            ->setColumnPreferenceKey('runway.' . $resourceHandle . '.columns')
             ->setColumns($columns)
             ->additional(['meta' => [
                 'activeFilterBadges' => $activeFilterBadges,
