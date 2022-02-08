@@ -42,22 +42,28 @@ class ResourceIndexQuery extends Query
     {
         $query = $this->resource->model()->newQuery();
 
-        if ($this->resource->hasRouting()) {
-            $query->with('runwayUri');
-        }
-
         $this->resource->blueprint()->fields()->items()
             ->filter(function ($field) {
                 return $field['field']['type'] === 'belongs_to'
                     || $field['field']['type'] === 'has_many';
-            })->map(function ($field) {
+            })
+            ->map(function ($field) {
                 if (str_contains($field['handle'], '_id')) {
                     return str_replace('_id', '', $field['handle']);
                 }
 
+                if (str_contains($field['handle'], '_')) {
+                    return Str::camel($field['handle']);
+                }
+
                 return $field['handle'];
-            })->each(function ($relation) use (&$query) {
-                $query->with($relation);
+            })
+            ->merge(['runwayUri'])
+            ->filter(function ($relationName) {
+                return method_exists($this->resource->model(), $relationName);
+            })
+            ->each(function ($relationName) use (&$query) {
+                $query->with($relationName);
             });
 
         $this->filterQuery($query, $args['filter'] ?? []);
@@ -74,7 +80,7 @@ class ResourceIndexQuery extends Query
     protected function filterQuery($query, $filters)
     {
         foreach ($filters as $field => $definitions) {
-            if (! is_array($definitions)) {
+            if (!is_array($definitions)) {
                 $definitions = [['equals' => $definitions]];
             }
 
