@@ -84,7 +84,7 @@ class ResourceIndexQuery extends Query
     protected function filterQuery($query, $filters)
     {
         foreach ($filters as $field => $definitions) {
-            if (!is_array($definitions)) {
+            if (! is_array($definitions)) {
                 $definitions = [['equals' => $definitions]];
             }
 

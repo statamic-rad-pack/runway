@@ -5,11 +5,11 @@ namespace DoubleThreeDigital\Runway\Http\Controllers;
 use DoubleThreeDigital\Runway\Http\Resources\ResourceCollection;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Support\Str;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
 use Statamic\Query\Scopes\Filters\Concerns\QueriesFilters;
-use Illuminate\Support\Str;
 
 class ResourceListingController extends CpController
 {
@@ -20,7 +20,7 @@ class ResourceListingController extends CpController
         $resource = Runway::findResource($resourceHandle);
         $blueprint = $resource->blueprint();
 
-        if (!User::current()->hasPermission("View {$resource->plural()}") && !User::current()->isSuper()) {
+        if (! User::current()->hasPermission("View {$resource->plural()}") && ! User::current()->isSuper()) {
             abort(403);
         }
 
