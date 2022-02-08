@@ -42,6 +42,20 @@ class ResourceIndexQuery extends Query
     {
         $query = $this->resource->model()->newQuery();
 
+        $this->eagerLoadQuery($query);
+        $this->filterQuery($query, $args['filter'] ?? []);
+        $this->sortQuery($query, $args['sort'] ?? []);
+
+        return $query->paginate(
+            $args['limit'] ?? null,
+            ['*'],
+            'page',
+            $args['page'] ?? null
+        );
+    }
+
+    protected function eagerLoadQuery($query)
+    {
         $this->resource->blueprint()->fields()->items()
             ->filter(function ($field) {
                 return $field['field']['type'] === 'belongs_to'
@@ -65,16 +79,6 @@ class ResourceIndexQuery extends Query
             ->each(function ($relationName) use (&$query) {
                 $query->with($relationName);
             });
-
-        $this->filterQuery($query, $args['filter'] ?? []);
-        $this->sortQuery($query, $args['sort'] ?? []);
-
-        return $query->paginate(
-            $args['limit'] ?? null,
-            ['*'],
-            'page',
-            $args['page'] ?? null
-        );
     }
 
     protected function filterQuery($query, $filters)
