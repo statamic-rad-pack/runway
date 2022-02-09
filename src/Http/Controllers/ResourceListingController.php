@@ -36,15 +36,17 @@ class ResourceListingController extends CpController
                     || $field['field']['type'] === 'has_many';
             })
             ->map(function ($field) {
-                if (str_contains($field['handle'], '_id')) {
-                    return str_replace('_id', '', $field['handle']);
+                $relationName = $field['handle'];
+
+                if (str_contains($relationName, '_id')) {
+                    $relationName = Str::replaceLast('_id', '', $relationName);
                 }
 
-                if (str_contains($field['handle'], '_')) {
-                    return Str::camel($field['handle']);
+                if (str_contains($relationName, '_')) {
+                    $relationName = Str::camel($relationName);
                 }
 
-                return $field['handle'];
+                return $relationName;
             })
             ->merge(['runwayUri'])
             ->filter(function ($relationName) use ($resource) {
