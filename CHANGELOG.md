@@ -2,11 +2,17 @@
 
 ## Unreleased
 
+## v2.2.4 (2022-02-09)
+
+### What's new
+
+- You may now manually specify relations to be eager loaded, if you'd prefer to have complete control by @duncanmcclean
+
 ## v2.2.3 (2022-02-09)
 
 ### What's fixed
 
-* The 'magic' behind the eager loading wasn't always resolving relation name's correctly by @duncanmcclean
+- The 'magic' behind the eager loading wasn't always resolving relation name's correctly by @duncanmcclean
 
 ## v2.2.2 (2022-02-08)
 
