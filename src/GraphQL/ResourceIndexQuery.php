@@ -40,9 +40,10 @@ class ResourceIndexQuery extends Query
 
     public function resolve($root, $args)
     {
-        $query = $this->resource->model()->newQuery();
+        $query = $this->resource->model()
+            ->newQuery()
+            ->with($this->resource->eagerLoadingRelations());
 
-        $this->eagerLoadQuery($query);
         $this->filterQuery($query, $args['filter'] ?? []);
         $this->sortQuery($query, $args['sort'] ?? []);
 
@@ -52,33 +53,6 @@ class ResourceIndexQuery extends Query
             'page',
             $args['page'] ?? null
         );
-    }
-
-    protected function eagerLoadQuery($query)
-    {
-        $this->resource->blueprint()->fields()->items()
-            ->filter(function ($field) {
-                return $field['field']['type'] === 'belongs_to'
-                    || $field['field']['type'] === 'has_many';
-            })
-            ->map(function ($field) {
-                if (str_contains($field['handle'], '_id')) {
-                    return str_replace('_id', '', $field['handle']);
-                }
-
-                if (str_contains($field['handle'], '_')) {
-                    return Str::camel($field['handle']);
-                }
-
-                return $field['handle'];
-            })
-            ->merge(['runwayUri'])
-            ->filter(function ($relationName) {
-                return method_exists($this->resource->model(), $relationName);
-            })
-            ->each(function ($relationName) use (&$query) {
-                $query->with($relationName);
-            });
     }
 
     protected function filterQuery($query, $filters)

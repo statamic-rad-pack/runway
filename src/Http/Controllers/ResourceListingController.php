@@ -5,7 +5,6 @@ namespace DoubleThreeDigital\Runway\Http\Controllers;
 use DoubleThreeDigital\Runway\Http\Resources\ResourceCollection;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
-use Illuminate\Support\Str;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
@@ -30,31 +29,7 @@ class ResourceListingController extends CpController
         $query = $resource->model()
             ->orderBy($sortField, $sortDirection);
 
-        $blueprint->fields()->items()
-            ->filter(function ($field) {
-                return $field['field']['type'] === 'belongs_to'
-                    || $field['field']['type'] === 'has_many';
-            })
-            ->map(function ($field) {
-                $relationName = $field['handle'];
-
-                if (str_contains($relationName, '_id')) {
-                    $relationName = Str::replaceLast('_id', '', $relationName);
-                }
-
-                if (str_contains($relationName, '_')) {
-                    $relationName = Str::camel($relationName);
-                }
-
-                return $relationName;
-            })
-            ->merge(['runwayUri'])
-            ->filter(function ($relationName) use ($resource) {
-                return method_exists($resource->model(), $relationName);
-            })
-            ->each(function ($relationName) use (&$query) {
-                $query->with($relationName);
-            });
+        $query->with($resource->eagerLoadingRelations());
 
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
             'collection' => $resourceHandle,

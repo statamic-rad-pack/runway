@@ -58,6 +58,10 @@ class Runway
                     $resource->graphqlEnabled($config['graphql']);
                 }
 
+                if (isset($config['with'])) {
+                    $resource->eagerLoadingRelations($config['with']);
+                }
+
                 return [$handle => $resource];
             })
             ->toArray();
