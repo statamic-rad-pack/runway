@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.2.3 (2022-02-09)
+
+### What's fixed
+
+* The 'magic' behind the eager loading wasn't always resolving relation name's correctly by @duncanmcclean
+
 ## v2.2.2 (2022-02-08)
 
 ### What's fixed
