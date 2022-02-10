@@ -15,7 +15,7 @@ class ResourceRoutingRepository
         $resource = Runway::findResource($resourceHandle);
         $record = $resource->model()->firstWhere($resource->primaryKey(), $id);
 
-        if (!$record) {
+        if (! $record) {
             return null;
         }
 
@@ -40,7 +40,7 @@ class ResourceRoutingRepository
 
         $runwayUri = RunwayUri::where('uri', $uri)->first();
 
-        if (!$runwayUri) {
+        if (! $runwayUri) {
             return null;
         }
 

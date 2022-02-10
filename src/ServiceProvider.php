@@ -7,7 +7,6 @@ use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
 use Statamic\Facades\Permission;
 use Statamic\Providers\AddonServiceProvider;
-use Statamic\Search\Document;
 use Statamic\Search\Searchables;
 use Statamic\Statamic;
 
@@ -29,11 +28,11 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $routes = [
-        'cp' => __DIR__ . '/../routes/cp.php',
+        'cp' => __DIR__.'/../routes/cp.php',
     ];
 
     protected $scripts = [
-        __DIR__ . '/../resources/dist/js/cp.js',
+        __DIR__.'/../resources/dist/js/cp.js',
     ];
 
     protected $tags = [
@@ -48,15 +47,15 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::boot();
 
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'runway');
-        $this->mergeConfigFrom(__DIR__ . '/../config/runway.php', 'runway');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'runway');
+        $this->mergeConfigFrom(__DIR__.'/../config/runway.php', 'runway');
 
-        if (!config('runway.disable_migrations')) {
-            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        if (! config('runway.disable_migrations')) {
+            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         }
 
         $this->publishes([
-            __DIR__ . '/../config/runway.php' => config_path('runway.php'),
+            __DIR__.'/../config/runway.php' => config_path('runway.php'),
         ], 'runway-config');
 
         Statamic::booted(function () {
@@ -113,7 +112,7 @@ class ServiceProvider extends AddonServiceProvider
                         ->mapWithKeys(function ($field) use ($record) {
                             return [$field => $record->{$field}];
                         })->flatMap(function ($value, $field) use ($transformers) {
-                            if (!isset($transformers[$field]) || !$transformers[$field] instanceof Closure) {
+                            if (! isset($transformers[$field]) || ! $transformers[$field] instanceof Closure) {
                                 return [$field => $value];
                             }
 
