@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.2.5 (2022-02-15)
+
+### What's fixed
+
+- Another fix for the magic behind Runway's "relation guessing" code for eager loading #118 by @duncanmcclean
+
 ## v2.2.4 (2022-02-09)
 
 ### What's new
