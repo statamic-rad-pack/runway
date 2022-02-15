@@ -6,6 +6,7 @@ use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
 use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Http\Resources\Json\ResourceCollection as LaravelResourceCollection;
+use Illuminate\Support\Str;
 use Statamic\Facades\Action;
 use Statamic\Facades\User;
 
@@ -68,6 +69,7 @@ class ResourceCollection extends LaravelResourceCollection
                         // instance. We can save extra queries this way.
                         if ($this->runwayResource->blueprint()->field($key)->fieldtype() instanceof BelongsToFieldtype) {
                             $relationName = str_replace('_id', '', $key);
+                            $relationName = Str::camel($relationName);
 
                             if ($record->relationLoaded($relationName)) {
                                 $value = $record->$relationName;
