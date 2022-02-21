@@ -30,7 +30,7 @@ return [
 ];
 ```
 
-* [Review documentation](https://runway.duncanmcclean.com/front-end-routing)
+* [Review documentation](https://runway.duncanmcclean.com/frontend-routing)
 
 ### Antlers templating
 
