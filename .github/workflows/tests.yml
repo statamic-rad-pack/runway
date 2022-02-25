@@ -24,6 +24,8 @@ jobs:
         exclude:
           - laravel: 9.*
             statamic: ^3.2
+          - laravel: 9.*
+            php: 7.4
 
     name: ${{ matrix.php }} - ${{ matrix.statamic }} - ${{ matrix.laravel }}
 
