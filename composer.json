@@ -34,8 +34,8 @@
         "statamic/cms": "3.2.* || 3.3.*"
     },
     "require-dev": {
-        "nunomaduro/collision": "^4.2",
-        "orchestra/testbench": "^5.0|^6.0",
+        "nunomaduro/collision": "^4.2 || ^5.0 || ^6.1",
+        "orchestra/testbench": "^5.0 || ^6.0 || ^7.0",
         "spatie/test-time": "^1.2"
     },
     "scripts": {
