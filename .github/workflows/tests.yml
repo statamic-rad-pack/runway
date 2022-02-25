@@ -21,6 +21,9 @@ jobs:
           - laravel: 8.*
             framework: ^8.24.0
             testbench: 6.*
+        exclude:
+          - laravel: 9.*
+            statamic: ^3.2
 
     name: ${{ matrix.php }} - ${{ matrix.statamic }} - ${{ matrix.laravel }}
 
