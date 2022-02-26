@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+## v2.3.0 (2022-02-26)
+
+### What's new
+
+- Statamic 3.3 is now supported! #120 by @duncanmcclean 🚀
+- Related fields will now be automatically set when creating with the BelongsTo fieldtype #112 #124 by @duncanmcclean
+
+### What's fixed
+
+- Fixed permissions issues on the Listing Table actions & in the Control Panel Nav #119 by @jbfournot
+
+### What's improved
+
+- Eager loading magic has been refactored & is now backed up with some tests! #123 by @duncanmcclean
+
+### Breaking changes
+
+- Statamic 3.1 is no longer supported
+
+Also, thanks to @SimonJnsson for a small documentation update!
+
 ## v2.2.5 (2022-02-15)
 
 ### What's fixed
