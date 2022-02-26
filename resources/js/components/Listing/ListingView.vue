@@ -160,9 +160,11 @@ export default {
         canViewRow(row) {
             return row.viewable && row.permalink
         },
+        
         canEditRow(row) {
             return row.editable && row.permalink
         },
+
         confirmDeleteRow(id, index, deleteUrl) {
             this.visibleColumns = this.columns.filter(column => column.visible)
             this.deletingRow = { id, index, deleteUrl }
