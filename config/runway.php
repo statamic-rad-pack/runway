@@ -11,8 +11,6 @@ return [
     |
     */
 
-    'icon' => 'content-writing',
-
     'resources' => [
         // \App\Models\Order::class => [
         //     'name' => 'Orders',
