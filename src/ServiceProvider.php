@@ -70,6 +70,20 @@ class ServiceProvider extends AddonServiceProvider
         });
     }
 
+    protected function registerPermissions()
+    {
+        foreach (Runway::allResources() as $resource) {
+            Permission::register("View {$resource->plural()}", function ($permission) use ($resource) {
+                $permission->children([
+                    Permission::make("Edit {$resource->plural()}")->children([
+                        Permission::make("Create new {$resource->singular()}"),
+                        Permission::make("Delete {$resource->singular()}"),
+                    ]),
+                ]);
+            })->group('Runway');
+        }
+    }
+
     protected function registerNavigation()
     {
         Nav::extend(function ($nav) {
@@ -84,20 +98,6 @@ class ServiceProvider extends AddonServiceProvider
                     ->can("View {$resource->plural()}");
             }
         });
-    }
-
-    protected function registerPermissions()
-    {
-        foreach (Runway::allResources() as $resource) {
-            Permission::register("View {$resource->plural()}", function ($permission) use ($resource) {
-                $permission->children([
-                    Permission::make("Edit {$resource->plural()}")->children([
-                        Permission::make("Create new {$resource->singular()}"),
-                        Permission::make("Delete {$resource->singular()}"),
-                    ]),
-                ]);
-            })->group('Runway');
-        }
     }
 
     protected function bootGraphQl()
