@@ -88,7 +88,7 @@ class Resource
         return $this->fluentlyGetOrSet('cpIcon')
             ->getter(function ($value) {
                 if (! $value) {
-                    return file_get_contents(__DIR__.'/../resources/svg/database.svg');
+                    return file_get_contents(__DIR__ . '/../resources/svg/database.svg');
                 }
 
                 return $value;
@@ -145,6 +145,40 @@ class Resource
         return $this->fluentlyGetOrSet('graphqlEnabled')
             ->getter(function ($graphqlEnabled) {
                 return $graphqlEnabled ?? false;
+            })
+            ->args(func_get_args());
+    }
+
+    public function eagerLoadingRelations($eagerLoadingRelations = null)
+    {
+        return $this->fluentlyGetOrSet('eagerLoadingRelations')
+            ->getter(function ($eagerLoadingRelations) {
+                if (! $eagerLoadingRelations) {
+                    return $this->blueprint()->fields()->items()
+                        ->filter(function ($field) {
+                            return $field['field']['type'] === 'belongs_to'
+                                || $field['field']['type'] === 'has_many';
+                        })
+                        ->mapWithKeys(function ($field) {
+                            $relationName = $field['handle'];
+
+                            if (str_contains($relationName, '_id')) {
+                                $relationName = Str::replaceLast('_id', '', $relationName);
+                            }
+
+                            if (str_contains($relationName, '_')) {
+                                $relationName = Str::camel($relationName);
+                            }
+
+                            return [$field['handle'] => $relationName];
+                        })
+                        ->merge(['runwayUri'])
+                        ->filter(function ($relationName) {
+                            return method_exists($this->model(), $relationName);
+                        });
+                }
+
+                return collect($eagerLoadingRelations);
             })
             ->args(func_get_args());
     }

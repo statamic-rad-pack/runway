@@ -1,12 +1,12 @@
 ---
-title: 'Installation'
+title: "Installation"
 ---
 
 ## System Requirements
 
-* Statamic 3.1
-* PHP 7.4 / PHP 8
-
+- PHP 7.4 & higher
+- Statamic 3.2 & higher
+- Laravel 8 & higher
 
 ## Installing via Composer (recommended)
 
@@ -24,11 +24,9 @@ php artisan vendor:publish --tag="runway-config"
 
 The configuration file will now be located at `config/runway.php`. You may now customise the config file to add your resources.
 
-
 ## Installing via the Control Panel
 
 In the Control Panel, open the ‘Addons’ page, then search for ‘Runway’. Go into Runway’s addon page and hit ‘Install’.
-
 
 ![Runway in the Statamic CP](/img/runway/statamic-cp-addons-runway.png)
 

@@ -72,19 +72,20 @@
                         </template>
 
                         <template slot="actions" slot-scope="{ row, index }">
-                            <dropdown-list>
+                            <dropdown-list v-if="canViewRow(row) || canEditRow(row) || row.actions.length">
                                 <dropdown-item
-                                    v-if="row.viewable && row.permalink"
+                                    v-if="canViewRow(row)"
                                     :text="__('View')"
                                     :redirect="row.permalink"
                                 />
 
                                 <dropdown-item
+                                    v-if="canEditRow(row)"
                                     :text="__('Edit')"
                                     :redirect="row.edit_url"
                                 />
 
-                                <div class="divider" v-if="row.actions.length" />
+                                <div class="divider" v-if="(canViewRow(row) || canEditRow(row)) && row.actions.length" />
 
                                 <data-list-inline-actions
                                     :item="row.id"
@@ -94,6 +95,7 @@
                                     @completed="actionCompleted"
                                 />
                             </dropdown-list>
+                            <div v-else class="w-10 block"></div>
                         </template>
                     </data-list-table>
 
@@ -155,6 +157,14 @@ export default {
     },
 
     methods: {
+        canViewRow(row) {
+            return row.viewable && row.permalink
+        },
+        
+        canEditRow(row) {
+            return row.editable && row.permalink
+        },
+
         confirmDeleteRow(id, index, deleteUrl) {
             this.visibleColumns = this.columns.filter(column => column.visible)
             this.deletingRow = { id, index, deleteUrl }

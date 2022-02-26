@@ -29,6 +29,8 @@ class ResourceListingController extends CpController
         $query = $resource->model()
             ->orderBy($sortField, $sortDirection);
 
+        $query->with($resource->eagerLoadingRelations()->values()->all());
+
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
             'collection' => $resourceHandle,
             'blueprints' => [
@@ -46,7 +48,7 @@ class ResourceListingController extends CpController
                     $blueprint->fields()->items()->reject(function (array $field) {
                         return $field['field']['type'] === 'has_many';
                     })->each(function (array $field) use ($query, $searchQuery) {
-                        $query->orWhere($field['handle'], 'LIKE', '%'.$searchQuery.'%');
+                        $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
                     });
                 }
             );
@@ -58,7 +60,7 @@ class ResourceListingController extends CpController
 
         return (new ResourceCollection($results))
             ->setResourceHandle($resourceHandle)
-            ->setColumnPreferenceKey('runway.'.$resourceHandle.'.columns')
+            ->setColumnPreferenceKey('runway.' . $resourceHandle . '.columns')
             ->setColumns($columns)
             ->additional(['meta' => [
                 'activeFilterBadges' => $activeFilterBadges,
