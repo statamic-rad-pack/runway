@@ -87,6 +87,7 @@ class ResourceControllerTest extends TestCase
             'handle' => 'created_at',
             'field' => [
                 'type' => 'date',
+                'mode' => 'single',
                 'time_enabled' => false,
                 'time_required' => false,
             ],
@@ -126,6 +127,7 @@ class ResourceControllerTest extends TestCase
             'handle' => 'created_at',
             'field' => [
                 'type' => 'date',
+                'mode' => 'single',
                 'format' => 'Y-m-d',
                 'time_enabled' => false,
                 'time_required' => false,
@@ -166,7 +168,8 @@ class ResourceControllerTest extends TestCase
             'handle' => 'created_at',
             'field' => [
                 'type' => 'date',
-                'format' => 'Y-m-d H:i:s',
+                'mode' => 'single',
+                'format' => 'Y-m-d H:i',
                 'time_enabled' => true,
                 'time_required' => false,
             ],
@@ -192,7 +195,7 @@ class ResourceControllerTest extends TestCase
             ->assertOk();
 
         $this->assertEquals(
-            $post->created_at->format('Y-m-d H:i:s'),
+            $post->created_at->format('Y-m-d H:i'),
             $response->viewData('values')->get('created_at')
         );
     }
