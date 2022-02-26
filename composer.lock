@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1099f51f7b6973aee4151c5e32e65fa1",
+    "content-hash": "ea5b46a031655972bff6d67a7854358f",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -4714,16 +4714,16 @@
         },
         {
             "name": "statamic/cms",
-            "version": "v3.3.0-beta.1",
+            "version": "v3.3.0-beta.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/statamic/cms.git",
-                "reference": "d5045eb3d81d74a73ac05b5e1821e2baa7e507ad"
+                "reference": "7cee2660177701ca078227e1b67d170e6461fd49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/statamic/cms/zipball/d5045eb3d81d74a73ac05b5e1821e2baa7e507ad",
-                "reference": "d5045eb3d81d74a73ac05b5e1821e2baa7e507ad",
+                "url": "https://api.github.com/repos/statamic/cms/zipball/7cee2660177701ca078227e1b67d170e6461fd49",
+                "reference": "7cee2660177701ca078227e1b67d170e6461fd49",
                 "shasum": ""
             },
             "require": {
@@ -4759,10 +4759,16 @@
             },
             "type": "library",
             "extra": {
-                "download-dist": {
-                    "url": "https://github.com/statamic/cms/releases/download/{$version}/dist.tar.gz",
-                    "path": "resources"
-                },
+                "download-dist": [
+                    {
+                        "url": "https://github.com/statamic/cms/releases/download/{$version}/dist.tar.gz",
+                        "path": "resources/dist"
+                    },
+                    {
+                        "url": "https://github.com/statamic/cms/releases/download/{$version}/dist-frontend.tar.gz",
+                        "path": "resources/dist-frontend"
+                    }
+                ],
                 "laravel": {
                     "providers": [
                         "Statamic\\Providers\\StatamicServiceProvider"
@@ -4793,7 +4799,7 @@
             ],
             "support": {
                 "issues": "https://github.com/statamic/cms/issues",
-                "source": "https://github.com/statamic/cms/tree/v3.3.0-beta.1"
+                "source": "https://github.com/statamic/cms/tree/v3.3.0-beta.2"
             },
             "funding": [
                 {
@@ -4801,7 +4807,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-02-25T21:26:52+00:00"
+            "time": "2022-02-25T23:25:47+00:00"
         },
         {
             "name": "statamic/stringy",
