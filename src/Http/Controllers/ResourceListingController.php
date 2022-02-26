@@ -29,7 +29,7 @@ class ResourceListingController extends CpController
         $query = $resource->model()
             ->orderBy($sortField, $sortDirection);
 
-        $query->with($resource->eagerLoadingRelations());
+        $query->with($resource->eagerLoadingRelations()->values()->all());
 
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
             'collection' => $resourceHandle,

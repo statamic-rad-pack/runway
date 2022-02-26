@@ -159,7 +159,7 @@ class Resource
                             return $field['field']['type'] === 'belongs_to'
                                 || $field['field']['type'] === 'has_many';
                         })
-                        ->map(function ($field) {
+                        ->mapWithKeys(function ($field) {
                             $relationName = $field['handle'];
 
                             if (str_contains($relationName, '_id')) {
@@ -170,16 +170,15 @@ class Resource
                                 $relationName = Str::camel($relationName);
                             }
 
-                            return $relationName;
+                            return [$field['handle'] => $relationName];
                         })
                         ->merge(['runwayUri'])
                         ->filter(function ($relationName) {
                             return method_exists($this->model(), $relationName);
-                        })
-                        ->toArray();
+                        });
                 }
 
-                return $eagerLoadingRelations;
+                return collect($eagerLoadingRelations);
             })
             ->args(func_get_args());
     }
