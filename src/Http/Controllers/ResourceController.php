@@ -170,6 +170,11 @@ class ResourceController extends CpController
                 ? $record->uri()
                 : null,
             'resourceHasRoutes' => $resource->hasRouting(),
+            'currentRecord' => [
+                'id'    => $record->getKey(),
+                'title' => $record->{collect($resource->listableColumns())->first()},
+                'edit_url' => $request->url(),
+            ],
         ];
 
         if ($request->wantsJson()) {

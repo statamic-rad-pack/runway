@@ -112,53 +112,30 @@ export default {
 
     shouldShowSidebar() {
       return this.enableSidebar;
-
       // return this.enableSidebar && this.containerWidth > 920
     },
   },
 
   created() {
-    console.log("mount", this.publishContainer);
-
     // If we're creating a resource through the 'Create' on a HasMany field somewhere, fill any fields...
     if (this.publishContainer.includes("relate-fieldtype-inline")) {
-      console.log("test 1");
-
-      let baseContainer = this.$store.state.publish.base;
-
-      console.log("test 2", baseContainer);
-
-      let resourceHandle = baseContainer.blueprint.handle; // TODO: this could be better.. what if the blueprint handle isn't the same as the resource handle?
-
-      console.log("test 3", resourceHandle);
-
       this.initialBlueprint.sections.forEach((section) => {
-        console.log("test 4", section);
-
         section.fields.forEach((field) => {
-          console.log("test 5", field);
-
           if (
             field.type === "belongs_to" &&
-            field.resource === resourceHandle
+            field.resource === window.Runway.currentResource
           ) {
-            console.log(
-              "test 6",
-              field,
-              window.location.pathname.split("/").reverse()[0]
+            let alreadyExists = this.values[field.handle].includes(
+              window.Runway.currentRecord.id
             );
 
-            this.values[field.handle].push(
-              window.location.pathname.split("/").reverse()[0]
-            ); // TODO: just a prototype right now
+            if (!alreadyExists) {
+              this.values[field.handle].push(window.Runway.currentRecord.id);
+              this.meta[field.handle].data = [window.Runway.currentRecord];
+            }
           }
         });
       });
-
-      // get resource name of base container
-
-      // do we have any fields in this blueprint with that resource?
-      // if yes, set the value of that field to the base ID (take into account belongs to & has many stuff)
     }
   },
 

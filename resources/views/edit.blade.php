@@ -16,4 +16,11 @@
         :is-creating="false"
         publish-container="base"
     ></runway-publish-form>
+
+    <script>
+        window.Runway = {
+            currentRecord: @json($currentRecord),
+            currentResource: "{{ $resource->handle() }}",
+        }
+    </script>
 @endsection
