@@ -2,11 +2,11 @@
 
 namespace DoubleThreeDigital\Runway\Tests\Http\Controllers;
 
-use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tests\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Statamic\Facades\Config;
 use Statamic\Facades\User;
 
 class ResourceControllerTest extends TestCase
@@ -78,29 +78,27 @@ class ResourceControllerTest extends TestCase
             ->assertSee($post->body);
     }
 
-    /**
-     * @test
-     * @dataProvider dateTimeProvider
-     */
-    public function can_edit_resource_with_datetime_field(array $options)
+    /** @test */
+    public function can_edit_resource_with_simple_date_field()
     {
-        // Override the config to add the created_at field
-        $configKey = 'runway.resources.'.Post::class.'.blueprint.sections.main.fields';
-        $fields = $this->app['config']->get($configKey, []);
+        $fields = Config::get('runway.resources.' . Post::class . '.blueprint.sections.main.fields');
 
         $fields[] = [
             'handle' => 'created_at',
-            'field'  => array_filter($options),
+            'field' => [
+                'type' => 'date',
+                'time_enabled' => false,
+                'time_required' => false,
+            ],
         ];
 
-        $this->app['config']->set($configKey, $fields);
+        Config::set('runway.resources.' . Post::class . '.blueprint.sections.main.fields', $fields);
 
         Runway::discoverResources();
 
         $user = User::make()->makeSuper()->save();
         $post = $this->postFactory();
 
-        /** @var resource $resource */
         $resource = Runway::findResource('post');
         $record = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
 
@@ -114,7 +112,87 @@ class ResourceControllerTest extends TestCase
             ->assertOk();
 
         $this->assertEquals(
-            $post->created_at->format($options['expected_format'] ?? $options['format'] ?? 'Y-m-d'),
+            $post->created_at->format('Y-m-d'),
+            $response->viewData('values')->get('created_at')
+        );
+    }
+
+    /** @test */
+    public function can_edit_resource_with_date_field_with_default_format()
+    {
+        $fields = Config::get('runway.resources.' . Post::class . '.blueprint.sections.main.fields');
+
+        $fields[] = [
+            'handle' => 'created_at',
+            'field' => [
+                'type' => 'date',
+                'format' => 'Y-m-d',
+                'time_enabled' => false,
+                'time_required' => false,
+            ],
+        ];
+
+        Config::set('runway.resources.' . Post::class . '.blueprint.sections.main.fields', $fields);
+
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+        $post = $this->postFactory();
+
+        $resource = Runway::findResource('post');
+        $record = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
+
+        $this->assertEquals($post->getKey(), $record->getKey());
+
+        $response = $this->actingAs($user)
+            ->get(cp_route('runway.edit', [
+                'resourceHandle' => 'post',
+                'record'         => $post->id,
+            ]))
+            ->assertOk();
+
+        $this->assertEquals(
+            $post->created_at->format('Y-m-d'),
+            $response->viewData('values')->get('created_at')
+        );
+    }
+
+    /** @test */
+    public function can_edit_resource_with_date_field_with_custom_format()
+    {
+        $fields = Config::get('runway.resources.' . Post::class . '.blueprint.sections.main.fields');
+
+        $fields[] = [
+            'handle' => 'created_at',
+            'field' => [
+                'type' => 'date',
+                'format' => 'Y-m-d H:i:s',
+                'time_enabled' => true,
+                'time_required' => false,
+            ],
+        ];
+
+        Config::set('runway.resources.' . Post::class . '.blueprint.sections.main.fields', $fields);
+
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+        $post = $this->postFactory();
+
+        $resource = Runway::findResource('post');
+        $record = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
+
+        $this->assertEquals($post->getKey(), $record->getKey());
+
+        $response = $this->actingAs($user)
+            ->get(cp_route('runway.edit', [
+                'resourceHandle' => 'post',
+                'record'         => $post->id,
+            ]))
+            ->assertOk();
+
+        $this->assertEquals(
+            $post->created_at->format('Y-m-d H:i:s'),
             $response->viewData('values')->get('created_at')
         );
     }
@@ -157,30 +235,5 @@ class ResourceControllerTest extends TestCase
         $this->assertDatabaseMissing('posts', [
             'id' => $post->id,
         ]);
-    }
-
-    public function dateTimeProvider()
-    {
-        return [
-            'simple_date' => [[
-                'type' => 'date',
-                'format' => null,
-                'time_enabled' => false,
-                'time_required' => false,
-            ]],
-            'simple_date_with_default_format' => [[
-                'type' => 'date',
-                'format' => 'Y-m-d',
-                'time_enabled' => false,
-                'time_required' => false,
-            ]],
-            'datetime_with_format' => [[
-                'type' => 'date',
-                'format' => 'Y-m-d H:i:s',
-                'expected_format' => 'Y-m-d H:i',
-                'time_enabled' => true,
-                'time_required' => false,
-            ]],
-        ];
     }
 }
