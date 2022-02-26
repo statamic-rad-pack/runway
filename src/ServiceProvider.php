@@ -26,11 +26,11 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $routes = [
-        'cp' => __DIR__.'/../routes/cp.php',
+        'cp' => __DIR__ . '/../routes/cp.php',
     ];
 
     protected $scripts = [
-        __DIR__.'/../resources/dist/js/cp.js',
+        __DIR__ . '/../resources/dist/js/cp.js',
     ];
 
     protected $tags = [
@@ -45,21 +45,22 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::boot();
 
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'runway');
-        $this->mergeConfigFrom(__DIR__.'/../config/runway.php', 'runway');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'runway');
+        $this->mergeConfigFrom(__DIR__ . '/../config/runway.php', 'runway');
 
         if (! config('runway.disable_migrations')) {
-            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         }
 
         $this->publishes([
-            __DIR__.'/../config/runway.php' => config_path('runway.php'),
+            __DIR__ . '/../config/runway.php' => config_path('runway.php'),
         ], 'runway-config');
 
         Statamic::booted(function () {
             Runway::discoverResources();
 
             $this->registerPermissions();
+            $this->registerNavigation();
             $this->bootGraphQl();
 
             if (Runway::usesRouting()) {
@@ -71,18 +72,6 @@ class ServiceProvider extends AddonServiceProvider
 
     protected function registerPermissions()
     {
-        Nav::extend(function ($nav) {
-            foreach (Runway::allResources() as $resource) {
-                if ($resource->hidden()) {
-                    continue;
-                }
-
-                $nav->content($resource->name())
-                    ->icon($resource->cpIcon())
-                    ->route('runway.index', ['resourceHandle' => $resource->handle()]);
-            }
-        });
-
         foreach (Runway::allResources() as $resource) {
             Permission::register("View {$resource->plural()}", function ($permission) use ($resource) {
                 $permission->children([
@@ -93,6 +82,22 @@ class ServiceProvider extends AddonServiceProvider
                 ]);
             })->group('Runway');
         }
+    }
+
+    protected function registerNavigation()
+    {
+        Nav::extend(function ($nav) {
+            foreach (Runway::allResources() as $resource) {
+                if ($resource->hidden()) {
+                    continue;
+                }
+
+                $nav->content($resource->name())
+                    ->icon($resource->cpIcon())
+                    ->route('runway.index', ['resourceHandle' => $resource->handle()])
+                    ->can("View {$resource->plural()}");
+            }
+        });
     }
 
     protected function bootGraphQl()
