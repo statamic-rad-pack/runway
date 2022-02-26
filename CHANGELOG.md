@@ -2,6 +2,36 @@
 
 ## Unreleased
 
+## v2.2.5 (2022-02-15)
+
+### What's fixed
+
+- Another fix for the magic behind Runway's "relation guessing" code for eager loading #118 by @duncanmcclean
+
+## v2.2.4 (2022-02-09)
+
+### What's new
+
+- You may now manually specify relations to be eager loaded, if you'd prefer to have complete control by @duncanmcclean
+
+## v2.2.3 (2022-02-09)
+
+### What's fixed
+
+- The 'magic' behind the eager loading wasn't always resolving relation name's correctly by @duncanmcclean
+
+## v2.2.2 (2022-02-08)
+
+### What's fixed
+
+- Fixed a couple of eager loading issues #116 #117 by @duncanmcclean
+
+## v2.2.1 (2022-02-05)
+
+### What's improved
+
+- Added some eager loading to 'index queries' #113 #114 by @duncanmcclean and @DanielDarrenJones
+
 ## v2.2.0 (2022-01-29)
 
 ### What's new
