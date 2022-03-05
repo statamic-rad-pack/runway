@@ -1,5 +1,6 @@
 ---
 title: Introduction
+table_of_contents: false
 ---
 
 Runway is a Statamic addon that lets you manage your Eloquent models in Statamic, as if they were entries in a collection.
@@ -10,8 +11,8 @@ Runway provides a familiar Control Panel interface where you can create, edit an
 
 That’s a very good question. Most of the time it comes down to a few things:
 
-* The Eloquent Entries addon stores almost all your data in a single column. Not very helpful if you want to run complex queries.
-* You can’t pick and choose which models you’d like in your database and which you’d like as entries.
+- The Eloquent Entries addon stores almost all your data in a single column. Not very helpful if you want to run complex queries.
+- You can’t pick and choose which models you’d like in your database and which you’d like as entries.
 
 Runway solves both of those problems, allowing you to use plain simple Eloquent with the glory of the Statamic ecosystem.
 
