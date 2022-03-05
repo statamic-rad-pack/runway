@@ -91,7 +91,7 @@ However, maintaining and developing new features for open-source projects can ta
 
 ## Security
 
-Only the latest version of Runway (v2.1) will receive security updates if a vulnerability is found. 
+Only the latest version of Runway (v2.3) will receive security updates if a vulnerability is found. 
 
 If you discover a security vulnerability, please report it to Duncan straight away, [via email](mailto:security@doublethree.digital). Please don't report security issues through GitHub Issues.
 
