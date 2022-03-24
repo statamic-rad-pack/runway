@@ -6,7 +6,7 @@
 
 <!-- /statamic:hide -->
 
-Runway gives you the option of displaying & managing your Eloquent models in Statamic sites.
+Runway gives you the ability to display & manage your Eloquent models in Statamic.
 
 ### Control Panel integration
 
