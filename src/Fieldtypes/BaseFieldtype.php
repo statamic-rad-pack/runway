@@ -5,6 +5,7 @@ namespace DoubleThreeDigital\Runway\Fieldtypes;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\CP\Column;
+use Statamic\Facades\Blink;
 use Statamic\Fieldtypes\Relationship;
 
 class BaseFieldtype extends Relationship
@@ -141,7 +142,9 @@ class BaseFieldtype extends Relationship
 
             ->map(function ($record) use ($resource) {
                 if (! $record instanceof Model) {
-                    $record = $resource->model()->firstWhere($resource->primaryKey(), $record);
+                    $record = Blink::once('runway-'.$this->config('resource').'-'.$record, function() use ($resource, $record) {
+                        return $resource->model()->firstWhere($resource->primaryKey(), $record);
+                    });
                 }
 
                 return $resource->augment($record);
