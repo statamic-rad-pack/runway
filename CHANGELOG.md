@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.3.1 (2022-04-08)
+
+### What's improved
+
+- Improved the performance of augmentation for Runway Fieldtypes (if you load the same record in multiple times) #135 by @ryanmitchell
+
 ## v2.3.0 (2022-02-26)
 
 ### What's new
