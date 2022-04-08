@@ -142,7 +142,7 @@ class BaseFieldtype extends Relationship
 
             ->map(function ($record) use ($resource) {
                 if (! $record instanceof Model) {
-                    $record = Blink::once('runway-'.$this->config('resource').'-'.$record, function () use ($resource, $record) {
+                    $record = Blink::once("Runway::{$this->config('resource')}::{$record}", function () use ($resource, $record) {
                         return $resource->model()->firstWhere($resource->primaryKey(), $record);
                     });
                 }
