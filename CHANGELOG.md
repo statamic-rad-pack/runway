@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.3.2 (2022-04-13)
+
+### What's fixed
+
+- Fixed an issue loading resource results when you're using a fieldset in the related blueprint #136 by @Skullbock
+
 ## v2.3.1 (2022-04-08)
 
 ### What's improved
