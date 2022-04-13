@@ -156,8 +156,10 @@ class Resource
                 if (! $eagerLoadingRelations) {
                     return $this->blueprint()->fields()->items()
                         ->filter(function ($field) {
-                            return $field['field']['type'] === 'belongs_to'
-                                || $field['field']['type'] === 'has_many';
+                            $type = $field['field']['type'] ?? null;
+
+                            return $type === 'belongs_to'
+                                || $type === 'has_many';
                         })
                         ->mapWithKeys(function ($field) {
                             $relationName = $field['handle'];
