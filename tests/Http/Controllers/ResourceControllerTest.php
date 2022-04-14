@@ -41,6 +41,20 @@ class ResourceControllerTest extends TestCase
     }
 
     /** @test */
+    public function cant_create_resource_if_resource_is_read_only()
+    {
+        Config::set('runway.resources.' . Post::class . '.read_only', true);
+
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+
+        $this->actingAs($user)
+            ->get(cp_route('runway.create', ['resourceHandle' => 'post']))
+            ->assertRedirect();
+    }
+
+    /** @test */
     public function can_store_resource()
     {
         $user = User::make()->makeSuper()->save();
@@ -60,6 +74,31 @@ class ResourceControllerTest extends TestCase
             ]);
 
         $this->assertDatabaseHas('posts', [
+            'title' => 'Jingle Bells',
+        ]);
+    }
+
+    /** @test */
+    public function cant_store_resource_if_resource_is_read_only()
+    {
+        Config::set('runway.resources.' . Post::class . '.read_only', true);
+
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+
+        $author = $this->authorFactory();
+
+        $this->actingAs($user)
+            ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
+                'title' => 'Jingle Bells',
+                'slug' => 'jingle-bells',
+                'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
+                'author_id' => [$author->id],
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseMissing('posts', [
             'title' => 'Jingle Bells',
         ]);
     }
@@ -201,6 +240,24 @@ class ResourceControllerTest extends TestCase
     }
 
     /** @test */
+    public function can_edit_resource_if_resource_is_read_only()
+    {
+        Config::set('runway.resources.' . Post::class . '.read_only', true);
+
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+
+        $post = $this->postFactory();
+
+        $this->actingAs($user)
+            ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))
+            ->assertOk()
+            ->assertSee($post->title)
+            ->assertSee($post->body);
+    }
+
+    /** @test */
     public function can_update_resource()
     {
         $user = User::make()->makeSuper()->save();
@@ -222,6 +279,31 @@ class ResourceControllerTest extends TestCase
         $post->refresh();
 
         $this->assertSame($post->title, 'Santa is coming home');
+    }
+
+    /** @test */
+    public function cant_update_resource_if_resource_is_read_only()
+    {
+        Config::set('runway.resources.' . Post::class . '.read_only', true);
+
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+
+        $post = $this->postFactory();
+
+        $this->actingAs($user)
+            ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
+                'title' => 'Santa is coming home',
+                'slug' => 'santa-is-coming-home',
+                'body' => $post->body,
+                'author_id' => [$post->author_id],
+            ])
+            ->assertRedirect();
+
+        $post->refresh();
+
+        $this->assertNotSame($post->title, 'Santa is coming home');
     }
 
     /** @test */

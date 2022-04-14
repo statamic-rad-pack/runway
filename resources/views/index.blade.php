@@ -6,14 +6,16 @@
     <div class="flex items-center justify-between mb-3">
         <h1 class="flex-1">{{ $title }}</h1>
 
-        @can('Create new ' . $resource->singular())
-            <a
-                class="btn-primary"
-                href="{{ cp_route('runway.create', ['resourceHandle' => $resource->handle()]) }}"
-            >
-                Create {{ $resource->singular() }}
-            </a>
-        @endcan
+        @if(! $resource->readOnly())
+            @can('Create new ' . $resource->singular())
+                <a
+                    class="btn-primary"
+                    href="{{ cp_route('runway.create', ['resourceHandle' => $resource->handle()]) }}"
+                >
+                    Create {{ $resource->singular() }}
+                </a>
+            @endcan
+        @endif
     </div>
 
     @if ($recordCount > 0)

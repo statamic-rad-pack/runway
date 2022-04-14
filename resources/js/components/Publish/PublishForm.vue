@@ -13,7 +13,7 @@
         </div>
       </h1>
 
-      <div class="hidden md:flex items-center">
+      <div v-if="!readOnly" class="hidden md:flex items-center">
         <button class="btn-primary" :disabled="isSaving" @click.prevent="save">
           Save
         </button>
@@ -85,6 +85,7 @@ export default {
     permalink: String,
     isCreating: Boolean,
     publishContainer: String,
+    readOnly: Boolean,
   },
 
   data() {
@@ -93,8 +94,6 @@ export default {
       values: this.initialValues,
       meta: this.initialMeta,
       title: this.initialTitle,
-
-      readonly: false, // TODO: might do this in the future
 
       errors: {},
       saving: false,

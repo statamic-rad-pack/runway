@@ -15,6 +15,7 @@
         permalink="{{ $permalink }}"
         :is-creating="false"
         publish-container="base"
+        :read-only="{{ $resource->readOnly() ? 'true' : 'false' }}"
     ></runway-publish-form>
 
     <script>

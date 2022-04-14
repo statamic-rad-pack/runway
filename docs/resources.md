@@ -185,6 +185,19 @@ You may also specify the `template` and `layout` you want to use when front-end 
 ],
 ```
 
+### Read Only
+
+You may also specify if you want a resource to be 'read only' - eg. users will not be able to create records and when editing, all fields will be marked as read only and no save button will be displayed.
+
+```php
+'resources' => [
+	\App\Models\Order::class => [
+	    'name' => 'Orders',
+        'read_only' => true,
+	],
+],
+```
+
 ## Actions
 
 In much the same way with entries, you can create custom Actions which will be usable in the listing tables provided by Runway.

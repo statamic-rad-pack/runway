@@ -58,6 +58,10 @@ class Runway
                     $resource->graphqlEnabled($config['graphql']);
                 }
 
+                if (isset($config['read_only'])) {
+                    $resource->readOnly($config['read_only']);
+                }
+
                 if (isset($config['with'])) {
                     $resource->eagerLoadingRelations($config['with']);
                 }
