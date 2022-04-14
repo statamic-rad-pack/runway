@@ -12,6 +12,10 @@ class StoreRequest extends FormRequest
     {
         $resource = Runway::findResource($this->resourceHandle);
 
+        if ($resource->readOnly()) {
+            return false;
+        }
+
         return User::current()->hasPermission("Create new {$resource->singular()}")
             || User::current()->isSuper();
     }
