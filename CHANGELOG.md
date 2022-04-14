@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## v2.3.3 (2022-04-14)
+
+### What's new
+
+- Better customisation around CP Nav Items #141 by @duncanmcclean
+- Resources can now be set to 'read-only' #139 by @duncanmcclean
+- Added a new `runway:resources` command to show all registered resources #137 by @duncanmcclean
+
+### What's improved
+
+- Removed some old code (from before the fancy listing table) #140 by @duncanmcclean
+
 ## v2.3.2 (2022-04-13)
 
 ### What's fixed
