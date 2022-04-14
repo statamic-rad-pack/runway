@@ -305,20 +305,4 @@ class ResourceControllerTest extends TestCase
 
         $this->assertNotSame($post->title, 'Santa is coming home');
     }
-
-    /** @test */
-    public function can_destroy_resource()
-    {
-        $user = User::make()->makeSuper()->save();
-
-        $post = $this->postFactory();
-
-        $this->actingAs($user)
-            ->delete(cp_route('runway.destroy', ['resourceHandle' => 'post', 'record' => $post->id]))
-            ->assertOK();
-
-        $this->assertDatabaseMissing('posts', [
-            'id' => $post->id,
-        ]);
-    }
 }
