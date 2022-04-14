@@ -2,6 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Actions;
 
+use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Actions\Action;
@@ -17,7 +18,9 @@ class DeleteModel extends Action
 
     public function visibleTo($item)
     {
-        return $item instanceof Model;
+        return $item instanceof Model
+            && ($resource = Runway::findResourceByModel($item)) instanceof Resource
+            && $resource->readOnly() !== true;
     }
 
     public function visibleToBulk($items)
@@ -39,13 +42,13 @@ class DeleteModel extends Action
 
     public function buttonText()
     {
-        /** @translation */
+        /* @translation */
         return 'Delete|Delete :count items?';
     }
 
     public function confirmationText()
     {
-        /** @translation */
+        /* @translation */
         return 'Are you sure you want to want to delete this?|Are you sure you want to delete these :count items?';
     }
 
