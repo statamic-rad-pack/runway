@@ -38,14 +38,12 @@ class ResourceListingControllerTest extends TestCase
                 'data' => [
                     [
                         'title' => $posts[0]->title,
-                        'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
-                        'delete_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
+                        'edit_url' => 'http://localhost/cp/runway/post/' . $posts[0]->id,
                         'id' => $posts[0]->id,
                     ],
                     [
                         'title' => $posts[1]->title,
-                        'edit_url' => 'http://localhost/cp/runway/post/'.$posts[1]->id,
-                        'delete_url' => 'http://localhost/cp/runway/post/'.$posts[1]->id,
+                        'edit_url' => 'http://localhost/cp/runway/post/' . $posts[1]->id,
                         'id' => $posts[1]->id,
                     ],
                 ],
@@ -74,8 +72,7 @@ class ResourceListingControllerTest extends TestCase
                 'data' => [
                     [
                         'title' => $posts[0]->title,
-                        'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
-                        'delete_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
+                        'edit_url' => 'http://localhost/cp/runway/post/' . $posts[0]->id,
                         'id' => $posts[0]->id,
                     ],
                 ],
@@ -121,8 +118,7 @@ class ResourceListingControllerTest extends TestCase
                 'data' => [
                     [
                         'name' => 'Colin The Caterpillar',
-                        'edit_url' => 'http://localhost/cp/runway/author/'.$author->id,
-                        'delete_url' => 'http://localhost/cp/runway/author/'.$author->id,
+                        'edit_url' => 'http://localhost/cp/runway/author/' . $author->id,
                         'id' => $author->id,
                     ],
                 ],
@@ -137,7 +133,7 @@ class ResourceListingControllerTest extends TestCase
         $posts = $this->postFactory(15);
 
         $this->actingAs($user)
-            ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']).'?perPage=5')
+            ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']) . '?perPage=5')
             ->assertOk()
             ->assertJson([
                 'meta' => [

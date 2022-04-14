@@ -11,7 +11,6 @@ use DoubleThreeDigital\Runway\Http\Requests\UpdateRequest;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Support\Json;
-use Illuminate\Http\Request;
 use Statamic\CP\Breadcrumbs;
 use Statamic\Facades\Scope;
 use Statamic\Facades\User;
@@ -208,16 +207,6 @@ class ResourceController extends CpController
         return [
             'data' => $this->getReturnData($resource, $record),
         ];
-    }
-
-    public function destroy(Request $request, $resourceHandle, $record)
-    {
-        $resource = Runway::findResource($resourceHandle);
-        $record = $resource->model()->where($resource->routeKey(), $record)->first();
-
-        $record->delete();
-
-        return true;
     }
 
     /**
