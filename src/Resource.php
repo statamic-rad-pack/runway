@@ -21,6 +21,8 @@ class Resource
     protected $template;
     protected $layout;
     protected $graphqlEnabled;
+    protected $readOnly;
+    protected $eagerLoadingRelations;
 
     public function handle($handle = null)
     {
@@ -146,6 +148,12 @@ class Resource
             ->getter(function ($graphqlEnabled) {
                 return $graphqlEnabled ?? false;
             })
+            ->args(func_get_args());
+    }
+
+    public function readOnly($readOnly = null)
+    {
+        return $this->fluentlyGetOrSet('readOnly')
             ->args(func_get_args());
     }
 
