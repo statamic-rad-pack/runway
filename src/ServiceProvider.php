@@ -17,6 +17,7 @@ class ServiceProvider extends AddonServiceProvider
     protected $commands = [
         Console\Commands\GenerateBlueprint::class,
         Console\Commands\GenerateMigration::class,
+        Console\Commands\ListResources::class,
         Console\Commands\RebuildUriCache::class,
     ];
 
