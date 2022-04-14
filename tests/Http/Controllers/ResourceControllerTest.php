@@ -41,6 +41,20 @@ class ResourceControllerTest extends TestCase
     }
 
     /** @test */
+    public function cant_create_resource_if_resource_is_read_only()
+    {
+        Config::set('runway.resources.' . Post::class . '.read_only', true);
+
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+
+        $this->actingAs($user)
+            ->get(cp_route('runway.create', ['resourceHandle' => 'post']))
+            ->assertForbidden();
+    }
+
+    /** @test */
     public function can_store_resource()
     {
         $user = User::make()->makeSuper()->save();
