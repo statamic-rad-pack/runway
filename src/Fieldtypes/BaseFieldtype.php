@@ -69,6 +69,19 @@ class BaseFieldtype extends Relationship
         $resource = Runway::findResource($this->config('resource'));
 
         return $resource->model()
+            ->when($request->search, function ($query) use ($request, $resource) {
+                $searchQuery = $request->search;
+
+                if ($query->hasNamedScope('runwaySearch')) {
+                    $query->runwaySearch($searchQuery);
+                }
+
+                $resource->blueprint()->fields()->items()->reject(function (array $field) {
+                    return $field['field']['type'] === 'has_many';
+                })->each(function (array $field) use ($query, $searchQuery) {
+                    $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
+                });
+            })
             ->orderBy($resource->primaryKey(), 'ASC')
             ->get()
             ->map(function ($record) use ($resource) {
