@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## v2.3.4 (2022-04-26)
+
+### What's new
+
+- You may now specify a `runwayListing` scope on your model to filter the results returned in the CP Listing Table #142 by @ryanmitchell
+
+### What's improved
+
+- There's now an option for toggling 'Create' button on BelongsTo fieldtype
+
+### What's fixed
+
+- Fixed an issue where search didn't work on fieldtypes
+
 ## v2.3.3 (2022-04-14)
 
 ### What's new
