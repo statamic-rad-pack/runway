@@ -66,3 +66,29 @@ class YourCustomAction extends Action
 	}
 }
 ```
+
+## Limiting results returned
+If you don't want to return all your models, you can add a scope `runwayListing` to add your own logic to limit the results.
+
+```php
+class YourModel extends Model
+{
+	public function scopeRunwayListing($query)
+	{
+		return $query->where('something', true);
+	}
+}
+```
+
+## Changing the default search logic
+If you only want to change how the control panel searches your models, you can specify a scope `runwaySearch` to apply your own logic.
+
+```php
+class YourModel extends Model
+{
+	public function scopeRunwaySearch($query, $searchString)
+	{
+		// your own search logic
+	}
+}
+```
