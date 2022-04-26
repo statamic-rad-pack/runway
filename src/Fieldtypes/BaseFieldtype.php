@@ -53,6 +53,13 @@ class BaseFieldtype extends Relationship
                     ->toArray(),
                 'width' => 50,
             ],
+            'create' => [
+                'display' => __('Allow Creating'),
+                'instructions' => __('statamic::fieldtypes.entries.config.create'),
+                'type' => 'toggle',
+                'default' => true,
+                'width' => 50,
+            ],
         ];
     }
 
@@ -68,7 +75,21 @@ class BaseFieldtype extends Relationship
             $query->runwayListing();
         }
 
-        return $query->get()
+        return $query
+            ->when($request->search, function ($query) use ($request, $resource) {
+                $searchQuery = $request->search;
+
+                if ($query->hasNamedScope('runwaySearch')) {
+                    $query->runwaySearch($searchQuery);
+                }
+
+                $resource->blueprint()->fields()->items()->reject(function (array $field) {
+                    return $field['field']['type'] === 'has_many';
+                })->each(function (array $field) use ($query, $searchQuery) {
+                    $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
+                });
+            })
+            ->get()
             ->map(function ($record) use ($resource) {
                 $firstListableColumn = $resource->listableColumns()[0];
 
@@ -82,7 +103,8 @@ class BaseFieldtype extends Relationship
                     ])
                     ->toArray();
             })
-            ->filter()->values();
+            ->filter()
+            ->values();
     }
 
     // This shows the values in the listing table
