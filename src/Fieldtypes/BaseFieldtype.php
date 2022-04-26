@@ -61,13 +61,11 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        $model = $resource->model();
-
-        $query = $model
+        $query = $resource->model()
             ->orderBy($resource->primaryKey(), 'ASC');
 
-        if (method_exists($model, 'limitRunwayQuery')) {
-            $model->limitRunwayQuery($query);
+        if ($query->hasNamedScope('runwayListing')) {
+            $query->runwayListing();
         }
 
         return $query->get()

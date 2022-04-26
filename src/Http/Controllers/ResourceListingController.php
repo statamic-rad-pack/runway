@@ -26,13 +26,11 @@ class ResourceListingController extends CpController
         $sortField = $request->input('sort', $resource->primaryKey());
         $sortDirection = $request->input('order', 'ASC');
 
-        $model = $resource->model();
-
-        $query = $model
+        $query = $resource->model()
             ->orderBy($sortField, $sortDirection);
 
-        if (method_exists($model, 'limitRunwayQuery')) {
-            $model->limitRunwayQuery($query);
+        if ($query->hasNamedScope('runwayListing')) {
+            $query->runwayListing();
         }
 
         $query->with($resource->eagerLoadingRelations()->values()->all());
