@@ -17,13 +17,6 @@ class BelongsToFieldtype extends BaseFieldtype
                 'default' => 1,
                 'read_only' => true,
             ],
-            'create' => [
-                'display' => __('Allow Creating'),
-                'instructions' => __('statamic::fieldtypes.entries.config.create'),
-                'type' => 'toggle',
-                'default' => true,
-                'width' => 50,
-            ],
         ];
 
         return array_merge($config, parent::configFieldItems());

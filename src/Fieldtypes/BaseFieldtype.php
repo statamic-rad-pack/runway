@@ -53,6 +53,13 @@ class BaseFieldtype extends Relationship
                     ->toArray(),
                 'width' => 50,
             ],
+            'create' => [
+                'display' => __('Allow Creating'),
+                'instructions' => __('statamic::fieldtypes.entries.config.create'),
+                'type' => 'toggle',
+                'default' => true,
+                'width' => 50,
+            ],
         ];
     }
 
