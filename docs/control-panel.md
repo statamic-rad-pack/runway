@@ -1,5 +1,5 @@
 ---
-title: 'Control Panel'
+title: "Control Panel"
 ---
 
 One of Runway’s core features is the Control Panel integration. Runway will create listing and publish form pages for each of your resources.
@@ -8,8 +8,8 @@ One of Runway’s core features is the Control Panel integration. Runway will cr
 
 The Control Panel functionality is built to work in exactly the same way you’d expect with entries. You can set filters, define scopes and use custom actions.
 
-
 ## Disable Control Panel functionality
+
 Technically, you can’t fully disable Runway’s CP feature. However, what you can do is hide the Nav Item from the Control Panel.
 
 ```php
@@ -23,8 +23,8 @@ Technically, you can’t fully disable Runway’s CP feature. However, what you 
 ],
 ```
 
-
 ## Custom Icon for CP Nav Item
+
 Runway has a rather generic icon for resources in the Control Panel Nav. Feel free to change this to something else that better suits your use case (in fact, I’d encourage it).
 
 You can either provide the name of an existing icon [packaged into Statamic Core](https://github.com/statamic/cms/tree/3.1/resources/svg) or inline the SVG as a string.
@@ -42,8 +42,8 @@ You can either provide the name of an existing icon [packaged into Statamic Core
 ],
 ```
 
-
 ## Permissions
+
 ![Screenshot of Runway's User Permissions](/img/runway/cp-user-permissions.png)
 
 If you have other users who are not ‘super users’, you may wish to also give them permission to view_create_update specific resources.
@@ -51,6 +51,7 @@ If you have other users who are not ‘super users’, you may wish to also give
 Runway gives you granular control over which actions users can/cannot do for each of your resources.
 
 ## Actions
+
 Runway supports using [Statamic Actions](https://statamic.dev/extending/actions#content) to preform tasks on your models.
 
 You may register your own custom actions, as per the Statamic documentation. If you wish to only show an action on one of your models, you can filter it down in the `visibleTo` method.
@@ -67,8 +68,9 @@ class YourCustomAction extends Action
 }
 ```
 
-## Limiting results returned
-If you don't want to return all your models, you can add a scope `runwayListing` to add your own logic to limit the results.
+## Scoping Control Panel Results
+
+If you don't want to return everything, you may add a scope (`runwayListing`) to limit the returned results.
 
 ```php
 class YourModel extends Model
@@ -80,15 +82,16 @@ class YourModel extends Model
 }
 ```
 
-## Changing the default search logic
-If you only want to change how the control panel searches your models, you can specify a scope `runwaySearch` to apply your own logic.
+### Scoping search results
+
+On top of scoping your Control Panel results, you may also scope how Runway searches your models. To do this, you may specify a `runwaySearch` scope.
 
 ```php
 class YourModel extends Model
 {
 	public function scopeRunwaySearch($query, $searchString)
 	{
-		// your own search logic
+		// Your own search logic
 	}
 }
 ```
