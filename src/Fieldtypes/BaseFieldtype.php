@@ -61,9 +61,16 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        return $resource->model()
-            ->orderBy($resource->primaryKey(), 'ASC')
-            ->get()
+        $model = $resource->model();
+        
+        $query = $model
+            ->orderBy($resource->primaryKey(), 'ASC');
+            
+        if (method_exists($model, 'limitRunwayQuery')) {
+            $model->limitRunwayQuery($query);
+        }
+                   
+        return $query->get()
             ->map(function ($record) use ($resource) {
                 $firstListableColumn = $resource->listableColumns()[0];
 
