@@ -68,7 +68,14 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        return $resource->model()
+        $query = $resource->model()
+            ->orderBy($resource->primaryKey(), 'ASC');
+
+        if ($query->hasNamedScope('runwayListing')) {
+            $query->runwayListing();
+        }
+
+        return $query
             ->when($request->search, function ($query) use ($request, $resource) {
                 $searchQuery = $request->search;
 
@@ -82,7 +89,6 @@ class BaseFieldtype extends Relationship
                     $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
                 });
             })
-            ->orderBy($resource->primaryKey(), 'ASC')
             ->get()
             ->map(function ($record) use ($resource) {
                 $firstListableColumn = $resource->listableColumns()[0];
@@ -97,7 +103,8 @@ class BaseFieldtype extends Relationship
                     ])
                     ->toArray();
             })
-            ->filter()->values();
+            ->filter()
+            ->values();
     }
 
     // This shows the values in the listing table
