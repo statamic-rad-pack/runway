@@ -166,7 +166,6 @@ class BaseFieldtype extends Relationship
 
                 return $item;
             })
-
             ->map(function ($record) use ($resource) {
                 if (! $record instanceof Model) {
                     $record = Blink::once("Runway::{$this->config('resource')}::{$record}", function () use ($resource, $record) {
