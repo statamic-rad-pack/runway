@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.3.5 (2022-04-28)
+
+### What's fixed
+
+* Fixed an issue with search on Runway fieldtypes - they'll no longer attempt to search hidden fields.
+
 ## v2.3.4 (2022-04-26)
 
 ### What's new
