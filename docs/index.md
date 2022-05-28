@@ -1,6 +1,11 @@
 ---
 title: Introduction
 table_of_contents: false
+slider:
+    - /img/promo/runway/cp-integration.png
+    - /img/promo/runway/frontend-routing.png
+    - /img/promo/runway/antlers-template.png
+    - /img/promo/runway/graphql.png
 ---
 
 Runway is a Statamic addon that lets you manage your Eloquent models in Statamic, as if they were entries in a collection.
