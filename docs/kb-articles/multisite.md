@@ -15,7 +15,7 @@ However, there is an easy way to scope the model results you get to only those r
 
 use Statamic\Facades\Site;
 
-public function scopeFood($query)
+public function scopeRunway($query)
 {
     $query->where('site', Site::selected()->handle());
 }
