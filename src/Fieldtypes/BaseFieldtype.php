@@ -4,6 +4,7 @@ namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Statamic\CP\Column;
 use Statamic\Facades\Blink;
 use Statamic\Fieldtypes\Relationship;
@@ -58,6 +59,13 @@ class BaseFieldtype extends Relationship
                 'instructions' => __('statamic::fieldtypes.entries.config.create'),
                 'type' => 'toggle',
                 'default' => true,
+                'width' => 50,
+            ],
+            'with' => [
+                'display' => __('Eager Loaded Relationships'),
+                'instructions' => 'Specify any relationships you wish to be eager loaded when this field is augmented.',
+                'type' => 'list',
+                'default' => [],
                 'width' => 50,
             ],
         ];
@@ -170,7 +178,11 @@ class BaseFieldtype extends Relationship
             ->map(function ($record) use ($resource) {
                 if (! $record instanceof Model) {
                     $record = Blink::once("Runway::{$this->config('resource')}::{$record}", function () use ($resource, $record) {
-                        return $resource->model()->firstWhere($resource->primaryKey(), $record);
+                        return $resource->model()
+                            ->when($this->config('with'), function ($query) {
+                                $query->with(Arr::wrap($this->config('with')));
+                            })
+                            ->firstWhere($resource->primaryKey(), $record);
                     });
                 }
 

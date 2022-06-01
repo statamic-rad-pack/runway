@@ -27,3 +27,5 @@ This fieldtype allows you to select multiple models for a `hasMany` or `morphedB
 It’s important that when configuring this fieldtype, the handle of the field is the same as the name of the `hasMany` relationship, eg: `authors`.
 
 Also when configuring the fieldtype, you may choose the resource you wish to be available for selection by the user.
+
+Optionally, you may also specify any relationships which should be eager loaded when the fieldtype is augmented (using the `with` config option).
