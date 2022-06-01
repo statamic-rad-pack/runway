@@ -2,11 +2,17 @@
 
 ## Unreleased
 
+## v2.3.6 (2022-06-01)
+
+### What's new
+
+- You may now specify relationships to be eager loaded when a Runway field is augmented #145 by @duncanmcclean
+
 ## v2.3.5 (2022-04-28)
 
 ### What's fixed
 
-* Fixed an issue with search on Runway fieldtypes - they'll no longer attempt to search hidden fields.
+- Fixed an issue with search on Runway fieldtypes - they'll no longer attempt to search hidden fields.
 
 ## v2.3.4 (2022-04-26)
 
