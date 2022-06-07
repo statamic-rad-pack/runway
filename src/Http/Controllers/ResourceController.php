@@ -195,7 +195,7 @@ class ResourceController extends CpController
                 continue;
             }
 
-            if (is_array($processedValue) && ! $record->hasCast($fieldKey, ['array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])) {
+            if (is_array($processedValue) && ! $record->hasCast($fieldKey, ['json', 'array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])) {
                 $processedValue = json_encode($processedValue);
             }
 
