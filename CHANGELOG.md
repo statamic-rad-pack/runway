@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.3.7 (2022-06-07)
+
+### What's fixed
+
+- Fixed a caching issue with fieldtype eager loading if the same model is augmented multiple times during a request #146 by @duncanmcclean
+
 ## v2.3.6 (2022-06-01)
 
 ### What's new
