@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.3.8 (2022-06-07)
+
+### What's fixed
+
+- Fixed an issue where columns with `json` cast would be 'double cast' when saved to the database #147 by @duncanmcclean
+
 ## v2.3.7 (2022-06-07)
 
 ### What's fixed
