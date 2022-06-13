@@ -50,7 +50,8 @@ class ResourceListingController extends CpController
                 },
                 function ($query) use ($searchQuery, $blueprint) {
                     $blueprint->fields()->items()->reject(function (array $field) {
-                        return $field['field']['type'] === 'has_many';
+                        return $field['field']['type'] === 'has_many'
+                            || $field['field']['type'] === 'hidden';
                     })->each(function (array $field) use ($query, $searchQuery) {
                         $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
                     });
