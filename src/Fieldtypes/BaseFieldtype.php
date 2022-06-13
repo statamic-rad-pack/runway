@@ -87,16 +87,20 @@ class BaseFieldtype extends Relationship
             ->when($request->search, function ($query) use ($request, $resource) {
                 $searchQuery = $request->search;
 
-                if ($query->hasNamedScope('runwaySearch')) {
-                    $query->runwaySearch($searchQuery);
-                }
-
-                $resource->blueprint()->fields()->items()->reject(function (array $field) {
-                    return $field['field']['type'] === 'has_many'
-                        || $field['field']['type'] === 'hidden';
-                })->each(function (array $field) use ($query, $searchQuery) {
-                    $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
-                });
+                $query->when(
+                    $query->hasNamedScope('runwaySearch'),
+                    function ($query) use ($searchQuery) {
+                        $query->runwaySearch($searchQuery);
+                    },
+                    function ($query) use ($searchQuery, $resource) {
+                        $resource->blueprint()->fields()->items()->reject(function (array $field) {
+                            return $field['field']['type'] === 'has_many'
+                                || $field['field']['type'] === 'hidden';
+                        })->each(function (array $field) use ($query, $searchQuery) {
+                            $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
+                        });
+                    }
+                );
             })
             ->get()
             ->map(function ($record) use ($resource) {
