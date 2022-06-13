@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.3.9 (2022-06-13)
+
+### What's fixed
+
+- If you had a `runwaySearch` scope on your model & tried to search using one of Runway's fieldtypes, Runway's default logic would still be used #149 #150 by @duncanmcclean
+
 ## v2.3.8 (2022-06-07)
 
 ### What's fixed
