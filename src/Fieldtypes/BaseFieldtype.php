@@ -261,7 +261,7 @@ class BaseFieldtype extends Relationship
 
     protected function makeTitle($record, $resource, string $default): string
     {
-        if (! $titleFormat = $resource->titleFormat()) {
+        if (! $titleFormat = $this->config('title_format')) {
             return $record->$default;
         }
 
