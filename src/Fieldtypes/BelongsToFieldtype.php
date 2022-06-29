@@ -17,6 +17,11 @@ class BelongsToFieldtype extends BaseFieldtype
                 'default' => 1,
                 'read_only' => true,
             ],
+            'title_format' => [
+                'display' => __('Title Format'),
+                'type' => 'text',
+                'width' => 50,
+            ],
         ];
 
         return array_merge($config, parent::configFieldItems());
