@@ -76,10 +76,6 @@ class Runway
                     $resource->eagerLoadingRelations($config['with']);
                 }
 
-                if (isset($config['title_format'])) {
-                    $resource->titleFormat($config['title_format']);
-                }
-
                 return [$handle => $resource];
             })
             ->toArray();
