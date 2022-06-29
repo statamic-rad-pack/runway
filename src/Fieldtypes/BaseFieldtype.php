@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Statamic\CP\Column;
 use Statamic\Facades\Blink;
+use Statamic\Facades\Parse;
 use Statamic\Fieldtypes\Relationship;
 
 class BaseFieldtype extends Relationship
@@ -104,15 +105,13 @@ class BaseFieldtype extends Relationship
             })
             ->get()
             ->map(function ($record) use ($resource) {
-                $firstListableColumn = $resource->listableColumns()[0];
-
                 return collect($resource->listableColumns())
                     ->mapWithKeys(function ($columnKey) use ($record) {
                         return [$columnKey => $record->{$columnKey}];
                     })
                     ->merge([
                         'id' => $record->{$resource->primaryKey()},
-                        'title' => $record->{$firstListableColumn},
+                        'title' => $this->makeTitle($record, $resource, $resource->listableColumns()[0]),
                     ])
                     ->toArray();
             })
@@ -258,5 +257,14 @@ class BaseFieldtype extends Relationship
                 ]),
             ],
         ];
+    }
+
+    protected function makeTitle($record, $resource, string $default): string
+    {
+        if (! $titleFormat = $resource->titleFormat()) {
+            return $record->$default;
+        }
+
+        return Parse::template($titleFormat, $record);
     }
 }

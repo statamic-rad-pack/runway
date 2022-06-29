@@ -25,6 +25,7 @@ class Resource
     protected $graphqlEnabled;
     protected $readOnly;
     protected $eagerLoadingRelations;
+    protected $titleFormat;
 
     public function handle($handle = null)
     {
@@ -218,6 +219,12 @@ class Resource
 
                 return collect($eagerLoadingRelations);
             })
+            ->args(func_get_args());
+    }
+
+    public function titleFormat($format = null)
+    {
+        return $this->fluentlyGetOrSet('titleFormat')
             ->args(func_get_args());
     }
 
