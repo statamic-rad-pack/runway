@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.4.0 (2022-06-30)
+
+### What's new
+
+- You can now specify a `title_format` on Runway's fieldtypes #153 #154 by @edalzell
+
 ## v2.3.9 (2022-06-13)
 
 ### What's fixed
