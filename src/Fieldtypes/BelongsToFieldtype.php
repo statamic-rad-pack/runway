@@ -17,6 +17,12 @@ class BelongsToFieldtype extends BaseFieldtype
                 'default' => 1,
                 'read_only' => true,
             ],
+            'title_format' => [
+                'display' => __('Title Format'),
+                'instructions' => __('Configure a title format for results. You should use Antlers to pull in field data.'),
+                'type' => 'text',
+                'width' => 50,
+            ],
         ];
 
         return array_merge($config, parent::configFieldItems());

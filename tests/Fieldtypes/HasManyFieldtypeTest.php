@@ -65,6 +65,34 @@ class HasManyFieldtypeTest extends TestCase
     }
 
     /** @test */
+    public function can_get_index_items_with_title_format()
+    {
+        $posts = $this->postFactory(2);
+        $author = $this->authorFactory();
+
+        foreach ($posts as $post) {
+            $post->update(['author_id' => $author->id]);
+        }
+
+        $this->fieldtype->setField(new Field('posts', [
+            'mode' => 'default',
+            'resource' => 'post',
+            'display' => 'Posts',
+            'type' => 'has_many',
+            'title_format' => '{{ title }} TEST {{ created_at format="Y" }}',
+        ]));
+
+        $getIndexItems = $this->fieldtype->getIndexItems(new HttpRequest());
+
+        $this->assertIsObject($getIndexItems);
+        $this->assertTrue($getIndexItems instanceof Collection);
+        $this->assertSame($getIndexItems->count(), 2);
+
+        $this->assertSame($getIndexItems->first()['title'], $posts[0]->title . ' TEST ' . now()->format('Y'));
+        $this->assertSame($getIndexItems->last()['title'], $posts[1]->title . ' TEST ' . now()->format('Y'));
+    }
+
+    /** @test */
     public function can_get_pre_process_index()
     {
         $posts = $this->postFactory(10);
@@ -81,7 +109,7 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertSame($preProcessIndex->first(), [
             'id' => $posts[0]->id,
             'title' => $posts[0]->title,
-            'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
+            'edit_url' => 'http://localhost/cp/runway/post/' . $posts[0]->id,
         ]);
     }
 

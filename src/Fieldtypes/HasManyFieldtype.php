@@ -21,6 +21,12 @@ class HasManyFieldtype extends BaseFieldtype
                 'type' => 'integer',
                 'width' => 50,
             ],
+            'title_format' => [
+                'display' => __('Title Format'),
+                'instructions' => __('Configure a title format for results. You should use Antlers to pull in field data.'),
+                'type' => 'text',
+                'width' => 50,
+            ],
         ];
 
         return array_merge($config, parent::configFieldItems());
