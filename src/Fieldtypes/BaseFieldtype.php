@@ -111,7 +111,7 @@ class BaseFieldtype extends Relationship
                     })
                     ->merge([
                         'id' => $record->{$resource->primaryKey()},
-                        'title' => $this->makeTitle($record, $resource, $resource->listableColumns()[0]),
+                        'title' => $this->makeTitle($record, $resource),
                     ])
                     ->toArray();
             })
@@ -259,10 +259,12 @@ class BaseFieldtype extends Relationship
         ];
     }
 
-    protected function makeTitle($record, $resource, string $default): string
+    protected function makeTitle($record, $resource): string
     {
         if (! $titleFormat = $this->config('title_format')) {
-            return $record->$default;
+            $firstListableColumn = $resource->listableColumns()[0];
+
+            return $record->{$firstListableColumn};
         }
 
         return Parse::template($titleFormat, $record);
