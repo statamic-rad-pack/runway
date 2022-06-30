@@ -33,13 +33,37 @@ class BelongsToFieldtypeTest extends TestCase
     /** @test */
     public function can_get_index_items()
     {
-        $this->authorFactory(10);
+        $authors = $this->authorFactory(10);
 
         $getIndexItems = $this->fieldtype->getIndexItems(new Request());
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Collection);
         $this->assertSame($getIndexItems->count(), 10);
+    }
+
+    /** @test */
+    public function can_get_index_items_with_title_format()
+    {
+        $authors = $this->authorFactory(2);
+
+        $this->fieldtype->setField(new Field('author', [
+            'max_items' => 1,
+            'mode' => 'default',
+            'resource' => 'author',
+            'display' => 'Author',
+            'type' => 'belongs_to',
+            'title_format' => 'AUTHOR {{ name }}',
+        ]));
+
+        $getIndexItems = $this->fieldtype->getIndexItems(new Request());
+
+        $this->assertIsObject($getIndexItems);
+        $this->assertTrue($getIndexItems instanceof Collection);
+        $this->assertSame($getIndexItems->count(), 2);
+
+        $this->assertSame($getIndexItems->first()['title'], 'AUTHOR ' . $authors[0]->name);
+        $this->assertSame($getIndexItems->last()['title'], 'AUTHOR ' . $authors[1]->name);
     }
 
     /** @test */
