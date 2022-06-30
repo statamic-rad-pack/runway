@@ -240,7 +240,7 @@ class BaseFieldtype extends Relationship
 
         return [
             'id'    => $record->getKey(),
-            'title' => $record->{collect($resource->listableColumns())->first()},
+            'title' => $this->makeTitle($record, $resource),
             'edit_url' => $editUrl,
         ];
     }
