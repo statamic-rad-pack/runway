@@ -26,6 +26,9 @@ This fieldtype allows you to select multiple models for a `hasMany` or `morphedB
 
 It’s important that when configuring this fieldtype, the handle of the field is the same as the name of the `hasMany` relationship, eg: `authors`.
 
-Also when configuring the fieldtype, you may choose the resource you wish to be available for selection by the user.
+Also when configuring the fieldtype, you should choose the resource you wish to be available for selection by the user.
 
-Optionally, you may also specify any relationships which should be eager loaded when the fieldtype is augmented (using the `with` config option).
+#### Additional configuration
+
+- **Eager Loading:** Using the `with` configuration option, you may specify any relationships you want to be eager loaded when the fieldtype is augmented.
+- **Title Format:** Using the `title_format` configuration option, you may specify a title format to be used when viewing related results in the CP. You should use Antlers in this setting. (eg. `{{ first_name }} {{ last_name }}`)
