@@ -23,6 +23,7 @@ class HasManyFieldtype extends BaseFieldtype
             ],
             'title_format' => [
                 'display' => __('Title Format'),
+                'instructions' => __('Configure a title format for results. You should use Antlers to pull in field data.'),
                 'type' => 'text',
                 'width' => 50,
             ],
