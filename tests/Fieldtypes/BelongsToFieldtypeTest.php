@@ -62,8 +62,9 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertTrue($getIndexItems instanceof Collection);
         $this->assertSame($getIndexItems->count(), 2);
 
-        $this->assertSame($getIndexItems->first()['title'], 'AUTHOR ' . $authors[0]->name);
-        $this->assertSame($getIndexItems->last()['title'], 'AUTHOR ' . $authors[1]->name);
+        $this->assertSame($getIndexItems->first()['title'], 'AUTHOR '.$authors[0]->name);
+        $this->assertSame($getIndexItems->last()['title'], 'AUTHOR '.$authors[1]->name);
+    }
 
     /** @test */
     public function can_get_item_array_with_title_format()
