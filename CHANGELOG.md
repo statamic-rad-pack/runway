@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.4.1 (2022-07-06)
+
+### What's fixed
+
+- Fieldtypes: Formatted title will now also be returned from `toItemArray` method #155 by @edalzell
+
 ## v2.4.0 (2022-06-30)
 
 ### What's new
