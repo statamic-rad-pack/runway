@@ -62,8 +62,27 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertTrue($getIndexItems instanceof Collection);
         $this->assertSame($getIndexItems->count(), 2);
 
-        $this->assertSame($getIndexItems->first()['title'], 'AUTHOR ' . $authors[0]->name);
-        $this->assertSame($getIndexItems->last()['title'], 'AUTHOR ' . $authors[1]->name);
+        $this->assertSame($getIndexItems->first()['title'], 'AUTHOR '.$authors[0]->name);
+        $this->assertSame($getIndexItems->last()['title'], 'AUTHOR '.$authors[1]->name);
+    }
+
+    /** @test */
+    public function can_get_item_array_with_title_format()
+    {
+        $author = $this->authorFactory();
+
+        $this->fieldtype->setField(new Field('author', [
+            'max_items' => 1,
+            'mode' => 'default',
+            'resource' => 'author',
+            'display' => 'Author',
+            'type' => 'belongs_to',
+            'title_format' => 'AUTHOR {{ name }}',
+        ]));
+
+        $item = $this->fieldtype->getItemData([1]);
+
+        $this->assertSame($item->first()['title'], 'AUTHOR '.$author->name);
     }
 
     /** @test */

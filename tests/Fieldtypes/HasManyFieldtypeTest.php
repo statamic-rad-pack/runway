@@ -93,6 +93,30 @@ class HasManyFieldtypeTest extends TestCase
     }
 
     /** @test */
+    public function can_get_item_array_with_title_format()
+    {
+        $posts = $this->postFactory(2);
+        $author = $this->authorFactory();
+
+        foreach ($posts as $post) {
+            $post->update(['author_id' => $author->id]);
+        }
+
+        $this->fieldtype->setField(new Field('posts', [
+            'mode' => 'default',
+            'resource' => 'post',
+            'display' => 'Posts',
+            'type' => 'has_many',
+            'title_format' => '{{ title }} TEST {{ created_at format="Y" }}',
+        ]));
+
+        $item = $this->fieldtype->getItemData([$posts[0]->id, $posts[1]->id]);
+
+        $this->assertSame($item->first()['title'], $posts[0]->title . ' TEST ' . now()->format('Y'));
+        $this->assertSame($item->last()['title'], $posts[1]->title . ' TEST ' . now()->format('Y'));
+    }
+
+    /** @test */
     public function can_get_pre_process_index()
     {
         $posts = $this->postFactory(10);
