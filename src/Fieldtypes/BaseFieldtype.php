@@ -191,8 +191,13 @@ class BaseFieldtype extends Relationship
                     });
                 }
 
+                if (! $record) {
+                    return null;
+                }
+
                 return $resource->augment($record);
-            });
+            })
+            ->filter();
 
         if ($this->config('max_items') === 1) {
             return $result->first();
