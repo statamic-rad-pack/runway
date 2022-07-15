@@ -227,17 +227,17 @@ class Resource
             && in_array('DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes', class_uses($this->model()));
     }
 
-    public function primaryKey()
+    public function primaryKey(): string
     {
         return $this->model()->getKeyName();
     }
 
-    public function routeKey()
+    public function routeKey(): string
     {
         return $this->model()->getRouteKeyName() ?? 'id';
     }
 
-    public function databaseTable()
+    public function databaseTable(): string
     {
         return $this->model()->getTable();
     }
@@ -260,7 +260,7 @@ class Resource
         ];
     }
 
-    public function augment(Model $model)
+    public function augment(Model $model): array
     {
         return AugmentedRecord::augment($model, $this->blueprint());
     }
