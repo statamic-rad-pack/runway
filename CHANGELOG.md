@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v2.4.2 (2022-07-15)
+
+### What's fixed
+
+- Fixed an error when attempting to augment model that doesn't exist #156 #158
+- Fixed an error when using the `{{ nav:breadcrumbs }}` tag on front-end routes #157 #159
+
 ## v2.4.1 (2022-07-06)
 
 ### What's fixed
