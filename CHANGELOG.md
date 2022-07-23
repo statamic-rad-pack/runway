@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.4.3 (2022-07-23)
+
+### What's new
+
+- You may now specify the order & direction of models via the Runway config #160 #161
+
 ## v2.4.2 (2022-07-15)
 
 ### What's fixed
