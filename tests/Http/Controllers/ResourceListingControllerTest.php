@@ -51,9 +51,34 @@ class ResourceListingControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_order_listing_rows()
+    public function listing_rows_are_ordered_as_per_config()
     {
-        $this->markTestIncomplete();
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Post.order_by', 'id');
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Post.order_by_direction', 'desc');
+
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+
+        $posts = $this->postFactory(2);
+
+        $this->actingAs($user)
+            ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']))
+            ->assertOk()
+            ->assertJson([
+                'data' => [
+                    [
+                        'title' => $posts[1]->title,
+                        'edit_url' => 'http://localhost/cp/runway/post/' . $posts[1]->id,
+                        'id' => $posts[1]->id,
+                    ],
+                    [
+                        'title' => $posts[0]->title,
+                        'edit_url' => 'http://localhost/cp/runway/post/' . $posts[0]->id,
+                        'id' => $posts[0]->id,
+                    ],
+                ],
+            ]);
     }
 
     /** @test */
