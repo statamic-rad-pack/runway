@@ -25,6 +25,7 @@ class Resource
     protected $graphqlEnabled;
     protected $readOnly;
     protected $eagerLoadingRelations;
+    protected $orderBy;
 
     public function handle($handle = null)
     {
@@ -217,6 +218,32 @@ class Resource
                 }
 
                 return collect($eagerLoadingRelations);
+            })
+            ->args(func_get_args());
+    }
+
+    public function orderBy($orderBy = null)
+    {
+        return $this->fluentlyGetOrSet('orderBy')
+            ->getter(function ($value) {
+                if (! $value) {
+                    return $this->primaryKey();
+                }
+
+                return $value;
+            })
+            ->args(func_get_args());
+    }
+
+    public function orderByDirection($orderByDirection = null)
+    {
+        return $this->fluentlyGetOrSet('orderByDirection')
+            ->getter(function ($value) {
+                if (! $value) {
+                    return 'asc';
+                }
+
+                return $value;
             })
             ->args(func_get_args());
     }

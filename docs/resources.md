@@ -235,6 +235,22 @@ You may also specify if you want a resource to be 'read only' - eg. users will n
 ],
 ```
 
+### Ordering
+
+Sometimes you may want to change the order that your models are returned in the Control Panel listing table. You can use the `order_by` and `order_by_direction` configuration options to tell Runway the order you wish models to be returned.
+
+```php
+'resources' => [
+	\App\Models\Order::class => [
+	    'name' => 'Orders',
+
+        // In this case, orders will the highest total will be displayed first.
+        'order_by' => 'total',
+        'order_by_direction' => 'DESC',
+	],
+],
+```
+
 ## Actions
 
 In much the same way with entries, you can create custom Actions which will be usable in the listing tables provided by Runway.

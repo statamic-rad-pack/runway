@@ -76,6 +76,14 @@ class Runway
                     $resource->eagerLoadingRelations($config['with']);
                 }
 
+                if (isset($config['order_by'])) {
+                    $resource->orderBy($config['order_by']);
+                }
+
+                if (isset($config['order_by_direction'])) {
+                    $resource->orderByDirection($config['order_by_direction']);
+                }
+
                 return [$handle => $resource];
             })
             ->toArray();

@@ -23,8 +23,8 @@ class ResourceListingController extends CpController
             abort(403);
         }
 
-        $sortField = $request->input('sort', $resource->primaryKey());
-        $sortDirection = $request->input('order', 'ASC');
+        $sortField = $request->input('sort', $resource->orderBy());
+        $sortDirection = $request->input('order', $resource->orderByDirection());
 
         $query = $resource->model()
             ->orderBy($sortField, $sortDirection);
