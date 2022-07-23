@@ -25,8 +25,6 @@ class ResourceListingControllerTest extends TestCase
     /** @test */
     public function can_sort_listing_rows()
     {
-        $this->markTestIncomplete();
-
         $user = User::make()->makeSuper()->save();
 
         $posts = $this->postFactory(2);
