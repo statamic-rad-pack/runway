@@ -1,108 +1,38 @@
-<!-- statamic:hide -->
-
 ![Banner](https://raw.githubusercontent.com/doublethreedigital/runway/2.1/banner.png)
 
 ## Runway
 
-<!-- /statamic:hide -->
-
 Runway gives you the ability to display & manage your Eloquent models in Statamic.
 
-### Control Panel integration
+## Features
 
-Runway fits right into the Control Panel - enabling you to create, edit and view your models. In most cases, you'll not notice the difference between an entry in the CP and an Eloquent model in the CP. 
-
-* [Review documentation](https://runway.duncanmcclean.com/control-panel)
-
-### Front-end routing
-
-Need to show your models on the front-end of your site? No problem - Runway's got that under control. Simply tell Runway the route you'd like to use and it'll serve up the front-end for you.
-
-```php
-// config/runway.php
-
-return [
-    'resources' => [
-        \App\Models\Product::class => [
-            'route' => '/products/{{ slug }}',
-        ],
-    ],
-];
-```
-
-* [Review documentation](https://runway.duncanmcclean.com/frontend-routing)
-
-### Antlers templating
-
-In addition to front-end routing, you may also use Runway's tag to loop through your models and display the results. The tag supports filtering, using Eloquent scopes and sorting.
-
-```antlers
-{{ runway:products }}
-    <h2>{{ name }}</h2>
-    <p>Price: {{ price }}</p>
-{{ /runway:products }}
-```
-
-* [Review documentation](https://runway.duncanmcclean.com/templating)
-
-### GraphQL API
-
-If you're a GraphQL fan, you're now able to fetch your models via GraphQL. Runway will augment the fields just like you'd expect.
-
-```graphql
-{
-    products(limit: 25, sort: "name") {
-        data {
-            id
-            name
-            price
-            description
-        }
-    }
-}
-```
-
-## Installation
-
-First, require Runway as a Composer dependency:
-
-```
-composer require doublethreedigital/runway
-```
-
-Once installed, you’ll want to publish the default configuration file.
-
-```
-php artisan vendor:publish --tag="runway-config"
-```
-
-Now, [configure each of the 'resources'](https://runway.duncanmcclean.com/resources) you'd like to be available through Runway.
+- Control Panel integration
+- Front-end Routing
+- Antlers Tags
+- GraphQL API
 
 ## Documentation
 
-There's full documentation of Runway over on it's [documentation site](https://runway.duncanmcclean.com).
+Visit the [Runway website](https://runway.duncanmcclean.com/) to read the documentation & knowledge base articles.
 
-## Sponsor Duncan
+## Support
 
-This addon is open-source, meaning anyone can use this addon in their sites for **free**! 
+Runway is a free addon, because of this there is no direct support channel. If you have a feature request or experience a bug, please [open a GitHub Issue](https://github.com/doublethreedigital/runway/issues/new/choose) and it'll be looked into over the next week or two.
 
-However, maintaining and developing new features for open-source projects can take quite a bit of time. If you're using Runway in your production environment, please [consider sponsoring me](https://github.com/sponsors/duncanmcclean) (Duncan McClean) for a couple dollars a month.
+> Only the latest version of this addon is supported. If you open a bug report using an old version, your issue will be closed.
 
+## Sponsor me!
 
-## Security
+Some of my addons (including this one) are free & open-source, meaning you can use them in your site without buying any licenses.
 
-Only the latest version of Runway (v2.4) will receive security updates if a vulnerability is found. 
+However, there is a cost from my perspective to maintain this addon (fixing new bugs, adding new features, answering questions). That all takes time. I've spent over **88 hours** of my own time maintaining this addon over the past year.
 
-If you discover a security vulnerability, please report it to Duncan straight away, [via email](mailto:security@doublethree.digital). Please don't report security issues through GitHub Issues.
-
-<!-- statamic:hide -->
+If you use this software on your projects & can afford it, I'd appreciate it if you'd consider [sponsoring me](https://github.com/sponsors/duncanmcclean), even if it's just a couple dollars a month.
 
 ---
 
 <p>
-<a href="https://statamic.com"><img src="https://img.shields.io/badge/Statamic-3.0+-FF269E?style=for-the-badge" alt="Compatible with Statamic v3"></a>
+<a href="https://statamic.com"><img src="https://img.shields.io/badge/Statamic-3.3+-FF269E?style=for-the-badge" alt="Compatible with Statamic v3"></a>
 <a href="https://packagist.org/packages/doublethreedigital/runway/stats"><img src="https://img.shields.io/packagist/v/doublethreedigital/runway?style=for-the-badge" alt="Runway on Packagist"></a>
 <a href="https://tuple.app"><img src="https://img.shields.io/badge/Pairing%20with-Tuple-5A67D8?style=for-the-badge" alt="Pairing with Tuple"></a>
 </p>
-
-<!-- /statamic:hide -->
