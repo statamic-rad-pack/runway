@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Statamic\CP\Column;
@@ -107,7 +108,16 @@ class BaseFieldtype extends Relationship
             ->map(function ($record) use ($resource) {
                 return collect($resource->listableColumns())
                     ->mapWithKeys(function ($columnKey) use ($record) {
-                        return [$columnKey => $record->{$columnKey}];
+                        $value = $record->{$columnKey};
+
+                        // If this is a relationship, then we want to process the values...
+                        if ($value instanceof EloquentCollection) {
+                            $value = $value->map(function ($item) {
+                                return $this->toItemArray($item);
+                            })->values()->toArray();
+                        }
+
+                        return [$columnKey => $value];
                     })
                     ->merge([
                         'id' => $record->{$resource->primaryKey()},
