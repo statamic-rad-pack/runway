@@ -3,11 +3,13 @@
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Statamic\CP\Column;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
+use Statamic\Facades\User;
 use Statamic\Fieldtypes\Relationship;
 
 class BaseFieldtype extends Relationship
@@ -210,10 +212,15 @@ class BaseFieldtype extends Relationship
     protected function getColumns()
     {
         $resource = Runway::findResource($this->config('resource'));
+        $blueprint = $resource->blueprint();
 
         return collect($resource->listableColumns())
-            ->map(function ($columnKey) {
-                return Column::make($columnKey);
+            ->map(function ($columnKey) use ($blueprint) {
+                /** @var \Statamic\Fields\Field $field */
+                $blueprintField = $blueprint->field($columnKey);
+
+                return Column::make($columnKey)
+                    ->fieldtype($blueprintField->fieldtype()->handle());
             })
             ->merge([Column::make('title')])
             ->toArray();
@@ -238,10 +245,35 @@ class BaseFieldtype extends Relationship
             ];
         }
 
+
         $editUrl = cp_route('runway.edit', [
             'resourceHandle' => $resource->handle(),
             'record' => $record->{$resource->routeKey()},
         ]);
+
+        if ($this->config('mode') === 'table') {
+            return collect($resource->listableColumns())
+                ->mapWithKeys(function ($columnKey) use ($resource, $record) {
+                    $value = $record->{$columnKey};
+
+                    // If this is a relationship, then we want to process the values...
+                    if ($value instanceof EloquentCollection) {
+                        $value = $value->map(function ($item) {
+                            return $this->toItemArray($item);
+                        })->values()->toArray();
+                    }
+
+                    return [$columnKey => $value];
+                })
+                ->merge([
+                    'id' => $record->{$resource->primaryKey()},
+                    'title' => $this->makeTitle($record, $resource),
+                    'edit_url' => $editUrl,
+                    'editable' => User::current()->hasPermission("Edit {$resource->plural()}") || User::current()->isSuper(),
+                    'viewable' => User::current()->hasPermission("View {$resource->plural()}") || User::current()->isSuper(),
+                ])
+                ->toArray();
+        }
 
         return [
             'id'    => $record->getKey(),
