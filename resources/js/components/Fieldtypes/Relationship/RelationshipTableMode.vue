@@ -16,7 +16,7 @@
                     <data-list-table
                         :loading="loading"
                         :reorderable="false"
-                        :sortable="false"
+                        :sortable="true"
                         class="card p-1"
                         @sorted="sorted"
                     >
@@ -213,6 +213,9 @@ export default {
             inline: false,
             primaryColumn: `cell-${primaryColumn}`,
             currentItem: null,
+
+            sortColumn: null,
+            sortDirection: null,
         }
     },
 
@@ -306,6 +309,13 @@ export default {
             this.$emit('item-data-updated', data)
 
             this.initializing = false
+        },
+
+        sorted(column, direction) {
+            this.sortColumn = column
+            this.sortDirection = direction
+
+            // TODO: make a request to the server to sort the items
         },
 
         update(selections) {
