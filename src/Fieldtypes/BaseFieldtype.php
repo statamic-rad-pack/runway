@@ -110,7 +110,16 @@ class BaseFieldtype extends Relationship
             ->map(function ($record) use ($resource) {
                 return collect($resource->listableColumns())
                     ->mapWithKeys(function ($columnKey) use ($record) {
-                        return [$columnKey => $record->{$columnKey}];
+                        $value = $record->{$columnKey};
+
+                        // If this is a relationship, then we want to process the values...
+                        if ($value instanceof EloquentCollection) {
+                            $value = $value->map(function ($item) {
+                                return $this->toItemArray($item);
+                            })->values()->toArray();
+                        }
+
+                        return [$columnKey => $value];
                     })
                     ->merge([
                         'id' => $record->{$resource->primaryKey()},
