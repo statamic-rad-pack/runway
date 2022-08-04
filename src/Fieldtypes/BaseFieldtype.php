@@ -223,7 +223,7 @@ class BaseFieldtype extends Relationship
                 return Column::make($columnKey)
                     ->fieldtype($blueprintField->fieldtype()->handle());
             })
-            ->merge([Column::make('title')])
+            // ->merge([Column::make('title')])
             ->toArray();
     }
 
