@@ -1,5 +1,6 @@
 <template>
-    <relationship-input
+    <component
+        :is="componentName"
         ref="input"
         :name="name"
         :value="value"
@@ -31,6 +32,8 @@
 </template>
 
 <script>
+// Note: this file has been copied from Statamic almost completely APART from the 'componentName' computed property which we've added.
+
 import qs from 'qs'
 
 export default {
@@ -49,6 +52,12 @@ export default {
     },
 
     computed: {
+        componentName() {
+            return this.config.mode === 'table'
+                ? 'relationship-table-mode'
+                : 'relationship-input'
+        },
+
         maxItems() {
             return this.config.max_items || Infinity
         },
