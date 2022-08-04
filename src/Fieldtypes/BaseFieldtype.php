@@ -19,6 +19,7 @@ class BaseFieldtype extends Relationship
     protected $canSearch = true;
     protected $categories = ['relationship'];
     protected $formComponent = 'runway-publish-form';
+    protected $component = 'runway-relationship';
 
     protected $formComponentProps = [
         'initialBlueprint' => 'blueprint',
