@@ -275,7 +275,7 @@ export default {
         },
 
         edit(item) {
-            if (!this.canEditRow(row)) {
+            if (!this.canEditRow(item)) {
                 return
             }
 
