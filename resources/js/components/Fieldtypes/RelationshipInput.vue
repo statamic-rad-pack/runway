@@ -23,25 +23,23 @@
     <template v-if="!initializing && !usesSelectField">
       <data-list
         v-if="config.mode == 'table'"
+        class="mb-2"
         :rows="items"
         :columns="columns"
         :sort="false"
       >
         <div>
-          <div
-            v-show="items.length === 0"
-            class="p-3 text-center text-grey-50"
-            v-text="__('No results')"
-          />
-
           <data-list-table
-            v-show="items.length"
             :loading="loading"
             :reorderable="false"
             :sortable="false"
             class="card p-1"
             @sorted="sorted"
           >
+            <template v-if="items.length === 0" slot="tbody-start">
+              <div class="p-2 text-grey-70" v-text="__('No results')"></div>
+            </template>
+
             <template :slot="primaryColumn" slot-scope="{ row, value }">
               <a :href="row.edit_url">{{ value }}</a>
             </template>
