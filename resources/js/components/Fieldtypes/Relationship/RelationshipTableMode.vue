@@ -51,6 +51,7 @@
                                 />
 
                                 <dropdown-item
+                                    v-if="!readOnly"
                                     class="warning"
                                     :text="__('Unlink')"
                                     @click="remove(index)"
