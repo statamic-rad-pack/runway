@@ -31,7 +31,7 @@
                             :slot="primaryColumn"
                             slot-scope="{ row, value }"
                         >
-                            <a :href="row.edit_url">{{ value }}</a>
+                            <a @click="edit(row)">{{ value }}</a>
                         </template>
 
                         <template slot="actions" slot-scope="{ row, index }">
@@ -47,7 +47,7 @@
                                 <dropdown-item
                                     v-if="canEditRow(row)"
                                     :text="__('Edit')"
-                                    :redirect="row.edit_url"
+                                    @click="edit(row)"
                                 />
 
                                 <dropdown-item
@@ -61,6 +61,18 @@
                     </data-list-table>
                 </div>
             </data-list>
+
+            <inline-edit-form
+                v-if="isEditing"
+                :item="currentItem"
+                :component="formComponent"
+                :component-props="formComponentProps"
+                @updated="itemUpdated"
+                @closed="
+                    isEditing = false
+                    currentItem = null
+                "
+            />
 
             <div
                 class="py-1 text-xs text-grey"
@@ -137,6 +149,7 @@ import ItemSelector from '../../../../../vendor/statamic/cms/resources/js/compon
 import CreateButton from '../../../../../vendor/statamic/cms/resources/js/components/inputs/relationship/CreateButton.vue'
 import { Sortable, Plugins } from '@shopify/draggable'
 import RelationshipSelectField from '../../../../../vendor/statamic/cms/resources/js/components/inputs/relationship/SelectField.vue'
+import InlineEditForm from '../../../../../vendor/statamic/cms/resources/js/components/inputs/relationship/InlineEditForm.vue'
 
 export default {
     props: {
@@ -179,6 +192,7 @@ export default {
         RelatedItem,
         CreateButton,
         RelationshipSelectField,
+        InlineEditForm,
     },
 
     data() {
@@ -191,11 +205,13 @@ export default {
         return {
             isSelecting: false,
             isCreating: false,
+            isEditing: false,
             itemData: [],
             initializing: true,
             loading: true,
             inline: false,
             primaryColumn: `cell-${primaryColumn}`,
+            currentItem: null,
         }
     },
 
@@ -256,6 +272,39 @@ export default {
 
         canEditRow(row) {
             return row.editable
+        },
+
+        edit(item) {
+            if (!this.canEditRow(row)) {
+                return
+            }
+
+            this.isEditing = true
+            this.currentItem = item
+        },
+
+        itemUpdated(responseData) {
+            this.isEditing = false
+            this.currentItem = null
+
+            this.initializing = true
+
+            let data = this.data.map(item => {
+                if (item.id == responseData.id) {
+                    console.log('found the one')
+
+                    return {
+                        ...item,
+                        ...responseData,
+                    }
+                }
+
+                return item
+            })
+
+            this.$emit('item-data-updated', data)
+
+            this.initializing = false
         },
 
         update(selections) {
