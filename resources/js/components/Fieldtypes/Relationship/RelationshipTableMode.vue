@@ -49,6 +49,12 @@
                                     :text="__('Edit')"
                                     :redirect="row.edit_url"
                                 />
+
+                                <dropdown-item
+                                    class="warning"
+                                    :text="__('Unlink')"
+                                    @click="remove(index)"
+                                />
                             </dropdown-list>
                             <div v-else class="w-10 block"></div>
                         </template>
