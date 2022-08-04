@@ -255,7 +255,6 @@ class BaseFieldtype extends Relationship
             ];
         }
 
-
         $editUrl = cp_route('runway.edit', [
             'resourceHandle' => $resource->handle(),
             'record' => $record->{$resource->routeKey()},
@@ -263,7 +262,7 @@ class BaseFieldtype extends Relationship
 
         if ($this->config('mode') === 'table') {
             return collect($resource->listableColumns())
-                ->mapWithKeys(function ($columnKey) use ($resource, $record) {
+                ->mapWithKeys(function ($columnKey) use ($record) {
                     $value = $record->{$columnKey};
 
                     // If this is a relationship, then we want to process the values...
