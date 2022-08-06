@@ -221,13 +221,19 @@ export default {
 
     computed: {
         items() {
-            return this.value.map(selection => {
+            let items = this.value.map(selection => {
                 const data = _.find(this.data, item => item.id == selection)
 
                 if (!data) return { id: selection, title: selection }
 
                 return data
             })
+
+            if (this.sortColumn && this.sortDirection) {
+                items = _.sortBy(items, this.sortColumn, this.sortDirection)
+            }
+
+            return items
         },
 
         maxItemsReached() {
@@ -314,8 +320,6 @@ export default {
         sorted(column, direction) {
             this.sortColumn = column
             this.sortDirection = direction
-
-            // TODO: make a request to the server to sort the items
         },
 
         update(selections) {
