@@ -10,7 +10,9 @@
                 class="mb-2"
                 :rows="items"
                 :columns="columns"
-                :sort="false"
+                :sort="true"
+                :sortColumm="sortColumn"
+                :sortDirection="sortDirection"
             >
                 <div>
                     <data-list-table
@@ -221,19 +223,13 @@ export default {
 
     computed: {
         items() {
-            let items = this.value.map(selection => {
+            return this.value.map(selection => {
                 const data = _.find(this.data, item => item.id == selection)
 
                 if (!data) return { id: selection, title: selection }
 
                 return data
             })
-
-            if (this.sortColumn && this.sortDirection) {
-                items = _.sortBy(items, this.sortColumn, this.sortDirection)
-            }
-
-            return items
         },
 
         maxItemsReached() {
