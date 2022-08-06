@@ -14,6 +14,7 @@ use DoubleThreeDigital\Runway\Support\Json;
 use Statamic\CP\Breadcrumbs;
 use Statamic\Facades\Scope;
 use Statamic\Facades\User;
+use Statamic\Fields\Field;
 use Statamic\Http\Controllers\CP\CpController;
 
 class ResourceController extends CpController
@@ -203,6 +204,35 @@ class ResourceController extends CpController
         }
 
         $record->save();
+
+        if ($request->get('from_inline_publish_form')) {
+            // In the case of the 'Relationship' fields in Table Mode, when a model is updated
+            // in the stack, we also need to return it's relations.
+            collect($resource->blueprint()->fields()->all())
+                ->filter(function (Field $field) {
+                    return $field->type() === 'belongs_to'
+                        || $field->type() === 'has_many';
+                })
+                ->each(function (Field $field) use (&$record) {
+                    $relatedResource = Runway::findResource($field->get('resource'));
+
+                    $column = $relatedResource->listableColumns()[0];
+
+                    $record->{$field->handle()} = $record->{$field->handle()}()
+                        ->select('id', $column)
+                        ->get()
+                        ->each(function ($model) use ($relatedResource, $column) {
+                            $model->title = $model->{$column};
+
+                            $model->edit_url = cp_route('runway.edit', [
+                                'resourceHandle' => $relatedResource->handle(),
+                                'record' => $model->{$relatedResource->routeKey()},
+                            ]);
+
+                            return $model;
+                        });
+                });
+        }
 
         return [
             'data' => $this->getReturnData($resource, $record),

@@ -118,6 +118,8 @@ export default {
   created() {
     // If we're creating a resource through the 'Create' on a HasMany field somewhere, fill any fields...
     if (this.publishContainer.includes("relate-fieldtype-inline")) {
+      this.values['from_inline_publish_form'] = true
+
       this.initialBlueprint.sections.forEach((section) => {
         section.fields.forEach((field) => {
           if (

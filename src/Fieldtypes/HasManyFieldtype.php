@@ -27,9 +27,22 @@ class HasManyFieldtype extends BaseFieldtype
                 'type' => 'text',
                 'width' => 50,
             ],
+            'mode' => [
+                'display' => __('Mode'),
+                'instructions' => __('statamic::fieldtypes.relationship.config.mode'),
+                'type' => 'radio',
+                'default' => 'default',
+                'options' => [
+                    'default' => __('Stack Selector'),
+                    'select' => __('Select Dropdown'),
+                    'typeahead' => __('Typeahead Field'),
+                    'table' => __('Table'),
+                ],
+                'width' => 50,
+            ],
         ];
 
-        return array_merge($config, parent::configFieldItems());
+        return array_merge(parent::configFieldItems(), $config);
     }
 
     // Pre-process the data before it gets sent to the publish page
@@ -123,6 +136,15 @@ class HasManyFieldtype extends BaseFieldtype
             });
 
         return null;
+    }
+
+    public function preload()
+    {
+        return array_merge(parent::preload(), [
+            'actionUrl'     => cp_route('runway.actions.run', [
+                'resourceHandle' => $this->config('resource'),
+            ]),
+        ]);
     }
 
     public function toGqlType()
