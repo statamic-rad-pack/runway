@@ -24,6 +24,7 @@
         :search="canSearch"
         :read-only="isReadOnly"
         :taggable="taggable"
+        :action-url="meta.actionUrl"
         @focus="$emit('focus')"
         @blur="$emit('blur')"
         @input="update"

@@ -15,6 +15,12 @@
                 :sortDirection="sortDirection"
             >
                 <div>
+                    <data-list-bulk-actions
+                        :url="actionUrl"
+                        @started="actionStarted"
+                        @completed="actionCompleted"
+                    />
+
                     <data-list-table
                         :loading="loading"
                         :reorderable="false"
@@ -57,6 +63,22 @@
                                     class="warning"
                                     :text="__('Unlink')"
                                     @click="remove(index)"
+                                />
+
+                                <div
+                                    class="divider"
+                                    v-if="
+                                        (canViewRow(row) || canEditRow(row)) &&
+                                            row.actions.length
+                                    "
+                                />
+
+                                <data-list-inline-actions
+                                    :item="row.id"
+                                    :url="actionUrl"
+                                    :actions="row.actions"
+                                    @started="actionStarted"
+                                    @completed="actionCompleted"
                                 />
                             </dropdown-list>
                             <div v-else class="w-10 block"></div>
@@ -187,6 +209,9 @@ export default {
         columns: {
             type: Array,
             default: () => [],
+        },
+        actionUrl: {
+            type: String,
         },
     },
 
@@ -398,6 +423,21 @@ export default {
 
         setLoadingProgress(state) {
             this.$progress.loading(`relationship-fieldtype-${this._uid}`, state)
+        },
+
+        actionStarted() {
+            this.loading = true
+        },
+
+        actionCompleted(successful = null, response) {
+            this.loading = false
+
+            if (successful === false) return
+
+            this.$events.$emit('clear-selections')
+            this.$events.$emit('reset-action-modals')
+
+            this.$toast.success(response.message || __('Action completed'))
         },
     },
 }

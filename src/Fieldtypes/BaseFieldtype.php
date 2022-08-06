@@ -2,11 +2,13 @@
 
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
+use DoubleThreeDigital\Runway\Actions\DeleteModel;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Statamic\CP\Column;
+use Statamic\Facades\Action;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
 use Statamic\Facades\User;
@@ -280,6 +282,9 @@ class BaseFieldtype extends Relationship
                     'edit_url' => $editUrl,
                     'editable' => User::current()->hasPermission("Edit {$resource->plural()}") || User::current()->isSuper(),
                     'viewable' => User::current()->hasPermission("View {$resource->plural()}") || User::current()->isSuper(),
+                    'actions' => Action::for($record, ['resource' => $resource->handle()])->reject(function ($action) {
+                        return $action instanceof DeleteModel;
+                    })->toArray(),
                 ])
                 ->toArray();
         }
