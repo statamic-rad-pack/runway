@@ -322,8 +322,6 @@ export default {
 
             let data = this.data.map(item => {
                 if (item.id == responseData.id) {
-                    console.log('found the one')
-
                     return {
                         ...item,
                         ...responseData,
