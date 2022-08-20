@@ -441,7 +441,7 @@ Runway 2 introduces some minor breaking changes. Including a minimum requirement
 
 ### What's new?
 
--   [Front-end routing](https://github.com/doublethreedigital/runway/tree/2.0#routing)
+-   [Front-end routing](https://github.com/duncanmcclean/runway/tree/2.0#routing)
 
 ### What's improved?
 
@@ -474,4 +474,4 @@ Because of the magic of Statamic's new [Upgrade Scripts](https://statamic.dev/up
 
 ## v2.0.0-beta.1 (2021-05-15)
 
-Initial beta release for v2.0 - view [release notes for v2.0](https://github.com/doublethreedigital/runway/blob/2.0/CHANGELOG.md#v200-2021-xx-xx)
+Initial beta release for v2.0 - view [release notes for v2.0](https://github.com/duncanmcclean/runway/blob/2.0/CHANGELOG.md#v200-2021-xx-xx)
