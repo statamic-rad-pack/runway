@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.5.1 (2022-08-24)
+
+### What's fixed
+
+-   Fixed issue when generating listing columns, if you're using a fieldset in your blueprint #164 #165
+
 ## v2.5.0 (2022-08-06)
 
 ### What's new
