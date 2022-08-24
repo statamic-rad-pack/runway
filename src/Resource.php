@@ -84,7 +84,7 @@ class Resource
     public function listableColumns()
     {
         return $this->blueprint()->fields()->items()->reject(function ($field) {
-            return isset($field['field']['listable']) && $field['field']['listable'] === 'hidden';
+            return isset($field['import']) || (isset($field['field']['listable']) && $field['field']['listable'] === 'hidden');
         })->pluck('handle')->toArray();
     }
 
