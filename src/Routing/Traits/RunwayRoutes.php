@@ -7,6 +7,8 @@ use DoubleThreeDigital\Runway\Routing\RoutingModel;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Support\Str;
 use Statamic\Routing\Routable;
+use Statamic\StaticCaching\Cacher;
+use Statamic\Support\Arr;
 use Statamic\View\Antlers\Parser;
 
 trait RunwayRoutes
@@ -95,6 +97,10 @@ trait RunwayRoutes
                     'uri' => $uri,
                 ]);
             }
+
+            app(Cacher::class)->invalidateUrls(
+                Arr::get(config('statamic.static_caching.invalidation.rules'), "runway.{$resource->handle()}.urls")
+            );
         });
 
         static::deleting(function ($model) {
