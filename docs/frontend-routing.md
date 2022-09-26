@@ -50,3 +50,28 @@ Instead your show/detail view of your model, you’ll have access to a bunch of 
 -   All fields configured in your blueprint (with augmentation of course)
 -   Any fields not in your blueprint but configured in your model, like `created_at`, `updated_at`.
 -   Any other variables provided by [the Cascade](https://statamic.dev/cascade#content)
+
+## Static Caching Invalidation
+
+If you're taking advantage of Statamic's [Static Caching](https://statamic.dev/static-caching) functionality, you may configure your routed Runway resources to be 'invalidated' on update.
+
+```php
+// config/statamic/static_caching.php
+
+'invalidation' => [
+
+    'class' => null,
+
+    'rules' => [
+        'runway' => [
+            'product' => [
+                'urls' => [
+                    '/products',
+                    '/products/*',
+                ],
+            ],
+        ],
+    ],
+
+],
+```
