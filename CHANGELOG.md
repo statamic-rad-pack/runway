@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.5.2 (2022-09-26)
+
+### What's improved
+
+-   It's now possible to invalidate URLs in your static cache for front-end routes #166 #167
+
 ## v2.5.1 (2022-08-24)
 
 ### What's fixed
