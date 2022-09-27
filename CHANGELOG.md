@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.5.3 (2022-09-27)
+
+### What's improved
+
+-   When using static caching, model URLs will automatically be invalidated on save - no need to configure a rule for it! #166
+
 ## v2.5.2 (2022-09-26)
 
 ### What's improved
