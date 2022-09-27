@@ -53,7 +53,9 @@ Instead your show/detail view of your model, you’ll have access to a bunch of 
 
 ## Static Caching Invalidation
 
-If you're taking advantage of Statamic's [Static Caching](https://statamic.dev/static-caching) functionality, you may configure your routed Runway resources to be 'invalidated' on update.
+If you're taking advantage of Statamic's [Static Caching](https://statamic.dev/static-caching) functionality, Runway will automatically invalidate the URI of your models on save.
+
+You may also configure additional URIs to be invalidated on save.
 
 ```php
 // config/statamic/static_caching.php
