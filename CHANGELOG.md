@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.5.4 (2022-10-29)
+
+### What's fixed
+
+-   The 'Save' button will now show when viewing the publish form on a small-ish screen #172 #174
+
 ## v2.5.3 (2022-09-27)
 
 ### What's improved
