@@ -73,7 +73,7 @@
         <button
             v-if="!readOnly"
             class="btn-lg btn-primary w-full" 
-            :disabled="!canSave"
+            :disabled="isSaving"
             @click.prevent="save"
         >
             Save
