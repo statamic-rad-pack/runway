@@ -68,6 +68,17 @@
         </publish-sections>
       </div>
     </publish-container>
+
+    <div class="md:hidden mt-3 flex items-center">
+        <button
+            v-if="!readOnly"
+            class="btn-lg btn-primary w-full" 
+            :disabled="!canSave"
+            @click.prevent="save"
+        >
+            Save
+        </button>
+    </div>
   </div>
 </template>
 
