@@ -67,12 +67,21 @@
                         :column-preferences-key="preferencesKey('columns')"
                         @sorted="sorted"
                     >
-                        <template :slot="primaryColumn" slot-scope="{ row, value }">
+                        <template
+                            :slot="primaryColumn"
+                            slot-scope="{ row, value }"
+                        >
                             <a :href="row.edit_url">{{ value }}</a>
                         </template>
 
                         <template slot="actions" slot-scope="{ row, index }">
-                            <dropdown-list v-if="canViewRow(row) || canEditRow(row) || row.actions.length">
+                            <dropdown-list
+                                v-if="
+                                    canViewRow(row) ||
+                                        canEditRow(row) ||
+                                        row.actions.length
+                                "
+                            >
                                 <dropdown-item
                                     v-if="canViewRow(row)"
                                     :text="__('View')"
@@ -85,7 +94,13 @@
                                     :redirect="row.edit_url"
                                 />
 
-                                <div class="divider" v-if="(canViewRow(row) || canEditRow(row)) && row.actions.length" />
+                                <div
+                                    class="divider"
+                                    v-if="
+                                        (canViewRow(row) || canEditRow(row)) &&
+                                            row.actions.length
+                                    "
+                                />
 
                                 <data-list-inline-actions
                                     :item="row.id"
@@ -102,7 +117,9 @@
                     <confirmation-modal
                         v-if="deletingRow !== false"
                         :title="__('Delete')"
-                        :bodyText="__('Are you sure you want to delete this item?')"
+                        :bodyText="
+                            __('Are you sure you want to delete this item?')
+                        "
                         :buttonText="__('Delete')"
                         :danger="true"
                         @confirm="deleteRow()"
@@ -123,7 +140,7 @@
 </template>
 
 <script>
-import Listing from '../../../../vendor/statamic/cms/resources/js/components/Listing.vue';
+import Listing from '../../../../vendor/statamic/cms/resources/js/components/Listing.vue'
 
 export default {
     mixins: [Listing],
@@ -138,7 +155,7 @@ export default {
         let primaryColumn = ''
 
         if (this.initialColumns) {
-            this.initialColumns.forEach((column) => {
+            this.initialColumns.forEach(column => {
                 if (column.is_primary_column) {
                     primaryColumn = column.handle
                 }
@@ -160,7 +177,7 @@ export default {
         canViewRow(row) {
             return row.viewable && row.permalink
         },
-        
+
         canEditRow(row) {
             return row.editable && row.permalink
         },
@@ -171,31 +188,38 @@ export default {
         },
 
         deleteRow(message) {
-            const id = this.deletingRow.id;
-            message = message || __("Deleted");
+            const id = this.deletingRow.id
+            message = message || __('Deleted')
 
             this.$axios
                 .delete(this.deletingRow.deleteUrl)
                 .then(() => {
-                    let i = _.indexOf(this.items, _.findWhere(this.rows, { id }))
+                    let i = _.indexOf(
+                        this.items,
+                        _.findWhere(this.rows, { id })
+                    )
                     this.items.splice(i, 1)
                     this.deletingRow = false
                     this.$toast.success(message)
 
                     // location.reload()
                 })
-                .catch((e) => {
+                .catch(e => {
                     this.$toast.error(
-                        e.response ? e.response.data.message : __("Something went wrong")
+                        e.response
+                            ? e.response.data.message
+                            : __('Something went wrong')
                     )
                 })
         },
 
         cancelDeleteRow() {
-            this.deletingRow = false;
+            this.deletingRow = false
             setTimeout(() => {
-                this.visibleColumns = this.columns.filter(column => column.visible)
-            }, 50);
+                this.visibleColumns = this.columns.filter(
+                    column => column.visible
+                )
+            }, 50)
         },
     },
 }

@@ -1,118 +1,136 @@
 <template>
-  <div
-    :is="config.mode == 'table' ? 'tr' : 'div'"
-    :class="{ 'sortable-row outline-none': config.mode === 'table' }"
-  >
-    <template v-if="config.mode == 'table'">
-      <td>
-        <a @click="edit">{{ item.title }}</a>
-      </td>
+    <div
+        :is="config.mode == 'table' ? 'tr' : 'div'"
+        :class="{ 'sortable-row outline-none': config.mode === 'table' }"
+    >
+        <template v-if="config.mode == 'table'">
+            <td>
+                <a @click="edit">{{ item.title }}</a>
+            </td>
 
-      <td class="actions-column" v-if="!readOnly">
-        <dropdown-list>
-          <dropdown-item :text="__('Edit')" @click="edit" v-if="editable" />
-          <dropdown-item
-            :text="__('Delete')"
-            class="warning"
-            @click="$emit('removed')"
-          />
-        </dropdown-list>
-      </td>
+            <td class="actions-column" v-if="!readOnly">
+                <dropdown-list>
+                    <dropdown-item
+                        :text="__('Edit')"
+                        @click="edit"
+                        v-if="editable"
+                    />
+                    <dropdown-item
+                        :text="__('Delete')"
+                        class="warning"
+                        @click="$emit('removed')"
+                    />
+                </dropdown-list>
+            </td>
 
-      <inline-edit-form
-        v-if="isEditing"
-        :item="item"
-        :component="formComponent"
-        :component-props="formComponentProps"
-        @updated="itemUpdated"
-        @closed="isEditing = false"
-      />
-    </template>
+            <inline-edit-form
+                v-if="isEditing"
+                :item="item"
+                :component="formComponent"
+                :component-props="formComponentProps"
+                @updated="itemUpdated"
+                @closed="isEditing = false"
+            />
+        </template>
 
-    <div v-else class="item select-none" :class="{ invalid: item.invalid }">
-      <div class="item-move" v-if="sortable">&nbsp;</div>
+        <div v-else class="item select-none" :class="{ invalid: item.invalid }">
+            <div class="item-move" v-if="sortable">&nbsp;</div>
 
-      <div class="item-inner">
-        <div v-if="statusIcon" class="little-dot mr-1" :class="item.status" />
+            <div class="item-inner">
+                <div
+                    v-if="statusIcon"
+                    class="little-dot mr-1"
+                    :class="item.status"
+                />
 
-        <div
-          v-if="item.invalid"
-          v-tooltip.top="__('An item with this ID could not be found')"
-          v-text="item.title"
-        />
+                <div
+                    v-if="item.invalid"
+                    v-tooltip.top="
+                        __('An item with this ID could not be found')
+                    "
+                    v-text="item.title"
+                />
 
-        <a v-if="!item.invalid && editable" @click="edit" v-text="item.title" />
+                <a
+                    v-if="!item.invalid && editable"
+                    @click="edit"
+                    v-text="item.title"
+                />
 
-        <div v-if="!item.invalid && !editable" v-text="item.title" />
+                <div v-if="!item.invalid && !editable" v-text="item.title" />
 
-        <inline-edit-form
-          v-if="isEditing"
-          :item="item"
-          :component="formComponent"
-          :component-props="formComponentProps"
-          @updated="itemUpdated"
-          @closed="isEditing = false"
-        />
-      </div>
+                <inline-edit-form
+                    v-if="isEditing"
+                    :item="item"
+                    :component="formComponent"
+                    :component-props="formComponentProps"
+                    @updated="itemUpdated"
+                    @closed="isEditing = false"
+                />
+            </div>
 
-      <div
-        v-if="item.collection"
-        v-text="item.collection.title"
-        class="text-4xs text-grey-60 uppercase whitespace-no-wrap mr-1"
-      />
+            <div
+                v-if="item.collection"
+                v-text="item.collection.title"
+                class="text-4xs text-grey-60 uppercase whitespace-no-wrap mr-1"
+            />
 
-      <div class="pr-1 flex items-center" v-if="!readOnly">
-        <dropdown-list>
-          <dropdown-item :text="__('Edit')" @click="edit" v-if="editable" />
-          <dropdown-item
-            :text="__('Delete')"
-            class="warning"
-            @click="$emit('removed')"
-          />
-        </dropdown-list>
-      </div>
+            <div class="pr-1 flex items-center" v-if="!readOnly">
+                <dropdown-list>
+                    <dropdown-item
+                        :text="__('Edit')"
+                        @click="edit"
+                        v-if="editable"
+                    />
+                    <dropdown-item
+                        :text="__('Delete')"
+                        class="warning"
+                        @click="$emit('removed')"
+                    />
+                </dropdown-list>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
-import InlineEditForm from "../../../../vendor/statamic/cms/resources/js/components/inputs/relationship/InlineEditForm.vue";
+import InlineEditForm from '../../../../vendor/statamic/cms/resources/js/components/inputs/relationship/InlineEditForm.vue'
 
 export default {
-  components: {
-    InlineEditForm,
-  },
-
-  props: {
-    item: Object,
-    config: Object,
-    statusIcon: Boolean,
-    editable: Boolean,
-    sortable: Boolean,
-    readOnly: Boolean,
-    formComponent: String,
-    formComponentProps: Object,
-  },
-
-  data() {
-    return {
-      isEditing: false,
-    };
-  },
-
-  methods: {
-    edit() {
-      if (!this.editable) return;
-      if (this.item.invalid) return;
-      this.isEditing = true;
+    components: {
+        InlineEditForm,
     },
 
-    itemUpdated(responseData) {
-      this.item.title = responseData.title;
-      this.item.published = responseData.published;
-      this.item.private = responseData.private;
-      this.item.status = responseData.status;
+    props: {
+        item: Object,
+        config: Object,
+        statusIcon: Boolean,
+        editable: Boolean,
+        sortable: Boolean,
+        readOnly: Boolean,
+        formComponent: String,
+        formComponentProps: Object,
     },
-  },
-};
+
+    data() {
+        return {
+            isEditing: false,
+        }
+    },
+
+    methods: {
+        edit() {
+            if (!this.editable) return
+            if (this.item.invalid) return
+            this.isEditing = true
+        },
+
+        itemUpdated(responseData) {
+            this.item.title = responseData.title
+            this.item.published = responseData.published
+            this.item.private = responseData.private
+            this.item.status = responseData.status
+        },
+    },
+}
 </script>
