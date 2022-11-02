@@ -51,7 +51,7 @@ class ResourceController extends CpController
 
         $viewData = [
             'title' => __('Create :resource', [
-                'resource' => $resource->singular()
+                'resource' => $resource->singular(),
             ]),
             'action' => cp_route('runway.store', ['resourceHandle' => $resource->handle()]),
             'method' => 'POST',
@@ -151,7 +151,7 @@ class ResourceController extends CpController
 
         $viewData = [
             'title' => __('Edit :resource', [
-                'resource' => $resource->singular()
+                'resource' => $resource->singular(),
             ]),
             'action' => cp_route('runway.update', [
                 'resourceHandle'  => $resource->handle(),
