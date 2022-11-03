@@ -50,8 +50,8 @@ class BaseFieldtype extends Relationship
                 'width' => 50,
             ],
             'resource' => [
-                'display' => 'Resource',
-                'instructions' => "Select the Runway resource you'd like to be selectable from this field.",
+                'display' => __('Resource'),
+                'instructions' => __("Select the Runway resource you'd like to be selectable from this field."),
                 'type' => 'select',
                 'options' => collect(Runway::allResources())
                     ->mapWithKeys(function ($resource) {
@@ -69,7 +69,7 @@ class BaseFieldtype extends Relationship
             ],
             'with' => [
                 'display' => __('Eager Loaded Relationships'),
-                'instructions' => 'Specify any relationships you wish to be eager loaded when this field is augmented.',
+                'instructions' => __('Specify any relationships you wish to be eager loaded when this field is augmented.'),
                 'type' => 'list',
                 'default' => [],
                 'width' => 50,
