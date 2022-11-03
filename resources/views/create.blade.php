@@ -1,5 +1,7 @@
 @extends('statamic::layout')
-@section('title', "Create {$resource->singular()}")
+@section('title', __('Create :resource', [
+    'resource' => $resource->singular(),
+]))
 @section('wrapper_class', 'max-w-3xl')
 
 @section('content')

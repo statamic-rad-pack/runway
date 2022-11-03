@@ -50,7 +50,9 @@ class ResourceController extends CpController
         $fields = $fields->preProcess();
 
         $viewData = [
-            'title' => "Create {$resource->singular()}",
+            'title' => __('Create :resource', [
+                'resource' => $resource->singular(),
+            ]),
             'action' => cp_route('runway.store', ['resourceHandle' => $resource->handle()]),
             'method' => 'POST',
             'breadcrumbs' => new Breadcrumbs([
@@ -148,7 +150,9 @@ class ResourceController extends CpController
         $fields = $blueprint->fields()->addValues($values)->preProcess();
 
         $viewData = [
-            'title' => "Edit {$resource->singular()}",
+            'title' => __('Edit :resource', [
+                'resource' => $resource->singular(),
+            ]),
             'action' => cp_route('runway.update', [
                 'resourceHandle'  => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},

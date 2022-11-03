@@ -19,7 +19,7 @@
                     :disabled="isSaving"
                     @click.prevent="save"
                 >
-                    Save
+                    __('Save')
                 </button>
             </div>
         </div>
@@ -83,7 +83,7 @@
                 :disabled="isSaving"
                 @click.prevent="save"
             >
-                Save
+                __('Save')
             </button>
         </div>
     </div>
