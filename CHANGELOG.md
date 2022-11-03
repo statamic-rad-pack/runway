@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.5.5 (2022-11-03)
+
+### What's new
+
+-   All of Runway's strings are now translatable! #178
+
 ## v2.5.4 (2022-10-29)
 
 ### What's fixed
