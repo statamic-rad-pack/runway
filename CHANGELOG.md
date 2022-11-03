@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.5.6 (2022-11-03)
+
+### What's fixed
+
+-   Fixed an issue where the translations weren't working properly on Save buttons #179
+
 ## v2.5.5 (2022-11-03)
 
 ### What's new
