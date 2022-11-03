@@ -6,7 +6,7 @@
 
 ### What's fixed
 
--   Fixed an issue where the translations weren't working properly on Save buttons #179
+-   Fixed an issue where the translations weren't working properly on Save buttons #179 by @jymden
 
 ## v2.5.5 (2022-11-03)
 
