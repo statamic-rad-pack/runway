@@ -161,8 +161,8 @@ class GenerateBlueprint extends Command
         $columns = Schema::getConnection()->getDoctrineSchemaManager()->listTableColumns($resource->databaseTable());
 
         $fields = collect($columns)
-            ->reject(fn(\Doctrine\DBAL\Schema\Column $column) => $column->getName() === 'id')
-            ->map(fn(\Doctrine\DBAL\Schema\Column $column) => [
+            ->reject(fn (\Doctrine\DBAL\Schema\Column $column) => $column->getName() === 'id')
+            ->map(fn (\Doctrine\DBAL\Schema\Column $column) => [
                 'name' => $column->getName(),
                 'type' => $this->getMatchingFieldtype($column),
                 'nullable' => ! $column->getNotnull(),

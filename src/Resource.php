@@ -83,7 +83,7 @@ class Resource
 
     public function listableColumns()
     {
-        return $this->blueprint()->fields()->items()->reject(fn($field) => isset($field['import']) || (isset($field['field']['listable']) && $field['field']['listable'] === 'hidden'))->pluck('handle')->toArray();
+        return $this->blueprint()->fields()->items()->reject(fn ($field) => isset($field['import']) || (isset($field['field']['listable']) && $field['field']['listable'] === 'hidden'))->pluck('handle')->toArray();
     }
 
     public function cpIcon($cpIcon = null)
@@ -154,21 +154,21 @@ class Resource
     public function template($template = null)
     {
         return $this->fluentlyGetOrSet('template')
-            ->getter(fn($value) => $value ?? 'default')
+            ->getter(fn ($value) => $value ?? 'default')
             ->args(func_get_args());
     }
 
     public function layout($layout = null)
     {
         return $this->fluentlyGetOrSet('layout')
-            ->getter(fn($value) => $value ?? 'layout')
+            ->getter(fn ($value) => $value ?? 'layout')
             ->args(func_get_args());
     }
 
     public function graphqlEnabled($graphqlEnabled = null)
     {
         return $this->fluentlyGetOrSet('graphqlEnabled')
-            ->getter(fn($graphqlEnabled) => $graphqlEnabled ?? false)
+            ->getter(fn ($graphqlEnabled) => $graphqlEnabled ?? false)
             ->args(func_get_args());
     }
 
@@ -204,7 +204,7 @@ class Resource
                             return [$field['handle'] => $relationName];
                         })
                         ->merge(['runwayUri'])
-                        ->filter(fn($relationName) => method_exists($this->model(), $relationName));
+                        ->filter(fn ($relationName) => method_exists($this->model(), $relationName));
                 }
 
                 return collect($eagerLoadingRelations);

@@ -110,7 +110,7 @@ class HasManyFieldtype extends BaseFieldtype
 
         // Delete any deleted models
         collect($relatedField->get())
-            ->reject(fn($model) => in_array($model->id, $data))
+            ->reject(fn ($model) => in_array($model->id, $data))
             ->each(function ($model) use ($relatedResource, &$deleted) {
                 $deleted[] = $model->{$relatedResource->primaryKey()};
 
@@ -119,8 +119,8 @@ class HasManyFieldtype extends BaseFieldtype
 
         // Add anything new
         collect($data)
-            ->reject(fn($relatedId) => $relatedField->get()->pluck($relatedResource->primaryKey())->contains($relatedId))
-            ->reject(fn($relatedId) => in_array($relatedId, $deleted))
+            ->reject(fn ($relatedId) => $relatedField->get()->pluck($relatedResource->primaryKey())->contains($relatedId))
+            ->reject(fn ($relatedId) => in_array($relatedId, $deleted))
             ->each(function ($relatedId) use ($record, $relatedResource, $relatedField) {
                 $model = $relatedResource->model()->find($relatedId);
 
@@ -147,7 +147,7 @@ class HasManyFieldtype extends BaseFieldtype
 
         return [
             'type' => GraphQL::listOf(GraphQL::type("runway.graphql.types.{$resource->handle()}")),
-            'resolve' => fn($model, $args, $context, ResolveInfo $info) => $model->{$info->fieldName},
+            'resolve' => fn ($model, $args, $context, ResolveInfo $info) => $model->{$info->fieldName},
         ];
     }
 }

@@ -54,7 +54,7 @@ class BaseFieldtype extends Relationship
                 'instructions' => __("Select the Runway resource you'd like to be selectable from this field."),
                 'type' => 'select',
                 'options' => collect(Runway::allResources())
-                    ->mapWithKeys(fn($resource) => [$resource->handle() => $resource->name()])
+                    ->mapWithKeys(fn ($resource) => [$resource->handle() => $resource->name()])
                     ->toArray(),
                 'width' => 50,
             ],
@@ -97,21 +97,21 @@ class BaseFieldtype extends Relationship
                         $query->runwaySearch($searchQuery);
                     },
                     function ($query) use ($searchQuery, $resource) {
-                        $resource->blueprint()->fields()->items()->reject(fn(array $field) => $field['field']['type'] === 'has_many'
+                        $resource->blueprint()->fields()->items()->reject(fn (array $field) => $field['field']['type'] === 'has_many'
                             || $field['field']['type'] === 'hidden')->each(function (array $field) use ($query, $searchQuery) {
-                            $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
-                        });
+                                $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
+                            });
                     }
                 );
             })
             ->get()
-            ->map(fn($record) => collect($resource->listableColumns())
+            ->map(fn ($record) => collect($resource->listableColumns())
                 ->mapWithKeys(function ($columnKey) use ($record) {
                     $value = $record->{$columnKey};
 
                     // If this is a relationship, then we want to process the values...
                     if ($value instanceof EloquentCollection) {
-                        $value = $value->map(fn($item) => $this->toItemArray($item))->values()->toArray();
+                        $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
                     }
 
                     return [$columnKey => $value];
@@ -188,7 +188,7 @@ class BaseFieldtype extends Relationship
                 if (! $record instanceof Model) {
                     $eagerLoadingRelations = collect($this->config('with') ?? [])->join(',');
 
-                    $record = Blink::once("Runway::{$this->config('resource')}::{$record}::{$eagerLoadingRelations}", fn() => $resource->model()
+                    $record = Blink::once("Runway::{$this->config('resource')}::{$record}::{$eagerLoadingRelations}", fn () => $resource->model()
                         ->when($this->config('with'), function ($query) {
                             $query->with(Arr::wrap($this->config('with')));
                         })
@@ -259,7 +259,7 @@ class BaseFieldtype extends Relationship
 
                     // If this is a relationship, then we want to process the values...
                     if ($value instanceof EloquentCollection) {
-                        $value = $value->map(fn($item) => $this->toItemArray($item))->values()->toArray();
+                        $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
                     }
 
                     return [$columnKey => $value];
@@ -270,7 +270,7 @@ class BaseFieldtype extends Relationship
                     'edit_url' => $editUrl,
                     'editable' => User::current()->hasPermission("Edit {$resource->plural()}") || User::current()->isSuper(),
                     'viewable' => User::current()->hasPermission("View {$resource->plural()}") || User::current()->isSuper(),
-                    'actions' => Action::for($record, ['resource' => $resource->handle()])->reject(fn($action) => $action instanceof DeleteModel)->toArray(),
+                    'actions' => Action::for($record, ['resource' => $resource->handle()])->reject(fn ($action) => $action instanceof DeleteModel)->toArray(),
                 ])
                 ->toArray();
         }
