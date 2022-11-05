@@ -10,12 +10,9 @@ use Statamic\GraphQL\Queries\Query;
 
 class ResourceShowQuery extends Query
 {
-    protected $resource;
-
-    public function __construct(Resource $resource)
+    public function __construct(protected Resource $resource)
     {
-        $this->resource = $resource;
-        $this->attributes['name'] = Str::lower($resource->singular());
+        $this->attributes['name'] = Str::lower($this->resource->singular());
     }
 
     public function type(): Type

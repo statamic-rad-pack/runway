@@ -13,12 +13,9 @@ use Statamic\Facades\GraphQL;
 
 class ResourceType extends Type
 {
-    protected $resource;
-
-    public function __construct(Resource $resource)
+    public function __construct(protected Resource $resource)
     {
-        $this->resource = $resource;
-        $this->attributes['name'] = "runway.graphql.types.{$resource->handle()}";
+        $this->attributes['name'] = "runway.graphql.types.{$this->resource->handle()}";
     }
 
     public function fields(): array
