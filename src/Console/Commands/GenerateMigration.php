@@ -215,23 +215,19 @@ class GenerateMigration extends Command
         $errorMessages = [];
 
         $fields = $resource->blueprint()->fields()->all()
-            ->reject(function (Field $field) {
-                return in_array($field->type(), [
-                    'html', 'revealer', 'section',
-                ]);
-            })
+            ->reject(fn (Field $field) => in_array($field->type(), [
+                'html', 'revealer', 'section',
+            ]))
             ->all();
 
         $columns = collect($fields)
-            ->map(function (Field $field) {
-                return [
-                    'name'           => $field->handle(),
-                    'type'           => $this->getMatchingColumnType($field),
-                    'nullable'       => $this->isFieldNullable($field),
-                    'default'        => empty($field->defaultValue()) ? $field->defaultValue() : null,
-                    'original_field' => $field,
-                ];
-            })
+            ->map(fn (Field $field) => [
+                'name'           => $field->handle(),
+                'type'           => $this->getMatchingColumnType($field),
+                'nullable'       => $this->isFieldNullable($field),
+                'default'        => empty($field->defaultValue()) ? $field->defaultValue() : null,
+                'original_field' => $field,
+            ])
             ->each(function ($column) use (&$errorMessages) {
                 if (is_null($column['type'])) {
                     $errorMessages[] = "Field [{$column['name']}] could not be matched with a column type.";
@@ -261,9 +257,7 @@ class GenerateMigration extends Command
 
     protected function getMatchingColumnType(Field $field): ?string
     {
-        $match = isset($this->matching[$field->type()])
-            ? $this->matching[$field->type()]
-            : null;
+        $match = $this->matching[$field->type()] ?? null;
 
         if (! $match) {
             return null;

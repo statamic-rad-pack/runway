@@ -161,18 +161,14 @@ class GenerateBlueprint extends Command
         $columns = Schema::getConnection()->getDoctrineSchemaManager()->listTableColumns($resource->databaseTable());
 
         $fields = collect($columns)
-            ->reject(function (\Doctrine\DBAL\Schema\Column $column) {
-                return $column->getName() === 'id';
-            })
-            ->map(function (\Doctrine\DBAL\Schema\Column $column) {
-                return [
-                    'name' => $column->getName(),
-                    'type' => $this->getMatchingFieldtype($column),
-                    'nullable' => ! $column->getNotnull(),
-                    'default' => $column->getDefault(),
-                    'original_column' => $column,
-                ];
-            })
+            ->reject(fn (\Doctrine\DBAL\Schema\Column $column) => $column->getName() === 'id')
+            ->map(fn (\Doctrine\DBAL\Schema\Column $column) => [
+                'name' => $column->getName(),
+                'type' => $this->getMatchingFieldtype($column),
+                'nullable' => ! $column->getNotnull(),
+                'default' => $column->getDefault(),
+                'original_column' => $column,
+            ])
             ->each(function ($field) use (&$errorMessages) {
                 if (is_null($field['type'])) {
                     $errorMessages[] = "Column [{$field['name']}] could not be matched with a fieldtype.";
@@ -198,9 +194,7 @@ class GenerateBlueprint extends Command
 
     protected function getMatchingFieldtype(\Doctrine\DBAL\Schema\Column $column): ?string
     {
-        $match = isset($this->matching[get_class($column->getType())])
-            ? $this->matching[get_class($column->getType())]
-            : null;
+        $match = $this->matching[$column->getType()::class] ?? null;
 
         if (! $match) {
             return null;

@@ -15,12 +15,9 @@ class ResourceIndexQuery extends Query
 {
     use QueriesConditions;
 
-    protected $resource;
-
-    public function __construct(Resource $resource)
+    public function __construct(protected Resource $resource)
     {
-        $this->resource = $resource;
-        $this->attributes['name'] = Str::lower($resource->plural());
+        $this->attributes['name'] = Str::lower($this->resource->plural());
     }
 
     public function type(): Type
@@ -63,9 +60,7 @@ class ResourceIndexQuery extends Query
             }
 
             if (Arr::assoc($definitions)) {
-                $definitions = collect($definitions)->map(function ($value, $key) {
-                    return [$key => $value];
-                })->values()->all();
+                $definitions = collect($definitions)->map(fn ($value, $key) => [$key => $value])->values()->all();
             }
 
             foreach ($definitions as $definition) {
@@ -87,7 +82,7 @@ class ResourceIndexQuery extends Query
             $order = 'asc';
 
             if (Str::contains($sort, ' ')) {
-                [$sort, $order] = explode(' ', $sort);
+                [$sort, $order] = explode(' ', (string) $sort);
             }
 
             $query = $query->orderBy($sort, $order);

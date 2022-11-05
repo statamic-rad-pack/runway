@@ -17,9 +17,7 @@ class AugmentedRecord
         $modelKeyValue = $record->toArray();
 
         $resourceKeyValue = $resource->blueprint()->fields()->items()->pluck('handle')
-            ->mapWithKeys(function ($fieldHandle) use ($record) {
-                return [$fieldHandle => $record->{$fieldHandle}];
-            });
+            ->mapWithKeys(fn ($fieldHandle) => [$fieldHandle => $record->{$fieldHandle}]);
 
         return collect($modelKeyValue)
             ->merge($resourceKeyValue)
