@@ -85,7 +85,7 @@ class RunwayTag extends Tags
     protected function augmentRecords($query, Resource $resource)
     {
         return collect($query)
-            ->map(fn($record, $key) => $resource->augment($record))
+            ->map(fn ($record, $key) => $resource->augment($record))
             ->toArray();
     }
 }

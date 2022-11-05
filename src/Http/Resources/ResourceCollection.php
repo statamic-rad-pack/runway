@@ -28,7 +28,7 @@ class ResourceCollection extends LaravelResourceCollection
     public function setColumns($originalColumns)
     {
         $columns = $this->runwayResource->blueprint()->columns()
-            ->filter(fn($column) => in_array($column->field, collect($originalColumns)->pluck('handle')->toArray()));
+            ->filter(fn ($column) => in_array($column->field, collect($originalColumns)->pluck('handle')->toArray()));
 
         if ($key = $this->columnPreferenceKey) {
             $columns->setPreferred($key);

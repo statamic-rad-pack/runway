@@ -215,13 +215,13 @@ class GenerateMigration extends Command
         $errorMessages = [];
 
         $fields = $resource->blueprint()->fields()->all()
-            ->reject(fn(Field $field) => in_array($field->type(), [
+            ->reject(fn (Field $field) => in_array($field->type(), [
                 'html', 'revealer', 'section',
             ]))
             ->all();
 
         $columns = collect($fields)
-            ->map(fn(Field $field) => [
+            ->map(fn (Field $field) => [
                 'name'           => $field->handle(),
                 'type'           => $this->getMatchingColumnType($field),
                 'nullable'       => $this->isFieldNullable($field),
