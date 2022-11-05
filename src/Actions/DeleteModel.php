@@ -25,11 +25,10 @@ class DeleteModel extends Action
 
     public function visibleToBulk($items)
     {
-        if ($items->whereInstanceOf(Model::class)->count() !== $items->count()) {
-            return false;
-        }
-
-        return true;
+        return $items
+            ->map(fn ($item) => $this->visibleTo($item))
+            ->filter(fn ($isVisible) => $isVisible === true)
+            ->count() === $items->count();
     }
 
     public function authorize($user, $item)
