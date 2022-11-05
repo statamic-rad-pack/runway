@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## v2.6.0 (2022-11-05)
+
+**⚠️ This release contains breaking changes.**
+
+### What's fixed
+
+-   Bulk actions are no longer visible for read-only resources #181
+
+### Breaking changes
+
+-   Dropped support for anything below PHP 8.1, Laravel 8 & Statamic 3.3 #182
+
 ## v2.5.6 (2022-11-03)
 
 ### What's fixed
