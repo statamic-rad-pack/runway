@@ -54,9 +54,7 @@ class BaseFieldtype extends Relationship
                 'instructions' => __("Select the Runway resource you'd like to be selectable from this field."),
                 'type' => 'select',
                 'options' => collect(Runway::allResources())
-                    ->mapWithKeys(function ($resource) {
-                        return [$resource->handle() => $resource->name()];
-                    })
+                    ->mapWithKeys(fn($resource) => [$resource->handle() => $resource->name()])
                     ->toArray(),
                 'width' => 50,
             ],
@@ -99,36 +97,30 @@ class BaseFieldtype extends Relationship
                         $query->runwaySearch($searchQuery);
                     },
                     function ($query) use ($searchQuery, $resource) {
-                        $resource->blueprint()->fields()->items()->reject(function (array $field) {
-                            return $field['field']['type'] === 'has_many'
-                                || $field['field']['type'] === 'hidden';
-                        })->each(function (array $field) use ($query, $searchQuery) {
+                        $resource->blueprint()->fields()->items()->reject(fn(array $field) => $field['field']['type'] === 'has_many'
+                            || $field['field']['type'] === 'hidden')->each(function (array $field) use ($query, $searchQuery) {
                             $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
                         });
                     }
                 );
             })
             ->get()
-            ->map(function ($record) use ($resource) {
-                return collect($resource->listableColumns())
-                    ->mapWithKeys(function ($columnKey) use ($record) {
-                        $value = $record->{$columnKey};
+            ->map(fn($record) => collect($resource->listableColumns())
+                ->mapWithKeys(function ($columnKey) use ($record) {
+                    $value = $record->{$columnKey};
 
-                        // If this is a relationship, then we want to process the values...
-                        if ($value instanceof EloquentCollection) {
-                            $value = $value->map(function ($item) {
-                                return $this->toItemArray($item);
-                            })->values()->toArray();
-                        }
+                    // If this is a relationship, then we want to process the values...
+                    if ($value instanceof EloquentCollection) {
+                        $value = $value->map(fn($item) => $this->toItemArray($item))->values()->toArray();
+                    }
 
-                        return [$columnKey => $value];
-                    })
-                    ->merge([
-                        'id' => $record->{$resource->primaryKey()},
-                        'title' => $this->makeTitle($record, $resource),
-                    ])
-                    ->toArray();
-            })
+                    return [$columnKey => $value];
+                })
+                ->merge([
+                    'id' => $record->{$resource->primaryKey()},
+                    'title' => $this->makeTitle($record, $resource),
+                ])
+                ->toArray())
             ->filter()
             ->values();
     }
@@ -196,13 +188,11 @@ class BaseFieldtype extends Relationship
                 if (! $record instanceof Model) {
                     $eagerLoadingRelations = collect($this->config('with') ?? [])->join(',');
 
-                    $record = Blink::once("Runway::{$this->config('resource')}::{$record}::{$eagerLoadingRelations}", function () use ($resource, $record) {
-                        return $resource->model()
-                            ->when($this->config('with'), function ($query) {
-                                $query->with(Arr::wrap($this->config('with')));
-                            })
-                            ->firstWhere($resource->primaryKey(), $record);
-                    });
+                    $record = Blink::once("Runway::{$this->config('resource')}::{$record}::{$eagerLoadingRelations}", fn() => $resource->model()
+                        ->when($this->config('with'), function ($query) {
+                            $query->with(Arr::wrap($this->config('with')));
+                        })
+                        ->firstWhere($resource->primaryKey(), $record));
                 }
 
                 if (! $record) {
@@ -269,9 +259,7 @@ class BaseFieldtype extends Relationship
 
                     // If this is a relationship, then we want to process the values...
                     if ($value instanceof EloquentCollection) {
-                        $value = $value->map(function ($item) {
-                            return $this->toItemArray($item);
-                        })->values()->toArray();
+                        $value = $value->map(fn($item) => $this->toItemArray($item))->values()->toArray();
                     }
 
                     return [$columnKey => $value];
@@ -282,9 +270,7 @@ class BaseFieldtype extends Relationship
                     'edit_url' => $editUrl,
                     'editable' => User::current()->hasPermission("Edit {$resource->plural()}") || User::current()->isSuper(),
                     'viewable' => User::current()->hasPermission("View {$resource->plural()}") || User::current()->isSuper(),
-                    'actions' => Action::for($record, ['resource' => $resource->handle()])->reject(function ($action) {
-                        return $action instanceof DeleteModel;
-                    })->toArray(),
+                    'actions' => Action::for($record, ['resource' => $resource->handle()])->reject(fn($action) => $action instanceof DeleteModel)->toArray(),
                 ])
                 ->toArray();
         }

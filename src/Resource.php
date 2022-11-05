@@ -83,9 +83,7 @@ class Resource
 
     public function listableColumns()
     {
-        return $this->blueprint()->fields()->items()->reject(function ($field) {
-            return isset($field['import']) || (isset($field['field']['listable']) && $field['field']['listable'] === 'hidden');
-        })->pluck('handle')->toArray();
+        return $this->blueprint()->fields()->items()->reject(fn($field) => isset($field['import']) || (isset($field['field']['listable']) && $field['field']['listable'] === 'hidden'))->pluck('handle')->toArray();
     }
 
     public function cpIcon($cpIcon = null)
@@ -156,27 +154,21 @@ class Resource
     public function template($template = null)
     {
         return $this->fluentlyGetOrSet('template')
-            ->getter(function ($value) {
-                return $value ?? 'default';
-            })
+            ->getter(fn($value) => $value ?? 'default')
             ->args(func_get_args());
     }
 
     public function layout($layout = null)
     {
         return $this->fluentlyGetOrSet('layout')
-            ->getter(function ($value) {
-                return $value ?? 'layout';
-            })
+            ->getter(fn($value) => $value ?? 'layout')
             ->args(func_get_args());
     }
 
     public function graphqlEnabled($graphqlEnabled = null)
     {
         return $this->fluentlyGetOrSet('graphqlEnabled')
-            ->getter(function ($graphqlEnabled) {
-                return $graphqlEnabled ?? false;
-            })
+            ->getter(fn($graphqlEnabled) => $graphqlEnabled ?? false)
             ->args(func_get_args());
     }
 
@@ -212,9 +204,7 @@ class Resource
                             return [$field['handle'] => $relationName];
                         })
                         ->merge(['runwayUri'])
-                        ->filter(function ($relationName) {
-                            return method_exists($this->model(), $relationName);
-                        });
+                        ->filter(fn($relationName) => method_exists($this->model(), $relationName));
                 }
 
                 return collect($eagerLoadingRelations);
@@ -251,7 +241,7 @@ class Resource
     public function hasRouting(): bool
     {
         return ! is_null($this->route())
-            && in_array('DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes', class_uses($this->model()));
+            && in_array(\DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes::class, class_uses($this->model()));
     }
 
     public function primaryKey(): string

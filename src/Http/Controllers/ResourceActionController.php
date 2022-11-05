@@ -26,8 +26,6 @@ class ResourceActionController extends ActionController
 
     protected function getSelectedItems($items, $context)
     {
-        return $items->map(function ($item) {
-            return $this->resource->find($item)->first();
-        });
+        return $items->map(fn($item) => $this->resource->find($item)->first());
     }
 }

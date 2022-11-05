@@ -22,14 +22,12 @@ class ResourceType extends Type
     {
         return $this->resource->blueprint()->fields()->toGql()
             ->merge($this->nonBlueprintFields())
-            ->mapWithKeys(function ($value, $key) {
-                return [
-                    Str::replace('_id', '', $key) => $value,
-                ];
-            })
+            ->mapWithKeys(fn($value, $key) => [
+                Str::replace('_id', '', $key) => $value,
+            ])
             ->map(function ($arr) {
                 if (is_array($arr)) {
-                    $arr['resolve'] = $arr['resolve'] ?? $this->resolver();
+                    $arr['resolve'] ??= $this->resolver();
                 }
 
                 return $arr;
@@ -57,12 +55,10 @@ class ResourceType extends Type
             ->listTableColumns($this->resource->databaseTable());
 
         return collect($columns)
-            ->reject(function ($column) {
-                return in_array(
-                    $column->getName(),
-                    $this->resource->blueprint()->fields()->all()->keys()->toArray()
-                );
-            })
+            ->reject(fn($column) => in_array(
+                $column->getName(),
+                $this->resource->blueprint()->fields()->all()->keys()->toArray()
+            ))
             ->map(function ($column) {
                 $type = null;
 
@@ -86,9 +82,7 @@ class ResourceType extends Type
                     'type' => $type,
                 ];
             })
-            ->reject(function ($item) {
-                return is_null($item['type']);
-            })
+            ->reject(fn($item) => is_null($item['type']))
             ->toArray();
     }
 }

@@ -43,14 +43,12 @@ class ResourceResponse implements Responsable
             ? $this->data->site()->handle()
             : Site::current()->handle();
 
-        $paths = collect($finder->getPaths())->flatMap(function ($path) use ($site, $amp) {
-            return [
-                $amp ? $path.'/'.$site.'/amp' : null,
-                $path.'/'.$site,
-                $amp ? $path.'/amp' : null,
-                $path,
-            ];
-        })->filter()->values()->all();
+        $paths = collect($finder->getPaths())->flatMap(fn($path) => [
+            $amp ? $path.'/'.$site.'/amp' : null,
+            $path.'/'.$site,
+            $amp ? $path.'/amp' : null,
+            $path,
+        ])->filter()->values()->all();
 
         $finder->setPaths($paths);
 

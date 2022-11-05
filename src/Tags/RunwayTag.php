@@ -18,7 +18,7 @@ class RunwayTag extends Tags
             $resource = Runway::findResource(
                 $this->params->has('resource') ? Str::studly($this->params->get('resource')) : Str::studly($resourceHandle)
             );
-        } catch (ResourceNotFound $e) {
+        } catch (ResourceNotFound) {
             $resource = Runway::findResource(
                 $this->params->has('resource') ? Str::lower($this->params->get('resource')) : Str::lower($resourceHandle)
             );
@@ -27,7 +27,7 @@ class RunwayTag extends Tags
         $query = $resource->model()->query();
 
         if ($scopes = $this->params->get('scope')) {
-            $scopes = explode('|', $scopes);
+            $scopes = explode('|', (string) $scopes);
 
             foreach ($scopes as $scope) {
                 $scopeName = explode(':', $scope)[0];
@@ -50,16 +50,16 @@ class RunwayTag extends Tags
         }
 
         if ($this->params->has('where') && $where = $this->params->get('where')) {
-            $query->where(explode(':', $where)[0], explode(':', $where)[1]);
+            $query->where(explode(':', (string) $where)[0], explode(':', (string) $where)[1]);
         }
 
         if ($with = $this->params->get('with')) {
-            $query->with(explode('|', $with));
+            $query->with(explode('|', (string) $with));
         }
 
         if ($this->params->has('sort')) {
-            $sortColumn = explode(':', $this->params->get('sort'))[0];
-            $sortDirection = explode(':', $this->params->get('sort'))[1];
+            $sortColumn = explode(':', (string) $this->params->get('sort'))[0];
+            $sortDirection = explode(':', (string) $this->params->get('sort'))[1];
 
             $query->orderBy($sortColumn, $sortDirection);
         }
@@ -85,9 +85,7 @@ class RunwayTag extends Tags
     protected function augmentRecords($query, Resource $resource)
     {
         return collect($query)
-            ->map(function ($record, $key) use ($resource) {
-                return $resource->augment($record);
-            })
+            ->map(fn($record, $key) => $resource->augment($record))
             ->toArray();
     }
 }

@@ -97,7 +97,7 @@ class ResourceController extends CpController
             }
 
             if (is_array($processedValue) && ! $record->hasCast($fieldKey, ['array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])) {
-                $processedValue = json_encode($processedValue);
+                $processedValue = json_encode($processedValue, JSON_THROW_ON_ERROR);
             }
 
             $record->{$fieldKey} = $processedValue;
@@ -140,7 +140,7 @@ class ResourceController extends CpController
             }
 
             if (Json::isJson($value)) {
-                $value = json_decode($value, true);
+                $value = json_decode((string) $value, true);
             }
 
             $values[$fieldKey] = $value;
@@ -201,7 +201,7 @@ class ResourceController extends CpController
             }
 
             if (is_array($processedValue) && ! $record->hasCast($fieldKey, ['json', 'array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])) {
-                $processedValue = json_encode($processedValue);
+                $processedValue = json_encode($processedValue, JSON_THROW_ON_ERROR);
             }
 
             $record->{$fieldKey} = $processedValue;
@@ -213,10 +213,8 @@ class ResourceController extends CpController
             // In the case of the 'Relationship' fields in Table Mode, when a model is updated
             // in the stack, we also need to return it's relations.
             collect($resource->blueprint()->fields()->all())
-                ->filter(function (Field $field) {
-                    return $field->type() === 'belongs_to'
-                        || $field->type() === 'has_many';
-                })
+                ->filter(fn(Field $field) => $field->type() === 'belongs_to'
+                    || $field->type() === 'has_many')
                 ->each(function (Field $field) use (&$record) {
                     $relatedResource = Runway::findResource($field->get('resource'));
 
