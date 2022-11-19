@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.6.1 (2022-11-19)
+
+### What's fixed
+
+-   The "Display" text for a field is now shown as the column name when using the 'Table' mode on the fieldtype (instead of the handle!) #185 #186
+
 ## v2.6.0 (2022-11-05)
 
 **⚠️ This release contains breaking changes.**
