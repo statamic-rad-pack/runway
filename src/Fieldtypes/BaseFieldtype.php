@@ -222,6 +222,7 @@ class BaseFieldtype extends Relationship
                 $blueprintField = $blueprint->field($columnKey);
 
                 return Column::make($columnKey)
+                    ->label($blueprintField->display())
                     ->fieldtype($blueprintField->fieldtype()->handle());
             })
             // ->merge([Column::make('title')])
