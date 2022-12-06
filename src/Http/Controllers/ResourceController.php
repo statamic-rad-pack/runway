@@ -213,8 +213,9 @@ class ResourceController extends CpController
             // In the case of the 'Relationship' fields in Table Mode, when a model is updated
             // in the stack, we also need to return it's relations.
             collect($resource->blueprint()->fields()->all())
-                ->filter(fn (Field $field) => $field->type() === 'belongs_to'
-                    || $field->type() === 'has_many')
+                ->filter(function (Field $field) {
+                    return $field->type() === 'belongs_to' || $field->type() === 'has_many';
+                })
                 ->each(function (Field $field) use (&$record) {
                     $relatedResource = Runway::findResource($field->get('resource'));
 
