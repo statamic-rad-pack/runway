@@ -209,9 +209,9 @@ class ResourceController extends CpController
 
         $record->save();
 
+        // In the case of the 'Relationship' fields in Table Mode, when a model is updated
+        // in the stack, we also need to return it's relations.
         if ($request->get('from_inline_publish_form')) {
-            // In the case of the 'Relationship' fields in Table Mode, when a model is updated
-            // in the stack, we also need to return it's relations.
             collect($resource->blueprint()->fields()->all())
                 ->filter(function (Field $field) {
                     return $field->type() === 'belongs_to' || $field->type() === 'has_many';
