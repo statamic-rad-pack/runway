@@ -209,18 +209,21 @@ class ResourceController extends CpController
 
         $record->save();
 
+        // In the case of the 'Relationship' fields in Table Mode, when a model is updated
+        // in the stack, we also need to return it's relations.
         if ($request->get('from_inline_publish_form')) {
-            // In the case of the 'Relationship' fields in Table Mode, when a model is updated
-            // in the stack, we also need to return it's relations.
             collect($resource->blueprint()->fields()->all())
-                ->filter(fn (Field $field) => $field->type() === 'belongs_to'
-                    || $field->type() === 'has_many')
-                ->each(function (Field $field) use (&$record) {
+                ->filter(function (Field $field) {
+                    return $field->type() === 'belongs_to' || $field->type() === 'has_many';
+                })
+                ->each(function (Field $field) use (&$record, $resource) {
                     $relatedResource = Runway::findResource($field->get('resource'));
 
                     $column = $relatedResource->listableColumns()[0];
 
-                    $record->{$field->handle()} = $record->{$field->handle()}()
+                    $relationshipName = $resource->eagerLoadingRelations()->get($field->handle()) ?? $field->handle();
+
+                    $record->{$field->handle()} = $record->{$relationshipName}()
                         ->select('id', $column)
                         ->get()
                         ->each(function ($model) use ($relatedResource, $column) {
