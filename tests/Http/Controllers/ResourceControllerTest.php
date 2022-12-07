@@ -281,6 +281,34 @@ class ResourceControllerTest extends TestCase
         $this->assertSame($post->title, 'Santa is coming home');
     }
 
+    /**
+     * @test
+     * https://github.com/duncanmcclean/runway/issues/187
+     */
+    public function can_update_resource_when_being_updated_from_inline_publish_form()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $post = $this->postFactory();
+
+        $this->actingAs($user)
+            ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
+                'title' => 'Santa is coming home',
+                'slug' => 'santa-is-coming-home',
+                'body' => $post->body,
+                'author_id' => [$post->author_id],
+                'from_inline_publish_form' => true,
+            ])
+            ->assertOk()
+            ->assertJsonStructure([
+                'data',
+            ]);
+
+        $post->refresh();
+
+        $this->assertSame($post->title, 'Santa is coming home');
+    }
+
     /** @test */
     public function cant_update_resource_if_resource_is_read_only()
     {
