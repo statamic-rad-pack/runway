@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.6.2 (2022-12-07)
+
+### What's fixed
+
+-   Fix error with BelongsTo fieldtype when saving via a publish form inside a stack #187 #188
+
 ## v2.6.1 (2022-11-19)
 
 ### What's fixed
