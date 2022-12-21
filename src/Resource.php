@@ -252,10 +252,7 @@ class Resource
             ->args(func_get_args());
     }
 
-    /**
-     * Does this resource have Runway's Front-end Routing feature enabled?
-     */
-    public function hasRouting(): bool
+    public function hasRouting()
     {
         return ! is_null($this->route())
             && in_array(\DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes::class, class_uses($this->model()));
