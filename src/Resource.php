@@ -81,9 +81,15 @@ class Resource
             ->args(func_get_args());
     }
 
-    public function listableColumns()
+    public function listableColumns(): array
     {
-        return $this->blueprint()->fields()->items()->reject(fn ($field) => isset($field['import']) || (isset($field['field']['listable']) && $field['field']['listable'] === 'hidden'))->pluck('handle')->toArray();
+        return $this->blueprint()->fields()->items()
+            ->reject(function ($field) {
+                return isset($field['import'])
+                    || (isset($field['field']['listable']) && $field['field']['listable'] === 'hidden');
+            })
+            ->pluck('handle')
+            ->toArray();
     }
 
     public function cpIcon($cpIcon = null)
@@ -178,6 +184,10 @@ class Resource
             ->args(func_get_args());
     }
 
+    /**
+     * Discovers any Eloquent relationships from fieldtypes in the resource's blueprint
+     * OR those explicitly defined in the resource's config file.
+     */
     public function eagerLoadingRelations($eagerLoadingRelations = null)
     {
         return $this->fluentlyGetOrSet('eagerLoadingRelations')
@@ -193,15 +203,19 @@ class Resource
                         ->mapWithKeys(function ($field) {
                             $relationName = $field['handle'];
 
+                            // If field handle is `author_id`, strip off the `_id`
                             if (str_contains($relationName, '_id')) {
                                 $relationName = Str::replaceLast('_id', '', $relationName);
                             }
 
+                            // If field handle contains an underscore, convert the name to camel case
                             if (str_contains($relationName, '_')) {
                                 $relationName = Str::camel($relationName);
                             }
 
-                            return [$field['handle'] => $relationName];
+                            return [
+                                $field['handle'] => $relationName
+                            ];
                         })
                         ->merge(['runwayUri'])
                         ->filter(fn ($relationName) => method_exists($this->model(), $relationName));
@@ -238,6 +252,9 @@ class Resource
             ->args(func_get_args());
     }
 
+    /**
+     * Does this resource have Runway's Front-end Routing feature enabled?
+     */
     public function hasRouting(): bool
     {
         return ! is_null($this->route())
