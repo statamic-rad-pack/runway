@@ -10,6 +10,10 @@ use Statamic\Fields\Blueprint;
 
 class AugmentedRecord
 {
+    /**
+     * Takes in an Eloquent model & augments it with the fields
+     * from the resource's blueprint.
+     */
     public static function augment(Model $record, Blueprint $blueprint): array
     {
         $resource = Runway::findResourceByModel($record);
@@ -24,6 +28,8 @@ class AugmentedRecord
             ->map(function ($value, $key) use ($record, $resource, $blueprint) {
                 $value = $record->{$key} ?? $value;
 
+                // When $value is a Carbon instance, format it with the format
+                // specified in the blueprint.
                 if ($value instanceof CarbonInterface) {
                     $format = $defaultFormat = 'Y-m-d H:i';
 
@@ -34,6 +40,7 @@ class AugmentedRecord
                     return $value->format($format);
                 }
 
+                // When $value is a JSON string, decode it.
                 if (Json::isJson($value)) {
                     $value = json_decode($value, true);
                 }
@@ -41,11 +48,6 @@ class AugmentedRecord
                 if ($blueprint->hasField($key)) {
                     /** @var \Statamic\Fields\Field $field */
                     $field = $blueprint->field($key);
-
-                    // HasMany is special...
-                    if ($field->fieldtype() instanceof HasManyFieldtype) {
-                        $value = $record->{$key};
-                    }
 
                     return $field->setValue($value)->augment()->value();
                 }
