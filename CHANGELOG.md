@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.6.3 (2022-12-21)
+
+### What's improved
+
+-   Made some minor tweaks - nothing noticeable #189
+
 ## v2.6.2 (2022-12-07)
 
 ### What's fixed
