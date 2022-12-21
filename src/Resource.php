@@ -214,7 +214,7 @@ class Resource
                             }
 
                             return [
-                                $field['handle'] => $relationName
+                                $field['handle'] => $relationName,
                             ];
                         })
                         ->merge(['runwayUri'])
