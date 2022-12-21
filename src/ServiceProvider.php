@@ -38,10 +38,6 @@ class ServiceProvider extends AddonServiceProvider
         Tags\RunwayTag::class,
     ];
 
-    protected $updateScripts = [
-        UpdateScripts\ModelsToResources::class,
-    ];
-
     public function boot()
     {
         parent::boot();

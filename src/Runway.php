@@ -10,7 +10,7 @@ class Runway
 {
     protected static array $resources = [];
 
-    public static function discoverResources()
+    public static function discoverResources(): self
     {
         static::$resources = collect(config('runway.resources'))
             ->mapWithKeys(function ($config, $model) {
