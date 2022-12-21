@@ -3,7 +3,6 @@
 namespace DoubleThreeDigital\Runway;
 
 use Carbon\CarbonInterface;
-use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
 use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Fields\Blueprint;
