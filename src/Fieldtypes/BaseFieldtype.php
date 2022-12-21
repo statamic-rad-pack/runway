@@ -97,8 +97,12 @@ class BaseFieldtype extends Relationship
                         $query->runwaySearch($searchQuery);
                     },
                     function ($query) use ($searchQuery, $resource) {
-                        $resource->blueprint()->fields()->items()->reject(fn (array $field) => $field['field']['type'] === 'has_many'
-                            || $field['field']['type'] === 'hidden')->each(function (array $field) use ($query, $searchQuery) {
+                        $resource->blueprint()->fields()->items()
+                            ->reject(function (array $field) {
+                                return $field['field']['type'] === 'has_many'
+                                    || $field['field']['type'] === 'hidden';
+                            })
+                            ->each(function (array $field) use ($query, $searchQuery) {
                                 $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
                             });
                     }
@@ -109,7 +113,7 @@ class BaseFieldtype extends Relationship
                 ->mapWithKeys(function ($columnKey) use ($record) {
                     $value = $record->{$columnKey};
 
-                    // If this is a relationship, then we want to process the values...
+                    // When $value is an Eloquent Collection, we want to map over each item & process its values.
                     if ($value instanceof EloquentCollection) {
                         $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
                     }
@@ -225,7 +229,6 @@ class BaseFieldtype extends Relationship
                     ->label($blueprintField->display())
                     ->fieldtype($blueprintField->fieldtype()->handle());
             })
-            // ->merge([Column::make('title')])
             ->toArray();
     }
 
@@ -253,12 +256,13 @@ class BaseFieldtype extends Relationship
             'record' => $record->{$resource->routeKey()},
         ]);
 
+        // When using Table mode, we want to return each item differently.
         if ($this->config('mode') === 'table') {
             return collect($resource->listableColumns())
                 ->mapWithKeys(function ($columnKey) use ($record) {
                     $value = $record->{$columnKey};
 
-                    // If this is a relationship, then we want to process the values...
+                    // When $value is an Eloquent Collection, we want to map over each item & process its values.
                     if ($value instanceof EloquentCollection) {
                         $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
                     }

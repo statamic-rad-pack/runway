@@ -88,15 +88,27 @@ class ResourceController extends CpController
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
 
-            if ($field->type() === 'section' || $field->type() === 'has_many') {
-                if ($field->type() === 'has_many' && $processedValue) {
+            // Skip section fields as there's nothing to store.
+            if ($field->type() === 'section') {
+                continue;
+            }
+
+            // Store the HasMany field's value in the $postCreatedHooks array so we
+            // can process it after we've finished creating this model.
+            if ($field->type() === 'has_many') {
+                if ($processedValue) {
                     $postCreatedHooks[] = $processedValue;
                 }
 
                 continue;
             }
 
-            if (is_array($processedValue) && ! $record->hasCast($fieldKey, ['array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])) {
+            // If the $processedValue is an array & no cast is set on the model then
+            // let's JSON encode it.
+            if (
+                is_array($processedValue)
+                && ! $record->hasCast($fieldKey, ['array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])
+            ) {
                 $processedValue = json_encode($processedValue, JSON_THROW_ON_ERROR);
             }
 
@@ -105,6 +117,8 @@ class ResourceController extends CpController
 
         $record->save();
 
+        // Runs anything in the $postCreatedHooks array. See HasManyFieldtype@process for an example
+        // of where this is used.
         foreach ($postCreatedHooks as $postCreatedHook) {
             $postCreatedHook($resource, $record);
         }
@@ -129,6 +143,8 @@ class ResourceController extends CpController
         foreach ($blueprintFieldKeys as $fieldKey) {
             $value = $record->{$fieldKey};
 
+            // When $value is a Carbon instance, format it with the format
+            // specified in the blueprint.
             if ($value instanceof CarbonInterface) {
                 $format = $defaultFormat = 'Y-m-d H:i';
 
@@ -139,6 +155,7 @@ class ResourceController extends CpController
                 $value = $value->format($format);
             }
 
+            // When $value is a JSON string, decode it.
             if (Json::isJson($value)) {
                 $value = json_decode((string) $value, true);
             }
@@ -196,11 +213,17 @@ class ResourceController extends CpController
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
 
+            // Skip section & HasMany fields as there's nothing to store.
             if ($field->type() === 'section' || $field->type() === 'has_many') {
                 continue;
             }
 
-            if (is_array($processedValue) && ! $record->hasCast($fieldKey, ['json', 'array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])) {
+            // If the $processedValue is an array & no cast is set on the model then
+            // let's JSON encode it.
+            if (
+                is_array($processedValue)
+                && ! $record->hasCast($fieldKey, ['array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])
+            ) {
                 $processedValue = json_encode($processedValue, JSON_THROW_ON_ERROR);
             }
 
@@ -214,7 +237,8 @@ class ResourceController extends CpController
         if ($request->get('from_inline_publish_form')) {
             collect($resource->blueprint()->fields()->all())
                 ->filter(function (Field $field) {
-                    return $field->type() === 'belongs_to' || $field->type() === 'has_many';
+                    return $field->type() === 'belongs_to'
+                        || $field->type() === 'has_many';
                 })
                 ->each(function (Field $field) use (&$record, $resource) {
                     $relatedResource = Runway::findResource($field->get('resource'));
