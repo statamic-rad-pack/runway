@@ -1,26 +1,34 @@
 ---
 title: Introduction
 table_of_contents: false
-slider:
-    - /img/promo/runway/cp-integration.png
-    - /img/promo/runway/frontend-routing.png
-    - /img/promo/runway/antlers-template.png
-    - /img/promo/runway/graphql.png
 ---
 
 Runway is a Statamic addon that lets you manage your Eloquent models in Statamic, as if they were entries in a collection.
 
-Runway provides a familiar Control Panel interface where you can create, edit and delete your Eloquent models. Runway also provides front-end routing functionality so your models can have their own routes.
+> With Runway I was able to quickly make a beautiful admin panel that administrators can use. If Runway didn't exist, it would have taken me a week or two to build something that wasn't quite as nice. Thanks for saving me days and days of work Duncan!
+>
+> [Erin Dalzell, Certified Statamic Partner](https://silentz.co/?ref=runway_docs)
 
-### Why not use Eloquent Entries?
+## Edit models in the Control Panel
 
-That’s a very good question. Most of the time it comes down to a few things:
+Runway lets you edit your Eloquent models from the Control Panel. Use your own blueprints for models, apply query scopes to the listing table & run custom actions.
 
-- The Eloquent Entries addon stores almost all your data in a single column. Not very helpful if you want to run complex queries.
-- You can’t pick and choose which models you’d like in your database and which you’d like as entries.
+[**→ Learn More**](/control-panel)
 
-Runway solves both of those problems, allowing you to use plain simple Eloquent with the glory of the Statamic ecosystem.
+## Relationship fieldtypes
 
-### I already have Eloquent models, how easy is it to plug in?
+Have multiple `Video` models that belong to a `Course`? Who'd have guessed you'd be able to manage them directly in the CP?
 
-Yes, you can plug in Runway anytime. Just hookup a Statamic blueprint and you’ll be off to the races.
+[**→ Learn More**](/fieldtypes)
+
+## Routing
+
+If you want it, Runway can setup routing for your models so it feels all Statamic-y. Fields will be automagically augmented & you'll have the full power of Antlers.
+
+[**→ Learn More**](/frontend-routing)
+
+## GraphQL
+
+If you're running headless, Runway will also make your models available via Statamic's GraphQL endpoint.
+
+[**→ Learn More**](/graphql)
