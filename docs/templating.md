@@ -92,7 +92,9 @@ You can specify multiple relationships to eager load, just separate with pipes.
 {{ runway:post with="user|comments" }}
 ```
 
-> Hot Tip: Eager Loading can make a **massive** difference in the speed of your queries.
+:::tip Hot Tip
+Eager Loading can make a **massive** difference in the speed of your queries.
+:::
 
 ### Limiting
 
