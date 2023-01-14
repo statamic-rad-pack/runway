@@ -5,9 +5,17 @@ table_of_contents: false
 
 Runway is a Statamic addon that lets you manage your Eloquent models in Statamic, as if they were entries in a collection.
 
-> With Runway I was able to quickly make a beautiful admin panel that administrators can use. If Runway didn't exist, it would have taken me a week or two to build something that wasn't quite as nice. Thanks for saving me days and days of work Duncan!
->
-> [Erin Dalzell, Certified Statamic Partner](https://silentz.co/?ref=runway_docs)
+<div class="testimonial">
+    <div class="testimonial-body">
+        “With Runway I was able to quickly make a beautiful admin panel that administrators can use. If Runway didn't exist, it would have taken me a week or two to build something that wasn't quite as nice. Thanks for saving me days and days of work Duncan!”
+    </div>
+    <div class="testimonial-person">
+        <a href="https://silentz.co" target="_blank">
+            <img src="/img/testimonials/erin.jpeg">
+            <span>Erin Dalzell, Certified Statamic Partner</span>
+        </a>
+    </div>
+</div>
 
 ## Edit models in the Control Panel
 
