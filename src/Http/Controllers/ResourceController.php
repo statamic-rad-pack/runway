@@ -13,6 +13,7 @@ use DoubleThreeDigital\Runway\Support\Json;
 use Statamic\CP\Breadcrumbs;
 use Statamic\Facades\Scope;
 use Statamic\Fields\Field;
+use Statamic\Fieldtypes\Arr;
 use Statamic\Http\Controllers\CP\CpController;
 
 class ResourceController extends CpController
@@ -101,6 +102,12 @@ class ResourceController extends CpController
                 }
 
                 continue;
+            }
+
+            // If it's a BelongsTo field & the $processedValue is an array, then we
+            // want the first item in the array.
+            if ($field->type() === 'belongs_to' && is_array($processedValue)) {
+                $processedValue = $processedValue[0];
             }
 
             // If the $processedValue is an array & no cast is set on the model then
@@ -216,6 +223,12 @@ class ResourceController extends CpController
             // Skip section & HasMany fields as there's nothing to store.
             if ($field->type() === 'section' || $field->type() === 'has_many') {
                 continue;
+            }
+
+            // If it's a BelongsTo field & the $processedValue is an array, then we
+            // want the first item in the array.
+            if ($field->type() === 'belongs_to' && is_array($processedValue)) {
+                $processedValue = $processedValue[0];
             }
 
             // If the $processedValue is an array & no cast is set on the model then
