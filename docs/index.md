@@ -17,26 +17,56 @@ Runway is a Statamic addon that lets you manage your Eloquent models in Statamic
     </div>
 </div>
 
-## Edit models in the Control Panel
+### Control Panel integration
 
-Runway lets you edit your Eloquent models from the Control Panel. Use your own blueprints for models, apply query scopes to the listing table & run custom actions.
+Runway fits right into the Control Panel - enabling you to create, edit and view your models. In most cases, you'll not notice the difference between an entry in the CP and an Eloquent model in the CP.
 
-[**→ Learn More**](/control-panel)
+-   [Review documentation](https://runway.duncanmcclean.com/control-panel)
 
-## Relationship fieldtypes
+### Front-end routing
 
-Have multiple `Video` models that belong to a `Course`? Who'd have guessed you'd be able to manage them directly in the CP?
+Need to show your models on the front-end of your site? No problem - Runway's got that under control. Simply tell Runway the route you'd like to use and it'll serve up the front-end for you.
 
-[**→ Learn More**](/fieldtypes)
+```php
+// config/runway.php
 
-## Routing
+return [
+    'resources' => [
+        \App\Models\Product::class => [
+            'route' => '/products/{{ slug }}',
+        ],
+    ],
+];
+```
 
-If you want it, Runway can setup routing for your models so it feels all Statamic-y. Fields will be automagically augmented & you'll have the full power of Antlers.
+-   [Review documentation](https://runway.duncanmcclean.com/frontend-routing)
 
-[**→ Learn More**](/frontend-routing)
+### Antlers templating
 
-## GraphQL
+In addition to front-end routing, you may also use Runway's tag to loop through your models and display the results. The tag supports filtering, using Eloquent scopes and sorting.
 
-If you're running headless, Runway will also make your models available via Statamic's GraphQL endpoint.
+```antlers
+{{ runway:products }}
+    <h2>{{ name }}</h2>
+    <p>Price: {{ price }}</p>
+{{ /runway:products }}
+```
 
-[**→ Learn More**](/graphql)
+-   [Review documentation](https://runway.duncanmcclean.com/templating)
+
+### GraphQL API
+
+If you're a GraphQL fan, you're now able to fetch your models via GraphQL. Runway will augment the fields just like you'd expect.
+
+```graphql
+{
+    products(limit: 25, sort: "name") {
+        data {
+            id
+            name
+            price
+            description
+        }
+    }
+}
+```
