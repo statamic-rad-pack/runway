@@ -14,13 +14,18 @@
             </h1>
 
             <div v-if="!readOnly" class="hidden md:flex items-center">
-                <button
-                    class="btn-primary"
-                    :disabled="isSaving"
-                    @click.prevent="save"
+                <save-button-options
+                    v-if="!readOnly"
+                    :preferences-prefix="preferencesPrefix"
                 >
-                    {{ __('Save') }}
-                </button>
+                    <button
+                        class="btn-primary"
+                        :disabled="isSaving"
+                        @click.prevent="save"
+                    >
+                        {{ __('Save') }}
+                    </button>
+                </save-button-options>
             </div>
         </div>
 
@@ -83,14 +88,23 @@
                 :disabled="isSaving"
                 @click.prevent="save"
             >
-               {{ __('Save') }}
+                {{ __('Save') }}
             </button>
         </div>
     </div>
 </template>
 
 <script>
+import SaveButtonOptions from '../../../../vendor/statamic/cms/resources/js/components/Publish/SaveButtonOptions'
+import HasPreferences from '../../../../vendor/statamic/cms/resources/js/components/data-list/HasPreferences'
+
 export default {
+    components: {
+        SaveButtonOptions,
+    },
+
+    mixins: [HasPreferences],
+
     props: {
         breadcrumbs: Array,
         initialBlueprint: Object,
@@ -101,9 +115,22 @@ export default {
         method: String,
         resourceHasRoutes: Boolean,
         permalink: String,
-        isCreating: Boolean,
+        isCreating: {
+            type: Boolean,
+            default: false,
+        },
+        isInline: {
+            type: Boolean,
+            default: false,
+        },
         publishContainer: String,
         readOnly: Boolean,
+        resource: {
+            type: Object,
+            required: true,
+        },
+        createAnotherUrl: String,
+        listingUrl: String,
     },
 
     data() {
@@ -112,11 +139,13 @@ export default {
             values: this.initialValues,
             meta: this.initialMeta,
             title: this.initialTitle,
+            preferencesPrefix: `runway.${this.resource.handle}`,
 
             errors: {},
             saving: false,
             containerWidth: null,
             saveKeyBinding: null,
+            quickSave: false,
         }
     },
 
@@ -129,8 +158,22 @@ export default {
 
         shouldShowSidebar() {
             return this.enableSidebar
-            // return this.enableSidebar && this.containerWidth > 920
         },
+
+        afterSaveOption() {
+            return this.getPreference('after_save')
+        },
+    },
+
+    mounted() {
+        this.saveKeyBinding = this.$keys.bindGlobal(
+            ['mod+s', 'mod+return'],
+            e => {
+                e.preventDefault()
+                this.quickSave = true
+                this.save()
+            }
+        )
     },
 
     created() {
@@ -177,11 +220,36 @@ export default {
                     this.$refs.container.saved()
                     this.$emit('saved', response)
 
+                    let nextAction = this.quickSave
+                        ? 'continue_editing'
+                        : this.afterSaveOption
+
+                    // If the user has opted to create another entry, redirect them to create page.
+                    if (!this.isInline && nextAction === 'create_another') {
+                        this.$nextTick(() => {
+                            window.location = this.createAnotherUrl
+                        })
+
+                        return
+                    }
+
+                    // If the user has opted to go to listing (default/null option), redirect them there.
+                    if (!this.isInline && nextAction === null) {
+                        this.$nextTick(() => {
+                            window.location = this.listingUrl
+                        })
+
+                        return
+                    }
+
+                    // Otherwise, leave them on the edit form (or redirect them to the edit form if they're creating a new model).
                     if (this.isCreating && this.publishContainer === 'base') {
                         this.$nextTick(() => {
                             window.location.href = response.data.redirect
                         })
                     } else {
+                        this.quickSave = false
+
                         this.$toast.success(__('Saved'))
                     }
                 })
@@ -228,16 +296,6 @@ export default {
         saving(saving) {
             this.$progress.loading(`runway-publish-form`, saving)
         },
-    },
-
-    mounted() {
-        this.saveKeyBinding = this.$keys.bindGlobal(
-            ['mod+s', 'mod+return'],
-            e => {
-                e.preventDefault()
-                this.save()
-            }
-        )
     },
 
     destroyed() {
