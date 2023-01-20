@@ -13,7 +13,6 @@ use DoubleThreeDigital\Runway\Support\Json;
 use Statamic\CP\Breadcrumbs;
 use Statamic\Facades\Scope;
 use Statamic\Fields\Field;
-use Statamic\Fieldtypes\Arr;
 use Statamic\Http\Controllers\CP\CpController;
 
 class ResourceController extends CpController
