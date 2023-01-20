@@ -4,7 +4,7 @@
 
 ## v2.6.4 (2023-01-20)
 
-## What's new
+### What's new
 
 -   PHP 8.2 is now officially supported! #191
 
