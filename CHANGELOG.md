@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.6.4 (2023-01-20)
+
+### What's fixed
+
+-   Fix data being encoded by Runway even when a cast is setup #197
+
 ## v2.6.3 (2022-12-21)
 
 ### What's improved
