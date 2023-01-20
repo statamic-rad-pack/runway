@@ -4,9 +4,14 @@
 
 ## v2.6.4 (2023-01-20)
 
+## What's new
+
+-   PHP 8.2 is now officially supported! #191
+
 ### What's fixed
 
 -   Fix data being encoded by Runway even when a cast is setup #197
+-   Ensure BelongsTo values wrapped in arrays are always converted to a single item
 
 ## v2.6.3 (2022-12-21)
 
