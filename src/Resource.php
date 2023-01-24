@@ -301,7 +301,7 @@ class Resource
     {
         return $this
             ->fluentlyGetOrSet('titleField')
-            ->getter(fn ($field) => $field ?? 'title')
+            ->getter(fn ($field) => $field ?? $this->listableColumns()[0])
             ->args(func_get_args());
     }
 
