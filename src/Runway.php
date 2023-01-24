@@ -30,6 +30,10 @@ class Runway
                     $resource->name(Str::title($handle));
                 }
 
+                if (isset($config['title_field'])) {
+                    $resource->titleField($config['title_field']);
+                }
+
                 if (isset($config['blueprint'])) {
                     $resource->blueprint($config['blueprint']);
                 }
