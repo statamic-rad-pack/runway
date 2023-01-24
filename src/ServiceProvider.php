@@ -2,6 +2,7 @@
 
 namespace DoubleThreeDigital\Runway;
 
+use DoubleThreeDigital\Runway\Search\Provider as SearchProvider;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
 use Statamic\Facades\Permission;
@@ -59,6 +60,7 @@ class ServiceProvider extends AddonServiceProvider
             $this->registerPermissions();
             $this->registerNavigation();
             $this->bootGraphQl();
+            SearchProvider::register();
 
             if (Runway::usesRouting()) {
                 $this->app->get(\Statamic\Contracts\Data\DataRepository::class)

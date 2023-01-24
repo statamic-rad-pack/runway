@@ -26,6 +26,7 @@ class Resource
     protected $readOnly;
     protected $eagerLoadingRelations;
     protected $orderBy;
+    protected $titleField;
 
     public function handle($handle = null)
     {
@@ -294,6 +295,14 @@ class Resource
     public function augment(Model $model): array
     {
         return AugmentedRecord::augment($model, $this->blueprint());
+    }
+
+    public function titleField($field = null)
+    {
+        return $this
+            ->fluentlyGetOrSet('titleField')
+            ->getter(fn ($field) => $field ?? 'title')
+            ->args(func_get_args());
     }
 
     public function __get($name)

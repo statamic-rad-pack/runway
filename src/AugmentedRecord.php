@@ -5,10 +5,37 @@ namespace DoubleThreeDigital\Runway;
 use Carbon\CarbonInterface;
 use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Database\Eloquent\Model;
+use Statamic\Data\AbstractAugmented;
 use Statamic\Fields\Blueprint;
 
-class AugmentedRecord
+class AugmentedRecord extends AbstractAugmented
 {
+    protected $data;
+    protected $resource;
+
+    public function __construct($model)
+    {
+        $this->data = $model;
+        $this->resource = Runway::findResourceByModel($model);
+    }
+
+    public function keys()
+    {
+        return collect()
+            ->merge($this->blueprintFields()->keys())
+            ->unique()->sort()->values()->all();
+    }
+
+    protected function blueprintFields()
+    {
+        return $this->resource->blueprint()->fields()->all();
+    }
+
+    protected function getFromData($handle)
+    {
+        return $this->data->$handle;
+    }
+
     /**
      * Takes in an Eloquent model & augments it with the fields
      * from the resource's blueprint.
