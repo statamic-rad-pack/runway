@@ -26,16 +26,6 @@ class AugmentedRecord extends AbstractAugmented
             ->unique()->sort()->values()->all();
     }
 
-    protected function blueprintFields()
-    {
-        return $this->resource->blueprint()->fields()->all();
-    }
-
-    protected function getFromData($handle)
-    {
-        return $this->data->$handle;
-    }
-
     /**
      * Takes in an Eloquent model & augments it with the fields
      * from the resource's blueprint.
@@ -84,5 +74,15 @@ class AugmentedRecord extends AbstractAugmented
                 'url' => $resource->hasRouting() ? $record->uri() : null,
             ])
             ->toArray();
+    }
+
+    protected function blueprintFields()
+    {
+        return $this->resource->blueprint()->fields()->all();
+    }
+
+    protected function getFromData($handle)
+    {
+        return $this->data->$handle;
     }
 }
