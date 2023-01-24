@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+## v3.0.0 (2023-xx-xx)
+
+### What's new
+
+-   Support for Statamic 3.4! 🚀 #201 by @duncanmcclean
+-   You may now use Statamic's Search functionality with Runway #169 #200 by @jasonvarga
+
+### Breaking changes
+
+This version of Runway only supports Statamic 3.4. You should upgrade to receive any new features & bug fixes.
+
+## v2.6.5 (2022-01-24)
+
+### What's fixed
+
+-   Fixed issue where fallback method calls to `Resource` weren't being passed through correctly
+
 ## v2.6.4 (2023-01-20)
 
 ### What's new

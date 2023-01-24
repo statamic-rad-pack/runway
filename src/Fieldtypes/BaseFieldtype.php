@@ -143,7 +143,7 @@ class BaseFieldtype extends Relationship
         }
 
         return collect($data)->map(function ($item) use ($resource) {
-            $column = $resource->listableColumns()[0];
+            $column = $resource->titleField();
 
             $fieldtype = $resource->blueprint()->field($column)->fieldtype();
 
@@ -304,7 +304,7 @@ class BaseFieldtype extends Relationship
     protected function makeTitle($record, $resource): string
     {
         if (! $titleFormat = $this->config('title_format')) {
-            $firstListableColumn = $resource->listableColumns()[0];
+            $firstListableColumn = $resource->titleField();
 
             return $record->{$firstListableColumn};
         }

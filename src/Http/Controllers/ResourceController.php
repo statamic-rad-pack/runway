@@ -199,7 +199,7 @@ class ResourceController extends CpController
             'resourceHasRoutes' => $resource->hasRouting(),
             'currentRecord' => [
                 'id'    => $record->getKey(),
-                'title' => $record->{collect($resource->listableColumns())->first()},
+                'title' => $record->{$resource->titleField()},
                 'edit_url' => $request->url(),
             ],
         ];
@@ -255,7 +255,7 @@ class ResourceController extends CpController
                 ->each(function (Field $field) use (&$record, $resource) {
                     $relatedResource = Runway::findResource($field->get('resource'));
 
-                    $column = $relatedResource->listableColumns()[0];
+                    $column = $relatedResource->titleField();
 
                     $relationshipName = $resource->eagerLoadingRelations()->get($field->handle()) ?? $field->handle();
 
@@ -286,7 +286,7 @@ class ResourceController extends CpController
     protected function getReturnData($resource, $record)
     {
         return array_merge($record->toArray(), [
-            'title' => $record->{$resource->listableColumns()[0]},
+            'title' => $record->{$resource->titleField()},
             'edit_url' => cp_route('runway.edit', [
                 'resourceHandle'  => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},

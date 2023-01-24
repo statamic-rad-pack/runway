@@ -11,7 +11,7 @@ trait HasListingColumns
     {
         $preferredFirstColumn = isset(User::current()->preferences()['runway'][$resource->handle()]['columns'])
             ? User::current()->preferences()['runway'][$resource->handle()]['columns'][0]
-            : $resource->listableColumns()[0];
+            : $resource->titleField();
 
         return collect($resource->listableColumns())
             ->map(function ($columnKey) use ($blueprint, $preferredFirstColumn) {
