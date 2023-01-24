@@ -138,56 +138,17 @@ If you’d like to hide the CP Nav Item that’s registered for this model, just
 
 > Bear in mind, this will just hide the Nav Item for the CP interface, it won’t actually get rid of the routes being registered. If someone knows where to look, they could still use the CP to manage your models (they could guess the URL).
 
-## CP Nav
-
-Runway will automatically register a Control Panel Nav Item for any configured resources (unless they're marked as `hidden`). By default, it'll put them in the 'Content' section and give them a generic icon. However, you may configure various settings for the CP Nav Item if required:
-
-### Icon
+### Control Panel Icon
 
 You should set `icon` to the name of the icon you’d like to use instead.
 
-Alternatively, if the icon you want isn’t [included in Statamic](https://github.com/statamic/cms/tree/3.1/resources/svg), you can also pass an SVG inline.
+Alternatively, if the icon you want isn’t [included in Statamic](https://github.com/statamic/cms/tree/3.1/resources/svg), you can also pass an inline SVG.
 
 ```php
 'resources' => [
 	\App\Models\Order::class => [
 		'name' => 'Orders',
-
-        'nav' => [
-            'icon' => 'date',
-        ],
-	],
-],
-```
-
-### Section
-
-You should set `section` to the name of the section you’d like to use instead.
-
-```php
-'resources' => [
-	\App\Models\Order::class => [
-		'name' => 'Orders',
-
-        'nav' => [
-            'section' => 'Tools',
-        ],
-	],
-],
-```
-
-### Title
-
-You should set `title` to whatever you want the name of the Nav Item to be.
-
-```php
-'resources' => [
-	\App\Models\Order::class => [
-		'name' => 'Orders',
-
-        'nav' => [
-            'title' => 'Shop Orders',
-        ],
+        'cp_icon' => 'date',
 	],
 ],
 ```
