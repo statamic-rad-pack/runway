@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.6.5 (2022-01-24)
+
+### What's fixed
+
+-   Fixed issue where fallback method calls to `Resource` weren't being passed through correctly
+
 ## v2.6.4 (2023-01-20)
 
 ### What's new
