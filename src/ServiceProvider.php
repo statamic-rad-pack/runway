@@ -95,8 +95,8 @@ class ServiceProvider extends AddonServiceProvider
                     continue;
                 }
 
-                $nav->content($resource->cpTitle())
-                    ->section($resource->cpSection())
+                $nav->content($resource->name())
+                    ->section(__('Content'))
                     ->icon($resource->cpIcon())
                     ->route('runway.index', ['resourceHandle' => $resource->handle()])
                     ->can("View {$resource->plural()}");
