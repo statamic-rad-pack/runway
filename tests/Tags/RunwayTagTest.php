@@ -252,12 +252,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_studly_case_resource_handle()
     {
-        Config::set('runway.resources', [
-            Post::class => [
-                'handle' => 'BlogPosts',
-                'blueprint' => [],
-            ],
-        ]);
+        Config::set('runway.resources.' . Post::class . '.handle', 'BlogPosts');
 
         Runway::discoverResources();
 
