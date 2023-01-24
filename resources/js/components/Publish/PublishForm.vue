@@ -95,8 +95,8 @@
 </template>
 
 <script>
-import SaveButtonOptions from '../../../../vendor/statamic/cms/resources/js/components/Publish/SaveButtonOptions'
-import HasPreferences from '../../../../vendor/statamic/cms/resources/js/components/data-list/HasPreferences'
+import SaveButtonOptions from '../statamic/SaveButtonOptions'
+import HasPreferences from '../statamic/HasPreferences'
 
 export default {
     components: {
