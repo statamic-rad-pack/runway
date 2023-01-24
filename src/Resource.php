@@ -303,6 +303,6 @@ class Resource
 
     public function __call($name, $arguments)
     {
-        return $this->model()->{$name}($arguments);
+        return $this->model()->{$name}(...$arguments);
     }
 }
