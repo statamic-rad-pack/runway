@@ -2,9 +2,13 @@
 
 namespace DoubleThreeDigital\Runway;
 
+use DoubleThreeDigital\Runway\Search\Provider as SearchProvider;
+use DoubleThreeDigital\Runway\Search\Searchable;
+use Illuminate\Support\Facades\Event;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
 use Statamic\Facades\Permission;
+use Statamic\Facades\Search;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 
@@ -59,6 +63,8 @@ class ServiceProvider extends AddonServiceProvider
             $this->registerPermissions();
             $this->registerNavigation();
             $this->bootGraphQl();
+            SearchProvider::register();
+            $this->bootModelEventListeners();
 
             if (Runway::usesRouting()) {
                 $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
@@ -115,6 +121,16 @@ class ServiceProvider extends AddonServiceProvider
 
                 GraphQL::addQuery("runway.graphql.queries.{$resource->handle()}.index");
                 GraphQL::addQuery("runway.graphql.queries.{$resource->handle()}.show");
+            });
+    }
+
+    protected function bootModelEventListeners()
+    {
+        Runway::allResources()
+            ->map(fn ($resource) => get_class($resource->model()))
+            ->each(function ($class) {
+                Event::listen('eloquent.saved: '.$class, fn ($model) => Search::updateWithinIndexes(new Searchable($model)));
+                Event::listen('eloquent.deleted: '.$class, fn ($model) => Search::deleteFromIndexes(new Searchable($model)));
             });
     }
 }
