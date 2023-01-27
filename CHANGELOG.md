@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.6.6 (2023-01-27)
+
+### What's fixed
+
+-   Fixed an issue where 'Edit' button wouldn't show in listing table action list if front-end routing was disabled #205 #206 by @duncanmcclean
+
 ## v2.6.5 (2022-01-24)
 
 ### What's fixed
