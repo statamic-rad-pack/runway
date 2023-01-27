@@ -30,22 +30,16 @@ class Runway
                     $resource->name(Str::title($handle));
                 }
 
+                if (isset($config['title_field'])) {
+                    $resource->titleField($config['title_field']);
+                }
+
                 if (isset($config['blueprint'])) {
                     $resource->blueprint($config['blueprint']);
                 }
 
-                if (isset($config['nav']['icon'])) {
-                    $resource->cpIcon($config['nav']['icon']);
-                } elseif (isset($config['listing']['cp_icon'])) {
-                    $resource->cpIcon($config['listing']['cp_icon']);
-                }
-
-                if (isset($config['nav']['section'])) {
-                    $resource->cpSection($config['nav']['section']);
-                }
-
-                if (isset($config['nav']['title'])) {
-                    $resource->cpTitle($config['nav']['title']);
+                if (isset($config['cp_icon'])) {
+                    $resource->cpIcon($config['cp_icon']);
                 }
 
                 if (isset($config['hidden'])) {

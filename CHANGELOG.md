@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## v3.0.0 (2023-xx-xx)
+
+### What's new
+
+-   Support for Statamic 3.4! 🚀 #201 by @duncanmcclean
+-   You may now use Statamic's Search functionality with Runway #169 #200 by @jasonvarga
+-   You may now configure the "title" field used for models in fieldtypes & in search #202
+
+### Breaking changes
+
+-   Statamic 3.3 is no longer supported. You should upgrade to receive any new features & bug fixes.
+-   Runway has dropped support for setting title & section of Control Panel nav items, in favour of Statamic's new CP Nav Preferences feature #204
+-   If you were setting a custom icon for Control Panel nav items, you will need to adjust your config. Please [review this PR](https://github.com/duncanmcclean/runway/pull/204) for more details.
+
 ## v2.6.5 (2022-01-24)
 
 ### What's fixed

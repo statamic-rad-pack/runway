@@ -16,8 +16,6 @@ class Resource
     protected $name;
     protected $blueprint;
     protected $cpIcon;
-    protected $cpSection;
-    protected $cpTitle;
     protected $hidden;
     protected $route;
     protected $template;
@@ -26,6 +24,7 @@ class Resource
     protected $readOnly;
     protected $eagerLoadingRelations;
     protected $orderBy;
+    protected $titleField;
 
     public function handle($handle = null)
     {
@@ -98,32 +97,6 @@ class Resource
             ->getter(function ($value) {
                 if (! $value) {
                     return file_get_contents(__DIR__ . '/../resources/svg/database.svg');
-                }
-
-                return $value;
-            })
-            ->args(func_get_args());
-    }
-
-    public function cpSection($cpSection = null)
-    {
-        return $this->fluentlyGetOrSet('cpSection')
-            ->getter(function ($value) {
-                if (! $value) {
-                    return __('Content');
-                }
-
-                return $value;
-            })
-            ->args(func_get_args());
-    }
-
-    public function cpTitle($cpTitle = null)
-    {
-        return $this->fluentlyGetOrSet('cpTitle')
-            ->getter(function ($value) {
-                if (! $value) {
-                    return $this->name();
                 }
 
                 return $value;
@@ -294,6 +267,14 @@ class Resource
     public function augment(Model $model): array
     {
         return AugmentedRecord::augment($model, $this->blueprint());
+    }
+
+    public function titleField($field = null)
+    {
+        return $this
+            ->fluentlyGetOrSet('titleField')
+            ->getter(fn ($field) => $field ?? $this->listableColumns()[0])
+            ->args(func_get_args());
     }
 
     public function __get($name)
