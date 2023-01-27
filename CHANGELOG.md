@@ -8,7 +8,7 @@
 
 -   Support for Statamic 3.4! 🚀 #201 by @duncanmcclean
 -   You may now use Statamic's Search functionality with Runway #169 #200 by @jasonvarga
--   You may now configure the "title" field used for models in fieldtypes & in search #202
+-   You may now configure the "title" field used for models in fieldtypes & in search #202 by @duncanmcclean
 
 ### Breaking changes
 
