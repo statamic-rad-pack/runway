@@ -179,7 +179,7 @@ export default {
         },
 
         canEditRow(row) {
-            return row.editable && row.permalink
+            return row.editable
         },
 
         confirmDeleteRow(id, index, deleteUrl) {
