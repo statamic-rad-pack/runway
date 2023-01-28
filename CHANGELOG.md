@@ -2,7 +2,13 @@
 
 ## Unreleased
 
-## v3.0.1 (2023-01-27)
+## v3.0.2 (2023-01-28)
+
+### What's fixed
+
+-   Fixed an issue where the stacks on relationship fieldtypes would open up empty #207 #208 by @duncanmcclean
+
+## v3.0.1 (2022-01-27)
 
 ### What's fixed
 
@@ -22,7 +28,23 @@
 -   Runway has dropped support for setting title & section of Control Panel nav items, in favour of Statamic's new CP Nav Preferences feature #204
 -   If you were setting a custom icon for Control Panel nav items, you will need to adjust your config. Please [review this PR](https://github.com/duncanmcclean/runway/pull/204) for more details.
 
+## v2.6.7 (2023-01-28)
+
+### What's fixed
+
+-   Fixed an issue where the stacks on relationship fieldtypes would open up empty #207 #208 by @duncanmcclean
+
+## v2.6.6 (2023-01-27)
+
+### What's fixed
+
+-   Fixed an issue where 'Edit' button wouldn't show in listing table action list if front-end routing was disabled #205 #206 by @duncanmcclean
+
 ## v2.6.5 (2022-01-24)
+
+### What's new
+
+-   Added Save Button Options #198 by @duncanmcclean
 
 ### What's fixed
 

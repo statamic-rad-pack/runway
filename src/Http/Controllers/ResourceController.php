@@ -63,7 +63,9 @@ class ResourceController extends CpController
                     ]),
                 ],
             ]),
-            'resource' => $resource,
+            'resource' => $request->wantsJson()
+                ? $resource->toArray()
+                : $resource,
             'blueprint' => $blueprint->toPublishArray(),
             'values' => $fields->values(),
             'meta' => $fields->meta(),
