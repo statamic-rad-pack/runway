@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v2.6.7 (2023-01-28)
+
+### What's fixed
+
+-   Fixed an issue where the stacks on relationship fieldtypes would open up empty #207 #208 by @duncanmcclean
+
 ## v2.6.6 (2023-01-27)
 
 ### What's fixed
@@ -12,7 +18,7 @@
 
 ### What's new
 
-* Added Save Button Options #198 by @duncanmcclean
+-   Added Save Button Options #198 by @duncanmcclean
 
 ### What's fixed
 
