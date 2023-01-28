@@ -10,6 +10,10 @@
 
 ## v2.6.5 (2022-01-24)
 
+### What's new
+
+* Added Save Button Options #198 by @duncanmcclean
+
 ### What's fixed
 
 -   Fixed issue where fallback method calls to `Resource` weren't being passed through correctly
