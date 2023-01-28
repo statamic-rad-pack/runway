@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## v3.0.2 (2023-01-28)
+
+### What's fixed
+
+-   Fixed an issue where the stacks on relationship fieldtypes would open up empty #207 #208 by @duncanmcclean
+
+## v3.0.1 (2022-01-27)
+
+### What's fixed
+
+-   Fixed an issue where 'Edit' button wouldn't show in listing table action list if front-end routing was disabled #205 #206 by @duncanmcclean
+
 ## v3.0.0 (2023-01-27)
 
 ### What's new
