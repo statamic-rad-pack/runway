@@ -57,7 +57,7 @@ class RunwayTag extends Tags
             $query->with(explode('|', (string) $with));
         }
 
-        if ($this->params->has('sort')) {
+        if ($this->params->has('sort') && ! empty($this->params->get('sort'))) {
             $sortColumn = explode(':', (string) $this->params->get('sort'))[0];
             $sortDirection = explode(':', (string) $this->params->get('sort'))[1];
 
