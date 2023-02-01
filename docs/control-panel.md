@@ -1,5 +1,5 @@
 ---
-title: "Control Panel"
+title: 'Control Panel'
 ---
 
 One of Runway’s core features is the Control Panel integration. Runway will create listing and publish form pages for each of your resources.
@@ -46,7 +46,7 @@ You can either provide the name of an existing icon [packaged into Statamic Core
 
 ![Screenshot of Runway's User Permissions](/img/runway/cp-user-permissions.png)
 
-If you have other users who are not ‘super users’, you may wish to also give them permission to view_create_update specific resources.
+If you have other users who are not ‘super users’, you may wish to also give them permission to view/create/update specific resources.
 
 Runway gives you granular control over which actions users can/cannot do for each of your resources.
 
