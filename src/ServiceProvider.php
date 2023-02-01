@@ -49,7 +49,7 @@ class ServiceProvider extends AddonServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'runway');
         $this->mergeConfigFrom(__DIR__ . '/../config/runway.php', 'runway');
 
-        if (! config('runway.disable_migrations')) {
+        if (!config('runway.disable_migrations')) {
             $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         }
 
@@ -73,16 +73,56 @@ class ServiceProvider extends AddonServiceProvider
         });
     }
 
+    protected function legacyPermissionKey($permission, $resource)
+    {
+        return match ($permission) {
+            'view' => "View {$resource->plural()}",
+            'edit' => "Edit {$resource->plural()}",
+            'create' => "Create new {$resource->singular()}",
+            'delete' => "Delete {$resource->singular()}"
+        };
+    }
+
+    protected function permissionKey($permission, $resource)
+    {
+        if (!$permissionKey = config("runway.permission_keys.{$permission}")) {
+            return $this->legacyPermissionKey($permission, $resource);
+        }
+
+        return str_replace('{resource}', $resource->handle(), $permissionKey);
+    }
+
+    protected function permissionLabel($permission, $resource)
+    {
+        $translationKey = "runway.permissions.{$permission}";
+
+        $label = trans($translationKey, [
+            'resource' => $resource->name()
+        ]);
+
+        if ($label == $translationKey) {
+            return $this->legacyPermissionKey($permission, $resource);
+        }
+
+        return $label;
+    }
+
     protected function registerPermissions()
     {
         foreach (Runway::allResources() as $resource) {
-            Permission::register("View {$resource->plural()}", function ($permission) use ($resource) {
-                $permission->children([
-                    Permission::make("Edit {$resource->plural()}")->children([
-                        Permission::make("Create new {$resource->singular()}"),
-                        Permission::make("Delete {$resource->singular()}"),
-                    ]),
-                ]);
+            Permission::register($this->permissionKey('view', $resource), function ($permission) use ($resource) {
+                $permission
+                    ->label($this->permissionLabel('view', $resource))
+                    ->children([
+                        Permission::make($this->permissionKey('edit', $resource))
+                            ->label($this->permissionLabel('edit', $resource))
+                            ->children([
+                                Permission::make($this->permissionKey('create', $resource))
+                                    ->label($this->permissionLabel('create', $resource)),
+                                Permission::make($this->permissionKey('delete', $resource))
+                                    ->label($this->permissionLabel('delete', $resource)),
+                            ]),
+                    ]);
             })->group('Runway');
         }
     }
@@ -129,8 +169,8 @@ class ServiceProvider extends AddonServiceProvider
         Runway::allResources()
             ->map(fn ($resource) => get_class($resource->model()))
             ->each(function ($class) {
-                Event::listen('eloquent.saved: '.$class, fn ($model) => Search::updateWithinIndexes(new Searchable($model)));
-                Event::listen('eloquent.deleted: '.$class, fn ($model) => Search::deleteFromIndexes(new Searchable($model)));
+                Event::listen('eloquent.saved: ' . $class, fn ($model) => Search::updateWithinIndexes(new Searchable($model)));
+                Event::listen('eloquent.deleted: ' . $class, fn ($model) => Search::deleteFromIndexes(new Searchable($model)));
             });
     }
 }

@@ -1,5 +1,5 @@
 ---
-title: "Control Panel"
+title: 'Control Panel'
 ---
 
 One of Runway’s core features is the Control Panel integration. Runway will create listing and publish form pages for each of your resources.
@@ -49,6 +49,64 @@ You can either provide the name of an existing icon [packaged into Statamic Core
 If you have other users who are not ‘super users’, you may wish to also give them permission to view_create_update specific resources.
 
 Runway gives you granular control over which actions users can/cannot do for each of your resources.
+
+### Permission keys
+
+By default, Runway generates permission keys using English and the automatic pluralized and singularized forms of the resource name. For instance: a resource named "Posts" will generate permission keys like `View Posts` and `Create new Post`. This might not be the best fit for you and you can learn more [here](https://github.com/duncanmcclean/runway/discussions/211).
+
+You can overcome this replacing the permission key pattern via configuration. This can be whatever you want, but following a more "Statamic like" pattern seems to be a good idea.
+
+```php
+  // config/runway.php
+
+  'permission_keys' => [
+    'create' => 'create {resource}',
+    'delete' => 'delete {resource}',
+    'edit' => 'edit {resource}',
+    'view' => 'view {resource}'
+  ]
+```
+
+In the example above `{resource}` will be replaced by the resource's `handle`, generating keys like `view post` and `create post`.
+
+### Permission labels
+
+If you don't want to show the permissions keys in the control panel, and want to show a more readable text or the translated text for the permission, you can simply add a `resources/lang/{lang}/runway.php` file and set the permission label there.
+
+```php
+  // resources/lang/pt_BR/runway.php
+
+  'permissions' => [
+      'create' => 'Criar :resource',
+      'delete' => 'Excluir :resource',
+      'edit' => 'Editar :resource',
+      'view' => 'Visualizar :resource'
+  ]
+```
+
+In the example above, `:resource` will be replaced by the resource's `name`, generating labels like `Visualizar Posts` e `Criar Posts`.
+
+### Custom permissions
+
+You can also add new permissions to the existing Runway default ones.
+
+```php
+// app/Providers/AppServiceProvider.php
+
+public function boot()
+{
+  Permission::group('Runway', function () {
+    foreach (Runway::allResources() as $resource) {
+        Permission::get("edit {$resource->handle()}")->addChild(
+            Permission::make("edit other owners {$resource->handle()}")
+                ->label(trans('runway.permissions.edit_other_owners_resource', [
+                    'resource' => $resource->name()
+                ]))
+        );
+    }
+  });
+}
+```
 
 ## Actions
 
