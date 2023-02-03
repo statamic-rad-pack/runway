@@ -16,7 +16,7 @@ class StoreRequest extends FormRequest
             return false;
         }
 
-        return User::current()->hasPermission("Create new {$resource->singular()}")
+        return User::current()->hasPermission("create {$resource->handle()}")
             || User::current()->isSuper();
     }
 

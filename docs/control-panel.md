@@ -50,28 +50,9 @@ If you have other users who are not ‘super users’, you may wish to also give
 
 Runway gives you granular control over which actions users can/cannot do for each of your resources.
 
-### Permission keys
-
-By default, Runway generates permission keys using English and the automatic pluralized and singularized forms of the resource name. For instance: a resource named "Posts" will generate permission keys like `View Posts` and `Create new Post`. This might not be the best fit for you and you can learn more [here](https://github.com/duncanmcclean/runway/discussions/211).
-
-You can overcome this replacing the permission key pattern via configuration. This can be whatever you want, but following a more "Statamic like" pattern seems to be a good idea.
-
-```php
-  // config/runway.php
-
-  'permission_keys' => [
-    'create' => 'create {resource}',
-    'delete' => 'delete {resource}',
-    'edit' => 'edit {resource}',
-    'view' => 'view {resource}'
-  ]
-```
-
-In the example above `{resource}` will be replaced by the resource's `handle`, generating keys like `view post` and `create post`.
-
 ### Permission labels
 
-If you don't want to show the permissions keys in the control panel, and want to show a more readable text or the translated text for the permission, you can simply add a `resources/lang/{lang}/runway.php` file and set the permission label there.
+You can customize permission labels by adding a `resources/lang/{lang}/runway.php` file.
 
 ```php
   // resources/lang/pt_BR/runway.php
@@ -84,7 +65,7 @@ If you don't want to show the permissions keys in the control panel, and want to
   ]
 ```
 
-In the example above, `:resource` will be replaced by the resource's `name`, generating labels like `Visualizar Posts` e `Criar Posts`.
+In the example above, `:resource` will be replaced by the resource's `name`.
 
 ### Custom permissions
 

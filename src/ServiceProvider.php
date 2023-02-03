@@ -49,7 +49,7 @@ class ServiceProvider extends AddonServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'runway');
         $this->mergeConfigFrom(__DIR__ . '/../config/runway.php', 'runway');
 
-        if (!config('runway.disable_migrations')) {
+        if (! config('runway.disable_migrations')) {
             $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         }
 
@@ -73,35 +73,21 @@ class ServiceProvider extends AddonServiceProvider
         });
     }
 
-    protected function legacyPermissionKey($permission, $resource)
-    {
-        return match ($permission) {
-            'view' => "View {$resource->plural()}",
-            'edit' => "Edit {$resource->plural()}",
-            'create' => "Create new {$resource->singular()}",
-            'delete' => "Delete {$resource->singular()}"
-        };
-    }
-
-    protected function permissionKey($permission, $resource)
-    {
-        if (!$permissionKey = config("runway.permission_keys.{$permission}")) {
-            return $this->legacyPermissionKey($permission, $resource);
-        }
-
-        return str_replace('{resource}', $resource->handle(), $permissionKey);
-    }
-
     protected function permissionLabel($permission, $resource)
     {
         $translationKey = "runway.permissions.{$permission}";
 
         $label = trans($translationKey, [
-            'resource' => $resource->name()
+            'resource' => $resource->name(),
         ]);
 
         if ($label == $translationKey) {
-            return $this->legacyPermissionKey($permission, $resource);
+            return match ($permission) {
+                'view' => "View {$resource->name()}",
+                'edit' => "Edit {$resource->name()}",
+                'create' => "Create {$resource->name()}",
+                'delete' => "Delete {$resource->name()}"
+            };
         }
 
         return $label;
@@ -110,16 +96,16 @@ class ServiceProvider extends AddonServiceProvider
     protected function registerPermissions()
     {
         foreach (Runway::allResources() as $resource) {
-            Permission::register($this->permissionKey('view', $resource), function ($permission) use ($resource) {
+            Permission::register("view {$resource->handle()}", function ($permission) use ($resource) {
                 $permission
                     ->label($this->permissionLabel('view', $resource))
                     ->children([
-                        Permission::make($this->permissionKey('edit', $resource))
+                        Permission::make("edit {$resource->handle()}")
                             ->label($this->permissionLabel('edit', $resource))
                             ->children([
-                                Permission::make($this->permissionKey('create', $resource))
+                                Permission::make("create {$resource->handle()}")
                                     ->label($this->permissionLabel('create', $resource)),
-                                Permission::make($this->permissionKey('delete', $resource))
+                                Permission::make("delete {$resource->handle()}")
                                     ->label($this->permissionLabel('delete', $resource)),
                             ]),
                     ]);
@@ -139,7 +125,7 @@ class ServiceProvider extends AddonServiceProvider
                     ->section(__('Content'))
                     ->icon($resource->cpIcon())
                     ->route('runway.index', ['resourceHandle' => $resource->handle()])
-                    ->can("View {$resource->plural()}");
+                    ->can("view {$resource->handle()}");
             }
         });
     }

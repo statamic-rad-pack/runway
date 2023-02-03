@@ -91,8 +91,8 @@ class ResourceCollection extends LaravelResourceCollection
                 $row['id'] = $record->getKey();
                 $row['edit_url'] = cp_route('runway.edit', ['resourceHandle' => $handle, 'record' => $record->getRouteKey()]);
                 $row['permalink'] = $this->runwayResource->hasRouting() ? $record->uri() : null;
-                $row['editable'] = User::current()->hasPermission("Edit {$this->runwayResource->plural()}") || User::current()->isSuper();
-                $row['viewable'] = User::current()->hasPermission("View {$this->runwayResource->plural()}") || User::current()->isSuper();
+                $row['editable'] = User::current()->hasPermission("edit {$this->runwayResource->handle()}") || User::current()->isSuper();
+                $row['viewable'] = User::current()->hasPermission("view {$this->runwayResource->handle()}") || User::current()->isSuper();
                 $row['actions'] = Action::for($record, ['resource' => $this->runwayResource->handle()]);
 
                 return $row;

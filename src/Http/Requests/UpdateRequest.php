@@ -16,7 +16,7 @@ class UpdateRequest extends FormRequest
             return false;
         }
 
-        return User::current()->hasPermission("Edit {$resource->plural()}")
+        return User::current()->hasPermission("edit {$resource->handle()}")
             || User::current()->isSuper();
     }
 
