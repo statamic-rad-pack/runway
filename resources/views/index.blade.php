@@ -7,7 +7,7 @@
         <h1 class="flex-1">{{ $title }}</h1>
 
         @if(! $resource->readOnly())
-            @can('Create new ' . $resource->singular())
+            @can('create ' . $resource->handle())
                 <a
                     class="btn-primary"
                     href="{{ cp_route('runway.create', ['resourceHandle' => $resource->handle()]) }}"

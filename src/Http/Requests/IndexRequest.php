@@ -4,6 +4,7 @@ namespace DoubleThreeDigital\Runway\Http\Requests;
 
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Statamic\Facades\User;
 
 class IndexRequest extends FormRequest
@@ -12,8 +13,7 @@ class IndexRequest extends FormRequest
     {
         $resource = Runway::findResource($this->resourceHandle);
 
-        return User::current()->hasPermission("view {$resource->handle()}")
-            || User::current()->isSuper();
+        return User::current()->can('view', $resource);
     }
 
     public function rules()
