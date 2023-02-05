@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+## v3.0.3 (2022-02-05)
+
+### What's improved
+
+* Improved handling of pagination in Runway tag to make it more Statamic-like #212 #217 by @duncanmcclean
+
+### What's fixed
+
+* Fixed `sort` parameter in Runway tag #213 #215 by @duncanmcclean
+* Fixed action controller returning incorrect items to actions #216 by @Alt-Ben
+
 ## v3.0.2 (2023-01-28)
 
 ### What's fixed
