@@ -36,7 +36,7 @@ class ChangePermissionNames extends UpdateScript
                                 ->replace("View {$resource->plural()}", "view {$resource->handle()}")
                                 ->replace("Edit {$resource->plural()}", "edit {$resource->handle()}")
                                 ->replace("Create new {$resource->singular()}", "create {$resource->handle()}")
-                                ->replace("Delete {$resource->plural()}", "delete {$resource->handle()}")
+                                ->replace("Delete {$resource->singular()}", "delete {$resource->handle()}")
                                 ->__toString();
                         });
 
