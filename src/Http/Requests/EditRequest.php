@@ -12,8 +12,7 @@ class EditRequest extends FormRequest
     {
         $resource = Runway::findResource($this->resourceHandle);
 
-        return User::current()->hasPermission("edit {$resource->handle()}")
-            || User::current()->isSuper();
+        return User::current()->can('edit', $resource);
     }
 
     public function rules()

@@ -2,9 +2,11 @@
 
 namespace DoubleThreeDigital\Runway;
 
+use DoubleThreeDigital\Runway\Policies\ResourcePolicy;
 use DoubleThreeDigital\Runway\Search\Provider as SearchProvider;
 use DoubleThreeDigital\Runway\Search\Searchable;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
 use Statamic\Facades\Permission;
@@ -65,6 +67,7 @@ class ServiceProvider extends AddonServiceProvider
             Runway::discoverResources();
 
             $this->registerPermissions();
+            $this->registerPolicies();
             $this->registerNavigation();
             $this->bootGraphQl();
 
@@ -99,6 +102,11 @@ class ServiceProvider extends AddonServiceProvider
         }
     }
 
+    protected function registerPolicies()
+    {
+        Gate::policy(Resource::class, ResourcePolicy::class);
+    }
+
     protected function registerNavigation()
     {
         Nav::extend(function ($nav) {
@@ -111,7 +119,7 @@ class ServiceProvider extends AddonServiceProvider
                     ->section(__('Content'))
                     ->icon($resource->cpIcon())
                     ->route('runway.index', ['resourceHandle' => $resource->handle()])
-                    ->can("view {$resource->handle()}");
+                    ->can('view', $resource);
             }
         });
     }
