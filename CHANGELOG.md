@@ -2,19 +2,32 @@
 
 ## Unreleased
 
+## v4.0.0 (2023-02-05)
+
 ### What's new
 
-* You may now translate permission names #214 by @MtDalPizzol
+-   You may now translate permission names #214 by @MtDalPizzol
 
 ### Breaking changes
 
-* Permission keys have changed. If you have a user role with custom permissions set, you may need to make some changes:
-    * **File driver:** If you're using the file users repository, your `roles.yaml` file will have been updated automatically with the new permission names.
-    * **Otherwise:** You'll need to change permission names yourself - examples of the changes are shown below.
-        * `View Products` -> `view product`
-        * `Edit Products` -> `edit product`
-        * `Create new Product` -> `create product`
-        * `Delete Product` -> `delete product`
+-   Permission keys have changed. If you have a user role with custom permissions set, you may need to make some changes:
+    -   **File driver:** If you're using the file users repository, your `roles.yaml` file will have been updated automatically with the new permission names.
+    -   **Otherwise:** You'll need to change permission names yourself - examples of the changes are shown below.
+        -   `View Products` -> `view product`
+        -   `Edit Products` -> `edit product`
+        -   `Create new Product` -> `create product`
+        -   `Delete Product` -> `delete product`
+
+## v3.0.3 (2022-02-05)
+
+### What's improved
+
+-   Improved handling of pagination in Runway tag to make it more Statamic-like #212 #217 by @duncanmcclean
+
+### What's fixed
+
+-   Fixed `sort` parameter in Runway tag #213 #215 by @duncanmcclean
+-   Fixed action controller returning incorrect items to actions #216 by @Alt-Ben
 
 ## v3.0.2 (2023-01-28)
 
