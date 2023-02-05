@@ -42,6 +42,10 @@ class ServiceProvider extends AddonServiceProvider
         Tags\RunwayTag::class,
     ];
 
+    protected $updateScripts = [
+        UpdateScripts\ChangePermissionNames::class,
+    ];
+
     public function boot()
     {
         parent::boot();
@@ -63,6 +67,7 @@ class ServiceProvider extends AddonServiceProvider
             $this->registerPermissions();
             $this->registerNavigation();
             $this->bootGraphQl();
+
             SearchProvider::register();
             $this->bootModelEventListeners();
 
@@ -76,13 +81,20 @@ class ServiceProvider extends AddonServiceProvider
     protected function registerPermissions()
     {
         foreach (Runway::allResources() as $resource) {
-            Permission::register("View {$resource->plural()}", function ($permission) use ($resource) {
-                $permission->children([
-                    Permission::make("Edit {$resource->plural()}")->children([
-                        Permission::make("Create new {$resource->singular()}"),
-                        Permission::make("Delete {$resource->singular()}"),
-                    ]),
-                ]);
+            Permission::register("view {$resource->handle()}", function ($permission) use ($resource) {
+                $permission
+                    ->label($this->permissionLabel('view', $resource))
+                    ->children([
+                        Permission::make("edit {$resource->handle()}")
+                            ->label($this->permissionLabel('edit', $resource))
+                            ->children([
+                                Permission::make("create {$resource->handle()}")
+                                    ->label($this->permissionLabel('create', $resource)),
+
+                                Permission::make("delete {$resource->handle()}")
+                                    ->label($this->permissionLabel('delete', $resource)),
+                            ]),
+                    ]);
             })->group('Runway');
         }
     }
@@ -99,7 +111,7 @@ class ServiceProvider extends AddonServiceProvider
                     ->section(__('Content'))
                     ->icon($resource->cpIcon())
                     ->route('runway.index', ['resourceHandle' => $resource->handle()])
-                    ->can("View {$resource->plural()}");
+                    ->can("view {$resource->handle()}");
             }
         });
     }
@@ -129,8 +141,28 @@ class ServiceProvider extends AddonServiceProvider
         Runway::allResources()
             ->map(fn ($resource) => get_class($resource->model()))
             ->each(function ($class) {
-                Event::listen('eloquent.saved: '.$class, fn ($model) => Search::updateWithinIndexes(new Searchable($model)));
-                Event::listen('eloquent.deleted: '.$class, fn ($model) => Search::deleteFromIndexes(new Searchable($model)));
+                Event::listen('eloquent.saved: ' . $class, fn ($model) => Search::updateWithinIndexes(new Searchable($model)));
+                Event::listen('eloquent.deleted: ' . $class, fn ($model) => Search::deleteFromIndexes(new Searchable($model)));
             });
+    }
+
+    protected function permissionLabel($permission, $resource)
+    {
+        $translationKey = "runway.permissions.{$permission}";
+
+        $label = trans($translationKey, [
+            'resource' => $resource->name(),
+        ]);
+
+        if ($label == $translationKey) {
+            return match ($permission) {
+                'view' => "View {$resource->name()}",
+                'edit' => "Edit {$resource->name()}",
+                'create' => "Create {$resource->name()}",
+                'delete' => "Delete {$resource->name()}"
+            };
+        }
+
+        return $label;
     }
 }

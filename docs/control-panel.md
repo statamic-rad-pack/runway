@@ -46,9 +46,48 @@ You can either provide the name of an existing icon [packaged into Statamic Core
 
 ![Screenshot of Runway's User Permissions](/img/runway/cp-user-permissions.png)
 
-If you have other users who are not ‘super users’, you may wish to also give them permission to view/create/update specific resources.
+If you have other users who are not 'super users', you may wish to also give them permission to view/create/update specific resources.
 
 Runway gives you granular control over which actions users can/cannot do for each of your resources.
+
+### Permission labels
+
+You may customize permission labels by adding a `resources/lang/{lang}/runway.php` file.
+
+```php
+// resources/lang/pt_BR/runway.php
+
+'permissions' => [
+    'create' => 'Criar :resource',
+    'delete' => 'Excluir :resource',
+    'edit' => 'Editar :resource',
+    'view' => 'Visualizar :resource'
+]
+```
+
+In the example above, `:resource` will be replaced by the resource's `name`.
+
+### Custom permissions
+
+If you need to, you can add new permissions to the existing ones created by Runway:
+
+```php
+// app/Providers/AppServiceProvider.php
+
+public function boot()
+{
+    Permission::group('Runway', function () {
+        foreach (Runway::allResources() as $resource) {
+            Permission::get("edit {$resource->handle()}")->addChild(
+                Permission::make("edit other owners {$resource->handle()}")
+                    ->label(trans('runway.permissions.edit_other_owners_resource', [
+                        'resource' => $resource->name()
+                    ]))
+            );
+        }
+    });
+}
+```
 
 ## Actions
 

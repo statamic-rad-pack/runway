@@ -274,8 +274,8 @@ class BaseFieldtype extends Relationship
                     'id' => $record->{$resource->primaryKey()},
                     'title' => $this->makeTitle($record, $resource),
                     'edit_url' => $editUrl,
-                    'editable' => User::current()->hasPermission("Edit {$resource->plural()}") || User::current()->isSuper(),
-                    'viewable' => User::current()->hasPermission("View {$resource->plural()}") || User::current()->isSuper(),
+                    'editable' => User::current()->hasPermission("edit {$resource->handle()}") || User::current()->isSuper(),
+                    'viewable' => User::current()->hasPermission("view {$resource->handle()}") || User::current()->isSuper(),
                     'actions' => Action::for($record, ['resource' => $resource->handle()])->reject(fn ($action) => $action instanceof DeleteModel)->toArray(),
                 ])
                 ->toArray();

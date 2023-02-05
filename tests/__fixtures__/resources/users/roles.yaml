@@ -1,0 +1,7 @@
+site_editor:
+  title: Site Editor
+  permissions:
+    - 'View Posts'
+    - 'Edit Posts'
+    - 'Create new Post'
+    - 'Delete Post'
