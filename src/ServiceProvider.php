@@ -42,6 +42,10 @@ class ServiceProvider extends AddonServiceProvider
         Tags\RunwayTag::class,
     ];
 
+    protected $updateScripts = [
+        UpdateScripts\ChangePermissionNames::class,
+    ];
+
     public function boot()
     {
         parent::boot();

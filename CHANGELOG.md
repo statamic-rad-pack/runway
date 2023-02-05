@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+### What's new
+
+* You may now translate permission names #214 by @MtDalPizzol
+
+### Breaking changes
+
+* Permission keys have changed. If you have a user role with custom permissions set, you may need to make some changes:
+    * **File driver:** If you're using the file users repository, your `roles.yaml` file will have been updated automatically with the new permission names.
+    * **Otherwise:** You'll need to change permission names yourself - examples of the changes are shown below.
+        * `View Products` -> `view product`
+        * `Edit Products` -> `edit product`
+        * `Create new Product` -> `create product`
+        * `Delete Product` -> `delete product`
+
 ## v3.0.2 (2023-01-28)
 
 ### What's fixed
