@@ -6,6 +6,7 @@ use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Support\Str;
+use Statamic\Extensions\Pagination\LengthAwarePaginator;
 use Statamic\Tags\Tags;
 
 class RunwayTag extends Tags
@@ -71,6 +72,15 @@ class RunwayTag extends Tags
 
         if ($this->params->get('paginate') || $this->params->get('limit')) {
             $paginator = $query->paginate($this->params->get('limit'));
+
+            $paginator = app()->makeWith(LengthAwarePaginator::class, [
+                'items' => $paginator->items(),
+                'total' => $paginator->total(),
+                'perPage' => $paginator->perPage(),
+                'currentPage' => $paginator->currentPage(),
+                'options' => $paginator->getOptions(),
+            ]);
+
             $results = $paginator->items();
         } else {
             $results = $query->get();
@@ -82,7 +92,7 @@ class RunwayTag extends Tags
 
         return [
             $this->params->get('as') => $this->augmentRecords($results, $resource),
-            'paginate'   => isset($paginator) ? $paginator->toArray() : null,
+            'paginate'   => isset($paginator) ? $this->getPaginationData($paginator) : null,
             'no_results' => collect($results)->isEmpty(),
         ];
     }
@@ -92,5 +102,19 @@ class RunwayTag extends Tags
         return collect($query)
             ->map(fn ($record, $key) => $resource->augment($record))
             ->toArray();
+    }
+
+    protected function getPaginationData($paginator)
+    {
+        return [
+            'total_items'    => $paginator->total(),
+            'items_per_page' => $paginator->perPage(),
+            'total_pages'    => $paginator->lastPage(),
+            'current_page'   => $paginator->currentPage(),
+            'prev_page'      => $paginator->previousPageUrl(),
+            'next_page'      => $paginator->nextPageUrl(),
+            'auto_links'     => $paginator->render('pagination::default'),
+            'links'          => $paginator->renderArray(),
+        ];
     }
 }

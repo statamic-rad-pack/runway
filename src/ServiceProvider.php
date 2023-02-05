@@ -42,6 +42,10 @@ class ServiceProvider extends AddonServiceProvider
         Tags\RunwayTag::class,
     ];
 
+    protected $updateScripts = [
+        UpdateScripts\ChangePermissionNames::class,
+    ];
+
     public function boot()
     {
         parent::boot();
@@ -63,6 +67,7 @@ class ServiceProvider extends AddonServiceProvider
             $this->registerPermissions();
             $this->registerNavigation();
             $this->bootGraphQl();
+
             SearchProvider::register();
             $this->bootModelEventListeners();
 
@@ -71,26 +76,6 @@ class ServiceProvider extends AddonServiceProvider
                     ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
             }
         });
-    }
-
-    protected function permissionLabel($permission, $resource)
-    {
-        $translationKey = "runway.permissions.{$permission}";
-
-        $label = trans($translationKey, [
-            'resource' => $resource->name(),
-        ]);
-
-        if ($label == $translationKey) {
-            return match ($permission) {
-                'view' => "View {$resource->name()}",
-                'edit' => "Edit {$resource->name()}",
-                'create' => "Create {$resource->name()}",
-                'delete' => "Delete {$resource->name()}"
-            };
-        }
-
-        return $label;
     }
 
     protected function registerPermissions()
@@ -105,6 +90,7 @@ class ServiceProvider extends AddonServiceProvider
                             ->children([
                                 Permission::make("create {$resource->handle()}")
                                     ->label($this->permissionLabel('create', $resource)),
+
                                 Permission::make("delete {$resource->handle()}")
                                     ->label($this->permissionLabel('delete', $resource)),
                             ]),
@@ -158,5 +144,25 @@ class ServiceProvider extends AddonServiceProvider
                 Event::listen('eloquent.saved: ' . $class, fn ($model) => Search::updateWithinIndexes(new Searchable($model)));
                 Event::listen('eloquent.deleted: ' . $class, fn ($model) => Search::deleteFromIndexes(new Searchable($model)));
             });
+    }
+
+    protected function permissionLabel($permission, $resource)
+    {
+        $translationKey = "runway.permissions.{$permission}";
+
+        $label = trans($translationKey, [
+            'resource' => $resource->name(),
+        ]);
+
+        if ($label == $translationKey) {
+            return match ($permission) {
+                'view' => "View {$resource->name()}",
+                'edit' => "Edit {$resource->name()}",
+                'create' => "Create {$resource->name()}",
+                'delete' => "Delete {$resource->name()}"
+            };
+        }
+
+        return $label;
     }
 }
