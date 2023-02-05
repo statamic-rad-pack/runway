@@ -35,8 +35,7 @@ class DeleteModel extends Action
     {
         $resource = Runway::findResourceByModel($item);
 
-        return $user->hasPermission("delete {$resource->handle()}")
-            || $user->isSuper();
+        return $user->can('delete', $resource);
     }
 
     public function buttonText()

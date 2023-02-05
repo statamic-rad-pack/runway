@@ -133,7 +133,7 @@ class ServiceProvider extends AddonServiceProvider
                     ->section(__('Content'))
                     ->icon($resource->cpIcon())
                     ->route('runway.index', ['resourceHandle' => $resource->handle()])
-                    ->can("view {$resource->handle()}");
+                    ->can('view', $resource);
             }
         });
     }

@@ -3,27 +3,31 @@
 namespace DoubleThreeDigital\Runway\Policies;
 
 use DoubleThreeDigital\Runway\Resource;
-use Statamic\Contracts\Auth\User;
+use Statamic\Facades\User;
 
 class ResourcePolicy
 {
-    public function view(User $user, Resource $resource)
+    public function view($user, Resource $resource)
     {
-        return $user->hasPermission("view {$resource->handle()}");
+        return User::fromUser($user)
+            ->hasPermission("view {$resource->handle()}");
     }
 
-    public function create(User $user, Resource $resource)
+    public function create($user, Resource $resource)
     {
-        return $user->hasPermission("create {$resource->handle()}");
+        return User::fromUser($user)
+            ->hasPermission("create {$resource->handle()}");
     }
-    
-    public function edit(User $user, Resource $resource)
+
+    public function edit($user, Resource $resource)
     {
-        return $user->hasPermission("edit {$resource->handle()}");
+        return User::fromUser($user)
+            ->hasPermission("edit {$resource->handle()}");
     }
-    
-    public function delete(User $user, Resource $resource)
+
+    public function delete($user, Resource $resource)
     {
-        return $user->hasPermission("delete {$resource->handle()}");
+        return User::fromUser($user)
+            ->hasPermission("delete {$resource->handle()}");
     }
 }
