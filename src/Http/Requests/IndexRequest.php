@@ -4,7 +4,6 @@ namespace DoubleThreeDigital\Runway\Http\Requests;
 
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Statamic\Facades\User;
 
 class IndexRequest extends FormRequest
