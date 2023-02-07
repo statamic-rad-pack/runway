@@ -71,7 +71,7 @@
                             :slot="primaryColumn"
                             slot-scope="{ row, value }"
                         >
-                            <a :href="row.edit_url">{{ value }}</a>
+                            <a :href="row.edit_url" @click.stop>{{ value }}</a>
                         </template>
 
                         <template slot="actions" slot-scope="{ row, index }">
