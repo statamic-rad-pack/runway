@@ -16,8 +16,7 @@ class CreateRequest extends FormRequest
             return false;
         }
 
-        return User::current()->hasPermission("create {$resource->handle()}")
-            || User::current()->isSuper();
+        return User::current()->can('create', $resource);
     }
 
     public function rules()
