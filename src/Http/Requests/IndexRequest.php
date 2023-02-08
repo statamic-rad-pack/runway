@@ -12,8 +12,7 @@ class IndexRequest extends FormRequest
     {
         $resource = Runway::findResource($this->resourceHandle);
 
-        return User::current()->hasPermission("view {$resource->handle()}")
-            || User::current()->isSuper();
+        return User::current()->can('view', $resource);
     }
 
     public function rules()
