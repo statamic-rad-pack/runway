@@ -15,20 +15,12 @@ class ResourcePolicy
 
     public function create($user, Resource $resource)
     {
-        if ($resource->readOnly()) {
-            return false;
-        }
-
         return User::fromUser($user)
             ->hasPermission("create {$resource->handle()}");
     }
 
     public function edit($user, Resource $resource)
     {
-        if ($resource->readOnly()) {
-            return false;
-        }
-
         return User::fromUser($user)
             ->hasPermission("edit {$resource->handle()}");
     }

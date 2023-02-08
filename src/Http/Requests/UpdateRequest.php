@@ -12,6 +12,10 @@ class UpdateRequest extends FormRequest
     {
         $resource = Runway::findResource($this->resourceHandle);
 
+        if ($resource->readOnly()) {
+            return false;
+        }
+
         return User::current()->can('edit', $resource);
     }
 
