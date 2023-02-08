@@ -99,6 +99,7 @@ If you need to, you can change how resource actions are authorized by extending 
 <?php
 
 namespace App\Policies;
+
 use DoubleThreeDigital\Runway\Policies\ResourcePolicy as RunwayResourcePolicy;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -120,6 +121,8 @@ class ResourcePolicy extends RunwayResourcePolicy
 // app/Providers/AppServiceProvider.php
 
 <?php
+
+namespace App\Providers;
 
 use App\Policies\ResourcePolicy;
 use DoubleThreeDigital\Runway\Policies\ResourcePolicy as RunwayResourcePolicy;
