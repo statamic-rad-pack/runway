@@ -89,6 +89,50 @@ public function boot()
 }
 ```
 
+## Authorization
+
+If you need to, you can change how resource actions are authorized by extending and rebinding the `ResourcePolicy` class.
+
+```php
+// app/Policies/ResourcePolicy.php
+
+<?php
+
+namespace App\Policies;
+
+use DoubleThreeDigital\Runway\Policies\ResourcePolicy as RunwayResourcePolicy;
+use Illuminate\Auth\Access\HandlesAuthorization;
+
+class ResourcePolicy extends RunwayResourcePolicy
+{
+    use HandlesAuthorization;
+
+    public function edit($user, $resource)
+    {
+        // Do custom checks here before running the default ones
+
+        // If custom checks didn't return, run default checks
+        return parent::edit($user, $resource);
+    }
+}
+```
+
+```php
+// app/Providers/AppServiceProvider.php
+
+<?php
+
+namespace App\Providers;
+
+use App\Policies\ResourcePolicy;
+use DoubleThreeDigital\Runway\Policies\ResourcePolicy as RunwayResourcePolicy;
+
+public function boot()
+{
+    $this->app->bind(RunwayResourcePolicy::class, ResourcePolicy::class);
+}
+```
+
 ## Actions
 
 Runway supports using [Statamic Actions](https://statamic.dev/extending/actions#content) to preform tasks on your models.

@@ -18,7 +18,7 @@ class ResourceListingController extends CpController
         $resource = Runway::findResource($resourceHandle);
         $blueprint = $resource->blueprint();
 
-        if (! User::current()->hasPermission("view {$resource->handle()}") && ! User::current()->isSuper()) {
+        if (! User::current()->can('view', $resource)) {
             abort(403);
         }
 
