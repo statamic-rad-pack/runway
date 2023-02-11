@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## v4.1.0 (2023-02-11)
+
+### What's improved
+
+-   Added a `ResourcePolicy` to handle authorization in Runway #221 by @MtDalPizzol
+
+### What's fixed
+
+-   Prevent resource row selection #220 by @MtDalPizzol
+
 ## v4.0.0 (2023-02-05)
 
 ### What's new
