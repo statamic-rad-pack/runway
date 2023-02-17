@@ -90,8 +90,8 @@ class ResourceController extends CpController
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
 
-            // Skip section fields as there's nothing to store.
-            if ($field->type() === 'section') {
+            // Skip section fields or computed fields as there's nothing to store.
+            if ($field->type() === 'section' || $field->visibility() === 'computed') {
                 continue;
             }
 
