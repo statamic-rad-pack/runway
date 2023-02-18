@@ -103,6 +103,34 @@ class ResourceControllerTest extends TestCase
         ]);
     }
 
+    /**
+     * @test
+     * https://github.com/duncanmcclean/runway/pull/223
+     */
+    public function can_store_resource_and_ensure_computed_field_isnt_saved_to_database()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $author = $this->authorFactory();
+
+        $this->actingAs($user)
+            ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
+                'title' => 'Jingle Bells',
+                'slug' => 'jingle-bells',
+                'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
+                'author_id' => [$author->id],
+                'age' => 25, // This is a computed field
+            ])
+            ->assertOk()
+            ->assertJsonStructure([
+                'redirect',
+            ]);
+
+        $this->assertDatabaseHas('posts', [
+            'title' => 'Jingle Bells',
+        ]);
+    }
+
     /** @test */
     public function can_edit_resource()
     {

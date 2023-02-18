@@ -133,6 +133,13 @@ abstract class TestCase extends OrchestraTestCase
                                             'mode' => 'default',
                                         ],
                                     ],
+                                    [
+                                        'handle' => 'age',
+                                        'field' => [
+                                            'type' => 'integer',
+                                            'visibility' => 'computed',
+                                        ],
+                                    ]
                                 ],
                             ],
                         ],
