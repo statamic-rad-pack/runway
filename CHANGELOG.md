@@ -6,7 +6,7 @@
 
 ### What's fixed
 
--   Ignore computed fields when saving #223 @ryanmitchell
+-   Ignore computed fields when saving #223 by @ryanmitchell
 
 ## v4.1.0 (2023-02-11)
 
