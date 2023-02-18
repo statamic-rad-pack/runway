@@ -139,7 +139,7 @@ abstract class TestCase extends OrchestraTestCase
                                             'type' => 'integer',
                                             'visibility' => 'computed',
                                         ],
-                                    ]
+                                    ],
                                 ],
                             ],
                         ],
