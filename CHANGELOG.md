@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v4.1.1 (2023-02-18)
+
+### What's fixed
+
+-   Ignore computed fields when saving #223 @ryanmitchell
+
 ## v4.1.0 (2023-02-11)
 
 ### What's improved
