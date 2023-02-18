@@ -103,6 +103,34 @@ class ResourceControllerTest extends TestCase
         ]);
     }
 
+    /**
+     * @test
+     * https://github.com/duncanmcclean/runway/pull/223
+     */
+    public function can_store_resource_and_ensure_computed_field_isnt_saved_to_database()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $author = $this->authorFactory();
+
+        $this->actingAs($user)
+            ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
+                'title' => 'Jingle Bells',
+                'slug' => 'jingle-bells',
+                'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
+                'author_id' => [$author->id],
+                'age' => 25, // This is the computed field
+            ])
+            ->assertOk()
+            ->assertJsonStructure([
+                'redirect',
+            ]);
+
+        $this->assertDatabaseHas('posts', [
+            'title' => 'Jingle Bells',
+        ]);
+    }
+
     /** @test */
     public function can_edit_resource()
     {
@@ -332,5 +360,30 @@ class ResourceControllerTest extends TestCase
         $post->refresh();
 
         $this->assertNotSame($post->title, 'Santa is coming home');
+    }
+
+    /** @test */
+    public function can_update_resource_and_ensure_computed_field_isnt_saved_to_database()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $post = $this->postFactory();
+
+        $this->actingAs($user)
+            ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
+                'title' => 'Santa is coming home',
+                'slug' => 'santa-is-coming-home',
+                'body' => $post->body,
+                'author_id' => [$post->author_id],
+                'age' => 19, // This is the computed field
+            ])
+            ->assertOk()
+            ->assertJsonStructure([
+                'data',
+            ]);
+
+        $post->refresh();
+
+        $this->assertSame($post->title, 'Santa is coming home');
     }
 }
