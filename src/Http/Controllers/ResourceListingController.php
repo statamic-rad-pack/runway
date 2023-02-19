@@ -51,7 +51,9 @@ class ResourceListingController extends CpController
                     $blueprint->fields()->items()
                         ->reject(function (array $field) {
                             return $field['field']['type'] === 'has_many'
-                                || $field['field']['type'] === 'hidden';
+                                || $field['field']['type'] === 'hidden'
+                                || $field['field']['type'] === 'section'
+                                || (isset($field['field']['visibility']) && $field['field']['visibility'] === 'computed');
                         })
                         ->each(function (array $field) use ($query, $searchQuery) {
                             $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
