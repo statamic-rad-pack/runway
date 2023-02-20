@@ -56,13 +56,13 @@ class RunwayTag extends Tags
             $value = explode(':', (string) $where)[1];
 
             if ($resource->eagerLoadingRelations()->has($key)) {
-                // eagerLoadingRelations() return a Collection of keys/values, the keys are the field names 
-                // & the values are the Eloquent relationship names. We need to get the relationship name 
+                // eagerLoadingRelations() return a Collection of keys/values, the keys are the field names
+                // & the values are the Eloquent relationship names. We need to get the relationship name
                 // for the whereHas query.
                 $relationshipName = $resource->eagerLoadingRelations()->get($key);
                 $relationshipResource = Runway::findResource($resource->blueprint()->field($key)->config()['resource']);
 
-                $query->whereHas($relationshipName, function ($query) use ($key, $value, $relationshipResource) {
+                $query->whereHas($relationshipName, function ($query) use ($value, $relationshipResource) {
                     $query->whereIn($relationshipResource->databaseTable() . '.' . $relationshipResource->primaryKey(), Arr::wrap($value));
                 });
             } else {
