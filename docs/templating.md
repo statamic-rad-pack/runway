@@ -75,6 +75,15 @@ Just like with the collection tag, you may filter your results like so:
 {{ /runway:post }}
 ```
 
+You can also query Belongs To / Has Many fields using the `where` parameter. Simply provide the ID(s) of the related models.
+
+```antlers
+{{ runway:post where="categories:2" }}
+	<h2>{{ title }}</h2>
+	<p>{{ intro_text }}</p>
+{{ /runway:post }}
+```
+
 ### Eager Loading
 
 If your model has a relationship that you'd like to bring into the template, you may specify the `with` parameter.
