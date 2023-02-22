@@ -130,6 +130,28 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
+    public function can_get_records_with_where_parameter_when_condition_is_on_relationship_field()
+    {
+        $posts = $this->postFactory(5);
+        $author = $this->authorFactory();
+
+        $posts[0]->update(['author_id' => $author->id]);
+        $posts[2]->update(['author_id' => $author->id]);
+        $posts[3]->update(['author_id' => $author->id]);
+
+        $this->tag->setParameters([
+            'where' => 'author_id:' . $author->id,
+        ]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertSame(3, count($usage));
+        $this->assertSame((string) $usage[0]['title'], $posts[0]->title);
+        $this->assertSame((string) $usage[1]['title'], $posts[2]->title);
+        $this->assertSame((string) $usage[2]['title'], $posts[3]->title);
+    }
+
+    /** @test */
     public function can_get_records_with_with_parameter()
     {
         $posts = $this->postFactory(5);

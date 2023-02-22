@@ -5,6 +5,7 @@ namespace DoubleThreeDigital\Runway\Tags;
 use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Statamic\Extensions\Pagination\LengthAwarePaginator;
 use Statamic\Tags\Tags;
@@ -51,7 +52,22 @@ class RunwayTag extends Tags
         }
 
         if ($this->params->has('where') && $where = $this->params->get('where')) {
-            $query->where(explode(':', (string) $where)[0], explode(':', (string) $where)[1]);
+            $key = explode(':', (string) $where)[0];
+            $value = explode(':', (string) $where)[1];
+
+            if ($resource->eagerLoadingRelations()->has($key)) {
+                // eagerLoadingRelations() return a Collection of keys/values, the keys are the field names
+                // & the values are the Eloquent relationship names. We need to get the relationship name
+                // for the whereHas query.
+                $relationshipName = $resource->eagerLoadingRelations()->get($key);
+                $relationshipResource = Runway::findResource($resource->blueprint()->field($key)->config()['resource']);
+
+                $query->whereHas($relationshipName, function ($query) use ($value, $relationshipResource) {
+                    $query->whereIn($relationshipResource->databaseTable() . '.' . $relationshipResource->primaryKey(), Arr::wrap($value));
+                });
+            } else {
+                $query->where($key, $value);
+            }
         }
 
         if ($with = $this->params->get('with')) {

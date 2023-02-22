@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## v4.1.2 (2023-02-20)
+
+### What's new
+
+-   You can now relationship fields when using the `where` parameter on the Runway tag #225 by @duncanmcclean
+
+### What's fixed
+
+-   Runway no longer attempts to search section & computed fields when searching in the Control Panel #224 by @stoffelio
+
 ## v4.1.1 (2023-02-18)
 
 ### What's fixed
