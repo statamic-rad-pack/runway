@@ -57,7 +57,7 @@ abstract class TestCase extends OrchestraTestCase
 
         $app->make(Manifest::class)->manifest = [
             'doublethreedigital/runway' => [
-                'id'        => 'doublethreedigital/runway',
+                'id' => 'doublethreedigital/runway',
                 'namespace' => 'DoubleThreeDigital\\Runway',
             ],
         ];
@@ -200,9 +200,9 @@ abstract class TestCase extends OrchestraTestCase
 
         for ($i = 0; $i < $count; $i++) {
             $items[] = Post::create(array_merge([
-                'title'     => $title = join(' ', $this->faker->words(6)),
-                'slug'      => str_slug($title),
-                'body'      => join(' ', $this->faker->paragraphs(10)),
+                'title' => $title = implode(' ', $this->faker->words(6)),
+                'slug' => str_slug($title),
+                'body' => implode(' ', $this->faker->paragraphs(10)),
                 'author_id' => $this->authorFactory()->id,
             ], $attributes));
         }

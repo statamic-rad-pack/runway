@@ -12,18 +12,31 @@ class Resource
     use FluentlyGetsAndSets;
 
     protected $handle;
+
     protected $model;
+
     protected $name;
+
     protected $blueprint;
+
     protected $cpIcon;
+
     protected $hidden;
+
     protected $route;
+
     protected $template;
+
     protected $layout;
+
     protected $graphqlEnabled;
+
     protected $readOnly;
+
     protected $eagerLoadingRelations;
+
     protected $orderBy;
+
     protected $titleField;
 
     public function handle($handle = null)
@@ -96,7 +109,7 @@ class Resource
         return $this->fluentlyGetOrSet('cpIcon')
             ->getter(function ($value) {
                 if (! $value) {
-                    return file_get_contents(__DIR__ . '/../resources/svg/database.svg');
+                    return file_get_contents(__DIR__.'/../resources/svg/database.svg');
                 }
 
                 return $value;
@@ -254,13 +267,13 @@ class Resource
     public function toArray(): array
     {
         return [
-            'handle'          => $this->handle(),
-            'model'           => $this->model(),
-            'name'            => $this->name(),
-            'blueprint'       => $this->blueprint(),
-            'cp_icon'         => $this->cpIcon(),
-            'hidden'          => $this->hidden(),
-            'route'           => $this->route(),
+            'handle' => $this->handle(),
+            'model' => $this->model(),
+            'name' => $this->name(),
+            'blueprint' => $this->blueprint(),
+            'cp_icon' => $this->cpIcon(),
+            'hidden' => $this->hidden(),
+            'route' => $this->route(),
         ];
     }
 

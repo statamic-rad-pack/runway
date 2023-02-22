@@ -26,18 +26,18 @@ class ResourceController extends CpController
 
         $listingConfig = [
             'preferencesPrefix' => "runway.{$resource->handle()}",
-            'requestUrl'        => cp_route('runway.listing-api', ['resourceHandle' => $resource->handle()]),
-            'listingUrl'        => cp_route('runway.index', ['resourceHandle' => $resource->handle()]),
+            'requestUrl' => cp_route('runway.listing-api', ['resourceHandle' => $resource->handle()]),
+            'listingUrl' => cp_route('runway.index', ['resourceHandle' => $resource->handle()]),
         ];
 
         return view('runway::index', [
-            'title'         => $resource->name(),
-            'resource'      => $resource,
-            'recordCount'   => $resource->model()->count(),
-            'columns'       => $this->buildColumns($resource, $blueprint),
-            'filters'       => Scope::filters("runway_{$resourceHandle}"),
+            'title' => $resource->name(),
+            'resource' => $resource,
+            'recordCount' => $resource->model()->count(),
+            'columns' => $this->buildColumns($resource, $blueprint),
+            'filters' => Scope::filters("runway_{$resourceHandle}"),
             'listingConfig' => $listingConfig,
-            'actionUrl'     => cp_route('runway.actions.run', ['resourceHandle' => $resourceHandle]),
+            'actionUrl' => cp_route('runway.actions.run', ['resourceHandle' => $resourceHandle]),
         ]);
     }
 
@@ -134,7 +134,7 @@ class ResourceController extends CpController
         return [
             'data' => $this->getReturnData($resource, $record),
             'redirect' => cp_route('runway.edit', [
-                'resourceHandle'  => $resource->handle(),
+                'resourceHandle' => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},
             ]),
         ];
@@ -179,7 +179,7 @@ class ResourceController extends CpController
                 'resource' => $resource->singular(),
             ]),
             'action' => cp_route('runway.update', [
-                'resourceHandle'  => $resource->handle(),
+                'resourceHandle' => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},
             ]),
             'method' => 'PATCH',
@@ -200,7 +200,7 @@ class ResourceController extends CpController
                 : null,
             'resourceHasRoutes' => $resource->hasRouting(),
             'currentRecord' => [
-                'id'    => $record->getKey(),
+                'id' => $record->getKey(),
                 'title' => $record->{$resource->titleField()},
                 'edit_url' => $request->url(),
             ],
@@ -290,7 +290,7 @@ class ResourceController extends CpController
         return array_merge($record->toArray(), [
             'title' => $record->{$resource->titleField()},
             'edit_url' => cp_route('runway.edit', [
-                'resourceHandle'  => $resource->handle(),
+                'resourceHandle' => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},
             ]),
         ]);

@@ -19,7 +19,7 @@ trait HasListingColumns
 
                 return [
                     'handle' => $columnKey,
-                    'title'  => $field
+                    'title' => $field
                         ? $field->display()
                         : $field,
                     'has_link' => $preferredFirstColumn === $columnKey,

@@ -43,7 +43,7 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function cant_create_resource_if_resource_is_read_only()
     {
-        Config::set('runway.resources.' . Post::class . '.read_only', true);
+        Config::set('runway.resources.'.Post::class.'.read_only', true);
 
         Runway::discoverResources();
 
@@ -81,7 +81,7 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function cant_store_resource_if_resource_is_read_only()
     {
-        Config::set('runway.resources.' . Post::class . '.read_only', true);
+        Config::set('runway.resources.'.Post::class.'.read_only', true);
 
         Runway::discoverResources();
 
@@ -148,7 +148,7 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_edit_resource_with_simple_date_field()
     {
-        $fields = Config::get('runway.resources.' . Post::class . '.blueprint.sections.main.fields');
+        $fields = Config::get('runway.resources.'.Post::class.'.blueprint.sections.main.fields');
 
         $fields[] = [
             'handle' => 'created_at',
@@ -160,7 +160,7 @@ class ResourceControllerTest extends TestCase
             ],
         ];
 
-        Config::set('runway.resources.' . Post::class . '.blueprint.sections.main.fields', $fields);
+        Config::set('runway.resources.'.Post::class.'.blueprint.sections.main.fields', $fields);
 
         Runway::discoverResources();
 
@@ -175,7 +175,7 @@ class ResourceControllerTest extends TestCase
         $response = $this->actingAs($user)
             ->get(cp_route('runway.edit', [
                 'resourceHandle' => 'post',
-                'record'         => $post->id,
+                'record' => $post->id,
             ]))
             ->assertOk();
 
@@ -188,7 +188,7 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_edit_resource_with_date_field_with_default_format()
     {
-        $fields = Config::get('runway.resources.' . Post::class . '.blueprint.sections.main.fields');
+        $fields = Config::get('runway.resources.'.Post::class.'.blueprint.sections.main.fields');
 
         $fields[] = [
             'handle' => 'created_at',
@@ -201,7 +201,7 @@ class ResourceControllerTest extends TestCase
             ],
         ];
 
-        Config::set('runway.resources.' . Post::class . '.blueprint.sections.main.fields', $fields);
+        Config::set('runway.resources.'.Post::class.'.blueprint.sections.main.fields', $fields);
 
         Runway::discoverResources();
 
@@ -216,7 +216,7 @@ class ResourceControllerTest extends TestCase
         $response = $this->actingAs($user)
             ->get(cp_route('runway.edit', [
                 'resourceHandle' => 'post',
-                'record'         => $post->id,
+                'record' => $post->id,
             ]))
             ->assertOk();
 
@@ -229,7 +229,7 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_edit_resource_with_date_field_with_custom_format()
     {
-        $fields = Config::get('runway.resources.' . Post::class . '.blueprint.sections.main.fields');
+        $fields = Config::get('runway.resources.'.Post::class.'.blueprint.sections.main.fields');
 
         $fields[] = [
             'handle' => 'created_at',
@@ -242,7 +242,7 @@ class ResourceControllerTest extends TestCase
             ],
         ];
 
-        Config::set('runway.resources.' . Post::class . '.blueprint.sections.main.fields', $fields);
+        Config::set('runway.resources.'.Post::class.'.blueprint.sections.main.fields', $fields);
 
         Runway::discoverResources();
 
@@ -257,7 +257,7 @@ class ResourceControllerTest extends TestCase
         $response = $this->actingAs($user)
             ->get(cp_route('runway.edit', [
                 'resourceHandle' => 'post',
-                'record'         => $post->id,
+                'record' => $post->id,
             ]))
             ->assertOk();
 
@@ -270,7 +270,7 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_edit_resource_if_resource_is_read_only()
     {
-        Config::set('runway.resources.' . Post::class . '.read_only', true);
+        Config::set('runway.resources.'.Post::class.'.read_only', true);
 
         Runway::discoverResources();
 
@@ -340,7 +340,7 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function cant_update_resource_if_resource_is_read_only()
     {
-        Config::set('runway.resources.' . Post::class . '.read_only', true);
+        Config::set('runway.resources.'.Post::class.'.read_only', true);
 
         Runway::discoverResources();
 

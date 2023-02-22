@@ -56,7 +56,7 @@ class ResourceListingController extends CpController
                                 || (isset($field['field']['visibility']) && $field['field']['visibility'] === 'computed');
                         })
                         ->each(function (array $field) use ($query, $searchQuery) {
-                            $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
+                            $query->orWhere($field['handle'], 'LIKE', '%'.$searchQuery.'%');
                         });
                 }
             );
@@ -68,7 +68,7 @@ class ResourceListingController extends CpController
 
         return (new ResourceCollection($results))
             ->setResourceHandle($resourceHandle)
-            ->setColumnPreferenceKey('runway.' . $resourceHandle . '.columns')
+            ->setColumnPreferenceKey('runway.'.$resourceHandle.'.columns')
             ->setColumns($columns)
             ->additional(['meta' => [
                 'activeFilterBadges' => $activeFilterBadges,

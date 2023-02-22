@@ -13,6 +13,7 @@ use Statamic\View\View;
 class ResourceResponse implements Responsable
 {
     protected $request;
+
     protected $with = [];
 
     public function __construct(protected $data)

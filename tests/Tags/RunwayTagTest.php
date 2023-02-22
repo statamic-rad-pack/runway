@@ -140,7 +140,7 @@ class RunwayTagTest extends TestCase
         $posts[3]->update(['author_id' => $author->id]);
 
         $this->tag->setParameters([
-            'where' => 'author_id:' . $author->id,
+            'where' => 'author_id:'.$author->id,
         ]);
 
         $usage = $this->tag->wildcard('post');
@@ -274,7 +274,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_studly_case_resource_handle()
     {
-        Config::set('runway.resources.' . Post::class . '.handle', 'BlogPosts');
+        Config::set('runway.resources.'.Post::class.'.handle', 'BlogPosts');
 
         Runway::discoverResources();
 

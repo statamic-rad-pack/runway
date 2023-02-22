@@ -17,10 +17,15 @@ use Statamic\Fieldtypes\Relationship;
 class BaseFieldtype extends Relationship
 {
     protected $canEdit = true;
+
     protected $canCreate = true;
+
     protected $canSearch = true;
+
     protected $categories = ['relationship'];
+
     protected $formComponent = 'runway-publish-form';
+
     protected $component = 'runway-relationship';
 
     protected $formComponentProps = [
@@ -104,7 +109,7 @@ class BaseFieldtype extends Relationship
                                     || $field['field']['type'] === 'hidden';
                             })
                             ->each(function (array $field) use ($query, $searchQuery) {
-                                $query->orWhere($field['handle'], 'LIKE', '%' . $searchQuery . '%');
+                                $query->orWhere($field['handle'], 'LIKE', '%'.$searchQuery.'%');
                             });
                     }
                 );
@@ -282,7 +287,7 @@ class BaseFieldtype extends Relationship
         }
 
         return [
-            'id'    => $record->getKey(),
+            'id' => $record->getKey(),
             'title' => $this->makeTitle($record, $resource),
             'edit_url' => $editUrl,
         ];
@@ -296,7 +301,7 @@ class BaseFieldtype extends Relationship
             [
                 'title' => $resource->singular(),
                 'url' => cp_route('runway.create', [
-                    'resourceHandle'  => $resource->handle(),
+                    'resourceHandle' => $resource->handle(),
                 ]),
             ],
         ];

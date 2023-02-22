@@ -33,8 +33,6 @@ class GenerateMigration extends Command
 
     /**
      * The matching table for fieldtypes -> database columns.
-     *
-     * @var array
      */
     protected array $matching = [
         'array' => [
@@ -222,10 +220,10 @@ class GenerateMigration extends Command
 
         $columns = collect($fields)
             ->map(fn (Field $field) => [
-                'name'           => $field->handle(),
-                'type'           => $this->getMatchingColumnType($field),
-                'nullable'       => $this->isFieldNullable($field),
-                'default'        => empty($field->defaultValue()) ? $field->defaultValue() : null,
+                'name' => $field->handle(),
+                'type' => $this->getMatchingColumnType($field),
+                'nullable' => $this->isFieldNullable($field),
+                'default' => empty($field->defaultValue()) ? $field->defaultValue() : null,
                 'original_field' => $field,
             ])
             ->each(function ($column) use (&$errorMessages) {

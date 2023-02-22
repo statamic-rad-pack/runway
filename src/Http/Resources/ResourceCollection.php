@@ -12,10 +12,13 @@ use Statamic\Facades\User;
 class ResourceCollection extends LaravelResourceCollection
 {
     public $collects;
+
     public $columns;
 
     protected $resourceHandle;
+
     protected $runwayResource;
+
     protected $columnPreferenceKey;
 
     public function setColumnPreferenceKey($key)

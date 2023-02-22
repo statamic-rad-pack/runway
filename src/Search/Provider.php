@@ -10,6 +10,7 @@ use Statamic\Support\Str;
 class Provider extends BaseProvider
 {
     protected static $handle = 'runway';
+
     protected static $referencePrefix = 'runway';
 
     public function provide(): Collection

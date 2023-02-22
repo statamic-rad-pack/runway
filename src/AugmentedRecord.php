@@ -11,6 +11,7 @@ use Statamic\Fields\Blueprint;
 class AugmentedRecord extends AbstractAugmented
 {
     protected $data;
+
     protected $resource;
 
     public function __construct($model)

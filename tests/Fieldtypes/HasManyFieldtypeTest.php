@@ -88,8 +88,8 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertTrue($getIndexItems instanceof Collection);
         $this->assertSame($getIndexItems->count(), 2);
 
-        $this->assertSame($getIndexItems->first()['title'], $posts[0]->title . ' TEST ' . now()->format('Y'));
-        $this->assertSame($getIndexItems->last()['title'], $posts[1]->title . ' TEST ' . now()->format('Y'));
+        $this->assertSame($getIndexItems->first()['title'], $posts[0]->title.' TEST '.now()->format('Y'));
+        $this->assertSame($getIndexItems->last()['title'], $posts[1]->title.' TEST '.now()->format('Y'));
     }
 
     /** @test */
@@ -112,8 +112,8 @@ class HasManyFieldtypeTest extends TestCase
 
         $item = $this->fieldtype->getItemData([$posts[0]->id, $posts[1]->id]);
 
-        $this->assertSame($item->first()['title'], $posts[0]->title . ' TEST ' . now()->format('Y'));
-        $this->assertSame($item->last()['title'], $posts[1]->title . ' TEST ' . now()->format('Y'));
+        $this->assertSame($item->first()['title'], $posts[0]->title.' TEST '.now()->format('Y'));
+        $this->assertSame($item->last()['title'], $posts[1]->title.' TEST '.now()->format('Y'));
     }
 
     /** @test */
@@ -133,7 +133,7 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertSame($preProcessIndex->first(), [
             'id' => $posts[0]->id,
             'title' => $posts[0]->title,
-            'edit_url' => 'http://localhost/cp/runway/post/' . $posts[0]->id,
+            'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
         ]);
     }
 

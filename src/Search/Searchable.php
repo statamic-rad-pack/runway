@@ -18,6 +18,7 @@ class Searchable implements Contract, ContainsQueryableValues, Augmentable
     use HasAugmentedInstance;
 
     protected $model;
+
     protected $resource;
 
     public function __construct($model)

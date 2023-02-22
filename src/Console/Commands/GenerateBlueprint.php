@@ -30,8 +30,6 @@ class GenerateBlueprint extends Command
 
     /**
      * The matching table for column types -> fieldtypes.
-     *
-     * @var array
      */
     protected array $matching = [
         \Doctrine\DBAL\Types\ArrayType::class => [

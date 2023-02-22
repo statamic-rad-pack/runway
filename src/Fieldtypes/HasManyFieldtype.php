@@ -135,7 +135,7 @@ class HasManyFieldtype extends BaseFieldtype
     public function preload()
     {
         return array_merge(parent::preload(), [
-            'actionUrl'     => cp_route('runway.actions.run', [
+            'actionUrl' => cp_route('runway.actions.run', [
                 'resourceHandle' => $this->config('resource'),
             ]),
         ]);

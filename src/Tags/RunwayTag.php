@@ -63,7 +63,7 @@ class RunwayTag extends Tags
                 $relationshipResource = Runway::findResource($resource->blueprint()->field($key)->config()['resource']);
 
                 $query->whereHas($relationshipName, function ($query) use ($value, $relationshipResource) {
-                    $query->whereIn($relationshipResource->databaseTable() . '.' . $relationshipResource->primaryKey(), Arr::wrap($value));
+                    $query->whereIn($relationshipResource->databaseTable().'.'.$relationshipResource->primaryKey(), Arr::wrap($value));
                 });
             } else {
                 $query->where($key, $value);
@@ -108,7 +108,7 @@ class RunwayTag extends Tags
 
         return [
             $this->params->get('as') => $this->augmentRecords($results, $resource),
-            'paginate'   => isset($paginator) ? $this->getPaginationData($paginator) : null,
+            'paginate' => isset($paginator) ? $this->getPaginationData($paginator) : null,
             'no_results' => collect($results)->isEmpty(),
         ];
     }
@@ -123,14 +123,14 @@ class RunwayTag extends Tags
     protected function getPaginationData($paginator)
     {
         return [
-            'total_items'    => $paginator->total(),
+            'total_items' => $paginator->total(),
             'items_per_page' => $paginator->perPage(),
-            'total_pages'    => $paginator->lastPage(),
-            'current_page'   => $paginator->currentPage(),
-            'prev_page'      => $paginator->previousPageUrl(),
-            'next_page'      => $paginator->nextPageUrl(),
-            'auto_links'     => $paginator->render('pagination::default'),
-            'links'          => $paginator->renderArray(),
+            'total_pages' => $paginator->lastPage(),
+            'current_page' => $paginator->currentPage(),
+            'prev_page' => $paginator->previousPageUrl(),
+            'next_page' => $paginator->nextPageUrl(),
+            'auto_links' => $paginator->render('pagination::default'),
+            'links' => $paginator->renderArray(),
         ];
     }
 }

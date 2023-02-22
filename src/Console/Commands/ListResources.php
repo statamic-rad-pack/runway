@@ -51,7 +51,7 @@ class ListResources extends Command
             Runway::allResources()->map(fn (Resource $resource) => [
                 $resource->handle(),
                 $resource->model()::class,
-                optional($resource->blueprint())->namespace() . optional($resource->blueprint())->handle(),
+                optional($resource->blueprint())->namespace().optional($resource->blueprint())->handle(),
                 $resource->hasRouting() ? $resource->route() : 'N/A',
             ])->toArray()
         );
