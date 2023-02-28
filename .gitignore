@@ -1,13 +1,15 @@
-vendor
 .DS_Store
 .phpunit.result.cache
+.php_cs.cache
+.php-cs-fixer.cache
+.idea
+vendor
 node_modules
 package-lock.json
-.php_cs.cache
-.idea
 tests/__fixtures__/users/.yaml
 composer.lock
 
-resources/dist/js/*.js
-resources/dist/mix-manifest.json
-.php-cs-fixer.cache
+dist
+!dist/.gitkeep
+vite.hot
+.env

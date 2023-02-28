@@ -34,7 +34,6 @@
 
 <script>
 // Note: this file has been copied from Statamic almost completely APART from the 'componentName' computed property which we've added.
-
 import qs from 'qs'
 
 export default {

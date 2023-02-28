@@ -24,7 +24,7 @@
         },
         "download-dist": {
             "url": "https://github.com/duncanmcclean/runway/releases/download/{$version}/dist.tar.gz",
-            "path": "resources/dist"
+            "path": "dist"
         }
     },
     "require": {

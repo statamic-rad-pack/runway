@@ -1,23 +1,19 @@
 {
     "scripts": {
-        "dev": "npm run development",
-        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "watch": "npm run development -- --watch",
-        "watch-poll": "npm run watch -- --watch-poll",
-        "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+        "dev": "vite",
+        "build": "vite build"
     },
     "dependencies": {
         "@shopify/draggable": "^1.0.0-beta.8",
         "axios": "^0.21.1",
         "cross-env": "^7.0.2",
-        "laravel-mix": "^5.0.4",
         "qs": "^6.11.0",
         "uniqid": "^5.2.0",
         "vue": "^2.6.11"
     },
     "devDependencies": {
-        "vue-template-compiler": "^2.6.11"
+        "@vitejs/plugin-vue2": "^2.2.0",
+        "laravel-vite-plugin": "^0.7.4",
+        "vite": "^4.1.4"
     }
 }
