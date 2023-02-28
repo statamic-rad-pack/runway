@@ -17,5 +17,3 @@ Statamic.$components.register('runway-listing-view', ListingView)
 import HasManyFieldtypeIndex from '../../vendor/statamic/cms/resources/js/components/fieldtypes/relationship/RelationshipIndexFieldtype.vue'
 
 Statamic.$components.register('has_many-fieldtype-index', HasManyFieldtypeIndex)
-
-console.log('fresh code dude')
