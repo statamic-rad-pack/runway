@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v4.2.1 (2023-02-28)
+
+### What's fixed
+
+-   Removed `console.log` I left in the last release 🤦‍♂️
+-   Fixed an issue with auto-publishing assets while waiting on statamic/cms#7627 to be merged
+
 ## v4.2.0 (2023-02-28)
 
 Nothing new since v4.1, just a couple of tweaks to Runway behind the scenes.
