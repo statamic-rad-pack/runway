@@ -173,4 +173,28 @@ class ServiceProvider extends AddonServiceProvider
 
         return $label;
     }
+
+    /**
+     * Overriding this method from the AddonServiceProvider so it auto-publishes Vite assets.
+     * See: https://github.com/statamic/cms/pull/7627
+     */
+    protected function bootPublishAfterInstall()
+    {
+        if (! $this->publishAfterInstall) {
+            return $this;
+        }
+
+        if (empty($this->scripts) && empty($this->stylesheets) && empty($this->vite)) {
+            return $this;
+        }
+
+        Statamic::afterInstalled(function ($command) {
+            $command->call('vendor:publish', [
+                '--tag' => $this->getAddon()->slug(),
+                '--force' => true,
+            ]);
+        });
+
+        return $this;
+    }
 }
