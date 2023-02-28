@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v4.2.2 (2023-02-28)
+
+### What's fixed
+
+-   Fixed another issue with auto-publishing of Runway's assets
+
 ## v4.2.1 (2023-02-28)
 
 ### What's fixed
