@@ -45,7 +45,10 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $vite = [
-        'resources/js/cp.js',
+        'publicDirectory' => 'dist',
+        'input' => [
+            'resources/js/cp.js',
+        ],
     ];
 
     public function boot()
