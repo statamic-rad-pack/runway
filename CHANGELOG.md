@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## v4.2.0 (2023-02-28)
+
+Nothing new since v4.1, just a couple of tweaks to Runway behind the scenes.
+
+### What's new
+
+-   Switched from Laravel Mix to Vite #229 by @duncanmcclean
+-   Replaced StyleCI with Pint via GitHub Actions
+
 ## v4.1.2 (2023-02-20)
 
 ### What's new
