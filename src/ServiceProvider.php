@@ -36,16 +36,16 @@ class ServiceProvider extends AddonServiceProvider
         'cp' => __DIR__.'/../routes/cp.php',
     ];
 
-    protected $scripts = [
-        __DIR__.'/../resources/dist/js/cp.js',
-    ];
-
     protected $tags = [
         Tags\RunwayTag::class,
     ];
 
     protected $updateScripts = [
         UpdateScripts\ChangePermissionNames::class,
+    ];
+
+    protected $vite = [
+        'resources/js/cp.js',
     ];
 
     public function boot()

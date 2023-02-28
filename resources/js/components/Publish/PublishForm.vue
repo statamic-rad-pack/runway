@@ -95,8 +95,8 @@
 </template>
 
 <script>
-import SaveButtonOptions from '../statamic/SaveButtonOptions'
-import HasPreferences from '../statamic/HasPreferences'
+import SaveButtonOptions from '../statamic/SaveButtonOptions.vue'
+import HasPreferences from '../statamic/HasPreferences.js'
 
 export default {
     components: {

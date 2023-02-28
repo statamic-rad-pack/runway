@@ -1,6 +1,6 @@
-import RelationshipFieldtype from './components/Fieldtypes/Relationship/RelationshipFieldtype'
-import RelationshipTableMode from './components/Fieldtypes/Relationship/RelationshipTableMode'
-import HasManyRelatedItem from './components/Fieldtypes/HasManyRelatedItem'
+import RelationshipFieldtype from './components/Fieldtypes/Relationship/RelationshipFieldtype.vue'
+import RelationshipTableMode from './components/Fieldtypes/Relationship/RelationshipTableMode.vue'
+import HasManyRelatedItem from './components/Fieldtypes/HasManyRelatedItem.vue'
 import PublishForm from './components/Publish/PublishForm.vue'
 import ListingView from './components/Listing/ListingView.vue'
 
@@ -17,3 +17,5 @@ Statamic.$components.register('runway-listing-view', ListingView)
 import HasManyFieldtypeIndex from '../../vendor/statamic/cms/resources/js/components/fieldtypes/relationship/RelationshipIndexFieldtype.vue'
 
 Statamic.$components.register('has_many-fieldtype-index', HasManyFieldtypeIndex)
+
+console.log('fresh code dude')
