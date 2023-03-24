@@ -20,13 +20,20 @@
                     >
                         <data-list-filter-presets
                             ref="presets"
+                            v-show="alwaysShowFilters || !showFilters"
                             :active-preset="activePreset"
+                            :active-preset-payload="activePresetPayload"
+                            :active-filters="activeFilters"
+                            :has-active-filters="hasActiveFilters"
                             :preferences-prefix="preferencesPrefix"
+                            :search-query="searchQuery"
                             @selected="selectPreset"
                             @reset="filtersReset"
+                            @hide-filters="filtersHide"
+                            @show-filters="filtersShow"
                         />
 
-                        <!-- <data-list-search
+                        <data-list-search
                             class="h-8"
                             v-if="showFilters"
                             ref="search"
@@ -59,7 +66,7 @@
                             <data-list-column-picker
                                 :preferences-key="preferencesKey('columns')"
                             />
-                        </div> -->
+                        </div>
                     </div>
 
                     <div>
