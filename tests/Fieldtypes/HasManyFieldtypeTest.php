@@ -22,7 +22,7 @@ class HasManyFieldtypeTest extends TestCase
 
         $this->fieldtype = new HasManyFieldtype();
 
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.sections.main.fields', [
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.tabs.main.fields', [
             [
                 'handle' => 'name',
                 'field' => [

@@ -231,7 +231,7 @@ class GenerateBlueprint extends Command
 
         Blueprint::make($resource->handle())
             ->setContents([
-                'sections' => [
+                'tabs' => [
                     'main' => ['fields' => $mainSection],
                     'sidebar' => ['fields' => $sidebarSection],
                 ],

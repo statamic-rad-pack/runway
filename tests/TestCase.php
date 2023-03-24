@@ -105,7 +105,7 @@ abstract class TestCase extends OrchestraTestCase
                 Post::class => [
                     'name' => 'Posts',
                     'blueprint' => [
-                        'sections' => [
+                        'tabs' => [
                             'main' => [
                                 'fields' => [
                                     [
@@ -161,7 +161,7 @@ abstract class TestCase extends OrchestraTestCase
                 Author::class => [
                     'name' => 'Author',
                     'blueprint' => [
-                        'sections' => [
+                        'tabs' => [
                             'main' => [
                                 'fields' => [
                                     [
