@@ -48,7 +48,7 @@
                     v-on="component.events"
                 />
 
-                <publish-sections
+                <publish-tabs
                     :read-only="readOnly"
                     :enable-sidebar="shouldShowSidebar"
                     @updated="setFieldValue"
@@ -77,7 +77,7 @@
                             </div>
                         </div>
                     </template>
-                </publish-sections>
+                </publish-tabs>
             </div>
         </publish-container>
 
