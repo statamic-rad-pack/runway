@@ -7,7 +7,6 @@ use Facades\Statamic\View\Cascade;
 use Illuminate\Contracts\Support\Responsable;
 use Statamic\Events\ResponseCreated;
 use Statamic\Facades\Site;
-use Statamic\Statamic;
 use Statamic\View\View;
 
 class ResourceResponse implements Responsable
