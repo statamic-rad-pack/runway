@@ -31,7 +31,7 @@
         "php": "^8.2",
         "friendsofphp/php-cs-fixer": "^3.0",
         "pixelfear/composer-dist-plugin": "^0.1.5",
-        "statamic/cms": "dev-master"
+        "statamic/cms": "^4.0"
     },
     "require-dev": {
         "nunomaduro/collision": "^6.1",
