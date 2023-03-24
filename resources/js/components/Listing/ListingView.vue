@@ -69,7 +69,7 @@
                         </div>
                     </div>
 
-                    <div>
+                    <div v-show="showFilters">
                         <data-list-filters
                             :filters="filters"
                             :active-preset="activePreset"
