@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests;
+namespace DuncanMcClean\Runway\Tests;
 
-use DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes;
-use DoubleThreeDigital\Runway\ServiceProvider;
+use DuncanMcClean\Runway\Routing\Traits\RunwayRoutes;
+use DuncanMcClean\Runway\ServiceProvider;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -58,9 +58,9 @@ abstract class TestCase extends OrchestraTestCase
         parent::getEnvironmentSetUp($app);
 
         $app->make(Manifest::class)->manifest = [
-            'doublethreedigital/runway' => [
-                'id' => 'doublethreedigital/runway',
-                'namespace' => 'DoubleThreeDigital\\Runway',
+            'duncanmcclean/runway' => [
+                'id' => 'duncanmcclean/runway',
+                'namespace' => 'DuncanMcClean\\Runway',
             ],
         ];
     }

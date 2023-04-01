@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Fieldtypes;
+namespace DuncanMcClean\Runway\Fieldtypes;
 
-use DoubleThreeDigital\Runway\Runway;
+use DuncanMcClean\Runway\Runway;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Request;

@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Http\Requests;
+namespace DuncanMcClean\Runway\Http\Requests;
 
-use DoubleThreeDigital\Runway\Runway;
+use DuncanMcClean\Runway\Runway;
 use Illuminate\Foundation\Http\FormRequest;
 use Statamic\Facades\User;
 

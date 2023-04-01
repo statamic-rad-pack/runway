@@ -1,10 +1,10 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Console\Commands;
+namespace DuncanMcClean\Runway\Console\Commands;
 
-use DoubleThreeDigital\Runway\Models\RunwayUri;
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
+use DuncanMcClean\Runway\Models\RunwayUri;
+use DuncanMcClean\Runway\Resource;
+use DuncanMcClean\Runway\Runway;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Statamic\Console\RunsInPlease;

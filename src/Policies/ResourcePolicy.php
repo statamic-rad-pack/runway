@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Policies;
+namespace DuncanMcClean\Runway\Policies;
 
-use DoubleThreeDigital\Runway\Resource;
+use DuncanMcClean\Runway\Resource;
 use Statamic\Facades\User;
 
 class ResourcePolicy

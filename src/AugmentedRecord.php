@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway;
+namespace DuncanMcClean\Runway;
 
 use Carbon\CarbonInterface;
-use DoubleThreeDigital\Runway\Support\Json;
+use DuncanMcClean\Runway\Support\Json;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Data\AbstractAugmented;
 use Statamic\Fields\Blueprint;

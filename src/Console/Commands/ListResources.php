@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Console\Commands;
+namespace DuncanMcClean\Runway\Console\Commands;
 
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
+use DuncanMcClean\Runway\Resource;
+use DuncanMcClean\Runway\Runway;
 use Illuminate\Console\Command;
 use Statamic\Console\RunsInPlease;
 

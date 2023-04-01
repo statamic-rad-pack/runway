@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Search;
+namespace DuncanMcClean\Runway\Search;
 
-use DoubleThreeDigital\Runway\AugmentedRecord;
-use DoubleThreeDigital\Runway\Runway;
+use DuncanMcClean\Runway\AugmentedRecord;
+use DuncanMcClean\Runway\Runway;
 use Statamic\Contracts\Data\Augmentable;
 use Statamic\Contracts\Data\Augmented;
 use Statamic\Contracts\Query\ContainsQueryableValues;

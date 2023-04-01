@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests;
+namespace DuncanMcClean\Runway\Tests;
 
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
+use DuncanMcClean\Runway\Resource;
+use DuncanMcClean\Runway\Runway;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Statamic\Fields\Blueprint;

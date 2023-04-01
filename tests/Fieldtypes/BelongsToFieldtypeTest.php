@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Fieldtypes;
+namespace DuncanMcClean\Runway\Tests\Fieldtypes;
 
-use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use DuncanMcClean\Runway\Fieldtypes\BelongsToFieldtype;
+use DuncanMcClean\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;

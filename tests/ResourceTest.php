@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests;
+namespace DuncanMcClean\Runway\Tests;
 
-use DoubleThreeDigital\Runway\Runway;
+use DuncanMcClean\Runway\Runway;
 use Illuminate\Support\Facades\Config;
 
 class ResourceTest extends TestCase
@@ -22,7 +22,7 @@ class ResourceTest extends TestCase
     /** @test */
     public function can_get_eager_loading_relations_for_has_many_field()
     {
-        $fields = Config::get('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.tabs.main.fields');
+        $fields = Config::get('runway.resources.DuncanMcClean\Runway\Tests\Author.blueprint.tabs.main.fields');
 
         $fields[] = [
             'handle' => 'posts',
@@ -34,7 +34,7 @@ class ResourceTest extends TestCase
             ],
         ];
 
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.tabs.main.fields', $fields);
+        Config::set('runway.resources.DuncanMcClean\Runway\Tests\Author.blueprint.tabs.main.fields', $fields);
 
         Runway::discoverResources();
 
@@ -60,7 +60,7 @@ class ResourceTest extends TestCase
     /** @test */
     public function can_get_eager_loading_relations_as_defined_in_config()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Post.with', ['author']);
+        Config::set('runway.resources.DuncanMcClean\Runway\Tests\Post.with', ['author']);
 
         Runway::discoverResources();
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Support;
+namespace DuncanMcClean\Runway\Support;
 
 class Json
 {

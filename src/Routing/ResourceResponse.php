@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Routing;
+namespace DuncanMcClean\Runway\Routing;
 
-use DoubleThreeDigital\Runway\Runway;
+use DuncanMcClean\Runway\Runway;
 use Facades\Statamic\View\Cascade;
 use Illuminate\Contracts\Support\Responsable;
 use Statamic\Events\ResponseCreated;

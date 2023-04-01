@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Http\Controllers;
+namespace DuncanMcClean\Runway\Tests\Http\Controllers;
 
-use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use DuncanMcClean\Runway\Runway;
+use DuncanMcClean\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\User;
@@ -51,8 +51,8 @@ class ResourceListingControllerTest extends TestCase
     /** @test */
     public function listing_rows_are_ordered_as_per_config()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Post.order_by', 'id');
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Post.order_by_direction', 'desc');
+        Config::set('runway.resources.DuncanMcClean\Runway\Tests\Post.order_by', 'id');
+        Config::set('runway.resources.DuncanMcClean\Runway\Tests\Post.order_by_direction', 'desc');
 
         Runway::discoverResources();
 
@@ -105,7 +105,7 @@ class ResourceListingControllerTest extends TestCase
     /** @test */
     public function can_search_records_with_has_many_relationship()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.tabs.main.fields', [
+        Config::set('runway.resources.DuncanMcClean\Runway\Tests\Author.blueprint.tabs.main.fields', [
             [
                 'handle' => 'name',
                 'field' => [

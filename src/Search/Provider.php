@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Search;
+namespace DuncanMcClean\Runway\Search;
 
-use DoubleThreeDigital\Runway\Runway;
+use DuncanMcClean\Runway\Runway;
 use Illuminate\Support\Collection;
 use Statamic\Search\Searchables\Provider as BaseProvider;
 use Statamic\Support\Str;

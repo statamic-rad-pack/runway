@@ -1,10 +1,10 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tags;
+namespace DuncanMcClean\Runway\Tags;
 
-use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
+use DuncanMcClean\Runway\Exceptions\ResourceNotFound;
+use DuncanMcClean\Runway\Resource;
+use DuncanMcClean\Runway\Runway;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Statamic\Extensions\Pagination\LengthAwarePaginator;

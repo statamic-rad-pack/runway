@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Routing;
+namespace DuncanMcClean\Runway\Tests\Routing;
 
-use DoubleThreeDigital\Runway\Tests\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use DuncanMcClean\Runway\Tests\Post;
+use DuncanMcClean\Runway\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
 
 class FrontendRoutingTest extends TestCase

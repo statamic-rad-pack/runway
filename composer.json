@@ -1,15 +1,15 @@
 {
-    "name": "doublethreedigital/runway",
+    "name": "duncanmcclean/runway",
     "description": "Use Eloquent in Statamic like never before.",
     "license": "proprietary",
     "autoload": {
         "psr-4": {
-            "DoubleThreeDigital\\Runway\\": "src"
+            "DuncanMcClean\\Runway\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "DoubleThreeDigital\\Runway\\Tests\\": "tests"
+            "DuncanMcClean\\Runway\\Tests\\": "tests"
         }
     },
     "extra": {
@@ -19,7 +19,7 @@
         },
         "laravel": {
             "providers": [
-                "DoubleThreeDigital\\Runway\\ServiceProvider"
+                "DuncanMcClean\\Runway\\ServiceProvider"
             ]
         },
         "download-dist": {

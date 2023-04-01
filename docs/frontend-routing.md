@@ -21,7 +21,7 @@ Next, add the `RunwayRoutes` trait to your Eloquent model.
 ```php
 // app/Models/Product.php
 
-use DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes;
+use DuncanMcClean\Runway\Routing\Traits\RunwayRoutes;
 
 class Product extends Model
 {

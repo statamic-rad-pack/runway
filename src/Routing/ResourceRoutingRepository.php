@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Routing;
+namespace DuncanMcClean\Runway\Routing;
 
-use DoubleThreeDigital\Runway\Models\RunwayUri;
+use DuncanMcClean\Runway\Models\RunwayUri;
 
 class ResourceRoutingRepository
 {

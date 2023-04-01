@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway;
+namespace DuncanMcClean\Runway;
 
-use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
+use DuncanMcClean\Runway\Exceptions\ResourceNotFound;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 

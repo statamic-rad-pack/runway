@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway;
+namespace DuncanMcClean\Runway;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
@@ -241,7 +241,7 @@ class Resource
     public function hasRouting()
     {
         return ! is_null($this->route())
-            && in_array(\DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes::class, class_uses($this->model()));
+            && in_array(\DuncanMcClean\Runway\Routing\Traits\RunwayRoutes::class, class_uses($this->model()));
     }
 
     public function primaryKey(): string

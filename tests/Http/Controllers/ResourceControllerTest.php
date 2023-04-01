@@ -1,10 +1,10 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Http\Controllers;
+namespace DuncanMcClean\Runway\Tests\Http\Controllers;
 
-use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use DuncanMcClean\Runway\Runway;
+use DuncanMcClean\Runway\Tests\Post;
+use DuncanMcClean\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Statamic\Facades\Config;
 use Statamic\Facades\User;

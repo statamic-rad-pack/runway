@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\GraphQL;
+namespace DuncanMcClean\Runway\GraphQL;
 
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
+use DuncanMcClean\Runway\Resource;
+use DuncanMcClean\Runway\Runway;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;

@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\GraphQL;
+namespace DuncanMcClean\Runway\GraphQL;
 
-use DoubleThreeDigital\Runway\Resource;
+use DuncanMcClean\Runway\Resource;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Str;
 use Statamic\Facades\GraphQL;
