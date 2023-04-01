@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### What's new
+
+-   Runway v5 now supports Statamic 4 #235
+
+### Upgrade Guide
+
+1. In your site's `composer.json` file, replace `doublethreedigital/runway` with `duncanmcclean/runway`
+2. Then, change the addon's version constraint to `^5.0`
+3. If you have any references to `DoubleThreeDigital` in your project, change them to `DuncanMcClean`
+
 ## v4.2.2 (2023-02-28)
 
 ### What's fixed
