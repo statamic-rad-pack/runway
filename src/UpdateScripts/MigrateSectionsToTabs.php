@@ -5,9 +5,8 @@ namespace DuncanMcClean\Runway\UpdateScripts;
 use DuncanMcClean\Runway\Resource;
 use DuncanMcClean\Runway\Runway;
 use Illuminate\Support\Facades\File;
-use Statamic\UpdateScripts\UpdateScript;
 use Statamic\Facades\Yaml;
-use Stillat\Proteus\Support\Facades\ConfigWriter;
+use Statamic\UpdateScripts\UpdateScript;
 
 class MigrateSectionsToTabs extends UpdateScript
 {
@@ -26,7 +25,7 @@ class MigrateSectionsToTabs extends UpdateScript
                 if (is_array($blueprintValue)) {
                     $configContents = File::get(config_path('runway.php'));
 
-                    $configContents = str_replace("sections", "tabs", $configContents);
+                    $configContents = str_replace('sections', 'tabs', $configContents);
 
                     File::put(config_path('runway.php'), $configContents);
                 }
