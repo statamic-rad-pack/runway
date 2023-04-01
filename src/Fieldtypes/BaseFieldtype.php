@@ -1,9 +1,9 @@
 <?php
 
-namespace DuncanMcClean\Runway\Fieldtypes;
+namespace DoubleThreeDigital\Runway\Fieldtypes;
 
-use DuncanMcClean\Runway\Actions\DeleteModel;
-use DuncanMcClean\Runway\Runway;
+use DoubleThreeDigital\Runway\Actions\DeleteModel;
+use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;

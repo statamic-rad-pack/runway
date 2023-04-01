@@ -1,10 +1,10 @@
 <?php
 
-namespace DuncanMcClean\Runway;
+namespace DoubleThreeDigital\Runway;
 
-use DuncanMcClean\Runway\Policies\ResourcePolicy;
-use DuncanMcClean\Runway\Search\Provider as SearchProvider;
-use DuncanMcClean\Runway\Search\Searchable;
+use DoubleThreeDigital\Runway\Policies\ResourcePolicy;
+use DoubleThreeDigital\Runway\Search\Provider as SearchProvider;
+use DoubleThreeDigital\Runway\Search\Searchable;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Statamic\Facades\CP\Nav;
@@ -132,16 +132,16 @@ class ServiceProvider extends AddonServiceProvider
     {
         Runway::allResources()
             ->each(function (Resource $resource) {
-                $this->app->bind("runway.graphql.types.{$resource->handle()}", fn () => new \DuncanMcClean\Runway\GraphQL\ResourceType($resource));
+                $this->app->bind("runway.graphql.types.{$resource->handle()}", fn () => new \DoubleThreeDigital\Runway\GraphQL\ResourceType($resource));
 
                 GraphQL::addType("runway.graphql.types.{$resource->handle()}");
             })
             ->filter
             ->graphqlEnabled()
             ->each(function (Resource $resource) {
-                $this->app->bind("runway.graphql.queries.{$resource->handle()}.index", fn () => new \DuncanMcClean\Runway\GraphQL\ResourceIndexQuery($resource));
+                $this->app->bind("runway.graphql.queries.{$resource->handle()}.index", fn () => new \DoubleThreeDigital\Runway\GraphQL\ResourceIndexQuery($resource));
 
-                $this->app->bind("runway.graphql.queries.{$resource->handle()}.show", fn () => new \DuncanMcClean\Runway\GraphQL\ResourceShowQuery($resource));
+                $this->app->bind("runway.graphql.queries.{$resource->handle()}.show", fn () => new \DoubleThreeDigital\Runway\GraphQL\ResourceShowQuery($resource));
 
                 GraphQL::addQuery("runway.graphql.queries.{$resource->handle()}.index");
                 GraphQL::addQuery("runway.graphql.queries.{$resource->handle()}.show");

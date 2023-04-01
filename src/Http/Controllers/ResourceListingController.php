@@ -1,9 +1,9 @@
 <?php
 
-namespace DuncanMcClean\Runway\Http\Controllers;
+namespace DoubleThreeDigital\Runway\Http\Controllers;
 
-use DuncanMcClean\Runway\Http\Resources\ResourceCollection;
-use DuncanMcClean\Runway\Runway;
+use DoubleThreeDigital\Runway\Http\Resources\ResourceCollection;
+use DoubleThreeDigital\Runway\Runway;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;

@@ -1,10 +1,10 @@
 <?php
 
-namespace DuncanMcClean\Runway\Routing\Traits;
+namespace DoubleThreeDigital\Runway\Routing\Traits;
 
-use DuncanMcClean\Runway\Models\RunwayUri;
-use DuncanMcClean\Runway\Routing\RoutingModel;
-use DuncanMcClean\Runway\Runway;
+use DoubleThreeDigital\Runway\Models\RunwayUri;
+use DoubleThreeDigital\Runway\Routing\RoutingModel;
+use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Support\Str;
 use Statamic\Routing\Routable;
 use Statamic\StaticCaching\Cacher;

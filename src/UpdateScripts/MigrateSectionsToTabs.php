@@ -1,9 +1,9 @@
 <?php
 
-namespace DuncanMcClean\Runway\UpdateScripts;
+namespace DoubleThreeDigital\Runway\UpdateScripts;
 
-use DuncanMcClean\Runway\Resource;
-use DuncanMcClean\Runway\Runway;
+use DoubleThreeDigital\Runway\Resource;
+use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Support\Facades\File;
 use Statamic\Facades\Yaml;
 use Statamic\UpdateScripts\UpdateScript;

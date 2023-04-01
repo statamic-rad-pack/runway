@@ -1,10 +1,10 @@
 <?php
 
-namespace DuncanMcClean\Runway\Http\Resources;
+namespace DoubleThreeDigital\Runway\Http\Resources;
 
-use DuncanMcClean\Runway\Fieldtypes\BelongsToFieldtype;
-use DuncanMcClean\Runway\Fieldtypes\HasManyFieldtype;
-use DuncanMcClean\Runway\Runway;
+use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
+use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
+use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Http\Resources\Json\ResourceCollection as LaravelResourceCollection;
 use Statamic\Facades\Action;
 use Statamic\Facades\User;

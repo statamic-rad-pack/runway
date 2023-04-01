@@ -1,6 +1,6 @@
 <?php
 
-namespace DuncanMcClean\Runway\Tests\Helpers;
+namespace DoubleThreeDigital\Runway\Tests\Helpers;
 
 trait RunsUpdateScripts
 {
@@ -10,7 +10,7 @@ trait RunsUpdateScripts
      * @param  string  $fqcn
      * @param  string  $package
      */
-    protected function runUpdateScript($fqcn, $package = 'DuncanMcClean/runway')
+    protected function runUpdateScript($fqcn, $package = 'doublethreedigital/runway')
     {
         $script = new $fqcn($package);
 

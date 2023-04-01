@@ -1,6 +1,6 @@
 <?php
 
-namespace DuncanMcClean\Runway\Models;
+namespace DoubleThreeDigital\Runway\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

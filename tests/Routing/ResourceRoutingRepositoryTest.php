@@ -1,9 +1,9 @@
 <?php
 
-namespace DuncanMcClean\Runway\Tests\Routing;
+namespace DoubleThreeDigital\Runway\Tests\Routing;
 
-use DuncanMcClean\Runway\Routing\RoutingModel;
-use DuncanMcClean\Runway\Tests\TestCase;
+use DoubleThreeDigital\Runway\Routing\RoutingModel;
+use DoubleThreeDigital\Runway\Tests\TestCase;
 use Statamic\Facades\Data;
 
 class ResourceRoutingRepositoryTest extends TestCase

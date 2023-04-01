@@ -1,9 +1,9 @@
 <?php
 
-namespace DuncanMcClean\Runway\Routing;
+namespace DoubleThreeDigital\Runway\Routing;
 
-use DuncanMcClean\Runway\AugmentedRecord;
-use DuncanMcClean\Runway\Runway;
+use DoubleThreeDigital\Runway\AugmentedRecord;
+use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Contracts\Data\Augmentable;

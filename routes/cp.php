@@ -1,8 +1,8 @@
 <?php
 
-use DuncanMcClean\Runway\Http\Controllers\ResourceActionController;
-use DuncanMcClean\Runway\Http\Controllers\ResourceController;
-use DuncanMcClean\Runway\Http\Controllers\ResourceListingController;
+use DoubleThreeDigital\Runway\Http\Controllers\ResourceActionController;
+use DoubleThreeDigital\Runway\Http\Controllers\ResourceController;
+use DoubleThreeDigital\Runway\Http\Controllers\ResourceListingController;
 use Illuminate\Support\Facades\Route;
 
 Route::name('runway.')->prefix('runway')->group(function () {

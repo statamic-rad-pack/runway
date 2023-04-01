@@ -1,8 +1,8 @@
 <?php
 
-namespace DuncanMcClean\Runway\Http\Controllers\Traits;
+namespace DoubleThreeDigital\Runway\Http\Controllers\Traits;
 
-use DuncanMcClean\Runway\Resource;
+use DoubleThreeDigital\Runway\Resource;
 use Statamic\Facades\User;
 
 trait HasListingColumns

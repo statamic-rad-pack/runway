@@ -1,8 +1,8 @@
 <?php
 
-namespace DuncanMcClean\Runway\Http\Controllers;
+namespace DoubleThreeDigital\Runway\Http\Controllers;
 
-use DuncanMcClean\Runway\Runway;
+use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Http\Request;
 use Statamic\Http\Controllers\CP\ActionController;
 

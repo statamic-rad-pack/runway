@@ -1,11 +1,11 @@
 <?php
 
-namespace DuncanMcClean\Runway\Tests\Tags;
+namespace DoubleThreeDigital\Runway\Tests\Tags;
 
-use DuncanMcClean\Runway\Runway;
-use DuncanMcClean\Runway\Tags\RunwayTag;
-use DuncanMcClean\Runway\Tests\Post;
-use DuncanMcClean\Runway\Tests\TestCase;
+use DoubleThreeDigital\Runway\Runway;
+use DoubleThreeDigital\Runway\Tags\RunwayTag;
+use DoubleThreeDigital\Runway\Tests\Post;
+use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Antlers;
 

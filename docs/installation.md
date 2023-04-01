@@ -1,19 +1,19 @@
 ---
-title: 'Installation'
+title: "Installation"
 ---
 
 ## System Requirements
 
--   PHP 7.4 & higher
--   Statamic 3.2 & higher
--   Laravel 8 & higher
+- PHP 7.4 & higher
+- Statamic 3.2 & higher
+- Laravel 8 & higher
 
 ## Installing via Composer (recommended)
 
 First, run this command which will require Runway as a dependency of your app.
 
 ```
-composer require duncanmcclean/runway
+composer require doublethreedigital/runway
 ```
 
 Once installed, you’ll want to publish the default configuration file.

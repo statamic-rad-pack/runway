@@ -1,10 +1,10 @@
 <?php
 
-namespace DuncanMcClean\Runway\Tests\UpdateScripts;
+namespace DoubleThreeDigital\Runway\Tests\UpdateScripts;
 
-use DuncanMcClean\Runway\Tests\Helpers\RunsUpdateScripts;
-use DuncanMcClean\Runway\Tests\TestCase;
-use DuncanMcClean\Runway\UpdateScripts\ChangePermissionNames;
+use DoubleThreeDigital\Runway\Tests\Helpers\RunsUpdateScripts;
+use DoubleThreeDigital\Runway\Tests\TestCase;
+use DoubleThreeDigital\Runway\UpdateScripts\ChangePermissionNames;
 use Illuminate\Support\Facades\File;
 
 class ChangePermissionNamesTest extends TestCase

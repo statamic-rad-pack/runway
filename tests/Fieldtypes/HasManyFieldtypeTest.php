@@ -1,9 +1,9 @@
 <?php
 
-namespace DuncanMcClean\Runway\Tests\Fieldtypes;
+namespace DoubleThreeDigital\Runway\Tests\Fieldtypes;
 
-use DuncanMcClean\Runway\Fieldtypes\HasManyFieldtype;
-use DuncanMcClean\Runway\Tests\TestCase;
+use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
+use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Collection;
@@ -22,7 +22,7 @@ class HasManyFieldtypeTest extends TestCase
 
         $this->fieldtype = new HasManyFieldtype();
 
-        Config::set('runway.resources.DuncanMcClean\Runway\Tests\Author.blueprint.tabs.main.fields', [
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.tabs.main.fields', [
             [
                 'handle' => 'name',
                 'field' => [

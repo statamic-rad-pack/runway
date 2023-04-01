@@ -1,6 +1,6 @@
 <?php
 
-namespace DuncanMcClean\Runway\Exceptions;
+namespace DoubleThreeDigital\Runway\Exceptions;
 
 class ResourceNotFound extends \Exception
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace DuncanMcClean\Runway\Console\Commands;
+namespace DoubleThreeDigital\Runway\Console\Commands;
 
-use DuncanMcClean\Runway\Resource;
-use DuncanMcClean\Runway\Runway;
+use DoubleThreeDigital\Runway\Resource;
+use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;

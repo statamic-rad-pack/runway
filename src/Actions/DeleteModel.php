@@ -1,9 +1,9 @@
 <?php
 
-namespace DuncanMcClean\Runway\Actions;
+namespace DoubleThreeDigital\Runway\Actions;
 
-use DuncanMcClean\Runway\Resource;
-use DuncanMcClean\Runway\Runway;
+use DoubleThreeDigital\Runway\Resource;
+use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Actions\Action;
 
