@@ -414,4 +414,32 @@ class ResourceControllerTest extends TestCase
 
         $this->assertSame($post->title, 'Santa is coming home');
     }
+
+    /**
+     * @test
+     * https://github.com/duncanmcclean/runway/pull/247
+     */
+    public function can_update_resource_and_ensure_appended_attribute_doesnt_attempt_to_get_saved()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $post = $this->postFactory();
+
+        $this->actingAs($user)
+            ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
+                'title' => 'Santa is coming home',
+                'slug' => 'santa-is-coming-home',
+                'body' => $post->body,
+                'excerpt' => 'This is an excerpt.',
+                'author_id' => [$post->author_id],
+            ])
+            ->assertOk()
+            ->assertJsonStructure([
+                'data',
+            ]);
+
+        $post->refresh();
+
+        $this->assertSame($post->title, 'Santa is coming home');
+    }
 }
