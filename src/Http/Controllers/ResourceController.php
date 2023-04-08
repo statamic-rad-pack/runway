@@ -95,6 +95,11 @@ class ResourceController extends CpController
                 continue;
             }
 
+            // Skip if this column exists in the model's $appends array.
+            if (in_array($fieldKey, $record->getAppends(), true)) {
+                continue;
+            }
+
             // Store the HasMany field's value in the $postCreatedHooks array so we
             // can process it after we've finished creating this model.
             if ($field->type() === 'has_many') {
@@ -223,6 +228,11 @@ class ResourceController extends CpController
 
             // Skip section, HasMany and computed fields as there's nothing to store.
             if ($field->type() === 'section' || $field->type() === 'has_many' || $field->visibility() === 'computed') {
+                continue;
+            }
+
+            // Skip if this column exists in the model's $appends array.
+            if (in_array($fieldKey, $record->getAppends(), true)) {
                 continue;
             }
 
