@@ -39,6 +39,7 @@ class BaseFieldtype extends Relationship
         'resourceHasRoutes' => 'resourceHasRoutes',
         'permalink' => 'permalink',
         'resource' => 'resource',
+        'breadcrumbs' => 'breadcrumbs',
     ];
 
     protected function configFieldItems(): array
