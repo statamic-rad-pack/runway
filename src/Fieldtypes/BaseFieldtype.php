@@ -233,13 +233,19 @@ class BaseFieldtype extends Relationship
         $blueprint = $resource->blueprint();
 
         return collect($resource->listableColumns())
-            ->map(function ($columnKey) use ($blueprint) {
+            ->map(function ($columnKey, $index) use ($blueprint) {
                 /** @var \Statamic\Fields\Field $field */
                 $blueprintField = $blueprint->field($columnKey);
 
-                return Column::make($columnKey)
-                    ->label($blueprintField->display())
-                    ->fieldtype($blueprintField->fieldtype()->handle());
+                return Column::make()
+                    ->field($blueprintField->handle())
+                    ->label(__($blueprintField->display()))
+                    ->fieldtype($blueprintField->fieldtype()->indexComponent())
+                    ->listable($blueprintField->isListable())
+                    ->defaultVisibility($blueprintField->isVisibleOnListing())
+                    ->visible($blueprintField->isVisibleOnListing())
+                    ->sortable($blueprintField->isSortable())
+                    ->defaultOrder($index + 1);
             })
             ->toArray();
     }
@@ -271,13 +277,16 @@ class BaseFieldtype extends Relationship
         // When using Table mode, we want to return each item differently.
         if ($this->config('mode') === 'table') {
             return collect($resource->listableColumns())
-                ->mapWithKeys(function ($columnKey) use ($record) {
+                ->mapWithKeys(function ($columnKey) use ($record, $resource) {
                     $value = $record->{$columnKey};
 
                     // When $value is an Eloquent Collection, we want to map over each item & process its values.
                     if ($value instanceof EloquentCollection) {
                         $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
                     }
+
+                    // We need to put each column through preProcessIndex so it's formatted properly for the listing table.
+                    $value = $resource->blueprint()->field($columnKey)->setValue($value)->preProcessIndex()->value();
 
                     return [$columnKey => $value];
                 })
