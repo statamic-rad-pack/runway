@@ -233,13 +233,19 @@ class BaseFieldtype extends Relationship
         $blueprint = $resource->blueprint();
 
         return collect($resource->listableColumns())
-            ->map(function ($columnKey) use ($blueprint) {
+            ->map(function ($columnKey, $index) use ($blueprint) {
                 /** @var \Statamic\Fields\Field $field */
                 $blueprintField = $blueprint->field($columnKey);
 
-                return Column::make($columnKey)
-                    ->label($blueprintField->display())
-                    ->fieldtype($blueprintField->fieldtype()->handle());
+                return Column::make()
+                    ->field($blueprintField->handle())
+                    ->label(__($blueprintField->display()))
+                    ->fieldtype($blueprintField->fieldtype()->indexComponent())
+                    ->listable($blueprintField->isListable())
+                    ->defaultVisibility($blueprintField->isVisibleOnListing())
+                    ->visible($blueprintField->isVisibleOnListing())
+                    ->sortable($blueprintField->isSortable())
+                    ->defaultOrder($index + 1);
             })
             ->toArray();
     }
