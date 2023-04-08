@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## v4.2.3 (2023-04-08)
+
+### What's fixed
+
+-   Fixed "Column index out of range" error #242
+-   Various fixes to Table mode on the Has Many fieldtype #246
+-   Fixed an issue where Runway would try to save attributes from the `$appends` array #247
+-   Fixed an 'ambiguous table' error with one of Runway's queries #248
+-   Fix double requests, caused by column data changing behind the scenes #250
+
+### What's improved
+
+-   Breadcrumbs are passed into the inline publish form (the one that shows when you edit something in a stack) #249
+
 ## v4.2.2 (2023-02-28)
 
 ### What's fixed
