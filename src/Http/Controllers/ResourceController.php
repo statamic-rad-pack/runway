@@ -95,8 +95,10 @@ class ResourceController extends CpController
                 continue;
             }
 
-            // Skip if this column exists in the model's $appends array.
-            if (in_array($fieldKey, $record->getAppends(), true)) {
+            // Skip if this column exists in the model's $appends array & no column exists for it in the database.
+
+            // Skip if no column exists for it in the database & it's present in the model's $appends array.
+            if (in_array($fieldKey, $record->getAppends(), true) && ! in_array($fieldKey, $resource->databaseColumns(), true)) {
                 continue;
             }
 
@@ -231,8 +233,8 @@ class ResourceController extends CpController
                 continue;
             }
 
-            // Skip if this column exists in the model's $appends array.
-            if (in_array($fieldKey, $record->getAppends(), true)) {
+            // Skip if no column exists for it in the database & it's present in the model's $appends array.
+            if (in_array($fieldKey, $record->getAppends(), true) && ! in_array($fieldKey, $resource->databaseColumns(), true)) {
                 continue;
             }
 
