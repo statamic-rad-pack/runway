@@ -277,13 +277,16 @@ class BaseFieldtype extends Relationship
         // When using Table mode, we want to return each item differently.
         if ($this->config('mode') === 'table') {
             return collect($resource->listableColumns())
-                ->mapWithKeys(function ($columnKey) use ($record) {
+                ->mapWithKeys(function ($columnKey) use ($record, $resource) {
                     $value = $record->{$columnKey};
 
                     // When $value is an Eloquent Collection, we want to map over each item & process its values.
                     if ($value instanceof EloquentCollection) {
                         $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
                     }
+
+                    // We need to put each column through preProcessIndex so it's formatted properly for the listing table.
+                    $value = $resource->blueprint()->field($columnKey)->setValue($value)->preProcessIndex()->value();
 
                     return [$columnKey => $value];
                 })
