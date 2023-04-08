@@ -1,6 +1,6 @@
 <template>
     <div
-        class="relationship-input overflow-x-scroll max-w-full"
+        class="relationship-input"
         :class="{ 'relationship-input-empty': items.length == 0 }"
     >
         <loading-graphic v-if="initializing" :inline="true" />
@@ -69,7 +69,7 @@
                                     class="divider"
                                     v-if="
                                         (canViewRow(row) || canEditRow(row)) &&
-                                        row.actions.length
+                                            row.actions.length
                                     "
                                 />
 
@@ -248,8 +248,8 @@ export default {
 
     computed: {
         items() {
-            return this.value.map((selection) => {
-                const data = _.find(this.data, (item) => item.id == selection)
+            return this.value.map(selection => {
+                const data = _.find(this.data, item => item.id == selection)
 
                 if (!data) return { id: selection, title: selection }
 
@@ -320,7 +320,7 @@ export default {
 
             this.initializing = true
 
-            let data = this.data.map((item) => {
+            let data = this.data.map(item => {
                 if (item.id == responseData.id) {
                     return {
                         ...item,
@@ -373,7 +373,7 @@ export default {
 
             return this.$axios
                 .post(this.itemDataUrl, { site: this.site, selections })
-                .then((response) => {
+                .then(response => {
                     this.$emit('item-data-updated', response.data.data)
                 })
                 .finally(() => {
@@ -390,13 +390,13 @@ export default {
                 plugins: [Plugins.SwapAnimation],
                 delay: 200,
             })
-                .on('drag:start', (e) => {
+                .on('drag:start', e => {
                     this.value.length === 1 ? e.cancel() : this.$emit('focus')
                 })
-                .on('drag:stop', (e) => {
+                .on('drag:stop', e => {
                     this.$emit('blur')
                 })
-                .on('sortable:stop', (e) => {
+                .on('sortable:stop', e => {
                     const val = [...this.value]
                     val.splice(e.newIndex, 0, val.splice(e.oldIndex, 1)[0])
                     this.update(val)
@@ -411,12 +411,12 @@ export default {
         selectFieldSelected(selectedItemData) {
             this.$emit(
                 'item-data-updated',
-                selectedItemData.map((item) => ({
+                selectedItemData.map(item => ({
                     id: item.id,
                     title: item.title,
                 }))
             )
-            this.update(selectedItemData.map((item) => item.id))
+            this.update(selectedItemData.map(item => item.id))
         },
 
         setLoadingProgress(state) {
