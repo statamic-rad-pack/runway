@@ -78,8 +78,8 @@
                             <dropdown-list
                                 v-if="
                                     canViewRow(row) ||
-                                        canEditRow(row) ||
-                                        row.actions.length
+                                    canEditRow(row) ||
+                                    row.actions.length
                                 "
                             >
                                 <dropdown-item
@@ -98,7 +98,7 @@
                                     class="divider"
                                     v-if="
                                         (canViewRow(row) || canEditRow(row)) &&
-                                            row.actions.length
+                                        row.actions.length
                                     "
                                 />
 
@@ -149,26 +149,17 @@ export default {
         listingConfig: Object,
         initialColumns: Array,
         actionUrl: String,
+        initialPrimaryColumn: String,
     },
 
     data() {
-        let primaryColumn = ''
-
-        if (this.initialColumns) {
-            this.initialColumns.forEach(column => {
-                if (column.is_primary_column) {
-                    primaryColumn = column.handle
-                }
-            })
-        }
-
         return {
             listingKey: 'id',
             preferencesPrefix: this.listingConfig.preferencesPrefix ?? 'runway',
             requestUrl: this.listingConfig.requestUrl,
             columns: this.initialColumns,
             meta: {},
-            primaryColumn: `cell-${primaryColumn}`,
+            primaryColumn: `cell-${this.initialPrimaryColumn}`,
             deletingRow: false,
         }
     },
@@ -183,7 +174,9 @@ export default {
         },
 
         confirmDeleteRow(id, index, deleteUrl) {
-            this.visibleColumns = this.columns.filter(column => column.visible)
+            this.visibleColumns = this.columns.filter(
+                (column) => column.visible
+            )
             this.deletingRow = { id, index, deleteUrl }
         },
 
@@ -204,7 +197,7 @@ export default {
 
                     // location.reload()
                 })
-                .catch(e => {
+                .catch((e) => {
                     this.$toast.error(
                         e.response
                             ? e.response.data.message
@@ -217,7 +210,7 @@ export default {
             this.deletingRow = false
             setTimeout(() => {
                 this.visibleColumns = this.columns.filter(
-                    column => column.visible
+                    (column) => column.visible
                 )
             }, 50)
         },

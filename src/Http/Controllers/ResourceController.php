@@ -12,6 +12,7 @@ use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Support\Json;
 use Statamic\CP\Breadcrumbs;
 use Statamic\Facades\Scope;
+use Statamic\Facades\User;
 use Statamic\Fields\Field;
 use Statamic\Http\Controllers\CP\CpController;
 
@@ -32,10 +33,15 @@ class ResourceController extends CpController
 
         $columns = $this->buildColumns($resource, $blueprint);
 
+        $preferredFirstColumn = isset(User::current()->preferences()['runway'][$resource->handle()]['columns'])
+            ? User::current()->preferences()['runway'][$resource->handle()]['columns'][0]
+            : $resource->titleField();
+
         return view('runway::index', [
             'title' => $resource->name(),
             'resource' => $resource,
             'recordCount' => $resource->model()->count(),
+            'primaryColumn' => $preferredFirstColumn,
             'columns' => $resource->blueprint()->columns()
                 ->filter(fn ($column) => in_array($column->field, collect($columns)->pluck('handle')->toArray()))
                 ->rejectUnlisted()
