@@ -98,7 +98,8 @@ class Resource
         return $this->blueprint()->fields()->items()
             ->reject(function ($field) {
                 return isset($field['import'])
-                    || (isset($field['field']['listable']) && $field['field']['listable'] === 'hidden');
+                    || (isset($field['field']['listable']) && $field['field']['listable'] === 'hidden')
+                    || (isset($field['field']['listable']) && $field['field']['listable'] === false);
             })
             ->pluck('handle')
             ->toArray();
