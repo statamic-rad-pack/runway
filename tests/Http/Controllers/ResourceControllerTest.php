@@ -131,6 +131,34 @@ class ResourceControllerTest extends TestCase
         ]);
     }
 
+    /**
+     * @test
+     * https://github.com/duncanmcclean/runway/pull/247
+     */
+    public function can_store_resource_and_ensure_appended_attribute_doesnt_attempt_to_get_saved()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $author = $this->authorFactory();
+
+        $this->actingAs($user)
+            ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
+                'title' => 'Jingle Bells',
+                'slug' => 'jingle-bells',
+                'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
+                'excerpt' => 'This is an excerpt.',
+                'author_id' => [$author->id],
+            ])
+            ->assertOk()
+            ->assertJsonStructure([
+                'redirect',
+            ]);
+
+        $this->assertDatabaseHas('posts', [
+            'title' => 'Jingle Bells',
+        ]);
+    }
+
     /** @test */
     public function can_edit_resource()
     {
