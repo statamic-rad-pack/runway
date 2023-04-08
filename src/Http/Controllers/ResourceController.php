@@ -95,6 +95,11 @@ class ResourceController extends CpController
                 continue;
             }
 
+            // Skip if the field exists in the model's $appends array and there's not a set mutator present for it on the model.
+            if (in_array($fieldKey, $record->getAppends(), true) && ! $record->hasSetMutator($fieldKey) && ! $record->hasAttributeSetMutator($fieldKey)) {
+                continue;
+            }
+
             // Store the HasMany field's value in the $postCreatedHooks array so we
             // can process it after we've finished creating this model.
             if ($field->type() === 'has_many') {
@@ -223,6 +228,11 @@ class ResourceController extends CpController
 
             // Skip section, HasMany and computed fields as there's nothing to store.
             if ($field->type() === 'section' || $field->type() === 'has_many' || $field->visibility() === 'computed') {
+                continue;
+            }
+
+            // Skip if the field exists in the model's $appends array and there's not a set mutator present for it on the model.
+            if (in_array($fieldKey, $record->getAppends(), true) && ! $record->hasSetMutator($fieldKey) && ! $record->hasAttributeSetMutator($fieldKey)) {
                 continue;
             }
 

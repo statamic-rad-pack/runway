@@ -127,6 +127,13 @@ abstract class TestCase extends OrchestraTestCase
                                         ],
                                     ],
                                     [
+                                        'handle' => 'excerpt',
+                                        'field' => [
+                                            'type' => 'textarea',
+                                            'read_only' => true,
+                                        ],
+                                    ],
+                                    [
                                         'handle' => 'author_id',
                                         'field' => [
                                             'type' => 'belongs_to',
@@ -238,6 +245,10 @@ class Post extends Model
         'title', 'slug', 'body', 'author_id',
     ];
 
+    protected $appends = [
+        'excerpt',
+    ];
+
     public function scopeFood($query)
     {
         $query->whereIn('title', ['Pasta', 'Apple', 'Burger']);
@@ -253,6 +264,11 @@ class Post extends Model
     public function author()
     {
         return $this->belongsTo(Author::class);
+    }
+
+    public function getExcerptAttribute()
+    {
+        return 'This is an excerpt.';
     }
 }
 
