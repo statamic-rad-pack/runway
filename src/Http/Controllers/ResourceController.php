@@ -95,10 +95,8 @@ class ResourceController extends CpController
                 continue;
             }
 
-            // Skip if this column exists in the model's $appends array & no column exists for it in the database.
-
-            // Skip if no column exists for it in the database & it's present in the model's $appends array.
-            if (in_array($fieldKey, $record->getAppends(), true) && ! in_array($fieldKey, $resource->databaseColumns(), true)) {
+            // Skip if the field exists in the model's $appends array and there's not a set mutator present for it on the model.
+            if (in_array($fieldKey, $record->getAppends(), true) && ! $record->hasSetMutator($fieldKey) && ! $record->hasAttributeSetMutator($fieldKey)) {
                 continue;
             }
 
@@ -233,8 +231,8 @@ class ResourceController extends CpController
                 continue;
             }
 
-            // Skip if no column exists for it in the database & it's present in the model's $appends array.
-            if (in_array($fieldKey, $record->getAppends(), true) && ! in_array($fieldKey, $resource->databaseColumns(), true)) {
+            // Skip if the field exists in the model's $appends array and there's not a set mutator present for it on the model.
+            if (in_array($fieldKey, $record->getAppends(), true) && ! $record->hasSetMutator($fieldKey) && ! $record->hasAttributeSetMutator($fieldKey)) {
                 continue;
             }
 
