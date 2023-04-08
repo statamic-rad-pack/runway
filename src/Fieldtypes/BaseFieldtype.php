@@ -7,6 +7,7 @@ use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Statamic\CP\Column;
 use Statamic\Facades\Action;
 use Statamic\Facades\Blink;
@@ -154,9 +155,14 @@ class BaseFieldtype extends Relationship
             $fieldtype = $resource->blueprint()->field($column)->fieldtype();
 
             if (! $item instanceof Model) {
-                // In a many to many relation item is an array
+                // In a Many to Many relationship, $item is an array.
                 if (is_array($item)) {
                     $item = $item['id'] ?? null;
+                }
+
+                // And sometimes, $item will be a Collection.
+                if ($item instanceof Collection) {
+                    $item = $item->first()->{$resource->primaryKey()} ?? null;
                 }
 
                 $record = $resource->model()->firstWhere($resource->primaryKey(), $item);
