@@ -1,12 +1,12 @@
 ---
-title: "Installation"
+title: 'Installation'
 ---
 
 ## System Requirements
 
-- PHP 7.4 & higher
-- Statamic 3.2 & higher
-- Laravel 8 & higher
+-   PHP 7.4 & higher
+-   Statamic 3.2 & higher
+-   Laravel 8 & higher
 
 ## Installing via Composer (recommended)
 
@@ -22,7 +22,9 @@ Once installed, you’ll want to publish the default configuration file.
 php artisan vendor:publish --tag="runway-config"
 ```
 
-The configuration file will now be located at `config/runway.php`. You may now customise the config file to add your resources.
+The configuration file will now be located at `config/runway.php`.
+
+Now that everything's installed & published, you'll want to [configure Runway Resources](/resources) for each of the models you wish to be editable in Runway.
 
 ## Installing via the Control Panel
 
@@ -36,4 +38,6 @@ Next, open up your Terminal and run the following command which will publish the
 php artisan vendor:publish --tag="runway-config"
 ```
 
-The configuration file will now be located at `config/runway.php`. You may now customise the config file to add your resources.
+The configuration file will now be located at `config/runway.php`.
+
+Now that everything's installed & published, you'll want to [configure Runway Resources](/resources) for each of the models you wish to be editable in Runway.
