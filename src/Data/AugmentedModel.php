@@ -1,14 +1,15 @@
 <?php
 
-namespace DoubleThreeDigital\Runway;
+namespace DoubleThreeDigital\Runway\Data;
 
 use Carbon\CarbonInterface;
+use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Data\AbstractAugmented;
 use Statamic\Fields\Blueprint;
 
-class AugmentedRecord extends AbstractAugmented
+class AugmentedModel extends AbstractAugmented
 {
     protected $data;
 

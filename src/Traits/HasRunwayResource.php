@@ -2,7 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Traits;
 
-use DoubleThreeDigital\Runway\AugmentedRecord;
+use DoubleThreeDigital\Runway\Data\AugmentedModel;
 use DoubleThreeDigital\Runway\Data\HasAugmentedInstance;
 use Statamic\Contracts\Data\Augmented;
 use Statamic\GraphQL\ResolvesValues;
@@ -17,6 +17,6 @@ trait HasRunwayResource
 
     public function newAugmentedInstance(): Augmented
     {
-        return new AugmentedRecord($this);
+        return new AugmentedModel($this);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace DoubleThreeDigital\Runway;
 
+use DoubleThreeDigital\Runway\Data\AugmentedModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -280,7 +281,7 @@ class Resource
 
     public function augment(Model $model): array
     {
-        return AugmentedRecord::augment($model, $this->blueprint());
+        return AugmentedModel::augment($model, $this->blueprint());
     }
 
     public function titleField($field = null)
