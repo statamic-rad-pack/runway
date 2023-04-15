@@ -4,6 +4,7 @@ namespace DoubleThreeDigital\Runway\Tests;
 
 use DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes;
 use DoubleThreeDigital\Runway\ServiceProvider;
+use DoubleThreeDigital\Runway\Traits\HasRunwayResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -239,7 +240,7 @@ abstract class TestCase extends OrchestraTestCase
 
 class Post extends Model
 {
-    use RunwayRoutes;
+    use RunwayRoutes, HasRunwayResource;
 
     protected $fillable = [
         'title', 'slug', 'body', 'author_id',
@@ -274,6 +275,8 @@ class Post extends Model
 
 class Author extends Model
 {
+    use HasRunwayResource;
+
     protected $fillable = [
         'name',
     ];

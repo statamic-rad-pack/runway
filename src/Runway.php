@@ -3,8 +3,10 @@
 namespace DoubleThreeDigital\Runway;
 
 use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Statamic\Fields\Blueprint;
 
 class Runway
 {
@@ -14,69 +16,38 @@ class Runway
     {
         static::$resources = collect(config('runway.resources'))
             ->mapWithKeys(function ($config, $model) {
+                $blueprint = null;
                 $handle = Str::lower(class_basename($model));
 
                 if (isset($config['handle'])) {
                     $handle = $config['handle'];
                 }
 
-                $resource = (new Resource())
-                    ->handle($handle)
-                    ->model($model);
-
-                if (isset($config['name'])) {
-                    $resource->name($config['name']);
-                } else {
-                    $resource->name(Str::title($handle));
+                if (! in_array(Traits\HasRunwayResource::class, class_uses_recursive($model))) {
+                    throw new \Exception(__('The HasRunwayResource trait is missing from the [:model] model.', ['model' => $model]));
                 }
 
-                if (isset($config['title_field'])) {
-                    $resource->titleField($config['title_field']);
+                if (! isset($config['blueprint'])) {
+                    throw new \Exception(__('The [:model] model is missing a blueprint.', ['model' => $model]));
                 }
 
-                if (isset($config['blueprint'])) {
-                    $resource->blueprint($config['blueprint']);
+                if (is_string($config['blueprint'])) {
+                    $blueprint = Blueprint::find($config['blueprint']);
                 }
 
-                if (isset($config['cp_icon'])) {
-                    $resource->cpIcon($config['cp_icon']);
+                if (is_array($config['blueprint'])) {
+                    $blueprint = Blueprint::make()
+                        ->setHandle($handle)
+                        ->setContents($config['blueprint']);
                 }
 
-                if (isset($config['hidden'])) {
-                    $resource->hidden($config['hidden']);
-                }
-
-                if (isset($config['route'])) {
-                    $resource->route($config['route']);
-                }
-
-                if (isset($config['template'])) {
-                    $resource->template($config['template']);
-                }
-
-                if (isset($config['layout'])) {
-                    $resource->layout($config['layout']);
-                }
-
-                if (isset($config['graphql'])) {
-                    $resource->graphqlEnabled($config['graphql']);
-                }
-
-                if (isset($config['read_only'])) {
-                    $resource->readOnly($config['read_only']);
-                }
-
-                if (isset($config['with'])) {
-                    $resource->eagerLoadingRelations($config['with']);
-                }
-
-                if (isset($config['order_by'])) {
-                    $resource->orderBy($config['order_by']);
-                }
-
-                if (isset($config['order_by_direction'])) {
-                    $resource->orderByDirection($config['order_by_direction']);
-                }
+                $resource = new Resource(
+                    handle: $handle,
+                    model: $model instanceof Model ? $model : new $model(),
+                    name: $config['name'] ?? Str::title($handle),
+                    blueprint: $blueprint,
+                    config: $config,
+                );
 
                 return [$handle => $resource];
             })

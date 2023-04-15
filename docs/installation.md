@@ -10,19 +10,19 @@ title: 'Installation'
 
 ## Installing via Composer (recommended)
 
-First, run this command which will require Runway as a dependency of your app.
+First, you need to install Runway as a Composer dependency:
 
 ```
 composer require doublethreedigital/runway
 ```
 
-Once installed, you’ll want to publish the default configuration file.
+Next, publish the configuration file:
 
 ```
 php artisan vendor:publish --tag="runway-config"
 ```
 
-The configuration file will now be located at `config/runway.php`.
+The configuration file will have been published as `config/runway.php`.
 
 Now that everything's installed & published, you'll want to [configure Runway Resources](/resources) for each of the models you wish to be editable in Runway.
 
