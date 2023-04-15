@@ -33,7 +33,7 @@ return [
 ];
 ```
 
-To define a resource, add an item to the `resources` array like so:
+There three steps to defining a Runway Resource: first you need to add it to Runway's `resources` array like so:
 
 ```php
 'resources' => [
@@ -43,9 +43,18 @@ To define a resource, add an item to the `resources` array like so:
 ],
 ```
 
-The key of the array item is the Eloquent model, and the array value contains the configuration for the resource.
+Second, you need to add the `HasRunwayResource` trait to your Eloquent model.
 
-The next thing you’ll want to do is create a blueprint for your model.
+```php
+// app/Models/Order.php
+
+class Order extends Model
+{
+    use HasRunwayResource; // [tl! add]
+}
+```
+
+Finally, you need to create a blueprint for your resource, there's [documentation on that below](#resource-blueprints). 🔽
 
 ## Resource Blueprints
 
