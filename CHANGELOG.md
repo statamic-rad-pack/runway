@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v4.2.4 (2023-04-15)
+
+### What's fixed
+
+-   Slug field will be used for `slug` column when generating blueprint from Eloquent model #251
+
 ## v4.2.3 (2023-04-08)
 
 ### What's fixed
