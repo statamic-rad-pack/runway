@@ -26,6 +26,7 @@
             :listing-config='@json($listingConfig)'
             :initial-columns='@json($columns)'
             action-url="{{ $actionUrl }}"
+            initial-primary-column="{{ $primaryColumn }}"
         ></runway-listing-view>
      @else
         @include('statamic::partials.create-first', [

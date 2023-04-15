@@ -202,26 +202,17 @@ export default {
         listingConfig: Object,
         initialColumns: Array,
         actionUrl: String,
+        initialPrimaryColumn: String,
     },
 
     data() {
-        let primaryColumn = ''
-
-        if (this.initialColumns) {
-            this.initialColumns.forEach((column) => {
-                if (column.is_primary_column) {
-                    primaryColumn = column.handle
-                }
-            })
-        }
-
         return {
             listingKey: 'id',
             preferencesPrefix: this.listingConfig.preferencesPrefix ?? 'runway',
             requestUrl: this.listingConfig.requestUrl,
             columns: this.initialColumns,
             meta: {},
-            primaryColumn: `cell-${primaryColumn}`,
+            primaryColumn: `cell-${this.initialPrimaryColumn}`,
             deletingRow: false,
         }
     },

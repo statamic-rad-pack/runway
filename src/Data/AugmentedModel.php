@@ -1,14 +1,15 @@
 <?php
 
-namespace DoubleThreeDigital\Runway;
+namespace DoubleThreeDigital\Runway\Data;
 
 use Carbon\CarbonInterface;
+use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Data\AbstractAugmented;
 use Statamic\Fields\Blueprint;
 
-class AugmentedRecord extends AbstractAugmented
+class AugmentedModel extends AbstractAugmented
 {
     protected $data;
 
@@ -30,6 +31,8 @@ class AugmentedRecord extends AbstractAugmented
     /**
      * Takes in an Eloquent model & augments it with the fields
      * from the resource's blueprint.
+     *
+     * TODO: Consider if we still need this or if what this does can be done elsewhere.
      */
     public static function augment(Model $record, Blueprint $blueprint): array
     {

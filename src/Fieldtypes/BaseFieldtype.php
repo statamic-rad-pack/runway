@@ -7,6 +7,7 @@ use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Statamic\CP\Column;
 use Statamic\Facades\Action;
 use Statamic\Facades\Blink;
@@ -38,6 +39,7 @@ class BaseFieldtype extends Relationship
         'resourceHasRoutes' => 'resourceHasRoutes',
         'permalink' => 'permalink',
         'resource' => 'resource',
+        'breadcrumbs' => 'breadcrumbs',
     ];
 
     protected function configFieldItems(): array
@@ -154,9 +156,14 @@ class BaseFieldtype extends Relationship
             $fieldtype = $resource->blueprint()->field($column)->fieldtype();
 
             if (! $item instanceof Model) {
-                // In a many to many relation item is an array
+                // In a Many to Many relationship, $item is an array.
                 if (is_array($item)) {
                     $item = $item['id'] ?? null;
+                }
+
+                // And sometimes, $item will be a Collection.
+                if ($item instanceof Collection) {
+                    $item = $item->first()->{$resource->primaryKey()} ?? null;
                 }
 
                 $record = $resource->model()->firstWhere($resource->primaryKey(), $item);
@@ -227,13 +234,19 @@ class BaseFieldtype extends Relationship
         $blueprint = $resource->blueprint();
 
         return collect($resource->listableColumns())
-            ->map(function ($columnKey) use ($blueprint) {
+            ->map(function ($columnKey, $index) use ($blueprint) {
                 /** @var \Statamic\Fields\Field $field */
                 $blueprintField = $blueprint->field($columnKey);
 
-                return Column::make($columnKey)
-                    ->label($blueprintField->display())
-                    ->fieldtype($blueprintField->fieldtype()->handle());
+                return Column::make()
+                    ->field($blueprintField->handle())
+                    ->label(__($blueprintField->display()))
+                    ->fieldtype($blueprintField->fieldtype()->indexComponent())
+                    ->listable($blueprintField->isListable())
+                    ->defaultVisibility($blueprintField->isVisibleOnListing())
+                    ->visible($blueprintField->isVisibleOnListing())
+                    ->sortable($blueprintField->isSortable())
+                    ->defaultOrder($index + 1);
             })
             ->toArray();
     }
@@ -265,13 +278,16 @@ class BaseFieldtype extends Relationship
         // When using Table mode, we want to return each item differently.
         if ($this->config('mode') === 'table') {
             return collect($resource->listableColumns())
-                ->mapWithKeys(function ($columnKey) use ($record) {
+                ->mapWithKeys(function ($columnKey) use ($record, $resource) {
                     $value = $record->{$columnKey};
 
                     // When $value is an Eloquent Collection, we want to map over each item & process its values.
                     if ($value instanceof EloquentCollection) {
                         $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
                     }
+
+                    // We need to put each column through preProcessIndex so it's formatted properly for the listing table.
+                    $value = $resource->blueprint()->field($columnKey)->setValue($value)->preProcessIndex()->value();
 
                     return [$columnKey => $value];
                 })

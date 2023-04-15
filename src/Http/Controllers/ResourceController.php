@@ -12,6 +12,7 @@ use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Support\Json;
 use Statamic\CP\Breadcrumbs;
 use Statamic\Facades\Scope;
+use Statamic\Facades\User;
 use Statamic\Fields\Field;
 use Statamic\Http\Controllers\CP\CpController;
 
@@ -30,11 +31,21 @@ class ResourceController extends CpController
             'listingUrl' => cp_route('runway.index', ['resourceHandle' => $resource->handle()]),
         ];
 
+        $columns = $this->buildColumns($resource, $blueprint);
+
+        $preferredFirstColumn = isset(User::current()->preferences()['runway'][$resource->handle()]['columns'])
+            ? User::current()->preferences()['runway'][$resource->handle()]['columns'][0]
+            : $resource->titleField();
+
         return view('runway::index', [
             'title' => $resource->name(),
             'resource' => $resource,
             'recordCount' => $resource->model()->count(),
-            'columns' => $this->buildColumns($resource, $blueprint),
+            'primaryColumn' => $preferredFirstColumn,
+            'columns' => $resource->blueprint()->columns()
+                ->filter(fn ($column) => in_array($column->field, collect($columns)->pluck('handle')->toArray()))
+                ->rejectUnlisted()
+                ->values(),
             'filters' => Scope::filters("runway_{$resourceHandle}"),
             'listingConfig' => $listingConfig,
             'actionUrl' => cp_route('runway.actions.run', ['resourceHandle' => $resourceHandle]),
@@ -92,6 +103,11 @@ class ResourceController extends CpController
 
             // Skip section fields or computed fields as there's nothing to store.
             if ($field->type() === 'section' || $field->visibility() === 'computed') {
+                continue;
+            }
+
+            // Skip if the field exists in the model's $appends array and there's not a set mutator present for it on the model.
+            if (in_array($fieldKey, $record->getAppends(), true) && ! $record->hasSetMutator($fieldKey) && ! $record->hasAttributeSetMutator($fieldKey)) {
                 continue;
             }
 
@@ -226,6 +242,11 @@ class ResourceController extends CpController
                 continue;
             }
 
+            // Skip if the field exists in the model's $appends array and there's not a set mutator present for it on the model.
+            if (in_array($fieldKey, $record->getAppends(), true) && ! $record->hasSetMutator($fieldKey) && ! $record->hasAttributeSetMutator($fieldKey)) {
+                continue;
+            }
+
             // If it's a BelongsTo field & the $processedValue is an array, then we
             // want the first item in the array.
             if ($field->type() === 'belongs_to' && is_array($processedValue)) {
@@ -262,7 +283,7 @@ class ResourceController extends CpController
                     $relationshipName = $resource->eagerLoadingRelations()->get($field->handle()) ?? $field->handle();
 
                     $record->{$field->handle()} = $record->{$relationshipName}()
-                        ->select('id', $column)
+                        ->select($relatedResource->databaseTable().'.'.$relatedResource->primaryKey(), $column)
                         ->get()
                         ->each(function ($model) use ($relatedResource, $column) {
                             $model->title = $model->{$column};

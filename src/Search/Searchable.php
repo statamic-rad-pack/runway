@@ -2,7 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Search;
 
-use DoubleThreeDigital\Runway\AugmentedRecord;
+use DoubleThreeDigital\Runway\Data\AugmentedModel;
 use DoubleThreeDigital\Runway\Runway;
 use Statamic\Contracts\Data\Augmentable;
 use Statamic\Contracts\Data\Augmented;
@@ -76,6 +76,6 @@ class Searchable implements Contract, ContainsQueryableValues, Augmentable
 
     public function newAugmentedInstance(): Augmented
     {
-        return new AugmentedRecord($this->model);
+        return new AugmentedModel($this->model);
     }
 }

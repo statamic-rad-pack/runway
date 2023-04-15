@@ -2,7 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Routing;
 
-use DoubleThreeDigital\Runway\AugmentedRecord;
+use DoubleThreeDigital\Runway\Data\AugmentedModel;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
@@ -81,6 +81,6 @@ class RoutingModel implements Responsable, Augmentable
     {
         $blueprint = Runway::findResourceByModel($this->model)->blueprint();
 
-        return AugmentedRecord::augment($this->model, $blueprint);
+        return AugmentedModel::augment($this->model, $blueprint);
     }
 }

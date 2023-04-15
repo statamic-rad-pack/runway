@@ -198,6 +198,10 @@ class GenerateBlueprint extends Command
             return null;
         }
 
+        if ($match['normal'] === 'text' && $column->getName() === 'slug') {
+            return 'slug';
+        }
+
         return $match['normal'];
     }
 
