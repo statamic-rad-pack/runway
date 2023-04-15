@@ -176,7 +176,7 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_edit_resource_with_simple_date_field()
     {
-        $fields = Config::get('runway.resources.'.Post::class.'.blueprint.sections.main.fields');
+        $fields = Config::get('runway.resources.'.Post::class.'.blueprint.tabs.main.fields');
 
         $fields[] = [
             'handle' => 'created_at',
@@ -188,7 +188,7 @@ class ResourceControllerTest extends TestCase
             ],
         ];
 
-        Config::set('runway.resources.'.Post::class.'.blueprint.sections.main.fields', $fields);
+        Config::set('runway.resources.'.Post::class.'.blueprint.tabs.main.fields', $fields);
 
         Runway::discoverResources();
 
@@ -216,7 +216,7 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_edit_resource_with_date_field_with_default_format()
     {
-        $fields = Config::get('runway.resources.'.Post::class.'.blueprint.sections.main.fields');
+        $fields = Config::get('runway.resources.'.Post::class.'.blueprint.tabs.main.fields');
 
         $fields[] = [
             'handle' => 'created_at',
@@ -229,7 +229,7 @@ class ResourceControllerTest extends TestCase
             ],
         ];
 
-        Config::set('runway.resources.'.Post::class.'.blueprint.sections.main.fields', $fields);
+        Config::set('runway.resources.'.Post::class.'.blueprint.tabs.main.fields', $fields);
 
         Runway::discoverResources();
 
@@ -257,7 +257,7 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_edit_resource_with_date_field_with_custom_format()
     {
-        $fields = Config::get('runway.resources.'.Post::class.'.blueprint.sections.main.fields');
+        $fields = Config::get('runway.resources.'.Post::class.'.blueprint.tabs.main.fields');
 
         $fields[] = [
             'handle' => 'created_at',
@@ -270,7 +270,7 @@ class ResourceControllerTest extends TestCase
             ],
         ];
 
-        Config::set('runway.resources.'.Post::class.'.blueprint.sections.main.fields', $fields);
+        Config::set('runway.resources.'.Post::class.'.blueprint.tabs.main.fields', $fields);
 
         Runway::discoverResources();
 

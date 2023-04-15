@@ -46,7 +46,7 @@ class GenerateMigrationTest extends TestCase
                 Food::class => [
                     'name' => 'Food',
                     'blueprint' => [
-                        'sections' => [
+                        'tabs' => [
                             'main' => [
                                 'fields' => [
                                     [

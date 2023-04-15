@@ -7,7 +7,6 @@ use Facades\Statamic\View\Cascade;
 use Illuminate\Contracts\Support\Responsable;
 use Statamic\Events\ResponseCreated;
 use Statamic\Facades\Site;
-use Statamic\Statamic;
 use Statamic\View\View;
 
 class ResourceResponse implements Responsable
@@ -38,18 +37,17 @@ class ResourceResponse implements Responsable
     protected function addViewPaths()
     {
         $finder = view()->getFinder();
-        $amp = Statamic::isAmpRequest();
 
         $site = method_exists($this->data, 'site')
             ? $this->data->site()->handle()
             : Site::current()->handle();
 
-        $paths = collect($finder->getPaths())->flatMap(fn ($path) => [
-            $amp ? $path.'/'.$site.'/amp' : null,
-            $path.'/'.$site,
-            $amp ? $path.'/amp' : null,
-            $path,
-        ])->filter()->values()->all();
+        $paths = collect($finder->getPaths())->flatMap(function ($path) use ($site) {
+            return [
+                $path.'/'.$site,
+                $path,
+            ];
+        })->filter()->values()->all();
 
         $finder->setPaths($paths);
 

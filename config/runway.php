@@ -16,7 +16,7 @@ return [
         //     'name' => 'Orders',
 
         //     'blueprint' => [
-        //         'sections' => [
+        //         'tabs' => [
         //             'main' => [
         //                 'fields' => [
         //                     [

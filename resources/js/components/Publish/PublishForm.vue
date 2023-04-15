@@ -48,7 +48,7 @@
                     v-on="component.events"
                 />
 
-                <publish-sections
+                <publish-tabs
                     :read-only="readOnly"
                     :enable-sidebar="shouldShowSidebar"
                     @updated="setFieldValue"
@@ -77,7 +77,7 @@
                             </div>
                         </div>
                     </template>
-                </publish-sections>
+                </publish-tabs>
             </div>
         </publish-container>
 
@@ -151,8 +151,8 @@ export default {
 
     computed: {
         enableSidebar() {
-            return this.blueprint.sections
-                .map(section => section.handle)
+            return this.blueprint.tabs
+                .map((section) => section.handle)
                 .includes('sidebar')
         },
 
@@ -168,7 +168,7 @@ export default {
     mounted() {
         this.saveKeyBinding = this.$keys.bindGlobal(
             ['mod+s', 'mod+return'],
-            e => {
+            (e) => {
                 e.preventDefault()
                 this.quickSave = true
                 this.save()
@@ -181,8 +181,8 @@ export default {
         if (this.publishContainer.includes('relate-fieldtype-inline')) {
             this.values['from_inline_publish_form'] = true
 
-            this.initialBlueprint.sections.forEach(section => {
-                section.fields.forEach(field => {
+            this.initialBlueprint.tabs.forEach((section) => {
+                section.fields.forEach((field) => {
                     if (
                         field.type === 'belongs_to' &&
                         field.resource === window.Runway.currentResource
@@ -215,7 +215,7 @@ export default {
                 url: this.action,
                 data: this.values,
             })
-                .then(response => {
+                .then((response) => {
                     this.saving = false
                     this.$refs.container.saved()
                     this.$emit('saved', response)
@@ -253,7 +253,7 @@ export default {
                         this.$toast.success(__('Saved'))
                     }
                 })
-                .catch(error => this.handleAxiosError(error))
+                .catch((error) => this.handleAxiosError(error))
         },
 
         clearErrors() {
