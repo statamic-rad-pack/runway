@@ -56,5 +56,5 @@
             "composer/package-versions-deprecated": true
         }
     },
-    "minimum-stability": "beta"
+    "minimum-stability": "alpha"
 }
