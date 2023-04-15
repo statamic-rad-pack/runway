@@ -6,6 +6,23 @@
 
 -   Runway v5 now supports Statamic 4 #235
 
+### What's fixed
+
+-   Fixed GraphQL error on some fieldtypes #252
+
+### Breaking changes
+
+Please add the new `HasRunwayResource` trait to the Eloquent models you have configured in the Runway config.
+
+```php
+// app/Models/Order.php
+
+class Order extends Model
+{
+    use HasRunwayResource;
+}
+```
+
 ## v4.2.4 (2023-04-15)
 
 ### What's fixed
