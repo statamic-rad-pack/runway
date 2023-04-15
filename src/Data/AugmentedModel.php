@@ -31,6 +31,8 @@ class AugmentedModel extends AbstractAugmented
     /**
      * Takes in an Eloquent model & augments it with the fields
      * from the resource's blueprint.
+     *
+     * TODO: Consider if we still need this or if what this does can be done elsewhere.
      */
     public static function augment(Model $record, Blueprint $blueprint): array
     {
