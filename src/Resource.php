@@ -6,19 +6,12 @@ use DoubleThreeDigital\Runway\Data\AugmentedModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use Statamic\Fields\Blueprint;
 use Statamic\Support\Traits\FluentlyGetsAndSets;
 
 class Resource
 {
     use FluentlyGetsAndSets;
-
-    protected $handle;
-
-    protected $model;
-
-    protected $name;
-
-    protected $blueprint;
 
     protected $cpIcon;
 
@@ -40,29 +33,72 @@ class Resource
 
     protected $titleField;
 
-    public function handle($handle = null)
+    public function __construct(
+        protected string $handle,
+        protected Model $model,
+        protected string $name,
+        protected Blueprint $blueprint,
+        protected array $config = []
+    )
     {
-        return $this->fluentlyGetOrSet('handle')
-            ->args(func_get_args());
+        if (isset($config['cp_icon'])) {
+            $this->cpIcon($config['cp_icon']);
+        }
+
+        if (isset($config['hidden'])) {
+            $this->hidden($config['hidden']);
+        }
+
+        if (isset($config['route'])) {
+            $this->route($config['route']);
+        }
+
+        if (isset($config['template'])) {
+            $this->template($config['template']);
+        }
+
+        if (isset($config['layout'])) {
+            $this->layout($config['layout']);
+        }
+
+        if (isset($config['graphql'])) {
+            $this->graphqlEnabled($config['graphql']);
+        }
+
+        if (isset($config['read_only'])) {
+            $this->readOnly($config['read_only']);
+        }
+
+        if (isset($config['with'])) {
+            $this->eagerLoadingRelations($config['with']);
+        }
+
+        if (isset($config['order_by'])) {
+            $this->orderBy($config['order_by']);
+        }
+
+        if (isset($config['order_by_direction'])) {
+            $this->orderByDirection($config['order_by_direction']);
+        }
+
+        if (isset($config['title_field'])) {
+            $this->titleField($config['title_field']);
+        }
     }
 
-    public function model($model = null)
+    public function handle(): string
     {
-        return $this->fluentlyGetOrSet('model')
-            ->setter(function ($value) {
-                if (! $value instanceof Model) {
-                    return new $value();
-                }
-
-                return $value;
-            })
-            ->args(func_get_args());
+        return $this->handle;
     }
 
-    public function name($name = null)
+    public function model(): Model
     {
-        return $this->fluentlyGetOrSet('name')
-            ->args(func_get_args());
+        return $this->model;
+    }
+
+    public function name()
+    {
+        return $this->name;
     }
 
     public function singular(): string
@@ -77,33 +113,7 @@ class Resource
 
     public function blueprint()
     {
-        return $this->fluentlyGetOrSet('blueprint')
-            ->setter(function ($value) {
-                if (is_string($value)) {
-                    return \Statamic\Facades\Blueprint::find($value);
-                }
-
-                if (is_array($value)) {
-                    return \Statamic\Facades\Blueprint::make()
-                        ->setHandle($this->handle())
-                        ->setContents($value);
-                }
-
-                return $value;
-            })
-            ->args(func_get_args());
-    }
-
-    public function listableColumns(): array
-    {
-        return $this->blueprint()->fields()->items()
-            ->reject(function ($field) {
-                return isset($field['import'])
-                    || (isset($field['field']['listable']) && $field['field']['listable'] === 'hidden')
-                    || (isset($field['field']['listable']) && $field['field']['listable'] === false);
-            })
-            ->pluck('handle')
-            ->toArray();
+        return $this->blueprint;
     }
 
     public function cpIcon($cpIcon = null)
@@ -172,6 +182,40 @@ class Resource
             ->args(func_get_args());
     }
 
+    public function orderBy($orderBy = null)
+    {
+        return $this->fluentlyGetOrSet('orderBy')
+            ->getter(function ($value) {
+                if (! $value) {
+                    return $this->primaryKey();
+                }
+
+                return $value;
+            })
+            ->args(func_get_args());
+    }
+
+    public function orderByDirection($orderByDirection = null)
+    {
+        return $this->fluentlyGetOrSet('orderByDirection')
+            ->getter(function ($value) {
+                if (! $value) {
+                    return 'asc';
+                }
+
+                return $value;
+            })
+            ->args(func_get_args());
+    }
+
+    public function titleField($field = null)
+    {
+        return $this
+            ->fluentlyGetOrSet('titleField')
+            ->getter(fn ($field) => $field ?? $this->listableColumns()[0])
+            ->args(func_get_args());
+    }
+
     /**
      * Discovers any Eloquent relationships from fieldtypes in the resource's blueprint
      * OR those explicitly defined in the resource's config file.
@@ -214,33 +258,22 @@ class Resource
             ->args(func_get_args());
     }
 
-    public function orderBy($orderBy = null)
+    /**
+     * Returns an array of column handles that are marked as listable.
+     */
+    public function listableColumns(): array
     {
-        return $this->fluentlyGetOrSet('orderBy')
-            ->getter(function ($value) {
-                if (! $value) {
-                    return $this->primaryKey();
-                }
-
-                return $value;
+        return $this->blueprint()->fields()->items()
+            ->reject(function ($field) {
+                return isset($field['import'])
+                    || (isset($field['field']['listable']) && $field['field']['listable'] === 'hidden')
+                    || (isset($field['field']['listable']) && $field['field']['listable'] === false);
             })
-            ->args(func_get_args());
+            ->pluck('handle')
+            ->toArray();
     }
 
-    public function orderByDirection($orderByDirection = null)
-    {
-        return $this->fluentlyGetOrSet('orderByDirection')
-            ->getter(function ($value) {
-                if (! $value) {
-                    return 'asc';
-                }
-
-                return $value;
-            })
-            ->args(func_get_args());
-    }
-
-    public function hasRouting()
+    public function hasRouting(): bool
     {
         return ! is_null($this->route())
             && in_array(\DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes::class, class_uses($this->model()));
@@ -261,7 +294,7 @@ class Resource
         return $this->model()->getTable();
     }
 
-    public function databaseColumns()
+    public function databaseColumns(): array
     {
         return Schema::getColumnListing($this->databaseTable());
     }
@@ -282,14 +315,6 @@ class Resource
     public function augment(Model $model): array
     {
         return AugmentedModel::augment($model, $this->blueprint());
-    }
-
-    public function titleField($field = null)
-    {
-        return $this
-            ->fluentlyGetOrSet('titleField')
-            ->getter(fn ($field) => $field ?? $this->listableColumns()[0])
-            ->args(func_get_args());
     }
 
     public function __get($name)
