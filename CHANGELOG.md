@@ -8,7 +8,7 @@
 
 ### What's fixed
 
--   Fixed GraphQL error on some fieldtypes #252
+-   Fixed GraphQL error on some fieldtypes #252 #253
 
 ### Breaking changes
 
