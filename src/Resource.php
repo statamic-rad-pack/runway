@@ -39,8 +39,7 @@ class Resource
         protected string $name,
         protected Blueprint $blueprint,
         protected array $config = []
-    )
-    {
+    ) {
         if (isset($config['cp_icon'])) {
             $this->cpIcon($config['cp_icon']);
         }
