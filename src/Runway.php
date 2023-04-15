@@ -30,6 +30,10 @@ class Runway
                     $resource->name(Str::title($handle));
                 }
 
+                if (! in_array(Traits\HasRunwayResource::class, class_uses_recursive($model))) {
+                    throw new \Exception(__('The HasRunwayResource trait is missing from the [:model] model.', ['model' => $model]));
+                }
+
                 if (isset($config['title_field'])) {
                     $resource->titleField($config['title_field']);
                 }
