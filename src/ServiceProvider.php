@@ -7,6 +7,7 @@ use DoubleThreeDigital\Runway\Search\Provider as SearchProvider;
 use DoubleThreeDigital\Runway\Search\Searchable;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Traits\Conditionable;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
 use Statamic\Facades\Permission;
@@ -16,6 +17,8 @@ use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
+    use Conditionable;
+
     protected $actions = [
         Actions\DeleteModel::class,
     ];
@@ -77,10 +80,10 @@ class ServiceProvider extends AddonServiceProvider
             SearchProvider::register();
             $this->bootModelEventListeners();
 
-            if (Runway::usesRouting()) {
+            $this->when(Runway::usesRouting(), function () {
                 $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
                     ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
-            }
+            });
         });
     }
 
@@ -113,17 +116,15 @@ class ServiceProvider extends AddonServiceProvider
     protected function registerNavigation()
     {
         Nav::extend(function ($nav) {
-            foreach (Runway::allResources() as $resource) {
-                if ($resource->hidden()) {
-                    continue;
-                }
-
-                $nav->content($resource->name())
-                    ->section(__('Content'))
-                    ->icon($resource->cpIcon())
-                    ->route('runway.index', ['resourceHandle' => $resource->handle()])
-                    ->can('view', $resource);
-            }
+            Runway::allResources()
+                ->reject(fn ($resource) => $resource->hidden())
+                ->each(function (Resource $resource) use (&$nav) {
+                    $nav->create($resource->name())
+                        ->section(__('Content'))
+                        ->icon($resource->cpIcon())
+                        ->route('runway.index', ['resourceHandle' => $resource->handle()])
+                        ->can('view', $resource);
+                });
         });
     }
 
