@@ -4,6 +4,7 @@ namespace DoubleThreeDigital\Runway;
 
 use DoubleThreeDigital\Runway\Data\AugmentedModel;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Fields\Blueprint;
@@ -113,6 +114,11 @@ class Resource
     public function blueprint()
     {
         return $this->blueprint;
+    }
+
+    public function config(): Collection
+    {
+        return collect($this->config);
     }
 
     public function cpIcon($cpIcon = null)
