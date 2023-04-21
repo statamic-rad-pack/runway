@@ -159,7 +159,7 @@ class ResourceController extends CpController
     public function edit(EditRequest $request, $resourceHandle, $record)
     {
         $resource = Runway::findResource($resourceHandle);
-        $record = $resource->model()->where($resource->routeKey(), $record)->first();
+        $record = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $record)->first();
 
         $values = [];
         $blueprintFieldKeys = $resource->blueprint()->fields()->all()->keys()->toArray();
@@ -232,7 +232,7 @@ class ResourceController extends CpController
     public function update(UpdateRequest $request, $resourceHandle, $record)
     {
         $resource = Runway::findResource($resourceHandle);
-        $record = $resource->model()->where($resource->routeKey(), $record)->first();
+        $record = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $record)->first();
 
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
