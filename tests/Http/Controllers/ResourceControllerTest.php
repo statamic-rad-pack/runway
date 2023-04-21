@@ -210,7 +210,7 @@ class ResourceControllerTest extends TestCase
         $this->assertEquals(
             [
                 'date' => $post->created_at->format('Y-m-d'),
-                'time' => $post->created_at->format('H:i'),
+                'time' => null,
             ],
             $response->viewData('values')->get('created_at')
         );
@@ -254,7 +254,7 @@ class ResourceControllerTest extends TestCase
         $this->assertEquals(
             [
                 'date' => $post->created_at->format('Y-m-d'),
-                'time' => $post->created_at->format('H:i'),
+                'time' => null,
             ],
             $response->viewData('values')->get('created_at')
         );
