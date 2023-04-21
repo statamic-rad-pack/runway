@@ -289,7 +289,7 @@ class ResourceController extends CpController
                     $relationshipName = $resource->eagerLoadingRelations()->get($field->handle()) ?? $field->handle();
 
                     $record->{$field->handle()} = $record->{$relationshipName}()
-                        ->select($resource->model()->qualifyColumn($relatedResource->primaryKey()), $column)
+                        ->select($relatedResource->model()->qualifyColumn($relatedResource->primaryKey()), $column)
                         ->get()
                         ->each(function ($model) use ($relatedResource, $column) {
                             $model->title = $model->{$column};
