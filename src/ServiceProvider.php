@@ -45,7 +45,6 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $updateScripts = [
         UpdateScripts\ChangePermissionNames::class,
-        UpdateScripts\MigrateSectionsToTabs::class,
     ];
 
     protected $vite = [
