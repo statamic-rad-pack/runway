@@ -22,7 +22,7 @@ class ResourceTest extends TestCase
     /** @test */
     public function can_get_eager_loading_relations_for_has_many_field()
     {
-        $fields = Config::get('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.tabs.main.fields');
+        $fields = Config::get('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.sections.main.fields');
 
         $fields[] = [
             'handle' => 'posts',
@@ -34,7 +34,7 @@ class ResourceTest extends TestCase
             ],
         ];
 
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.tabs.main.fields', $fields);
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.sections.main.fields', $fields);
 
         Runway::discoverResources();
 

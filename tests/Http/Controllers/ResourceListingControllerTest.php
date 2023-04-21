@@ -105,7 +105,7 @@ class ResourceListingControllerTest extends TestCase
     /** @test */
     public function can_search_records_with_has_many_relationship()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.tabs.main.fields', [
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.sections.main.fields', [
             [
                 'handle' => 'name',
                 'field' => [
