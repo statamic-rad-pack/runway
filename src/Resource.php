@@ -33,6 +33,8 @@ class Resource
 
     protected $readOnly;
 
+    protected $extra;
+
     protected $eagerLoadingRelations;
 
     protected $orderBy;
@@ -168,6 +170,12 @@ class Resource
     public function readOnly($readOnly = null)
     {
         return $this->fluentlyGetOrSet('readOnly')
+            ->args(func_get_args());
+    }
+
+    public function extra($extra = null)
+    {
+        return $this->fluentlyGetOrSet('extra')
             ->args(func_get_args());
     }
 

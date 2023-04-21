@@ -29,7 +29,7 @@ class ResourceListingController extends CpController
             ->orderBy($sortField, $sortDirection);
 
         if ($query->hasNamedScope('runwayListing')) {
-            $query->runwayListing();
+            $query->runwayListing($resource);
         }
 
         $query->with($resource->eagerLoadingRelations()->values()->all());
@@ -44,8 +44,8 @@ class ResourceListingController extends CpController
         if ($searchQuery = $request->input('search')) {
             $query->when(
                 $query->hasNamedScope('runwaySearch'),
-                function ($query) use ($searchQuery) {
-                    $query->runwaySearch($searchQuery);
+                function ($query) use ($searchQuery, $resource) {
+                    $query->runwaySearch($searchQuery, $resource);
                 },
                 function ($query) use ($searchQuery, $blueprint) {
                     $blueprint->fields()->items()

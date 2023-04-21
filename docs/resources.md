@@ -227,6 +227,21 @@ If you'd like to specify a different field, you may do so by setting the `title_
 ],
 ```
 
+### Extra data
+
+In case you need to provide some extra data you can do so by setting the `extra` option on your resource.
+
+```php
+'resources' => [
+	\App\Models\Order::class => [
+	    'name' => 'Orders',
+		'extra' => 'Something you may need within a scope',
+	],
+],
+```
+
+This can be useful within a [scope](/control-panel#content-scoping-control-panel-results) as you've access to the resource from there.
+
 ## Actions
 
 In much the same way with entries, you can create custom Actions which will be usable in the listing tables provided by Runway.

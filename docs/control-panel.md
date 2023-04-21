@@ -158,7 +158,7 @@ If you don't want to return everything, you may add a scope (`runwayListing`) to
 ```php
 class YourModel extends Model
 {
-	public function scopeRunwayListing($query)
+	public function scopeRunwayListing($query, $resource)
 	{
 		return $query->where('something', true);
 	}
@@ -172,7 +172,7 @@ On top of scoping your Control Panel results, you may also scope how Runway sear
 ```php
 class YourModel extends Model
 {
-	public function scopeRunwaySearch($query, $searchString)
+	public function scopeRunwaySearch($query, $searchString, $resource)
 	{
 		// Your own search logic
 	}

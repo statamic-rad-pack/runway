@@ -92,7 +92,7 @@ class BaseFieldtype extends Relationship
             ->orderBy($resource->primaryKey(), 'ASC');
 
         if ($query->hasNamedScope('runwayListing')) {
-            $query->runwayListing();
+            $query->runwayListing($resource);
         }
 
         return $query
@@ -101,8 +101,8 @@ class BaseFieldtype extends Relationship
 
                 $query->when(
                     $query->hasNamedScope('runwaySearch'),
-                    function ($query) use ($searchQuery) {
-                        $query->runwaySearch($searchQuery);
+                    function ($query) use ($searchQuery, $resource) {
+                        $query->runwaySearch($searchQuery, $resource);
                     },
                     function ($query) use ($searchQuery, $resource) {
                         $resource->blueprint()->fields()->items()

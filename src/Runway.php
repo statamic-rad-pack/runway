@@ -66,6 +66,10 @@ class Runway
                     $resource->readOnly($config['read_only']);
                 }
 
+                if (isset($config['extra'])) {
+                    $resource->extra($config['extra']);
+                }
+
                 if (isset($config['with'])) {
                     $resource->eagerLoadingRelations($config['with']);
                 }
