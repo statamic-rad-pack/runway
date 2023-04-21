@@ -23,6 +23,12 @@ class Order extends Model
 }
 ```
 
+## v4.2.5 (2023-04-21)
+
+### What's fixed
+
+-   Table name is now prefixed on two queries in the `ResourceController` #254
+
 ## v4.2.4 (2023-04-15)
 
 ### What's fixed
