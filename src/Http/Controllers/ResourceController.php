@@ -159,7 +159,10 @@ class ResourceController extends CpController
     public function edit(EditRequest $request, $resourceHandle, $record)
     {
         $resource = Runway::findResource($resourceHandle);
-        $record = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $record)->first();
+
+        $record = $resource->model()
+            ->where($resource->model()->qualifyColumn($resource->routeKey()), $record)
+            ->first();
 
         $values = [];
         $blueprintFieldKeys = $resource->blueprint()->fields()->all()->keys()->toArray();
@@ -232,7 +235,10 @@ class ResourceController extends CpController
     public function update(UpdateRequest $request, $resourceHandle, $record)
     {
         $resource = Runway::findResource($resourceHandle);
-        $record = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $record)->first();
+
+        $record = $resource->model()
+            ->where($resource->model()->qualifyColumn($resource->routeKey()), $record)
+            ->first();
 
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
@@ -283,7 +289,7 @@ class ResourceController extends CpController
                     $relationshipName = $resource->eagerLoadingRelations()->get($field->handle()) ?? $field->handle();
 
                     $record->{$field->handle()} = $record->{$relationshipName}()
-                        ->select($relatedResource->databaseTable().'.'.$relatedResource->primaryKey(), $column)
+                        ->select($resource->model()->qualifyColumn($relatedResource->primaryKey()), $column)
                         ->get()
                         ->each(function ($model) use ($relatedResource, $column) {
                             $model->title = $model->{$column};
