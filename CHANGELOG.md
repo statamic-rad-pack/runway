@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v5.0.0 (2023-04-28)
+
 ### What's new
 
 -   Runway v5 now supports Statamic 4 #235
