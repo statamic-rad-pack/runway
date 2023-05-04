@@ -22,11 +22,6 @@ trait HasRunwayResource
         return new AugmentedModel($this);
     }
 
-    public function augmentedValue($key)
-    {
-        return $this->augmented()->get($key);
-    }
-
     public function runwayResource(): Resource
     {
         return Runway::findResourceByModel($this);
