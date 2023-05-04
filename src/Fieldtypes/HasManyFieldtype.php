@@ -46,12 +46,12 @@ class HasManyFieldtype extends BaseFieldtype
                 'type' => 'toggle',
                 'width' => 50,
             ],
-            // TODO: Somehow make this work in cases where the pivot table contains the reorderable column, rather than the model itself.
-            'reorderable_column' => [
-                'display' => __('Reorderable Column'),
-                'instructions' => __('This is the column which will be used to store the sort order.'),
+            'order_column' => [
+                'display' => __('Order Column'),
+                'instructions' => __('Which column should be used to keep track of the order?'),
                 'type' => 'text',
                 'width' => 50,
+                'placeholder' => 'sort_order',
                 'if' => [
                     'reorderable' => true,
                 ],
@@ -146,7 +146,7 @@ class HasManyFieldtype extends BaseFieldtype
             });
 
         // If reordering is enabled, update all models with their new sort order.
-        if ($this->config('reorderable') && $orderColumn = $this->config('reorderable_column')) {
+        if ($this->config('reorderable') && $orderColumn = $this->config('order_column')) {
             collect($data)
                 ->each(function ($relatedId, $index) use ($relatedResource, $orderColumn) {
                     $model = $relatedResource->model()->find($relatedId);
