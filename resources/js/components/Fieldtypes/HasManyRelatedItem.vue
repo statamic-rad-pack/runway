@@ -33,7 +33,7 @@
             />
         </template>
 
-        <div v-else class="item select-none" :class="{ invalid: item.invalid }">
+        <template v-else>
             <div class="item-move" v-if="sortable">&nbsp;</div>
 
             <div class="item-inner">
@@ -89,7 +89,7 @@
                     />
                 </dropdown-list>
             </div>
-        </div>
+        </template>
     </div>
 </template>
 
