@@ -19,6 +19,7 @@ class CreatePostsTable extends Migration
             $table->string('slug');
             $table->longText('body');
             $table->integer('author_id');
+            $table->integer('sort_order')->nullable();
             $table->timestamps();
         });
     }

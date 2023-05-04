@@ -5,7 +5,7 @@ namespace DoubleThreeDigital\Runway\Fieldtypes;
 use DoubleThreeDigital\Runway\Runway;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\Request;
+use Statamic\Facades\Blink;
 use Statamic\Facades\GraphQL;
 
 class HasManyFieldtype extends BaseFieldtype
@@ -80,14 +80,18 @@ class HasManyFieldtype extends BaseFieldtype
     public function process($data)
     {
         // Determine whether or not this field is on a resource or a collection
-        $resourceHandle = request()->route('resourceHandle');
+        $resourceHandle = request()->route('resourceHandle') ?? Blink::get('RunwayRouteResource');
 
         if (! $resourceHandle) {
             return $data;
         }
 
         $resource = Runway::findResource($resourceHandle);
-        $record = $resource->model()->firstWhere($resource->routeKey(), (int) Request::route('record'));
+
+        $record = $resource->model()->firstWhere(
+            $resource->routeKey(),
+            request()->route('record') ?? Blink::get('RunwayRouteRecord')
+        );
 
         // If we're adding HasMany relations on a model that doesn't exist yet,
         // return a closure that will be run post-save.
