@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway\GraphQL;
 
-use DoubleThreeDigital\Runway\Data\AugmentedModel;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -11,8 +10,6 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Rebing\GraphQL\Support\Type;
 use Statamic\Facades\GraphQL;
-use Statamic\Contracts\Query\Builder;
-use Statamic\Fields\Value;
 
 class ResourceType extends Type
 {
@@ -47,17 +44,7 @@ class ResourceType extends Type
                 $model = $resource->model()->firstWhere($resource->primaryKey(), $model);
             }
 
-            $value = AugmentedModel::augment($model, $this->resource->blueprint())[$info->fieldName];
-
-            if ($value instanceof Value) {
-                $value = $value->value();
-            }
-
-            if ($value instanceof Builder) {
-                $value = $value->get();
-            }
-
-            return $value;
+            return $model->resolveGqlValue($info->fieldName);
         };
     }
 
