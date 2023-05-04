@@ -65,6 +65,7 @@ class BaseFieldtype extends Relationship
                     ->mapWithKeys(fn ($resource) => [$resource->handle() => $resource->name()])
                     ->toArray(),
                 'width' => 50,
+                'validate' => 'required',
             ],
             'create' => [
                 'display' => __('Allow Creating'),

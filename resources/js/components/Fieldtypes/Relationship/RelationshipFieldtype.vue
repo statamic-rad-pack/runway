@@ -124,7 +124,11 @@ export default {
         },
 
         canReorder() {
-            return this.maxItems > 1
+            return (
+                this.maxItems > 1 &&
+                this.config.reorderable === true &&
+                this.config.order_column !== undefined
+            )
         },
 
         statusIcons() {
@@ -148,7 +152,7 @@ export default {
         },
 
         replicatorPreview() {
-            return this.value.map(id => {
+            return this.value.map((id) => {
                 const item = _.findWhere(this.meta.data, { id })
                 return item ? item.title : id
             })

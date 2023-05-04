@@ -5,7 +5,7 @@ namespace DoubleThreeDigital\Runway\Fieldtypes;
 use DoubleThreeDigital\Runway\Runway;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\Request;
+use Statamic\Facades\Blink;
 use Statamic\Facades\GraphQL;
 
 class HasManyFieldtype extends BaseFieldtype
@@ -40,6 +40,22 @@ class HasManyFieldtype extends BaseFieldtype
                 ],
                 'width' => 50,
             ],
+            'reorderable' => [
+                'display' => __('Reorderable?'),
+                'instructions' => __('Can the models be reordered?'),
+                'type' => 'toggle',
+                'width' => 50,
+            ],
+            'order_column' => [
+                'display' => __('Order Column'),
+                'instructions' => __('Which column should be used to keep track of the order?'),
+                'type' => 'text',
+                'width' => 50,
+                'placeholder' => 'sort_order',
+                'if' => [
+                    'reorderable' => true,
+                ],
+            ],
         ];
 
         return array_merge(parent::configFieldItems(), $config);
@@ -64,14 +80,18 @@ class HasManyFieldtype extends BaseFieldtype
     public function process($data)
     {
         // Determine whether or not this field is on a resource or a collection
-        $resourceHandle = request()->route('resourceHandle');
+        $resourceHandle = request()->route('resourceHandle') ?? Blink::get('RunwayRouteResource');
 
         if (! $resourceHandle) {
             return $data;
         }
 
         $resource = Runway::findResource($resourceHandle);
-        $record = $resource->model()->firstWhere($resource->routeKey(), (int) Request::route('record'));
+
+        $record = $resource->model()->firstWhere(
+            $resource->routeKey(),
+            request()->route('record') ?? Blink::get('RunwayRouteRecord')
+        );
 
         // If we're adding HasMany relations on a model that doesn't exist yet,
         // return a closure that will be run post-save.
@@ -128,6 +148,22 @@ class HasManyFieldtype extends BaseFieldtype
                     $relatedField->getForeignKeyName() => $record->{$relatedResource->primaryKey()},
                 ]);
             });
+
+        // If reordering is enabled, update all models with their new sort order.
+        if ($this->config('reorderable') && $orderColumn = $this->config('order_column')) {
+            collect($data)
+                ->each(function ($relatedId, $index) use ($relatedResource, $orderColumn) {
+                    $model = $relatedResource->model()->find($relatedId);
+
+                    if ($model->{$orderColumn} === $index) {
+                        return;
+                    }
+
+                    $model->update([
+                        $orderColumn => $index,
+                    ]);
+                });
+        }
 
         return null;
     }
