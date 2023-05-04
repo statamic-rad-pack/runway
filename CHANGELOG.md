@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## v4.2.6 (2023-05-04)
+
+### What's new
+
+-   You can now re-order items using the HasMany fieldtype #228 #259
+
+### What's fixed
+
+-   Fixed GraphQL not resolving the Entries fieldtype (and probably others too!) #258 #260
+
 ## v4.2.5 (2023-04-21)
 
 ### What's fixed
