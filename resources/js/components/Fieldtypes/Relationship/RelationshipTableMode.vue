@@ -10,7 +10,7 @@
                 class="mb-2"
                 :rows="items"
                 :columns="columns"
-                :sort="true"
+                :sort="!canReorder"
                 :sortColumm="sortColumn"
                 :sortDirection="sortDirection"
             >
@@ -24,7 +24,7 @@
                     <data-list-table
                         :loading="loading"
                         :reorderable="canReorder"
-                        :sortable="true"
+                        :sortable="!canReorder"
                         class="card p-1"
                         @sorted="sorted"
                         @reordered="reordered"
