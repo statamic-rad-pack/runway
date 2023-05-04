@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway\Http\Controllers;
 
 use Carbon\CarbonInterface;
+use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
 use DoubleThreeDigital\Runway\Http\Requests\CreateRequest;
 use DoubleThreeDigital\Runway\Http\Requests\EditRequest;
 use DoubleThreeDigital\Runway\Http\Requests\IndexRequest;
@@ -185,6 +186,19 @@ class ResourceController extends CpController
             // When $value is a JSON string, decode it.
             if (Json::isJson($value)) {
                 $value = json_decode((string) $value, true);
+            }
+
+            // HasMany field: if reordering is enabled, ensure the models are returned in the right order.
+            if (
+                $resource->blueprint()->field($fieldKey)->fieldtype() instanceof HasManyFieldtype
+                && isset($resource->blueprint()->field($fieldKey)->config()['reorderable'])
+                && $resource->blueprint()->field($fieldKey)->config()['reorderable'] === true
+            ) {
+                $orderColumn = $resource->blueprint()->field($fieldKey)->config()['order_column'];
+
+                $value = $record->{$fieldKey}()
+                    ->reorder($orderColumn, 'ASC')
+                    ->get();
             }
 
             $values[$fieldKey] = $value;

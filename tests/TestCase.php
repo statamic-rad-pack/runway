@@ -243,7 +243,7 @@ class Post extends Model
     use RunwayRoutes, HasRunwayResource;
 
     protected $fillable = [
-        'title', 'slug', 'body', 'author_id',
+        'title', 'slug', 'body', 'author_id', 'sort_order',
     ];
 
     protected $appends = [

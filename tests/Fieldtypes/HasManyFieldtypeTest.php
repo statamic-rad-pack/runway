@@ -8,6 +8,8 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Request;
+use Statamic\Facades\Blink;
 use Statamic\Fields\Field;
 
 class HasManyFieldtypeTest extends TestCase
@@ -137,29 +139,75 @@ class HasManyFieldtypeTest extends TestCase
         ]);
     }
 
-    // /** @test */
-    // public function can_process_and_add_relations_to_model()
-    // {
-    //     $posts = $this->postFactory(10);
-    //     $author = $this->authorFactory();
+    /** @test */
+    public function can_process_and_add_relations_to_model()
+    {
+        $posts = $this->postFactory(10);
+        $author = $this->authorFactory();
 
-    //     foreach ($posts as $post) {
-    //         // $post->update(['author_id' => $author->id]);
-    //     }
+        // Usually these bits would be fetched from the request. However, as we can't mock
+        // the request, we're using Blink.
+        Blink::put('RunwayRouteResource', 'author');
+        Blink::put('RunwayRouteRecord', $author->id);
 
-    //     Request::shouldReceive('route')
-    //         ->once()
-    //         ->with('record')
-    //         ->andReturn($author->id);
+        $this->fieldtype->process(collect($posts)->pluck('id')->toArray());
 
-    //     $process = $this->fieldtype->process(collect($posts)->pluck('id')->toArray());
+        // Ensure the author is attached to all 10 posts
+        $this->assertSame($posts[0]->fresh()->author_id, $author->id);
+        $this->assertSame($posts[1]->fresh()->author_id, $author->id);
+        $this->assertSame($posts[2]->fresh()->author_id, $author->id);
+        $this->assertSame($posts[3]->fresh()->author_id, $author->id);
+        $this->assertSame($posts[4]->fresh()->author_id, $author->id);
+        $this->assertSame($posts[5]->fresh()->author_id, $author->id);
+        $this->assertSame($posts[6]->fresh()->author_id, $author->id);
+        $this->assertSame($posts[7]->fresh()->author_id, $author->id);
+        $this->assertSame($posts[8]->fresh()->author_id, $author->id);
+        $this->assertSame($posts[9]->fresh()->author_id, $author->id);
+    }
 
-    //     $this->assertSame($preProcessIndex->first(), [
-    //         'id' => $posts[0]->id,
-    //         'title' => $posts[0]->title,
-    //         'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
-    //     ]);
-    // }
+        /** @test */
+        public function can_process_and_add_relations_to_model_and_can_persist_users_sort_order()
+        {
+            $posts = $this->postFactory(3);
+            $author = $this->authorFactory();
+
+            $this->fieldtype->field()->setConfig(array_merge($this->fieldtype->field()->config(), [
+                'reorderable' => true,
+                'order_column' => 'sort_order',
+            ]));
+
+            // Usually these bits would be fetched from the request. However, as we can't mock
+            // the request, we're using Blink.
+            Blink::put('RunwayRouteResource', 'author');
+            Blink::put('RunwayRouteRecord', $author->id);
+
+            $this->fieldtype->process([
+                $posts[1]->id,
+                $posts[2]->id,
+                $posts[0]->id,
+            ]);
+
+            // Ensure the author is attached to all 3 posts
+            $this->assertSame($posts[0]->fresh()->author_id, $author->id);
+            $this->assertSame($posts[1]->fresh()->author_id, $author->id);
+            $this->assertSame($posts[2]->fresh()->author_id, $author->id);
+
+            // Ensure the sort_order is persisted correctly for all 3 posts
+            $this->assertDatabaseHas('posts', [
+                'id' => $posts[0]->id,
+                'sort_order' => 2,
+            ]);
+
+            $this->assertDatabaseHas('posts', [
+                'id' => $posts[1]->id,
+                'sort_order' => 0,
+            ]);
+
+            $this->assertDatabaseHas('posts', [
+                'id' => $posts[2]->id,
+                'sort_order' => 1,
+            ]);
+        }
 
     /** @test */
     public function can_get_augment_value()
