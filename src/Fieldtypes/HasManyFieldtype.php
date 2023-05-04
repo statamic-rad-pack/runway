@@ -40,6 +40,22 @@ class HasManyFieldtype extends BaseFieldtype
                 ],
                 'width' => 50,
             ],
+            'reorderable' => [
+                'display' => __('Reorderable?'),
+                'instructions' => __('Can the models be reordered?'),
+                'type' => 'toggle',
+                'width' => 50,
+            ],
+            // TODO: Somehow make this work in cases where the pivot table contains the reorderable column, rather than the model itself.
+            'reorderable_column' => [
+                'display' => __('Reorderable Column'),
+                'instructions' => __('This is the column which will be used to store the sort order.'),
+                'type' => 'text',
+                'width' => 50,
+                'if' => [
+                    'reorderable' => true,
+                ],
+            ],
         ];
 
         return array_merge(parent::configFieldItems(), $config);

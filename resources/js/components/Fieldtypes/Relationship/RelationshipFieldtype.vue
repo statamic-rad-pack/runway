@@ -124,7 +124,7 @@ export default {
         },
 
         canReorder() {
-            return this.maxItems > 1
+            return this.maxItems > 1 && this.config.reorderable === true && this.config.reorderable_column !== undefined
         },
 
         statusIcons() {
