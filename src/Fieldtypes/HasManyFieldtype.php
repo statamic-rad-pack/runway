@@ -145,6 +145,22 @@ class HasManyFieldtype extends BaseFieldtype
                 ]);
             });
 
+        // If reordering is enabled, update all models with their new sort order.
+        if ($this->config('reorderable') && $orderColumn = $this->config('reorderable_column')) {
+            collect($data)
+                ->each(function ($relatedId, $index) use ($relatedResource, $orderColumn) {
+                    $model = $relatedResource->model()->find($relatedId);
+
+                    if ($model->{$orderColumn} === $index) {
+                        return;
+                    }
+
+                    $model->update([
+                        $orderColumn => $index,
+                    ]);
+                });
+        }
+
         return null;
     }
 
