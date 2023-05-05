@@ -46,6 +46,40 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
+    public function can_get_records_with_select_parameter()
+    {
+        $posts = $this->postFactory(5);
+
+        $this->tag->setParameters([
+            'select' => 'id,title,slug',
+        ]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertSame(5, count($usage));
+
+        $this->assertSame((string) $usage[0]['title'], $posts[0]->title);
+        $this->assertSame((string) $usage[0]['slug'], $posts[0]->slug);
+        $this->assertEmpty((string) $usage[0]['body']);
+
+        $this->assertSame((string) $usage[1]['title'], $posts[1]->title);
+        $this->assertSame((string) $usage[1]['slug'], $posts[1]->slug);
+        $this->assertEmpty((string) $usage[1]['body']);
+
+        $this->assertSame((string) $usage[2]['title'], $posts[2]->title);
+        $this->assertSame((string) $usage[2]['slug'], $posts[2]->slug);
+        $this->assertEmpty((string) $usage[2]['body']);
+
+        $this->assertSame((string) $usage[3]['title'], $posts[3]->title);
+        $this->assertSame((string) $usage[3]['slug'], $posts[3]->slug);
+        $this->assertEmpty((string) $usage[3]['body']);
+
+        $this->assertSame((string) $usage[4]['title'], $posts[4]->title);
+        $this->assertSame((string) $usage[4]['slug'], $posts[4]->slug);
+        $this->assertEmpty((string) $usage[4]['body']);
+    }
+
+    /** @test */
     public function can_get_records_with_scope_parameter()
     {
         $posts = $this->postFactory(5);
