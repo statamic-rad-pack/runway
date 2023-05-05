@@ -6,7 +6,6 @@ use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Statamic\Extensions\Pagination\LengthAwarePaginator;
 use Statamic\Facades\Blink;
