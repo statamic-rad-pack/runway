@@ -6,8 +6,10 @@ use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Statamic\Extensions\Pagination\LengthAwarePaginator;
+use Statamic\Facades\Blink;
 use Statamic\Tags\Tags;
 
 class RunwayTag extends Tags
@@ -27,6 +29,10 @@ class RunwayTag extends Tags
         }
 
         $query = $resource->model()->query();
+
+        if ($select = $this->params->get('select')) {
+            $query->select(explode(',', (string) $select));
+        }
 
         if ($scopes = $this->params->get('scope')) {
             $scopes = explode('|', (string) $scopes);
@@ -116,7 +122,11 @@ class RunwayTag extends Tags
     protected function augmentRecords($query, Resource $resource)
     {
         return collect($query)
-            ->map(fn ($record, $key) => $resource->augment($record))
+            ->map(function ($record, $key) use ($resource) {
+                return Blink::once("Runway::Tag::AugmentRecords::{$resource->handle()}::{$record->{$resource->primaryKey()}}", function () use ($resource, $record) {
+                    return $resource->augment($record);
+                });
+            })
             ->toArray();
     }
 
