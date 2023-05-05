@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v4.2.8 (2023-05-05)
+
+### What's new
+
+-   Added a new `select` parameter to the Runway tag #263
+
 ## v4.2.7 (2023-05-04)
 
 ### What's new
