@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Rebing\GraphQL\Support\Type;
-use Statamic\Facades\GraphQL;
 use Statamic\Contracts\Query\Builder;
+use Statamic\Facades\GraphQL;
 use Statamic\Fields\Value;
 
 class ResourceType extends Type
