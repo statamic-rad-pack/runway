@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v5.0.3 (2023-05-08)
+
+### What's fixed
+
+-   Fix hard-coded primary key column in HasMany fieldtype #264 #265
+
 ## v5.0.2 (2023-05-05)
 
 ### What's new
