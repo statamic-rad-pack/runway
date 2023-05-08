@@ -64,6 +64,8 @@ class HasManyFieldtype extends BaseFieldtype
     // Pre-process the data before it gets sent to the publish page
     public function preProcess($data)
     {
+        $resource = Runway::findResource($this->config('resource'));
+
         // Determine whether or not this field is on a resource or a collection
         $resourceHandle = request()->route('resourceHandle');
 
@@ -72,7 +74,7 @@ class HasManyFieldtype extends BaseFieldtype
         }
 
         return collect($data)
-            ->pluck('id')
+            ->pluck($resource->primaryKey())
             ->toArray();
     }
 
