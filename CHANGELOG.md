@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## v5.0.4 (2023-05-09)
+
+### What's fixed
+
+-   Fixed slightly broken listing table #267
+-   Fixed issue with save button icon #269
+-   Allow overriding Eloquent relationship names in Belongs To fieldtype #268 #270
+
 ## v5.0.3 (2023-05-08)
 
 ### What's fixed
