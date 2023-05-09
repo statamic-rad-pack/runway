@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## v4.2.10 (2023-05-09)
+
+**Note:** This is likely the last v4 release of Runway. You should consider updating to Runway v5 and Statamic 4 for future updates.
+
+### What's fixed
+
+-   Allow overriding Eloquent relationship names in Belongs To fieldtype #268 #270
+
 ## v4.2.9 (2023-05-08)
 
 ### What's fixed
