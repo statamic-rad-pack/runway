@@ -2,7 +2,7 @@ import RelationshipFieldtype from './components/Fieldtypes/Relationship/Relation
 import RelationshipTableMode from './components/Fieldtypes/Relationship/RelationshipTableMode.vue'
 import HasManyRelatedItem from './components/Fieldtypes/HasManyRelatedItem.vue'
 import PublishForm from './components/Publish/PublishForm.vue'
-import ListingView from './components/Listing/ListingView.vue'
+import RunwayListing from './components/Listing/RunwayListing.vue'
 
 Statamic.$components.register(
     'runway-relationship-fieldtype',
@@ -11,7 +11,7 @@ Statamic.$components.register(
 Statamic.$components.register('relationship-table-mode', RelationshipTableMode)
 Statamic.$components.register('hasmany-related-item', HasManyRelatedItem)
 Statamic.$components.register('runway-publish-form', PublishForm)
-Statamic.$components.register('runway-listing-view', ListingView)
+Statamic.$components.register('runway-listing', RunwayListing)
 
 // Statamic seems to form the fieldtype name differently, so we're just pointing it where it should be going so stuff works.
 import HasManyFieldtypeIndex from '../../vendor/statamic/cms/resources/js/components/fieldtypes/relationship/RelationshipIndexFieldtype.vue'

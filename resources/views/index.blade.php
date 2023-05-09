@@ -21,13 +21,13 @@
     </div>
 
     @if ($recordCount > 0)
-        <runway-listing-view
+        <runway-listing
             :filters="{{ $filters->toJson() }}"
             :listing-config='@json($listingConfig)'
             :initial-columns='@json($columns)'
             action-url="{{ $actionUrl }}"
             initial-primary-column="{{ $primaryColumn }}"
-        ></runway-listing-view>
+        ></runway-listing>
      @else
         @include('statamic::partials.create-first', [
             'resource' => $resource->singular(),
