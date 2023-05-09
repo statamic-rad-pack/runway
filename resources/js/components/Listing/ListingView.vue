@@ -16,7 +16,7 @@
             <div slot-scope="{ hasSelections }">
                 <div class="card overflow-hidden p-0 relative">
                     <div
-                        class="flex items-center justify-between p-2 text-sm border-b"
+                        class="flex flex-wrap items-center justify-between px-2 pb-2 text-sm border-b"
                     >
                         <data-list-filter-presets
                             ref="presets"
@@ -34,35 +34,25 @@
                         />
 
                         <data-list-search
-                            class="h-8"
-                            v-if="showFilters"
+                            class="h-8 mt-2 min-w-[240px] w-full"
                             ref="search"
                             v-model="searchQuery"
                             :placeholder="searchPlaceholder"
                         />
 
-                        <div class="flex ml-2 space-x-2">
+                        <div class="flex space-x-2 mt-2">
                             <button
-                                class="btn btn-sm"
-                                v-text="__('Cancel')"
-                                v-show="!alwaysShowFilters && showFilters"
-                                @click="filtersHide"
+                                class="btn btn-sm ml-2"
+                                v-text="__('Reset')"
+                                v-show="isDirty"
+                                @click="$refs.presets.refreshPreset()"
                             />
                             <button
-                                class="btn btn-sm"
+                                class="btn btn-sm ml-2"
                                 v-text="__('Save')"
-                                v-show="showFilters && isDirty"
+                                v-show="isDirty"
                                 @click="$refs.presets.savePreset()"
                             />
-                            <button
-                                class="btn flex items-center btn-sm w-12"
-                                @click="handleShowFilters"
-                                v-if="!showFilters"
-                                v-tooltip="__('Show Filter Controls (F)')"
-                            >
-                                <svg-icon name="search" class="w-4 h-4" />
-                                <svg-icon name="filter-lines" class="w-4 h-4" />
-                            </button>
                             <data-list-column-picker
                                 :preferences-key="preferencesKey('columns')"
                             />
@@ -78,14 +68,12 @@
                             :active-filter-badges="activeFilterBadges"
                             :active-count="activeFilterCount"
                             :search-query="searchQuery"
+                            :is-searching="true"
                             :saves-presets="true"
                             :preferences-prefix="preferencesPrefix"
-                            @filter-changed="filterChanged"
-                            @search-changed="searchChanged"
+                            @changed="filterChanged"
                             @saved="$refs.presets.setPreset($event)"
                             @deleted="$refs.presets.refreshPresets()"
-                            @restore-preset="$refs.presets.viewPreset($event)"
-                            @reset="filtersReset"
                         />
                     </div>
 
