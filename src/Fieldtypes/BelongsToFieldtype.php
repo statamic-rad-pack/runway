@@ -23,6 +23,12 @@ class BelongsToFieldtype extends BaseFieldtype
                 'type' => 'text',
                 'width' => 50,
             ],
+            'relationship_name' => [
+                'display' => __('Relationship Name'),
+                'instructions' => __('The name of the Eloquent relationship this field should use. When left blank, Runway will attempt to guess it.'),
+                'type' => 'text',
+                'width' => 50,
+            ],
         ];
 
         return array_merge($config, parent::configFieldItems());
