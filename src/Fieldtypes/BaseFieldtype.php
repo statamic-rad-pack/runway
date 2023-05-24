@@ -96,7 +96,7 @@ class BaseFieldtype extends Relationship
             $query->runwayListing();
         }
 
-        return $query
+        $paginator = $query
             ->when($request->search, function ($query) use ($request, $resource) {
                 $searchQuery = $request->search;
 
@@ -117,25 +117,29 @@ class BaseFieldtype extends Relationship
                     }
                 );
             })
-            ->get()
-            ->map(fn ($record) => collect($resource->listableColumns())
-                ->mapWithKeys(function ($columnKey) use ($record) {
-                    $value = $record->{$columnKey};
+            ->paginate();
 
-                    // When $value is an Eloquent Collection, we want to map over each item & process its values.
-                    if ($value instanceof EloquentCollection) {
-                        $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
-                    }
+            $paginator
+                ->getCollection()
+                ->transform(fn ($record) => collect($resource->listableColumns())
+                    ->mapWithKeys(function ($columnKey) use ($record) {
+                        $value = $record->{$columnKey};
 
-                    return [$columnKey => $value];
-                })
-                ->merge([
-                    'id' => $record->{$resource->primaryKey()},
-                    'title' => $this->makeTitle($record, $resource),
-                ])
-                ->toArray())
-            ->filter()
-            ->values();
+                        // When $value is an Eloquent Collection, we want to map over each item & process its values.
+                        if ($value instanceof EloquentCollection) {
+                            $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
+                        }
+
+                        return [$columnKey => $value];
+                    })
+                    ->merge([
+                        'id' => $record->{$resource->primaryKey()},
+                        'title' => $this->makeTitle($record, $resource),
+                    ])
+                    ->toArray()
+                );
+
+            return $paginator;
     }
 
     // This shows the values in the listing table
