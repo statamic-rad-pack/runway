@@ -96,7 +96,7 @@ class BaseFieldtype extends Relationship
             $query->runwayListing();
         }
 
-        return $query
+        $paginator = $query
             ->when($request->search, function ($query) use ($request, $resource) {
                 $searchQuery = $request->search;
 
@@ -117,8 +117,11 @@ class BaseFieldtype extends Relationship
                     }
                 );
             })
-            ->get()
-            ->map(fn ($record) => collect($resource->listableColumns())
+            ->paginate();
+
+        $paginator
+            ->getCollection()
+            ->transform(fn ($record) => collect($resource->listableColumns())
                 ->mapWithKeys(function ($columnKey) use ($record) {
                     $value = $record->{$columnKey};
 
@@ -133,9 +136,10 @@ class BaseFieldtype extends Relationship
                     'id' => $record->{$resource->primaryKey()},
                     'title' => $this->makeTitle($record, $resource),
                 ])
-                ->toArray())
-            ->filter()
-            ->values();
+                ->toArray()
+            );
+
+        return $paginator;
     }
 
     // This shows the values in the listing table

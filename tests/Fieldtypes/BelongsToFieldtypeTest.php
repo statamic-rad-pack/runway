@@ -4,6 +4,7 @@ namespace DoubleThreeDigital\Runway\Tests\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
 use DoubleThreeDigital\Runway\Tests\TestCase;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -38,7 +39,7 @@ class BelongsToFieldtypeTest extends TestCase
         $getIndexItems = $this->fieldtype->getIndexItems(new Request());
 
         $this->assertIsObject($getIndexItems);
-        $this->assertTrue($getIndexItems instanceof Collection);
+        $this->assertTrue($getIndexItems instanceof Paginator);
         $this->assertSame($getIndexItems->count(), 10);
     }
 
@@ -59,7 +60,7 @@ class BelongsToFieldtypeTest extends TestCase
         $getIndexItems = $this->fieldtype->getIndexItems(new Request());
 
         $this->assertIsObject($getIndexItems);
-        $this->assertTrue($getIndexItems instanceof Collection);
+        $this->assertTrue($getIndexItems instanceof Paginator);
         $this->assertSame($getIndexItems->count(), 2);
 
         $this->assertSame($getIndexItems->first()['title'], 'AUTHOR '.$authors[0]->name);
