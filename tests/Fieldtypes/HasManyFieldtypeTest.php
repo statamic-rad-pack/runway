@@ -4,11 +4,11 @@ namespace DoubleThreeDigital\Runway\Tests\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
 use DoubleThreeDigital\Runway\Tests\TestCase;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
 use Statamic\Facades\Blink;
 use Statamic\Fields\Field;
 
@@ -62,7 +62,7 @@ class HasManyFieldtypeTest extends TestCase
         $getIndexItems = $this->fieldtype->getIndexItems(new HttpRequest());
 
         $this->assertIsObject($getIndexItems);
-        $this->assertTrue($getIndexItems instanceof Collection);
+        $this->assertTrue($getIndexItems instanceof Paginator);
         $this->assertSame($getIndexItems->count(), 10);
     }
 
@@ -87,7 +87,7 @@ class HasManyFieldtypeTest extends TestCase
         $getIndexItems = $this->fieldtype->getIndexItems(new HttpRequest());
 
         $this->assertIsObject($getIndexItems);
-        $this->assertTrue($getIndexItems instanceof Collection);
+        $this->assertTrue($getIndexItems instanceof Paginator);
         $this->assertSame($getIndexItems->count(), 2);
 
         $this->assertSame($getIndexItems->first()['title'], $posts[0]->title.' TEST '.now()->format('Y'));
