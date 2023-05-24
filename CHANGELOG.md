@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v5.0.5 (2023-05-24)
+
+### What's improved
+
+* Added pagination to fieldtype selection listings #275
+
 ## v5.0.4 (2023-05-09)
 
 ### What's fixed
