@@ -119,27 +119,27 @@ class BaseFieldtype extends Relationship
             })
             ->paginate();
 
-            $paginator
-                ->getCollection()
-                ->transform(fn ($record) => collect($resource->listableColumns())
-                    ->mapWithKeys(function ($columnKey) use ($record) {
-                        $value = $record->{$columnKey};
+        $paginator
+            ->getCollection()
+            ->transform(fn ($record) => collect($resource->listableColumns())
+                ->mapWithKeys(function ($columnKey) use ($record) {
+                    $value = $record->{$columnKey};
 
-                        // When $value is an Eloquent Collection, we want to map over each item & process its values.
-                        if ($value instanceof EloquentCollection) {
-                            $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
-                        }
+                    // When $value is an Eloquent Collection, we want to map over each item & process its values.
+                    if ($value instanceof EloquentCollection) {
+                        $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
+                    }
 
-                        return [$columnKey => $value];
-                    })
-                    ->merge([
-                        'id' => $record->{$resource->primaryKey()},
-                        'title' => $this->makeTitle($record, $resource),
-                    ])
-                    ->toArray()
-                );
+                    return [$columnKey => $value];
+                })
+                ->merge([
+                    'id' => $record->{$resource->primaryKey()},
+                    'title' => $this->makeTitle($record, $resource),
+                ])
+                ->toArray()
+            );
 
-            return $paginator;
+        return $paginator;
     }
 
     // This shows the values in the listing table
