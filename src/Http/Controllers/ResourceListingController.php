@@ -8,7 +8,6 @@ use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
 use Statamic\Query\Scopes\Filters\Concerns\QueriesFilters;
-use Statamic\Query\Scopes\Scope;
 
 class ResourceListingController extends CpController
 {
