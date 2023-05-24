@@ -47,7 +47,7 @@ class ResourceController extends CpController
                 ->filter(fn ($column) => in_array($column->field, collect($columns)->pluck('handle')->toArray()))
                 ->rejectUnlisted()
                 ->values(),
-            'filters' => Scope::filters("runway_{$resourceHandle}"),
+            'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
             'listingConfig' => $listingConfig,
             'actionUrl' => cp_route('runway.actions.run', ['resourceHandle' => $resourceHandle]),
         ]);

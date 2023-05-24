@@ -39,6 +39,10 @@ class ServiceProvider extends AddonServiceProvider
         'cp' => __DIR__.'/../routes/cp.php',
     ];
 
+    protected $scopes = [
+        Query\Scopes\Filters\Fields::class,
+    ];
+
     protected $tags = [
         Tags\RunwayTag::class,
     ];
