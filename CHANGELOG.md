@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v5.0.6 (2023-05-24)
+
+### What's new
+
+* Enabled filters on the Listing Table #276 #278
+
 ## v5.0.5 (2023-05-24)
 
 ### What's improved
