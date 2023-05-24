@@ -35,7 +35,7 @@ class ResourceListingController extends CpController
         $query->with($resource->eagerLoadingRelations()->values()->all());
 
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
-            'collection' => $resourceHandle,
+            'resource' => $resourceHandle,
             'blueprints' => [
                 $blueprint,
             ],
