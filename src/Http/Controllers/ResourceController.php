@@ -9,6 +9,7 @@ use DoubleThreeDigital\Runway\Http\Requests\EditRequest;
 use DoubleThreeDigital\Runway\Http\Requests\IndexRequest;
 use DoubleThreeDigital\Runway\Http\Requests\StoreRequest;
 use DoubleThreeDigital\Runway\Http\Requests\UpdateRequest;
+use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Support\Json;
 use Statamic\CP\Breadcrumbs;
@@ -34,15 +35,11 @@ class ResourceController extends CpController
 
         $columns = $this->buildColumns($resource, $blueprint);
 
-        $preferredFirstColumn = isset(User::current()->preferences()['runway'][$resource->handle()]['columns'])
-            ? User::current()->preferences()['runway'][$resource->handle()]['columns'][0]
-            : $resource->titleField();
-
         return view('runway::index', [
             'title' => $resource->name(),
             'resource' => $resource,
             'recordCount' => $resource->model()->count(),
-            'primaryColumn' => $preferredFirstColumn,
+            'primaryColumn' => $this->getPrimaryColumn($resource),
             'columns' => $resource->blueprint()->columns()
                 ->filter(fn ($column) => in_array($column->field, collect($columns)->pluck('handle')->toArray()))
                 ->rejectUnlisted()
@@ -335,5 +332,21 @@ class ResourceController extends CpController
                 'record' => $record->{$resource->routeKey()},
             ]),
         ]);
+    }
+
+    protected function getPrimaryColumn(Resource $resource): string
+    {
+        if (isset(User::current()->preferences()['runway'][$resource->handle()]['columns'])) {
+            return collect($resource->blueprint()->fields()->all())
+                ->filter(fn ($field) => in_array($field->handle(), User::current()->preferences()['runway'][$resource->handle()]['columns']))
+                ->reject(function ( $field) use ($resource) {
+                    return $field->fieldtype()->indexComponent() === 'relationship'
+                        || $field->fieldtype()->indexComponent() === 'hasmany-related-item';
+                })
+                ->map(fn ($field) => $field->handle())
+                ->first();
+        }
+
+        return $resource->titleField();
     }
 }
