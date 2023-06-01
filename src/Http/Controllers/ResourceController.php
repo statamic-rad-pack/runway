@@ -339,7 +339,7 @@ class ResourceController extends CpController
         if (isset(User::current()->preferences()['runway'][$resource->handle()]['columns'])) {
             return collect($resource->blueprint()->fields()->all())
                 ->filter(fn ($field) => in_array($field->handle(), User::current()->preferences()['runway'][$resource->handle()]['columns']))
-                ->reject(function ( $field) use ($resource) {
+                ->reject(function ($field) {
                     return $field->fieldtype()->indexComponent() === 'relationship'
                         || $field->fieldtype()->indexComponent() === 'hasmany-related-item';
                 })

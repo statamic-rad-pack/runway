@@ -17,7 +17,7 @@ class ResourceShowQuery extends Query
 
     public function type(): Type
     {
-        return GraphQL::type("runway.graphql.types.{$this->resource->handle()}");
+        return GraphQL::type("runway_graphql_types_{$this->resource->handle()}");
     }
 
     public function args(): array
