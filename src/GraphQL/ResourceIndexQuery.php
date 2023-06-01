@@ -22,7 +22,7 @@ class ResourceIndexQuery extends Query
 
     public function type(): Type
     {
-        return GraphQL::paginate(GraphQL::type("runway.graphql.types.{$this->resource->handle()}"));
+        return GraphQL::paginate(GraphQL::type("runway_graphql_types_{$this->resource->handle()}"));
     }
 
     public function args(): array

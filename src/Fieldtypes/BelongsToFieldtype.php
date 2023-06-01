@@ -38,6 +38,6 @@ class BelongsToFieldtype extends BaseFieldtype
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        return GraphQL::type("runway.graphql.types.{$resource->handle()}");
+        return GraphQL::type("runway_graphql_types_{$resource->handle()}");
     }
 }

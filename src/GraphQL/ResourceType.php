@@ -15,7 +15,7 @@ class ResourceType extends Type
 {
     public function __construct(protected Resource $resource)
     {
-        $this->attributes['name'] = "runway.graphql.types.{$this->resource->handle()}";
+        $this->attributes['name'] = "runway_graphql_types_{$this->resource->handle()}";
     }
 
     public function fields(): array
@@ -39,7 +39,7 @@ class ResourceType extends Type
     {
         return function ($model, $args, $context, ResolveInfo $info) {
             if (! $model instanceof Model) {
-                $resource = Runway::findResource(Str::replace('runway.graphql.types.', '', $info->parentType->name));
+                $resource = Runway::findResource(Str::replace('runway_graphql_types_', '', $info->parentType->name));
 
                 $model = $resource->model()->firstWhere($resource->primaryKey(), $model);
             }
