@@ -6,7 +6,7 @@
 
 ### What's fixed
 
-* Fixes GraphQL naming issues #283 by @Buffalom
+* Fixes GraphQL naming issues #279 #283 by @Buffalom
 * Fixed issue where relationship field was being picked up as the first column #280
 
 ## v5.0.6 (2023-05-24)
