@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v5.0.7 (2023-06-01)
+
+### What's fixed
+
+* Fixes GraphQL naming issues #283 by @Buffalom
+* Fixed issue where relationship field was being picked up as the first column #280
+
 ## v5.0.6 (2023-05-24)
 
 ### What's new
