@@ -143,18 +143,18 @@ Using the Runway tag with pagination is a little more complicated but it’s not
 
     {{ posts }}
         <h2>{{ title }}</h2>
-		  <p>{{ intro_text }}</p>
+	<p>{{ intro_text }}</p>
     {{ /posts }}
 
     {{ paginate }}
-        {{ if prev_page_url }}
-            <a href="{{ prev_page_url }}">Previous</a>
+        {{ if prev_page }}
+            <a href="{{ prev_page }}">Previous</a>
         {{ /if }}
 
-        <span>Page {{ current_page }} of {{ last_page }}</span>
+        <span>Page {{ current_page }} of {{ total_pages }}</span>
 
-        {{ if next_page_url }}
-            <a href="{{ next_page_url }}">Previous</a>
+        {{ if next_page }}
+            <a href="{{ next_page }}">Next</a>
         {{ /if }}
     {{ /paginate }}
 {{ /runway:post }}
