@@ -3,7 +3,9 @@
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Actions\DeleteModel;
+use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -14,6 +16,7 @@ use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
 use Statamic\Facades\User;
 use Statamic\Fieldtypes\Relationship;
+use Statamic\Http\Requests\FilteredRequest;
 
 class BaseFieldtype extends Relationship
 {
@@ -302,34 +305,14 @@ class BaseFieldtype extends Relationship
         return Parse::template($titleFormat, $record);
     }
 
-    private function asPaginator($request, $query, $resource)
+    private function asPaginator(FilteredRequest $request, Builder $query, Resource $resource)
     {
-        $paginator = $query
-            ->when($request->search, function ($query) use ($request, $resource) {
-                $searchQuery = $request->search;
-
-                $query->when(
-                    $query->hasNamedScope('runwaySearch'),
-                    function ($query) use ($searchQuery) {
-                        $query->runwaySearch($searchQuery);
-                    },
-                    function ($query) use ($searchQuery, $resource) {
-                        $resource->blueprint()->fields()->items()
-                            ->reject(function (array $field) {
-                                return $field['field']['type'] === 'has_many'
-                                    || $field['field']['type'] === 'hidden';
-                            })
-                            ->each(function (array $field) use ($query, $searchQuery) {
-                                $query->orWhere($field['handle'], 'LIKE', '%'.$searchQuery.'%');
-                            });
-                    }
-                );
-            })
-            ->paginate();
+        $paginator = $this->withSearch($request, $query, $resource)->paginate();
+        $columns = $resource->listableColumns();
 
         $paginator
             ->getCollection()
-            ->transform(fn ($record) => collect($resource->listableColumns())
+            ->transform(fn ($record) => collect($columns)
                 ->mapWithKeys(function ($columnKey) use ($record) {
                     $value = $record->{$columnKey};
 
@@ -343,38 +326,19 @@ class BaseFieldtype extends Relationship
                 ->merge([
                     'id' => $record->{$resource->primaryKey()},
                     'title' => $this->makeTitle($record, $resource),
-                ])
-                ->toArray()
+                ])->toArray()
             );
 
         return $paginator;
     }
 
-    private function asCollection($request, $query, $resource)
+    private function asCollection(FilteredRequest $request, Builder $query, Resource $resource)
     {
-        return $query
-            ->when($request->search, function ($query) use ($request, $resource) {
-                $searchQuery = $request->search;
+        $columns = $resource->listableColumns();
 
-                $query->when(
-                    $query->hasNamedScope('runwaySearch'),
-                    function ($query) use ($searchQuery) {
-                        $query->runwaySearch($searchQuery);
-                    },
-                    function ($query) use ($searchQuery, $resource) {
-                        $resource->blueprint()->fields()->items()
-                            ->reject(function (array $field) {
-                                return $field['field']['type'] === 'has_many'
-                                    || $field['field']['type'] === 'hidden';
-                            })
-                            ->each(function (array $field) use ($query, $searchQuery) {
-                                $query->orWhere($field['handle'], 'LIKE', '%'.$searchQuery.'%');
-                            });
-                    }
-                );
-            })
+        return $this->withSearch($request, $query, $resource)
             ->get()
-            ->map(fn ($record) => collect($resource->listableColumns())
+            ->map(fn ($record) => collect($columns)
                 ->mapWithKeys(function ($columnKey) use ($record) {
                     $value = $record->{$columnKey};
 
@@ -392,5 +356,20 @@ class BaseFieldtype extends Relationship
                 ->toArray())
             ->filter()
             ->values();
+    }
+
+    private function withSearch(FilteredRequest $request, Builder $query, Resource $resource): Builder
+    {
+        return $query
+            ->when($request->search, fn ($query) => $query->when(
+                $query->hasNamedScope('runwaySearch'),
+                fn ($query) => $query->runwaySearch($request->search),
+                fn ($query) => $resource
+                    ->blueprint()
+                    ->fields()
+                    ->items()
+                    ->reject(fn (array $field) => $field['field']['type'] === 'has_many' || $field['field']['type'] === 'hidden')
+                    ->each(fn (array $field) => $query->orWhere($field['handle'], 'LIKE', '%'.$request->search.'%'))
+            ));
     }
 }

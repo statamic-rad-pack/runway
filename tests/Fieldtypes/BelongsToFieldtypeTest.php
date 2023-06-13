@@ -6,9 +6,9 @@ use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Statamic\Fields\Field;
+use Statamic\Http\Requests\FilteredRequest;
 
 class BelongsToFieldtypeTest extends TestCase
 {
@@ -52,9 +52,9 @@ class BelongsToFieldtypeTest extends TestCase
     {
         $authors = $this->authorFactory(10);
 
-        $getIndexItems = $this->stackFieldtype->getIndexItems(new Request());
-        $getIndexItems2 = $this->selectFieldtype->getIndexItems(new Request());
-        $getIndexItems3 = $this->typeaheadFieldtype->getIndexItems(new Request());
+        $getIndexItems = $this->stackFieldtype->getIndexItems(new FilteredRequest());
+        $getIndexItems2 = $this->selectFieldtype->getIndexItems(new FilteredRequest());
+        $getIndexItems3 = $this->typeaheadFieldtype->getIndexItems(new FilteredRequest());
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Paginator);
@@ -83,7 +83,7 @@ class BelongsToFieldtypeTest extends TestCase
             'title_format' => 'AUTHOR {{ name }}',
         ]));
 
-        $getIndexItems = $this->stackFieldtype->getIndexItems(new Request());
+        $getIndexItems = $this->stackFieldtype->getIndexItems(new FilteredRequest());
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Paginator);
@@ -109,7 +109,7 @@ class BelongsToFieldtypeTest extends TestCase
 
         $item = $this->stackFieldtype->getItemData([1]);
 
-        $this->assertSame($item->first()['title'], 'AUTHOR '.$author->name);
+        $this->assertSame('AUTHOR '.$author->name, $item->first()['title']);
     }
 
     /** @test */

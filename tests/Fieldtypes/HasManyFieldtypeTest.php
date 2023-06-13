@@ -6,11 +6,11 @@ use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Blink;
 use Statamic\Fields\Field;
+use Statamic\Http\Requests\FilteredRequest;
 
 class HasManyFieldtypeTest extends TestCase
 {
@@ -72,9 +72,9 @@ class HasManyFieldtypeTest extends TestCase
             $post->update(['author_id' => $author->id]);
         }
 
-        $getIndexItems1 = $this->stackFieldtype->getIndexItems(new Request());
-        $getIndexItems2 = $this->selectFieldtype->getIndexItems(new Request());
-        $getIndexItems3 = $this->typeaheadFieldtype->getIndexItems(new Request());
+        $getIndexItems1 = $this->stackFieldtype->getIndexItems(new FilteredRequest());
+        $getIndexItems2 = $this->selectFieldtype->getIndexItems(new FilteredRequest());
+        $getIndexItems3 = $this->typeaheadFieldtype->getIndexItems(new FilteredRequest());
 
         $this->assertIsObject($getIndexItems1);
         $this->assertTrue($getIndexItems1 instanceof Paginator);
@@ -107,7 +107,7 @@ class HasManyFieldtypeTest extends TestCase
             'title_format' => '{{ title }} TEST {{ created_at format="Y" }}',
         ]));
 
-        $getIndexItems = $this->stackFieldtype->getIndexItems(new Request());
+        $getIndexItems = $this->stackFieldtype->getIndexItems(new FilteredRequest());
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Paginator);
