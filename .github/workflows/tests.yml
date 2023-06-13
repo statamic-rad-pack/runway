@@ -12,10 +12,10 @@ jobs:
 
     strategy:
       matrix:
-        php: [8.2]
-        laravel: [10.*]
+        php: [8.2, 8.1]
+        laravel: [10.*, 9.*]
         statamic: [^4.0]
-        testbench: [8.*]
+        testbench: [8.*, 7.*]
         os: [ubuntu-latest]
 
     name: ${{ matrix.php }} - ${{ matrix.statamic }} - ${{ matrix.laravel }}
