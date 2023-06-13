@@ -96,7 +96,7 @@ class BaseFieldtype extends Relationship
             $query->runwayListing();
         }
 
-        if ($this->config('mode') == 'stack') {
+        if (in_array($this->config('mode'), ['default', 'stack'])) {
             return $this->asPaginator($request, $query, $resource);
         }
 
