@@ -96,50 +96,11 @@ class BaseFieldtype extends Relationship
             $query->runwayListing();
         }
 
-        $paginator = $query
-            ->when($request->search, function ($query) use ($request, $resource) {
-                $searchQuery = $request->search;
+        if ($this->config('mode') == 'stack') {
+            return $this->asPaginator($request, $query, $resource);
+        }
 
-                $query->when(
-                    $query->hasNamedScope('runwaySearch'),
-                    function ($query) use ($searchQuery) {
-                        $query->runwaySearch($searchQuery);
-                    },
-                    function ($query) use ($searchQuery, $resource) {
-                        $resource->blueprint()->fields()->items()
-                            ->reject(function (array $field) {
-                                return $field['field']['type'] === 'has_many'
-                                    || $field['field']['type'] === 'hidden';
-                            })
-                            ->each(function (array $field) use ($query, $searchQuery) {
-                                $query->orWhere($field['handle'], 'LIKE', '%'.$searchQuery.'%');
-                            });
-                    }
-                );
-            })
-            ->paginate();
-
-        $paginator
-            ->getCollection()
-            ->transform(fn ($record) => collect($resource->listableColumns())
-                ->mapWithKeys(function ($columnKey) use ($record) {
-                    $value = $record->{$columnKey};
-
-                    // When $value is an Eloquent Collection, we want to map over each item & process its values.
-                    if ($value instanceof EloquentCollection) {
-                        $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
-                    }
-
-                    return [$columnKey => $value];
-                })
-                ->merge([
-                    'id' => $record->{$resource->primaryKey()},
-                    'title' => $this->makeTitle($record, $resource),
-                ])
-                ->toArray()
-            );
-
-        return $paginator;
+        return $this->asCollection($request, $query, $resource);
     }
 
     // This shows the values in the listing table
@@ -339,5 +300,97 @@ class BaseFieldtype extends Relationship
         }
 
         return Parse::template($titleFormat, $record);
+    }
+
+    private function asPaginator($request, $query, $resource)
+    {
+        $paginator = $query
+            ->when($request->search, function ($query) use ($request, $resource) {
+                $searchQuery = $request->search;
+
+                $query->when(
+                    $query->hasNamedScope('runwaySearch'),
+                    function ($query) use ($searchQuery) {
+                        $query->runwaySearch($searchQuery);
+                    },
+                    function ($query) use ($searchQuery, $resource) {
+                        $resource->blueprint()->fields()->items()
+                            ->reject(function (array $field) {
+                                return $field['field']['type'] === 'has_many'
+                                    || $field['field']['type'] === 'hidden';
+                            })
+                            ->each(function (array $field) use ($query, $searchQuery) {
+                                $query->orWhere($field['handle'], 'LIKE', '%'.$searchQuery.'%');
+                            });
+                    }
+                );
+            })
+            ->paginate();
+
+        $paginator
+            ->getCollection()
+            ->transform(fn ($record) => collect($resource->listableColumns())
+                ->mapWithKeys(function ($columnKey) use ($record) {
+                    $value = $record->{$columnKey};
+
+                    // When $value is an Eloquent Collection, we want to map over each item & process its values.
+                    if ($value instanceof EloquentCollection) {
+                        $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
+                    }
+
+                    return [$columnKey => $value];
+                })
+                ->merge([
+                    'id' => $record->{$resource->primaryKey()},
+                    'title' => $this->makeTitle($record, $resource),
+                ])
+                ->toArray()
+            );
+
+        return $paginator;
+    }
+
+    private function asCollection($request, $query, $resource)
+    {
+        return $query
+            ->when($request->search, function ($query) use ($request, $resource) {
+                $searchQuery = $request->search;
+
+                $query->when(
+                    $query->hasNamedScope('runwaySearch'),
+                    function ($query) use ($searchQuery) {
+                        $query->runwaySearch($searchQuery);
+                    },
+                    function ($query) use ($searchQuery, $resource) {
+                        $resource->blueprint()->fields()->items()
+                            ->reject(function (array $field) {
+                                return $field['field']['type'] === 'has_many'
+                                    || $field['field']['type'] === 'hidden';
+                            })
+                            ->each(function (array $field) use ($query, $searchQuery) {
+                                $query->orWhere($field['handle'], 'LIKE', '%'.$searchQuery.'%');
+                            });
+                    }
+                );
+            })
+            ->get()
+            ->map(fn ($record) => collect($resource->listableColumns())
+                ->mapWithKeys(function ($columnKey) use ($record) {
+                    $value = $record->{$columnKey};
+
+                    // When $value is an Eloquent Collection, we want to map over each item & process its values.
+                    if ($value instanceof EloquentCollection) {
+                        $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
+                    }
+
+                    return [$columnKey => $value];
+                })
+                ->merge([
+                    'id' => $record->{$resource->primaryKey()},
+                    'title' => $this->makeTitle($record, $resource),
+                ])
+                ->toArray())
+            ->filter()
+            ->values();
     }
 }
