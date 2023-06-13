@@ -6,7 +6,7 @@ use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Blink;
@@ -21,8 +21,6 @@ class HasManyFieldtypeTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->fieldtype = new HasManyFieldtype();
 
         Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.sections.main.fields', [
             [
@@ -41,7 +39,8 @@ class HasManyFieldtypeTest extends TestCase
             ],
         ]);
 
-        $this->fieldtype->setField(new Field('posts', [
+        $this->fieldtype = tap(new HasManyFieldtype())
+            ->setField(new Field('posts', [
             'mode' => 'default',
             'resource' => 'post',
             'display' => 'Posts',
@@ -59,7 +58,7 @@ class HasManyFieldtypeTest extends TestCase
             $post->update(['author_id' => $author->id]);
         }
 
-        $getIndexItems = $this->fieldtype->getIndexItems(new HttpRequest());
+        $getIndexItems = $this->fieldtype->getIndexItems(new Request());
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Paginator);
@@ -84,7 +83,7 @@ class HasManyFieldtypeTest extends TestCase
             'title_format' => '{{ title }} TEST {{ created_at format="Y" }}',
         ]));
 
-        $getIndexItems = $this->fieldtype->getIndexItems(new HttpRequest());
+        $getIndexItems = $this->fieldtype->getIndexItems(new Request());
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Paginator);
