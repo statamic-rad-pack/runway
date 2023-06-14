@@ -7,6 +7,8 @@ use Statamic\Query\Scopes\Filters\Fields as BaseFieldsFilter;
 
 class Fields extends BaseFieldsFilter
 {
+    protected static $handle = 'runway-fields';
+
     public function visibleTo($key)
     {
         return $key === 'runway';

@@ -8,7 +8,9 @@
         "@shopify/draggable": "^1.0.0-beta.8",
         "axios": "^0.21.1",
         "cross-env": "^7.0.2",
+        "marked": "^5.1.0",
         "qs": "^6.11.0",
+        "underscore": "^1.13.6",
         "uniqid": "^5.2.0",
         "vue": "^2.6.11"
     },
