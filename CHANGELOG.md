@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## v5.0.8 (2023-06-14)
+
+### What's new
+
+* PHP 8.1 is now supported again! #293
+
+### What's improved
+
+* Documentation: Updated pagination templating example #284 by @conradfuhrman
+
 ## v5.0.7 (2023-06-01)
 
 ### What's fixed
