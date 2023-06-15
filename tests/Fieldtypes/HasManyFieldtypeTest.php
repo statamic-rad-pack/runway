@@ -47,25 +47,9 @@ class HasManyFieldtypeTest extends TestCase
             ],
         ]);
 
-        $this->stackFieldtype = tap(new HasManyFieldtype())
+        $this->fieldtype = tap(new HasManyFieldtype())
             ->setField(new Field('posts', [
                 'mode' => 'stack',
-                'resource' => 'post',
-                'display' => 'Posts',
-                'type' => 'has_many',
-            ]));
-
-        $this->selectFieldtype = tap(new HasManyFieldtype())
-            ->setField(new Field('posts', [
-                'mode' => 'select',
-                'resource' => 'post',
-                'display' => 'Posts',
-                'type' => 'has_many',
-            ]));
-
-        $this->typeaheadFieldtype = tap(new HasManyFieldtype())
-            ->setField(new Field('posts', [
-                'mode' => 'typeahead',
                 'resource' => 'post',
                 'display' => 'Posts',
                 'type' => 'has_many',
@@ -90,29 +74,21 @@ class HasManyFieldtypeTest extends TestCase
             $post->update(['author_id' => $author->id]);
         }
 
-        $getIndexItems1 = $this->stackFieldtype->getIndexItems(
+        $getIndexItemsWithPagination = $this->fieldtype->getIndexItems(
             new FilteredRequest(['paginate' => true])
         );
 
-        $getIndexItems2 = $this->selectFieldtype->getIndexItems(
+        $getIndexItemsWithoutPagination = $this->fieldtype->getIndexItems(
             new FilteredRequest(['paginate' => false])
         );
 
-        $getIndexItems3 = $this->typeaheadFieldtype->getIndexItems(
-            new FilteredRequest(['paginate' => false])
-        );
+        $this->assertIsObject($getIndexItemsWithPagination);
+        $this->assertTrue($getIndexItemsWithPagination instanceof Paginator);
+        $this->assertSame($getIndexItemsWithPagination->count(), 10);
 
-        $this->assertIsObject($getIndexItems1);
-        $this->assertTrue($getIndexItems1 instanceof Paginator);
-        $this->assertSame($getIndexItems1->count(), 10);
-
-        $this->assertIsObject($getIndexItems2);
-        $this->assertTrue($getIndexItems2 instanceof Collection);
-        $this->assertSame($getIndexItems2->count(), 10);
-
-        $this->assertIsObject($getIndexItems3);
-        $this->assertTrue($getIndexItems3 instanceof Collection);
-        $this->assertSame($getIndexItems3->count(), 10);
+        $this->assertIsObject($getIndexItemsWithoutPagination);
+        $this->assertTrue($getIndexItemsWithoutPagination instanceof Collection);
+        $this->assertSame($getIndexItemsWithoutPagination->count(), 10);
     }
 
     /** @test */
@@ -125,7 +101,7 @@ class HasManyFieldtypeTest extends TestCase
             $post->update(['author_id' => $author->id]);
         }
 
-        $this->stackFieldtype->setField(new Field('posts', [
+        $this->fieldtype->setField(new Field('posts', [
             'mode' => 'default',
             'resource' => 'post',
             'display' => 'Posts',
@@ -133,7 +109,7 @@ class HasManyFieldtypeTest extends TestCase
             'title_format' => '{{ title }} TEST {{ created_at format="Y" }}',
         ]));
 
-        $getIndexItems = $this->stackFieldtype->getIndexItems(new FilteredRequest());
+        $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest());
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Paginator);
@@ -153,7 +129,7 @@ class HasManyFieldtypeTest extends TestCase
             $post->update(['author_id' => $author->id]);
         }
 
-        $this->stackFieldtype->setField(new Field('posts', [
+        $this->fieldtype->setField(new Field('posts', [
             'mode' => 'default',
             'resource' => 'post',
             'display' => 'Posts',
@@ -161,7 +137,7 @@ class HasManyFieldtypeTest extends TestCase
             'title_format' => '{{ title }} TEST {{ created_at format="Y" }}',
         ]));
 
-        $item = $this->stackFieldtype->getItemData([$posts[0]->id, $posts[1]->id]);
+        $item = $this->fieldtype->getItemData([$posts[0]->id, $posts[1]->id]);
 
         $this->assertSame($item->first()['title'], $posts[0]->title.' TEST '.now()->format('Y'));
         $this->assertSame($item->last()['title'], $posts[1]->title.' TEST '.now()->format('Y'));
@@ -177,7 +153,7 @@ class HasManyFieldtypeTest extends TestCase
             $post->update(['author_id' => $author->id]);
         }
 
-        $preProcessIndex = $this->stackFieldtype->preProcessIndex($author->posts);
+        $preProcessIndex = $this->fieldtype->preProcessIndex($author->posts);
 
         $this->assertTrue($preProcessIndex instanceof Collection);
 
@@ -199,7 +175,7 @@ class HasManyFieldtypeTest extends TestCase
         Blink::put('RunwayRouteResource', 'author');
         Blink::put('RunwayRouteRecord', $author->id);
 
-        $this->stackFieldtype->process(collect($posts)->pluck('id')->toArray());
+        $this->fieldtype->process(collect($posts)->pluck('id')->toArray());
 
         // Ensure the author is attached to all 10 posts
         $this->assertSame($posts[0]->fresh()->author_id, $author->id);
@@ -254,7 +230,7 @@ class HasManyFieldtypeTest extends TestCase
         $posts = $this->postFactory(3);
         $author = $this->authorFactory();
 
-        $this->stackFieldtype->field()->setConfig(array_merge($this->stackFieldtype->field()->config(), [
+        $this->fieldtype->field()->setConfig(array_merge($this->fieldtype->field()->config(), [
             'reorderable' => true,
             'order_column' => 'sort_order',
         ]));
@@ -264,7 +240,7 @@ class HasManyFieldtypeTest extends TestCase
         Blink::put('RunwayRouteResource', 'author');
         Blink::put('RunwayRouteRecord', $author->id);
 
-        $this->stackFieldtype->process([
+        $this->fieldtype->process([
             $posts[1]->id,
             $posts[2]->id,
             $posts[0]->id,
@@ -347,7 +323,7 @@ class HasManyFieldtypeTest extends TestCase
             $post->update(['author_id' => $author->id]);
         }
 
-        $augment = $this->stackFieldtype->augment(
+        $augment = $this->fieldtype->augment(
             $author->posts
         );
 
@@ -372,7 +348,7 @@ class HasManyFieldtypeTest extends TestCase
             $post->update(['author_id' => $author->id]);
         }
 
-        $getItemData = $this->stackFieldtype->getItemData(
+        $getItemData = $this->fieldtype->getItemData(
             $author->posts
         );
 
