@@ -123,10 +123,36 @@ class BaseFieldtype extends Relationship
             });
 
         if (in_array($this->config('mode'), ['default', 'stack'])) {
-            return $this->asPaginator($request, $query, $resource);
+            $paginator = $query->paginate();
+        } else {
+            $collection = $query->get();
         }
 
-        return $this->asCollection($request, $query, $resource);
+        ($paginator?->getCollection() ?? $collection)
+            ->transform(function ($record) use ($resource) {
+                return collect($resource->listableColumns())
+                    ->mapWithKeys(function ($columnKey) use ($record) {
+                        $value = $record->{$columnKey};
+
+                        // When $value is an Eloquent Collection, we want to map over each item & process its values.
+                        if ($value instanceof EloquentCollection) {
+                            $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
+                        }
+
+                        return [$columnKey => $value];
+                    })
+                    ->merge([
+                        'id' => $record->{$resource->primaryKey()},
+                        'title' => $this->makeTitle($record, $resource),
+                    ])
+                    ->toArray();
+            });
+
+        if (in_array($this->config('mode'), ['default', 'stack'])) {
+            return $paginator;
+        }
+
+        return $collection->filter()->values();
     }
 
     // This shows the values in the listing table
@@ -326,58 +352,5 @@ class BaseFieldtype extends Relationship
         }
 
         return Parse::template($titleFormat, $record);
-    }
-
-    private function asPaginator(FilteredRequest $request, Builder $query, Resource $resource)
-    {
-        $paginator = $query->paginate();
-        $columns = $resource->listableColumns();
-
-        $paginator
-            ->getCollection()
-            ->transform(fn ($record) => collect($columns)
-                ->mapWithKeys(function ($columnKey) use ($record) {
-                    $value = $record->{$columnKey};
-
-                    // When $value is an Eloquent Collection, we want to map over each item & process its values.
-                    if ($value instanceof EloquentCollection) {
-                        $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
-                    }
-
-                    return [$columnKey => $value];
-                })
-                ->merge([
-                    'id' => $record->{$resource->primaryKey()},
-                    'title' => $this->makeTitle($record, $resource),
-                ])->toArray()
-            );
-
-        return $paginator;
-    }
-
-    private function asCollection(FilteredRequest $request, Builder $query, Resource $resource)
-    {
-        $columns = $resource->listableColumns();
-
-        return $query
-            ->get()
-            ->map(fn ($record) => collect($columns)
-                ->mapWithKeys(function ($columnKey) use ($record) {
-                    $value = $record->{$columnKey};
-
-                    // When $value is an Eloquent Collection, we want to map over each item & process its values.
-                    if ($value instanceof EloquentCollection) {
-                        $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
-                    }
-
-                    return [$columnKey => $value];
-                })
-                ->merge([
-                    'id' => $record->{$resource->primaryKey()},
-                    'title' => $this->makeTitle($record, $resource),
-                ])
-                ->toArray())
-            ->filter()
-            ->values();
     }
 }
