@@ -321,19 +321,19 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertDatabaseHas('post_author', [
             'post_id' => $posts[1]->id,
             'author_id' => $author->id,
-            'pivot_sort_order' => 1,
+            'pivot_sort_order' => 0,
         ]);
 
         $this->assertDatabaseHas('post_author', [
             'post_id' => $posts[2]->id,
             'author_id' => $author->id,
-            'pivot_sort_order' => 2,
+            'pivot_sort_order' => 1,
         ]);
 
         $this->assertDatabaseHas('post_author', [
             'post_id' => $posts[0]->id,
             'author_id' => $author->id,
-            'pivot_sort_order' => 3,
+            'pivot_sort_order' => 2,
         ]);
     }
 
