@@ -6,25 +6,41 @@ use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Statamic\Fields\Field;
+use Statamic\Http\Requests\FilteredRequest;
 
 class BelongsToFieldtypeTest extends TestCase
 {
     use WithFaker;
 
-    protected BelongsToFieldtype $fieldtype;
+    protected BelongsToFieldtype $stackFieldtype;
+
+    protected BelongsToFieldtype $selectFieldtype;
+
+    protected BelongsToFieldtype $typeaheadFieldtype;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->fieldtype = new BelongsToFieldtype();
-
-        $this->fieldtype->setField(new Field('author', [
+        $this->stackFieldtype = tap(new BelongsToFieldtype())->setField(new Field('author', [
             'max_items' => 1,
             'mode' => 'default',
+            'resource' => 'author',
+            'display' => 'Author',
+            'type' => 'belongs_to',
+        ]));
+        $this->selectFieldtype = tap(new BelongsToFieldtype())->setField(new Field('author', [
+            'max_items' => 1,
+            'mode' => 'select',
+            'resource' => 'author',
+            'display' => 'Author',
+            'type' => 'belongs_to',
+        ]));
+        $this->typeaheadFieldtype = tap(new BelongsToFieldtype())->setField(new Field('author', [
+            'max_items' => 1,
+            'mode' => 'typeahead',
             'resource' => 'author',
             'display' => 'Author',
             'type' => 'belongs_to',
@@ -36,11 +52,29 @@ class BelongsToFieldtypeTest extends TestCase
     {
         $authors = $this->authorFactory(10);
 
-        $getIndexItems = $this->fieldtype->getIndexItems(new Request());
+        $getIndexItems = $this->stackFieldtype->getIndexItems(
+            new FilteredRequest(['paginate' => true])
+        );
+
+        $getIndexItems2 = $this->selectFieldtype->getIndexItems(
+            new FilteredRequest(['paginate' => false])
+        );
+
+        $getIndexItems3 = $this->typeaheadFieldtype->getIndexItems(
+            new FilteredRequest(['paginate' => false])
+        );
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Paginator);
         $this->assertSame($getIndexItems->count(), 10);
+
+        $this->assertIsObject($getIndexItems2);
+        $this->assertTrue($getIndexItems2 instanceof Collection);
+        $this->assertSame($getIndexItems2->count(), 10);
+
+        $this->assertIsObject($getIndexItems3);
+        $this->assertTrue($getIndexItems3 instanceof Collection);
+        $this->assertSame($getIndexItems3->count(), 10);
     }
 
     /** @test */
@@ -48,7 +82,7 @@ class BelongsToFieldtypeTest extends TestCase
     {
         $authors = $this->authorFactory(2);
 
-        $this->fieldtype->setField(new Field('author', [
+        $this->stackFieldtype->setField(new Field('author', [
             'max_items' => 1,
             'mode' => 'default',
             'resource' => 'author',
@@ -57,7 +91,7 @@ class BelongsToFieldtypeTest extends TestCase
             'title_format' => 'AUTHOR {{ name }}',
         ]));
 
-        $getIndexItems = $this->fieldtype->getIndexItems(new Request());
+        $getIndexItems = $this->stackFieldtype->getIndexItems(new FilteredRequest());
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Paginator);
@@ -72,7 +106,7 @@ class BelongsToFieldtypeTest extends TestCase
     {
         $author = $this->authorFactory();
 
-        $this->fieldtype->setField(new Field('author', [
+        $this->stackFieldtype->setField(new Field('author', [
             'max_items' => 1,
             'mode' => 'default',
             'resource' => 'author',
@@ -81,9 +115,9 @@ class BelongsToFieldtypeTest extends TestCase
             'title_format' => 'AUTHOR {{ name }}',
         ]));
 
-        $item = $this->fieldtype->getItemData([1]);
+        $item = $this->stackFieldtype->getItemData([1]);
 
-        $this->assertSame($item->first()['title'], 'AUTHOR '.$author->name);
+        $this->assertSame('AUTHOR '.$author->name, $item->first()['title']);
     }
 
     /** @test */
@@ -91,7 +125,7 @@ class BelongsToFieldtypeTest extends TestCase
     {
         $author = $this->authorFactory();
 
-        $preProcessIndex = $this->fieldtype->preProcessIndex($author->id);
+        $preProcessIndex = $this->stackFieldtype->preProcessIndex($author->id);
 
         $this->assertTrue($preProcessIndex instanceof Collection);
 
@@ -107,7 +141,7 @@ class BelongsToFieldtypeTest extends TestCase
     {
         $authors = $this->authorFactory(5);
 
-        $augment = $this->fieldtype->augment(
+        $augment = $this->stackFieldtype->augment(
             collect($authors)->pluck('id')->toArray()
         );
 
@@ -127,7 +161,7 @@ class BelongsToFieldtypeTest extends TestCase
     {
         $authors = $this->authorFactory(2);
 
-        $getItemData = $this->fieldtype->getItemData(
+        $getItemData = $this->stackFieldtype->getItemData(
             collect($authors)->pluck('id')->toArray()
         );
 

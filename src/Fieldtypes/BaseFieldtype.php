@@ -3,7 +3,9 @@
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Actions\DeleteModel;
+use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -14,6 +16,7 @@ use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
 use Statamic\Facades\User;
 use Statamic\Fieldtypes\Relationship;
+use Statamic\Http\Requests\FilteredRequest;
 
 class BaseFieldtype extends Relationship
 {
@@ -96,17 +99,18 @@ class BaseFieldtype extends Relationship
             $query->runwayListing();
         }
 
-        $paginator = $query
+        $query = $query
             ->when($request->search, function ($query) use ($request, $resource) {
                 $searchQuery = $request->search;
 
                 $query->when(
                     $query->hasNamedScope('runwaySearch'),
-                    function ($query) use ($searchQuery) {
-                        $query->runwaySearch($searchQuery);
-                    },
+                    fn ($query) => $query->runwaySearch($searchQuery),
                     function ($query) use ($searchQuery, $resource) {
-                        $resource->blueprint()->fields()->items()
+                        $resource
+                            ->blueprint()
+                            ->fields()
+                            ->items()
                             ->reject(function (array $field) {
                                 return $field['field']['type'] === 'has_many'
                                     || $field['field']['type'] === 'hidden';
@@ -116,30 +120,35 @@ class BaseFieldtype extends Relationship
                             });
                     }
                 );
-            })
-            ->paginate();
+            });
 
-        $paginator
-            ->getCollection()
-            ->transform(fn ($record) => collect($resource->listableColumns())
-                ->mapWithKeys(function ($columnKey) use ($record) {
-                    $value = $record->{$columnKey};
+        $items = $request->boolean('paginate', true)
+            ? $query->paginate()
+            : $query->get();
 
-                    // When $value is an Eloquent Collection, we want to map over each item & process its values.
-                    if ($value instanceof EloquentCollection) {
-                        $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
-                    }
+        $items
+            ->transform(function ($record) use ($resource) {
+                return collect($resource->listableColumns())
+                    ->mapWithKeys(function ($columnKey) use ($record) {
+                        $value = $record->{$columnKey};
 
-                    return [$columnKey => $value];
-                })
-                ->merge([
-                    'id' => $record->{$resource->primaryKey()},
-                    'title' => $this->makeTitle($record, $resource),
-                ])
-                ->toArray()
-            );
+                        // When $value is an Eloquent Collection, we want to map over each item & process its values.
+                        if ($value instanceof EloquentCollection) {
+                            $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
+                        }
 
-        return $paginator;
+                        return [$columnKey => $value];
+                    })
+                    ->merge([
+                        'id' => $record->{$resource->primaryKey()},
+                        'title' => $this->makeTitle($record, $resource),
+                    ])
+                    ->toArray();
+            });
+
+        return $request->boolean('paginate', true)
+            ? $items
+            : $items->filter()->values();
     }
 
     // This shows the values in the listing table
@@ -328,7 +337,7 @@ class BaseFieldtype extends Relationship
                 ]),
             ],
         ];
-    }
+}
 
     protected function makeTitle($record, $resource): string
     {
