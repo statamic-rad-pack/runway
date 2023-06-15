@@ -18,6 +18,8 @@ class HasManyFieldtypeTest extends TestCase
 
     protected HasManyFieldtype $fieldtype;
 
+    protected HasManyFieldtype $fieldtypeUsingPivotTable;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -55,7 +57,7 @@ class HasManyFieldtypeTest extends TestCase
                 'type' => 'has_many',
             ]));
 
-        $this->pivottedPostsStackFieldtype = tap(new HasManyFieldtype())
+        $this->fieldtypeUsingPivotTable = tap(new HasManyFieldtype())
             ->setField(new Field('pivottedPosts', [
                 'mode' => 'stack',
                 'resource' => 'post',
@@ -201,7 +203,7 @@ class HasManyFieldtypeTest extends TestCase
         Blink::put('RunwayRouteResource', 'author');
         Blink::put('RunwayRouteRecord', $author->id);
 
-        $this->pivottedPostsStackFieldtype->process([
+        $this->fieldtypeUsingPivotTable->process([
             $posts[0]->id,
             $posts[1]->id,
             $posts[2]->id,
@@ -277,7 +279,7 @@ class HasManyFieldtypeTest extends TestCase
         $posts = $this->postFactory(3);
         $author = $this->authorFactory();
 
-        $this->pivottedPostsStackFieldtype->field()->setConfig(array_merge($this->pivottedPostsStackFieldtype->field()->config(), [
+        $this->fieldtypeUsingPivotTable->field()->setConfig(array_merge($this->fieldtypeUsingPivotTable->field()->config(), [
             'reorderable' => true,
             'order_column' => 'pivot_sort_order',
         ]));
@@ -287,7 +289,7 @@ class HasManyFieldtypeTest extends TestCase
         Blink::put('RunwayRouteResource', 'author');
         Blink::put('RunwayRouteRecord', $author->id);
 
-        $this->pivottedPostsStackFieldtype->process([
+        $this->fieldtypeUsingPivotTable->process([
             $posts[1]->id,
             $posts[2]->id,
             $posts[0]->id,
