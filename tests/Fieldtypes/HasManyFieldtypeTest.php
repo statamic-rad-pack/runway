@@ -196,49 +196,49 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertSame($posts[9]->fresh()->author_id, $author->id);
     }
 
-        /** @test */
-        public function can_process_and_add_relations_to_model_and_can_persist_users_sort_order()
-        {
-            $posts = $this->postFactory(3);
-            $author = $this->authorFactory();
+    /** @test */
+    public function can_process_and_add_relations_to_model_and_can_persist_users_sort_order()
+    {
+        $posts = $this->postFactory(3);
+        $author = $this->authorFactory();
 
-            $this->stackFieldtype->field()->setConfig(array_merge($this->stackFieldtype->field()->config(), [
-                'reorderable' => true,
-                'order_column' => 'sort_order',
-            ]));
+        $this->stackFieldtype->field()->setConfig(array_merge($this->stackFieldtype->field()->config(), [
+            'reorderable' => true,
+            'order_column' => 'sort_order',
+        ]));
 
-            // Usually these bits would be fetched from the request. However, as we can't mock
-            // the request, we're using Blink.
-            Blink::put('RunwayRouteResource', 'author');
-            Blink::put('RunwayRouteRecord', $author->id);
+        // Usually these bits would be fetched from the request. However, as we can't mock
+        // the request, we're using Blink.
+        Blink::put('RunwayRouteResource', 'author');
+        Blink::put('RunwayRouteRecord', $author->id);
 
-            $this->stackFieldtype->process([
-                $posts[1]->id,
-                $posts[2]->id,
-                $posts[0]->id,
-            ]);
+        $this->stackFieldtype->process([
+            $posts[1]->id,
+            $posts[2]->id,
+            $posts[0]->id,
+        ]);
 
-            // Ensure the author is attached to all 3 posts
-            $this->assertSame($posts[0]->fresh()->author_id, $author->id);
-            $this->assertSame($posts[1]->fresh()->author_id, $author->id);
-            $this->assertSame($posts[2]->fresh()->author_id, $author->id);
+        // Ensure the author is attached to all 3 posts
+        $this->assertSame($posts[0]->fresh()->author_id, $author->id);
+        $this->assertSame($posts[1]->fresh()->author_id, $author->id);
+        $this->assertSame($posts[2]->fresh()->author_id, $author->id);
 
-            // Ensure the sort_order is persisted correctly for all 3 posts
-            $this->assertDatabaseHas('posts', [
-                'id' => $posts[0]->id,
-                'sort_order' => 2,
-            ]);
+        // Ensure the sort_order is persisted correctly for all 3 posts
+        $this->assertDatabaseHas('posts', [
+            'id' => $posts[0]->id,
+            'sort_order' => 2,
+        ]);
 
-            $this->assertDatabaseHas('posts', [
-                'id' => $posts[1]->id,
-                'sort_order' => 0,
-            ]);
+        $this->assertDatabaseHas('posts', [
+            'id' => $posts[1]->id,
+            'sort_order' => 0,
+        ]);
 
-            $this->assertDatabaseHas('posts', [
-                'id' => $posts[2]->id,
-                'sort_order' => 1,
-            ]);
-        }
+        $this->assertDatabaseHas('posts', [
+            'id' => $posts[2]->id,
+            'sort_order' => 1,
+        ]);
+    }
 
     /** @test */
     public function can_get_augment_value()
