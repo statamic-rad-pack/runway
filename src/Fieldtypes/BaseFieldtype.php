@@ -122,13 +122,11 @@ class BaseFieldtype extends Relationship
                 );
             });
 
-        if (in_array($this->config('mode'), ['default', 'stack'])) {
-            $paginator = $query->paginate();
-        } else {
-            $collection = $query->get();
-        }
+        $items = in_array($this->config('mode'), ['default', 'stack'])
+            ? $query->paginate()
+            : $query->get();
 
-        ($paginator?->getCollection() ?? $collection)
+        $items
             ->transform(function ($record) use ($resource) {
                 return collect($resource->listableColumns())
                     ->mapWithKeys(function ($columnKey) use ($record) {
@@ -148,11 +146,9 @@ class BaseFieldtype extends Relationship
                     ->toArray();
             });
 
-        if (in_array($this->config('mode'), ['default', 'stack'])) {
-            return $paginator;
-        }
-
-        return $collection->filter()->values();
+        return in_array($this->config('mode'), ['default', 'stack'])
+            ? $items
+            : $items->filter()->values();
     }
 
     // This shows the values in the listing table
