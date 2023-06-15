@@ -2,8 +2,11 @@ name: Code Style
 
 on:
   push:
-    paths:
-      - "**.php"
+    branches:
+      - "5.x"
+  pull_request:
+    branches:
+      - "*"
 
 permissions:
   contents: write
