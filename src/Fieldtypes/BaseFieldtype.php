@@ -3,9 +3,7 @@
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Actions\DeleteModel;
-use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -16,7 +14,6 @@ use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
 use Statamic\Facades\User;
 use Statamic\Fieldtypes\Relationship;
-use Statamic\Http\Requests\FilteredRequest;
 
 class BaseFieldtype extends Relationship
 {
@@ -337,7 +334,7 @@ class BaseFieldtype extends Relationship
                 ]),
             ],
         ];
-}
+    }
 
     protected function makeTitle($record, $resource): string
     {
