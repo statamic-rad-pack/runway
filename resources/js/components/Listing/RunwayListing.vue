@@ -182,9 +182,14 @@
 
 <script>
 import Listing from '../../../../vendor/statamic/cms/resources/js/components/Listing.vue'
+import DataListFilters from './DataListFilters.vue'
 
 export default {
     mixins: [Listing],
+
+    components: {
+        DataListFilters,
+    },
 
     props: {
         listingConfig: Object,
