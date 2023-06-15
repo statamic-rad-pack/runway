@@ -100,16 +100,27 @@ class BaseFieldtype extends Relationship
         }
 
         $query = $query
-            ->when($request->search, fn ($query) => $query->when(
-                $query->hasNamedScope('runwaySearch'),
-                fn ($query) => $query->runwaySearch($request->search),
-                fn ($query) => $resource
-                    ->blueprint()
-                    ->fields()
-                    ->items()
-                    ->reject(fn (array $field) => $field['field']['type'] === 'has_many' || $field['field']['type'] === 'hidden')
-                    ->each(fn (array $field) => $query->orWhere($field['handle'], 'LIKE', '%'.$request->search.'%'))
-            ));
+            ->when($request->search, function ($query) use ($request, $resource) {
+                $searchQuery = $request->search;
+
+                $query->when(
+                    $query->hasNamedScope('runwaySearch'),
+                    fn ($query) => $query->runwaySearch($searchQuery),
+                    function ($query) use ($searchQuery, $resource) {
+                        $resource
+                            ->blueprint()
+                            ->fields()
+                            ->items()
+                            ->reject(function (array $field) {
+                                return $field['field']['type'] === 'has_many'
+                                    || $field['field']['type'] === 'hidden';
+                            })
+                            ->each(function (array $field) use ($query, $searchQuery) {
+                                $query->orWhere($field['handle'], 'LIKE', '%'.$searchQuery.'%');
+                            });
+                    }
+                );
+            });
 
         if (in_array($this->config('mode'), ['default', 'stack'])) {
             return $this->asPaginator($request, $query, $resource);
