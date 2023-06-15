@@ -285,4 +285,9 @@ class Author extends Model
     {
         return $this->hasMany(Post::class);
     }
+
+    public function pivottedPosts()
+    {
+        return $this->belongsToMany(Post::class, 'post_author');
+    }
 }

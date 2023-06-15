@@ -32,6 +32,7 @@ Also when configuring the fieldtype, you should choose the resource you wish to 
 
 -   **Eager Loading:** Using the `with` configuration option, you may specify any relationships you want to be eager loaded when the fieldtype is augmented.
 -   **Title Format:** Using the `title_format` configuration option, you may specify a title format to be used when viewing related results in the CP. You should use Antlers in this setting. (eg. `{{ first_name }} {{ last_name }}`)
+* **Reorderable** & **Order Column:** If you want to persist the ordering models, you may enable `reorderable` and specify the column used for storing the sort order (`order_column`).
 
 ### Table Mode
 

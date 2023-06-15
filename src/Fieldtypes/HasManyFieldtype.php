@@ -125,6 +125,16 @@ class HasManyFieldtype extends BaseFieldtype
 
         // Many to many relation
         if ($relatedField instanceof BelongsToMany) {
+            // When Reordering is enabled, we need to change the format of the $data array. The key should
+            // be the foriegn key and the value should be pivot data (our sort order).
+            if ($this->config('reorderable') && $orderColumn = $this->config('order_column')) {
+                $data = collect($data)
+                    ->mapWithKeys(function ($relatedId, $index) use ($orderColumn) {
+                        return [$relatedId => [$orderColumn => $index]];
+                    })
+                    ->toArray();
+            }
+
             $record->{$this->field()->handle()}()->sync($data);
 
             return null;
@@ -156,7 +166,6 @@ class HasManyFieldtype extends BaseFieldtype
             collect($data)
                 ->each(function ($relatedId, $index) use ($relatedResource, $orderColumn) {
                     $model = $relatedResource->model()->find($relatedId);
-
                     if ($model->{$orderColumn} === $index) {
                         return;
                     }
