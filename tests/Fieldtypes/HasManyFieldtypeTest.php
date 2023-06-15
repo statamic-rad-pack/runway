@@ -37,6 +37,14 @@ class HasManyFieldtypeTest extends TestCase
                     'mode' => 'select',
                 ],
             ],
+            [
+                'handle' => 'pivottedPosts',
+                'field' => [
+                    'type' => 'has_many',
+                    'resource' => 'post',
+                    'mode' => 'select',
+                ],
+            ],
         ]);
 
         $this->stackFieldtype = tap(new HasManyFieldtype())
@@ -46,6 +54,7 @@ class HasManyFieldtypeTest extends TestCase
                 'display' => 'Posts',
                 'type' => 'has_many',
             ]));
+
         $this->selectFieldtype = tap(new HasManyFieldtype())
             ->setField(new Field('posts', [
                 'mode' => 'select',
@@ -53,11 +62,20 @@ class HasManyFieldtypeTest extends TestCase
                 'display' => 'Posts',
                 'type' => 'has_many',
             ]));
+
         $this->typeaheadFieldtype = tap(new HasManyFieldtype())
             ->setField(new Field('posts', [
                 'mode' => 'typeahead',
                 'resource' => 'post',
                 'display' => 'Posts',
+                'type' => 'has_many',
+            ]));
+
+        $this->pivottedPostsStackFieldtype = tap(new HasManyFieldtype())
+            ->setField(new Field('pivottedPosts', [
+                'mode' => 'stack',
+                'resource' => 'post',
+                'display' => 'Pivotted Posts',
                 'type' => 'has_many',
             ]));
     }
@@ -197,6 +215,40 @@ class HasManyFieldtypeTest extends TestCase
     }
 
     /** @test */
+    public function can_process_and_add_relations_to_model_with_pivot_table()
+    {
+        $posts = $this->postFactory(3);
+        $author = $this->authorFactory();
+
+        // Usually these bits would be fetched from the request. However, as we can't mock
+        // the request, we're using Blink.
+        Blink::put('RunwayRouteResource', 'author');
+        Blink::put('RunwayRouteRecord', $author->id);
+
+        $this->pivottedPostsStackFieldtype->process([
+            $posts[0]->id,
+            $posts[1]->id,
+            $posts[2]->id,
+        ]);
+
+        // Ensure the author is attached to all 3 posts AND the pivot_sort_order is persisted.
+        $this->assertDatabaseHas('post_author', [
+            'post_id' => $posts[0]->id,
+            'author_id' => $author->id,
+        ]);
+
+        $this->assertDatabaseHas('post_author', [
+            'post_id' => $posts[1]->id,
+            'author_id' => $author->id,
+        ]);
+
+        $this->assertDatabaseHas('post_author', [
+            'post_id' => $posts[2]->id,
+            'author_id' => $author->id,
+        ]);
+    }
+
+    /** @test */
     public function can_process_and_add_relations_to_model_and_can_persist_users_sort_order()
     {
         $posts = $this->postFactory(3);
@@ -237,6 +289,51 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertDatabaseHas('posts', [
             'id' => $posts[2]->id,
             'sort_order' => 1,
+        ]);
+    }
+
+    /**
+     * @test
+     * https://github.com/duncanmcclean/runway/issues/287
+     */
+    public function can_process_and_add_relations_to_model_and_can_persist_users_sort_order_on_pivot_table()
+    {
+        $posts = $this->postFactory(3);
+        $author = $this->authorFactory();
+
+        $this->pivottedPostsStackFieldtype->field()->setConfig(array_merge($this->pivottedPostsStackFieldtype->field()->config(), [
+            'reorderable' => true,
+            'order_column' => 'pivot_sort_order',
+        ]));
+
+        // Usually these bits would be fetched from the request. However, as we can't mock
+        // the request, we're using Blink.
+        Blink::put('RunwayRouteResource', 'author');
+        Blink::put('RunwayRouteRecord', $author->id);
+
+        $this->pivottedPostsStackFieldtype->process([
+            $posts[1]->id,
+            $posts[2]->id,
+            $posts[0]->id,
+        ]);
+
+        // Ensure the author is attached to all 3 posts AND the pivot_sort_order is persisted.
+        $this->assertDatabaseHas('post_author', [
+            'post_id' => $posts[1]->id,
+            'author_id' => $author->id,
+            'pivot_sort_order' => 1,
+        ]);
+
+        $this->assertDatabaseHas('post_author', [
+            'post_id' => $posts[2]->id,
+            'author_id' => $author->id,
+            'pivot_sort_order' => 2,
+        ]);
+
+        $this->assertDatabaseHas('post_author', [
+            'post_id' => $posts[0]->id,
+            'author_id' => $author->id,
+            'pivot_sort_order' => 3,
         ]);
     }
 
