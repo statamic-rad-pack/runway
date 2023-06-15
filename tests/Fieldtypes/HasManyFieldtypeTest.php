@@ -72,9 +72,17 @@ class HasManyFieldtypeTest extends TestCase
             $post->update(['author_id' => $author->id]);
         }
 
-        $getIndexItems1 = $this->stackFieldtype->getIndexItems(new FilteredRequest());
-        $getIndexItems2 = $this->selectFieldtype->getIndexItems(new FilteredRequest());
-        $getIndexItems3 = $this->typeaheadFieldtype->getIndexItems(new FilteredRequest());
+        $getIndexItems1 = $this->stackFieldtype->getIndexItems(
+            new FilteredRequest(['paginate' => true])
+        );
+
+        $getIndexItems2 = $this->selectFieldtype->getIndexItems(
+            new FilteredRequest(['paginate' => false])
+        );
+
+        $getIndexItems3 = $this->typeaheadFieldtype->getIndexItems(
+            new FilteredRequest(['paginate' => false])
+        );
 
         $this->assertIsObject($getIndexItems1);
         $this->assertTrue($getIndexItems1 instanceof Paginator);

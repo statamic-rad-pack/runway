@@ -122,7 +122,7 @@ class BaseFieldtype extends Relationship
                 );
             });
 
-        $items = in_array($this->config('mode'), ['default', 'stack'])
+        $items = $request->boolean('paginate', true)
             ? $query->paginate()
             : $query->get();
 
@@ -146,7 +146,7 @@ class BaseFieldtype extends Relationship
                     ->toArray();
             });
 
-        return in_array($this->config('mode'), ['default', 'stack'])
+        return $request->boolean('paginate', true)
             ? $items
             : $items->filter()->values();
     }
@@ -337,7 +337,7 @@ class BaseFieldtype extends Relationship
                 ]),
             ],
         ];
-    }
+}
 
     protected function makeTitle($record, $resource): string
     {

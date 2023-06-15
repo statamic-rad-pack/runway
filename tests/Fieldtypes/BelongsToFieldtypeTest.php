@@ -52,9 +52,17 @@ class BelongsToFieldtypeTest extends TestCase
     {
         $authors = $this->authorFactory(10);
 
-        $getIndexItems = $this->stackFieldtype->getIndexItems(new FilteredRequest());
-        $getIndexItems2 = $this->selectFieldtype->getIndexItems(new FilteredRequest());
-        $getIndexItems3 = $this->typeaheadFieldtype->getIndexItems(new FilteredRequest());
+        $getIndexItems = $this->stackFieldtype->getIndexItems(
+            new FilteredRequest(['paginate' => true])
+        );
+
+        $getIndexItems2 = $this->selectFieldtype->getIndexItems(
+            new FilteredRequest(['paginate' => false])
+        );
+
+        $getIndexItems3 = $this->typeaheadFieldtype->getIndexItems(
+            new FilteredRequest(['paginate' => false])
+        );
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Paginator);
