@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## v5.0.9 (2023-06-16)
+
+### What's fixed
+
+* Fixed issue with "Fields" filter on non-Runway listing tables #292
+* Fieldtypes: Ensure pagination only takes place when in Stack mode #289 #291 by @edalzell
+* Removes extra border on Publish Form #296
+
+### What's improved
+
+* Has Many Fieldtype: "Reorderable" setting now works with pivot tables #287 #297
+
 ## v5.0.8 (2023-06-14)
 
 ### What's new
