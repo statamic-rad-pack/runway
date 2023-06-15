@@ -151,6 +151,27 @@ class YourCustomAction extends Action
 }
 ```
 
+## Filters
+
+Runway provides a "Fields" filter to filter records in the Control Panel based on blueprint fields.
+
+![Control Panel Filters](/img/runway/cp-filters.png)
+
+You can create your own filters using [query scopes and filters](https://statamic.dev/extending/query-scopes-and-filters#filters). To make your filter visible in a Runway resource, specify it in `visibleTo` method, specifying the context of the resource and the key as 'runway'.
+
+```php
+/**
+ * Determine when the filter is shown.
+ *
+ * @param string $key
+ * @return bool
+ */
+public function visibleTo($key)
+{
+    return $key === 'runway' && $this->context['resource'] === 'product';
+}
+```
+
 ## Scoping Control Panel Results
 
 If you don't want to return everything, you may add a scope (`runwayListing`) to limit the returned results.
