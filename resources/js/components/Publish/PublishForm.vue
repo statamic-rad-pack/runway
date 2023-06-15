@@ -303,3 +303,9 @@ export default {
     },
 }
 </script>
+
+<style>
+.publish-sidebar .publish-tab-actions {
+    border-bottom-width: 0px;
+}
+</style>
