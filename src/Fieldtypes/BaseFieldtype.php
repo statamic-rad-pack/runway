@@ -99,6 +99,18 @@ class BaseFieldtype extends Relationship
             $query->runwayListing();
         }
 
+        $query = $query
+            ->when($request->search, fn ($query) => $query->when(
+                $query->hasNamedScope('runwaySearch'),
+                fn ($query) => $query->runwaySearch($request->search),
+                fn ($query) => $resource
+                    ->blueprint()
+                    ->fields()
+                    ->items()
+                    ->reject(fn (array $field) => $field['field']['type'] === 'has_many' || $field['field']['type'] === 'hidden')
+                    ->each(fn (array $field) => $query->orWhere($field['handle'], 'LIKE', '%'.$request->search.'%'))
+            ));
+
         if (in_array($this->config('mode'), ['default', 'stack'])) {
             return $this->asPaginator($request, $query, $resource);
         }
@@ -307,7 +319,7 @@ class BaseFieldtype extends Relationship
 
     private function asPaginator(FilteredRequest $request, Builder $query, Resource $resource)
     {
-        $paginator = $this->withSearch($request, $query, $resource)->paginate();
+        $paginator = $query->paginate();
         $columns = $resource->listableColumns();
 
         $paginator
@@ -336,7 +348,7 @@ class BaseFieldtype extends Relationship
     {
         $columns = $resource->listableColumns();
 
-        return $this->withSearch($request, $query, $resource)
+        return $query
             ->get()
             ->map(fn ($record) => collect($columns)
                 ->mapWithKeys(function ($columnKey) use ($record) {
@@ -356,20 +368,5 @@ class BaseFieldtype extends Relationship
                 ->toArray())
             ->filter()
             ->values();
-    }
-
-    private function withSearch(FilteredRequest $request, Builder $query, Resource $resource): Builder
-    {
-        return $query
-            ->when($request->search, fn ($query) => $query->when(
-                $query->hasNamedScope('runwaySearch'),
-                fn ($query) => $query->runwaySearch($request->search),
-                fn ($query) => $resource
-                    ->blueprint()
-                    ->fields()
-                    ->items()
-                    ->reject(fn (array $field) => $field['field']['type'] === 'has_many' || $field['field']['type'] === 'hidden')
-                    ->each(fn (array $field) => $query->orWhere($field['handle'], 'LIKE', '%'.$request->search.'%'))
-            ));
     }
 }
