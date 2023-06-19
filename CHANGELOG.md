@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v5.0.10 (2023-06-19)
+
+### What's fixed
+
+* Fieldtype: Dropdown / Stack options will now respect the configured ordering for the resource #298
+
 ## v5.0.9 (2023-06-16)
 
 ### What's fixed
