@@ -7,6 +7,7 @@ use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Statamic\Fields\Field;
 use Statamic\Http\Requests\FilteredRequest;
 
@@ -74,6 +75,35 @@ class BelongsToFieldtypeTest extends TestCase
 
         $this->assertSame($getIndexItems->first()['title'], 'AUTHOR '.$authors[0]->name);
         $this->assertSame($getIndexItems->last()['title'], 'AUTHOR '.$authors[1]->name);
+    }
+
+    /** @test */
+    public function can_get_index_items_in_order_specified_in_runway_config()
+    {
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.order_by', 'name');
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.order_by_direction', 'desc');
+
+        $authorOne = $this->authorFactory(1, [
+            'name' => 'Scully',
+        ]);
+
+        $authorTwo = $this->authorFactory(1, [
+            'name' => 'Jake Peralta',
+        ]);
+
+        $authorThree = $this->authorFactory(1, [
+            'name' => 'Amy Santiago',
+        ]);
+
+        $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest(['paginate' => false]));
+
+        $this->assertIsObject($getIndexItems);
+        $this->assertTrue($getIndexItems instanceof Collection);
+        $this->assertSame($getIndexItems->count(), 3);
+
+        $this->assertSame($getIndexItems->all()[0]['title'], 'Scully');
+        $this->assertSame($getIndexItems->all()[1]['title'], 'Jake Peralta');
+        $this->assertSame($getIndexItems->all()[2]['title'], 'Amy Santiago');
     }
 
     /** @test */
