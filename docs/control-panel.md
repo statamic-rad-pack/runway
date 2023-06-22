@@ -18,7 +18,7 @@ Technically, you can’t fully disable Runway’s CP feature. However, what you 
 'resources' => [
 	\App\Models\Order::class => [
 	    'name' => 'Orders',
-		'hidden' => true,
+	    'hidden' => true,
 	],
 ],
 ```
@@ -35,9 +35,7 @@ You can either provide the name of an existing icon [packaged into Statamic Core
 'resources' => [
 	\App\Models\Order::class => [
 	    'name' => 'Orders',
-		'listing' => [
-			'cp_icon' => 'date',
-		],
+	    'cp_icon' => 'date',
 	],
 ],
 ```
