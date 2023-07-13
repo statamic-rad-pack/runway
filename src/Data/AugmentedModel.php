@@ -41,19 +41,25 @@ class AugmentedModel extends AbstractAugmented
         $modelKeyValue = $record->toArray();
 
         $resourceKeyValue = $resource->blueprint()->fields()->items()->pluck('handle')
-            ->mapWithKeys(fn ($fieldHandle) => [$fieldHandle => $record->{$fieldHandle}]);
+            ->mapWithKeys(function ($fieldHandle) use ($record) {
+                // By using a 'dotted' key instead of arrows we can later 'undot' the
+                // collection, ensuring nested fields are assigned their augmented value.
+                $key = str_replace('->', '.', $fieldHandle);
+
+                return [$key => data_get($record, $key)];
+            });
 
         return collect($modelKeyValue)
             ->merge($resourceKeyValue)
-            ->map(function ($value, $key) use ($record, $resource, $blueprint) {
-                $value = $record->{$key} ?? $value;
+            ->map(function ($value, $key) use ($resource, $blueprint) {
+                $fieldHandle = str_replace('.', '->', $key);
 
                 // When $value is a Carbon instance, format it with the format
                 // specified in the blueprint.
                 if ($value instanceof CarbonInterface) {
                     $format = $defaultFormat = 'Y-m-d H:i';
 
-                    if ($field = $resource->blueprint()->field($key)) {
+                    if ($field = $resource->blueprint()->field($fieldHandle)) {
                         $format = $field->get('format', $defaultFormat);
                     }
 
@@ -65,15 +71,16 @@ class AugmentedModel extends AbstractAugmented
                     $value = json_decode($value, true);
                 }
 
-                if ($blueprint->hasField($key)) {
+                if ($blueprint->hasField($fieldHandle)) {
                     /** @var \Statamic\Fields\Field $field */
-                    $field = $blueprint->field($key);
+                    $field = $blueprint->field($fieldHandle);
 
                     return $field->setValue($value)->augment()->value();
                 }
 
                 return $value;
             })
+            ->undot()
             ->merge([
                 'url' => $resource->hasRouting() ? $record->uri() : null,
             ])

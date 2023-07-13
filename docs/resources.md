@@ -126,6 +126,34 @@ You may also run this same command for all resources:
 php please runway:generate-blueprints
 ```
 
+### Storing blueprint fields in a JSON column
+
+To avoid creating a migration for every new field you add to a blueprint, fields can be stored within a JSON column. To do so, use the `->` symbol within the field handle:
+
+```yaml
+fields:
+  -
+    handle: 'values->excerpt'
+    field:
+      type: text
+```
+
+Your table will need to have a suitable column:
+
+```php
+$table->json('values')->nullable();
+```
+
+And the cast defined on the model:
+
+```php
+protected $casts = [
+    'values' => 'array', // or 'json', AsArrayObject::class
+];
+```
+
+Please note generating a migration from a blueprint configured in this way is **not** currently supported.
+
 ## Configuring resources
 
 There’s about a dozen configuration options available for resources, they are all documented below.

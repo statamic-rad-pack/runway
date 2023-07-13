@@ -23,6 +23,27 @@ class FrontendRoutingTest extends TestCase
     }
 
     /** @test */
+    public function returns_resource_response_for_resource_with_nested_field()
+    {
+        $post = $this->postFactory();
+
+        $post->values = [
+            'alt_title' => $this->faker->words(6, asText: true),
+        ];
+
+        $post->save();
+
+        $runwayUri = $post->fresh()->runwayUri;
+
+        $this
+            ->get($runwayUri->uri)
+            ->assertOk()
+            ->assertSee($post->values['alt_title'])
+            ->assertSee('TEMPLATE: default')
+            ->assertSee('LAYOUT: layout');
+    }
+
+    /** @test */
     public function returns_resource_response_for_resource_with_custom_template()
     {
         $this->markTestIncomplete();
