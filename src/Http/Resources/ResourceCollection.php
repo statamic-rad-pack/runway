@@ -87,8 +87,10 @@ class ResourceCollection extends LaravelResourceCollection
                     }
                 }
 
-                foreach ($this->runwayResource->blueprint()->fields()->except(array_keys($row))->all() as $key => $field) {
-                    $row[$key] = $field->setValue($record->{$key})->preProcessIndex()->value();
+                foreach ($this->runwayResource->blueprint()->fields()->except(array_keys($row))->all() as $fieldHandle => $field) {
+                    $key = str_replace('->', '.', $fieldHandle);
+
+                    $row[$fieldHandle] = $field->setValue(data_get($record, $key))->preProcessIndex()->value();
                 }
 
                 $row['id'] = $record->getKey();
