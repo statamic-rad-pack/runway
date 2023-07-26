@@ -4,6 +4,7 @@ namespace DoubleThreeDigital\Runway\Tests\Console\Commands;
 
 use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tests\TestCase;
+use DoubleThreeDigital\Runway\Traits\HasRunwayResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
@@ -26,6 +27,10 @@ class GenerateMigrationTest extends TestCase
                 ],
             ],
         ]);
+
+        collect(File::glob(database_path('migrations/*')))->each(function ($path) {
+            File::delete($path);
+        });
     }
 
     /** @test */
@@ -37,8 +42,6 @@ class GenerateMigrationTest extends TestCase
     /** @test */
     public function can_generate_migration_for_single_resource()
     {
-        $this->markTestIncomplete("Hmm, something odd was going on here. I'm just going to presume this is all working for now and loop back to it later.");
-
         TestTime::freeze();
 
         Config::set('runway', [
@@ -56,6 +59,13 @@ class GenerateMigrationTest extends TestCase
                                             'validate' => 'required',
                                         ],
                                     ],
+                                    [
+                                        'handle' => 'metadata->calories',
+                                        'field' => [
+                                            'type' => 'integer',
+                                            'validate' => 'required',
+                                        ],
+                                    ]
                                 ],
                             ],
                         ],
@@ -65,9 +75,6 @@ class GenerateMigrationTest extends TestCase
         ]);
 
         Runway::discoverResources();
-
-        // Assert migration doesn't already exist
-        $this->assertCount(0, collect(File::allFiles(database_path('migrations'))));
 
         // Run the command
         $this
@@ -79,11 +86,12 @@ class GenerateMigrationTest extends TestCase
 
         // Assert migration now exists
         $this->assertFileExists(
-            $expectedMigrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_foods_tables.php'
+            $expectedMigrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_foods_table.php'
         );
 
         // Assert migration contains the right fields
-        $this->assertStringContainsString('$table->text(\'name\');', File::get($expectedMigrationPath));
+        $this->assertStringContainsString('$table->text(\'name\')', File::get($expectedMigrationPath));
+        $this->assertStringContainsString('$table->json(\'metadata\')', File::get($expectedMigrationPath));
 
         // Cleanup after ourselves
         collect(File::allFiles(database_path('migrations')))
@@ -131,6 +139,8 @@ class GenerateMigrationTest extends TestCase
 
 class Food extends Model
 {
+    use HasRunwayResource;
+
     protected $table = 'foods';
 
     protected $fillable = ['name'];

@@ -219,13 +219,27 @@ class GenerateMigration extends Command
             ->all();
 
         $columns = collect($fields)
-            ->map(fn (Field $field) => [
-                'name' => $field->handle(),
-                'type' => $this->getMatchingColumnType($field),
-                'nullable' => $this->isFieldNullable($field),
-                'default' => empty($field->defaultValue()) ? $field->defaultValue() : null,
-                'original_field' => $field,
-            ])
+            ->map(function (Field $field) {
+                // Pick up on nested fields
+                if (str_contains($field->handle(), '->')) {
+                    return [
+                        'name' => Str::before($field->handle(), '->'),
+                        'type' => 'json',
+                        'nullable' => true,
+                        'default' => null,
+                        'original_field' => $field,
+                    ];
+                }
+
+                return [
+                    'name' => $field->handle(),
+                    'type' => $this->getMatchingColumnType($field),
+                    'nullable' => $this->isFieldNullable($field),
+                    'default' => empty($field->defaultValue()) ? $field->defaultValue() : null,
+                    'original_field' => $field,
+                ];
+            })
+            ->unique('name')
             ->each(function ($column) use (&$errorMessages) {
                 if (is_null($column['type'])) {
                     $errorMessages[] = "Field [{$column['name']}] could not be matched with a column type.";

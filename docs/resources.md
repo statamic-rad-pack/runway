@@ -152,7 +152,7 @@ protected $casts = [
 ];
 ```
 
-> **Note:** Currently, Nested Fields aren't be available in GraphQL & aren't supported by the [migration generator](#generating-migrations-from-your-blueprints) command.
+> **Note:** Nested Fields aren't currently available in GraphQL.
 
 ## Configuring resources
 
