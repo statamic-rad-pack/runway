@@ -126,7 +126,7 @@ You may also run this same command for all resources:
 php please runway:generate-blueprints
 ```
 
-### Storing blueprint fields in a JSON column
+### Nesting fields inside JSON columns
 
 To avoid creating a migration for every new field you add to a blueprint, fields can be stored within a JSON column. To do so, use the `->` symbol within the field handle:
 
@@ -152,7 +152,7 @@ protected $casts = [
 ];
 ```
 
-Please note generating a migration from a blueprint configured in this way is **not** currently supported.
+> **Note:** Currently, Nested Fields aren't be available in GraphQL & aren't supported by the [migration generator](#generating-migrations-from-your-blueprints) command.
 
 ## Configuring resources
 
