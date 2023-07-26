@@ -22,16 +22,19 @@ class FrontendRoutingTest extends TestCase
             ->assertSee('LAYOUT: layout');
     }
 
-    /** @test */
+    /**
+     * @test
+     * https://github.com/duncanmcclean/runway/pull/302
+     */
     public function returns_resource_response_for_resource_with_nested_field()
     {
-        $post = $this->postFactory();
-
-        $post->values = [
-            'alt_title' => $this->faker->words(6, asText: true),
-        ];
-
-        $post->save();
+        $post = $this->postFactory(
+            attributes: [
+                'values' => [
+                    'alt_title' => $this->faker->words(6, asText: true),
+                ],
+            ],
+        );
 
         $runwayUri = $post->fresh()->runwayUri;
 

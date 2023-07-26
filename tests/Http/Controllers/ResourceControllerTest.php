@@ -340,13 +340,13 @@ class ResourceControllerTest extends TestCase
     {
         $user = User::make()->makeSuper()->save();
 
-        $post = $this->postFactory();
-
-        $post->values = [
-            'alt_title' => $this->faker->words(6, asText: true),
-        ];
-
-        $post->save();
+        $post = $this->postFactory(
+            attributes: [
+                'values' => [
+                    'alt_title' => $this->faker->words(6, asText: true),
+                ],
+            ],
+        );
 
         $this->actingAs($user)
             ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))
