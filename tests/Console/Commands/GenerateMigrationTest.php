@@ -65,7 +65,7 @@ class GenerateMigrationTest extends TestCase
                                             'type' => 'integer',
                                             'validate' => 'required',
                                         ],
-                                    ]
+                                    ],
                                 ],
                             ],
                         ],
