@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v5.1.0 (2023-07-26)
+
+### What's new
+
+* You can now add nested fields from inside JSON columns to your blueprint #302 #308 by @morphsteve
+
 ## v5.0.10 (2023-06-19)
 
 ### What's fixed
