@@ -152,7 +152,9 @@ protected $casts = [
 ];
 ```
 
-> **Note:** Nested Fields aren't currently available in GraphQL.
+:::note Note!
+Nested Fields aren't currently available in GraphQL.
+:::
 
 ## Configuring resources
 
