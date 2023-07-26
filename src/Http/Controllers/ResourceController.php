@@ -129,6 +129,7 @@ class ResourceController extends CpController
             // let's JSON encode it.
             if (
                 is_array($processedValue)
+                && ! str_contains($fieldKey, '->')
                 && ! $record->hasCast($fieldKey, ['json', 'array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])
             ) {
                 $processedValue = json_encode($processedValue, JSON_THROW_ON_ERROR);
@@ -166,7 +167,7 @@ class ResourceController extends CpController
         $blueprintFieldKeys = $resource->blueprint()->fields()->all()->keys()->toArray();
 
         foreach ($blueprintFieldKeys as $fieldKey) {
-            $value = $record->{$fieldKey};
+            $value = data_get($record, str_replace('->', '.', $fieldKey));
 
             // When $value is a Carbon instance, format it with the format
             // specified in the blueprint.
@@ -274,6 +275,7 @@ class ResourceController extends CpController
             // let's JSON encode it.
             if (
                 is_array($processedValue)
+                && ! str_contains($fieldKey, '->')
                 && ! $record->hasCast($fieldKey, ['json', 'array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])
             ) {
                 $processedValue = json_encode($processedValue, JSON_THROW_ON_ERROR);

@@ -159,6 +159,34 @@ class ResourceControllerTest extends TestCase
         ]);
     }
 
+    /**
+     * @test
+     * https://github.com/duncanmcclean/runway/pull/302
+     */
+    public function can_store_resource_with_nested_field()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $author = $this->authorFactory();
+
+        $this->actingAs($user)
+            ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
+                'title' => 'Jingle Bells',
+                'slug' => 'jingle-bells',
+                'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
+                'values->alt_title' => 'Batman Smells',
+                'author_id' => [$author->id],
+            ])
+            ->assertOk()
+            ->assertJsonStructure([
+                'redirect',
+            ]);
+
+        $this->assertDatabaseHas('posts', [
+            'values->alt_title' => 'Batman Smells',
+        ]);
+    }
+
     /** @test */
     public function can_edit_resource()
     {
@@ -302,6 +330,30 @@ class ResourceControllerTest extends TestCase
             ],
             $response->viewData('values')->get('created_at')
         );
+    }
+
+    /**
+     * @test
+     * https://github.com/duncanmcclean/runway/pull/302
+     */
+    public function can_edit_resource_with_nested_field()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $post = $this->postFactory(
+            attributes: [
+                'values' => [
+                    'alt_title' => $this->faker->words(6, asText: true),
+                ],
+            ],
+        );
+
+        $this->actingAs($user)
+            ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))
+            ->assertOk()
+            ->assertSee($post->title)
+            ->assertSee($post->body)
+            ->assertSee($post->values['alt_title']);
     }
 
     /** @test */
@@ -450,5 +502,33 @@ class ResourceControllerTest extends TestCase
         $post->refresh();
 
         $this->assertSame($post->title, 'Santa is coming home');
+    }
+
+    /**
+     * @test
+     * https://github.com/duncanmcclean/runway/pull/302
+     */
+    public function can_update_resource_with_nested_field()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $post = $this->postFactory();
+
+        $this->actingAs($user)
+            ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
+                'title' => 'Santa is coming home',
+                'slug' => 'santa-is-coming-home',
+                'body' => $post->body,
+                'values->alt_title' => 'Claus is venturing out',
+                'author_id' => [$post->author_id],
+            ])
+            ->assertOk()
+            ->assertJsonStructure([
+                'data',
+            ]);
+
+        $post->refresh();
+
+        $this->assertSame($post->values['alt_title'], 'Claus is venturing out');
     }
 }

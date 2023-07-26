@@ -166,4 +166,26 @@ class ResourceListingControllerTest extends TestCase
                 ],
             ]);
     }
+
+    /**
+     * @test
+     * https://github.com/duncanmcclean/runway/pull/223
+     */
+    public function can_get_values_from_nested_fields()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $posts = $this->postFactory(3, [
+            'values' => [
+                'alt_title' => $this->faker()->words(6, true),
+            ],
+        ]);
+
+        $this->actingAs($user)
+            ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']).'?columns=title,values->alt_title')
+            ->assertOk()
+            ->assertSee($posts[0]->values['alt_title'])
+            ->assertSee($posts[1]->values['alt_title'])
+            ->assertSee($posts[2]->values['alt_title']);
+    }
 }

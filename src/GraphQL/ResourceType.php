@@ -25,6 +25,8 @@ class ResourceType extends Type
             ->mapWithKeys(fn ($value, $key) => [
                 Str::replace('_id', '', $key) => $value,
             ])
+            // TODO: Make nested fields work with GraphQL
+            ->reject(fn ($value, $key) => str_contains($key, '->'))
             ->map(function ($arr) {
                 if (is_array($arr)) {
                     $arr['resolve'] ??= $this->resolver();
