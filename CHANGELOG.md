@@ -6,8 +6,8 @@
 
 ### What's fixed
 
-* Fixed `{{ url }}` not being available in search results #314 #315
-* Fixes error when trying to paginate search results #311 #312
+* Fixed `{{ url }}` not being available in search results #314 #315 by @duncanmcclean
+* Fixes error when trying to paginate search results #311 #312 by @ryanmitchell
 
 ## v5.1.0 (2023-07-26)
 
