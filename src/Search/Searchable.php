@@ -9,13 +9,14 @@ use Statamic\Contracts\Data\Augmented;
 use Statamic\Contracts\Query\ContainsQueryableValues;
 use Statamic\Contracts\Search\Result;
 use Statamic\Contracts\Search\Searchable as Contract;
+use Statamic\Data\ContainsSupplementalData;
 use Statamic\Data\HasAugmentedInstance;
 use Statamic\Facades\Site;
 use Statamic\Search\Result as ResultInstance;
 
 class Searchable implements Contract, ContainsQueryableValues, Augmentable
 {
-    use HasAugmentedInstance;
+    use HasAugmentedInstance, ContainsSupplementalData;
 
     protected $model;
 
@@ -76,6 +77,7 @@ class Searchable implements Contract, ContainsQueryableValues, Augmentable
 
     public function newAugmentedInstance(): Augmented
     {
-        return new AugmentedModel($this->model);
+        return (new AugmentedModel($this->model))
+            ->supplement($this->supplements());
     }
 }

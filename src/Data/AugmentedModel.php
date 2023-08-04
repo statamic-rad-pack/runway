@@ -15,10 +15,19 @@ class AugmentedModel extends AbstractAugmented
 
     protected $resource;
 
+    protected $supplements = [];
+
     public function __construct($model)
     {
         $this->data = $model;
         $this->resource = Runway::findResourceByModel($model);
+    }
+
+    public function supplement(array $data)
+    {
+        $this->supplements = $data;
+
+        return $this;
     }
 
     public function keys()
@@ -94,6 +103,6 @@ class AugmentedModel extends AbstractAugmented
 
     protected function getFromData($handle)
     {
-        return $this->data->$handle;
+        return $this->supplements[$handle] ?? $this->data->$handle;
     }
 }
