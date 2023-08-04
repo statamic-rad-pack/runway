@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Actions\DeleteModel;
+use DoubleThreeDigital\Runway\Query\Scopes\Filters\Fields\Models;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
@@ -345,5 +346,10 @@ class BaseFieldtype extends Relationship
         }
 
         return Parse::template($titleFormat, $record);
+    }
+
+    public function filter()
+    {
+        return new Models($this);
     }
 }

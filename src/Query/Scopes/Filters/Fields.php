@@ -20,4 +20,17 @@ class Fields extends BaseFieldsFilter
 
         return $resource->blueprint()->fields()->all()->filter->isFilterable();
     }
+
+    public function apply($query, $values)
+    {
+        $this->getFields()
+            ->filter(function ($field, $handle) use ($values) {
+                return isset($values[$handle]);
+            })
+            ->each(function ($field, $handle) use ($query, $values) {
+                $filter = $field->fieldtype()->filter();
+                $values = $filter->fields()->addValues($values[$handle])->process()->values();
+                $filter->apply($query, $handle, $values);
+            });
+    }
 }
