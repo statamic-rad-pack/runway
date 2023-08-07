@@ -86,7 +86,7 @@ If you find a bug, have some question or have a feature request, please open a [
 
 Some of my addons (including this one) are free & open-source, meaning you can use them in your site without buying any licenses.
 
-However, there is a cost from my perspective to maintain this addon (fixing new bugs, adding new features, answering questions). That all takes time. I've spent over **100 hours** of my own time maintaining this addon over the past year.
+However, there is a cost from my perspective to maintain this addon (fixing new bugs, adding new features, answering questions). That all takes time. I've spent over **140 hours** of my own time maintaining this addon over the past year.
 
 If you use this software on your projects & can afford it, I'd appreciate it if you'd consider [sponsoring me](https://github.com/sponsors/duncanmcclean), even if it's just a couple dollars a month.
 
