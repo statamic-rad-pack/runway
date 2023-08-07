@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v5.1.2 (2023-08-07)
+
+### What's improved
+
+* Removed old dependency
+
 ## v5.1.1 (2023-08-04)
 
 ### What's fixed
