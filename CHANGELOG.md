@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## v5.1.2 (2023-08-07)
+
+### What's improved
+
+* Removed old dependency
+
+## v5.1.1 (2023-08-04)
+
+### What's fixed
+
+* Fixed `{{ url }}` not being available in search results #314 #315 by @duncanmcclean
+* Fixes error when trying to paginate search results #311 #312 by @ryanmitchell
+
 ## v5.1.0 (2023-07-26)
 
 ### What's new

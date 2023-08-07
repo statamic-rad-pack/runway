@@ -34,7 +34,20 @@ class AugmentedModel extends AbstractAugmented
     {
         return collect()
             ->merge($this->blueprintFields()->keys())
+            ->merge($this->commonKeys())
             ->unique()->sort()->values()->all();
+    }
+
+    private function commonKeys()
+    {
+        return [
+            'url',
+        ];
+    }
+
+    public function url(): ?string
+    {
+        return $this->resource->hasRouting() ? $this->data->uri() : null;
     }
 
     /**
