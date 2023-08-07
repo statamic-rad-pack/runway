@@ -2,42 +2,161 @@
 title: Fieldtypes
 ---
 
-Runway provides a couple of fieldtypes, mostly for things like Eloquent relations.
+Runway provides two fieldtypes to let you manage Eloquent relationships within Statamic: Belongs To & Has Many.
 
-## BelongsTo fieldtype
+You can not only use these fieldtypes to represent Eloquent relationships on your models but you can also use them to **relate Eloquent models to entries/terms**, it's almost like magic 🪄.
 
-![Screenshot of BelongsTo fieldtype](/img/runway/belongs-to-fieldtype.png)
+## Belongs To
 
-This fieldtypes allows you to select a single model for a `belongsTo` Eloquent relationship.
+You can use the **Belongs To** fieldtype to relate to a single Eloquent model.
 
-### Configuration
+To configure the Belongs To fieldtype, you'll need to ensure you've created the [`belongsTo` relationship](https://laravel.com/docs/master/eloquent-relationships#one-to-many-inverse) on your model:
 
-It’s important that when configuring this fieldtype, the handle of the field is the same as the `belongsTo` column name, eg: `category_id`.
+```php
+// app/Models/Post.php
 
-Also when configuring the fieldtype, you may choose the resource you wish to be available for selection by the user.
+public function author()
+{
+    return $this->belongsTo(Author::class);
+}
+```
+
+You'll next need to add the field to your resource's blueprint:
+
+```yaml
+# resources/blueprints/post.yaml
+
+-
+    handle: author_id
+    field:
+        max_items: 1
+        mode: default
+        resource: author
+        create: true
+        display: 'Author'
+        type: 'belongs_to'
+```
+
+Make sure `resource` is set to the handle of the 'related resource' (in this case, the one for the `Author` model). You should also ensure the handle of the field is set to the name of the Belongs To column in the database, like `author_id`.
+
+:::note Note!
+When using this fieldtype on Entries / Terms, you don't need to create an Eloquent relationship and you can name your field anything (it doesn't need to be in the format `model_id`).
+:::
+
 
 ## HasMany fieldtype
 
-This fieldtype allows you to select multiple models for a `hasMany` or `morphedByMany` Eloquent relationship.
+![Screenshot of the Has Many Fieldtype](/img/runway/has-many-fieldtype.png)
 
-> Fun fact: You can use the HasMany fieldtype anywhere - in Runway resources, entries, taxonomies, you name it!
+You can use the **Has Many** fieldtype to relate to multiple Eloquent models.
 
-### Configuration
+To configure the Has Many fieldtype, you'll need to ensure you've created a [`hasMany`/`morphedByMany` relationship](https://laravel.com/docs/master/eloquent-factories#has-many-relationships) on your model:
 
-It’s important that when configuring this fieldtype, the handle of the field is the same as the name of the `hasMany` relationship, eg: `authors`.
+```php
+// app/Models/Post.php
 
-Also when configuring the fieldtype, you should choose the resource you wish to be available for selection by the user.
+public function categories()
+{
+    return $this->hasMany(Category::class);
+}
+```
 
-#### Additional configuration
+You'll next need to add the field to your resource's blueprint:
 
--   **Eager Loading:** Using the `with` configuration option, you may specify any relationships you want to be eager loaded when the fieldtype is augmented.
--   **Title Format:** Using the `title_format` configuration option, you may specify a title format to be used when viewing related results in the CP. You should use Antlers in this setting. (eg. `{{ first_name }} {{ last_name }}`)
-* **Reorderable** & **Order Column:** If you want to persist the ordering models, you may enable `reorderable` and specify the column used for storing the sort order (`order_column`).
+```yaml
+# resources/blueprints/post.yaml
+
+-
+    handle: categories
+    field:
+        type: has_many
+        resource: category
+        mode: default
+        display: Categories
+```
+
+Make sure `resource` is set to the handle of the 'related resource' (in this case, the one for the `Category` model). You should also ensure the handle of the field is the same as the name of the Eloquent relationship.
+
+:::note Note!
+When using this fieldtype on Entries / Terms, you obviously don't need to create an Eloquent relationship so you can name your field anything.
+:::
+
+### Re-ordering relationships
+
+If you'd like users to be able to re-orderable models in your Has Many field, you may set `reorderable` to `true` and specify the column you'd like to use to store the order.
+
+If you're using a pivot table for the relationship, the order column must exist on the pivot table.
+
+```yaml
+# resources/blueprints/post.yaml
+
+-
+    handle: categories
+    field:
+        type: has_many
+        resource: category
+        mode: default
+        display: Categories
+        orderable: true // [tl! add]
+        order_column: sort_order  // [tl! add]
+```
 
 ### Table Mode
 
-Runway's Has Many fieldtype includes a special 'Table mode'. Essentially, it lets you manage your related models but in a table, so you can see more information about each of the selected models.
+By default, [Relationship Fieldtypes](https://statamic.dev/extending/relationship-fieldtypes#content) in Statamic have three modes: `default`/`select`/`typeahead`.
+
+However, the Has Many fieldtype offers an additional `table` mode. This displays the related Eloquent models in a table (similar to listing tables used elsewhere in the Control Panel), allowing you to see more information about each model.
 
 ![Table Mode](/img/runway/table-mode.png)
 
-You may enable Table mode when configuring your 'Has Many' field.
+You may enable Table Mode by adjusting the `mode` configuration option:
+
+```yaml
+# resources/blueprints/post.yaml
+
+-
+    handle: categories
+    field:
+        type: has_many
+        resource: category
+        mode: default // [tl! remove]
+        mode: table // [tl! add]
+        display: Categories
+```
+
+## Title Format
+
+The `title_format` configuration option allows you to specify a title format to be used when related models are displayed in the Control Panel.
+
+You can even use Antlers when specifying a `title_format`.
+
+```yaml
+# resources/blueprints/post.yaml
+
+-
+    handle: categories
+    field:
+        type: has_many
+        resource: category
+        mode: default
+        display: Categories
+        title_format: 'Category ID {{ id }}: {{ name }}' // [tl! add]
+```
+
+## Eager Loading
+
+If you wish, you can configure additional relationships to be eager loaded with the field:
+
+```yaml
+# resources/blueprints/post.yaml
+
+-
+    handle: categories
+    field:
+        type: has_many
+        resource: category
+        mode: default
+        display: Categories
+        with:
+            - 'parentCategory'
+```
