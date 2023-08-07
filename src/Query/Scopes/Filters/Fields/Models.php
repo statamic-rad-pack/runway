@@ -27,6 +27,7 @@ class Models extends FieldtypeFilter
                 'type' => 'select',
                 'options' => [
                     'like' => __('Contains'),
+                    'not like' => __('Doesn\'t contain'),
                     '=' => __('Is'),
                     '!=' => __('Isn\'t'),
                 ],
@@ -44,20 +45,36 @@ class Models extends FieldtypeFilter
 
     public function apply($query, $handle, $values)
     {
-        $resource = Runway::findResourceByModel($query->getModel());
-
         $field = $values['field'];
         $operator = $values['operator'];
         $value = $values['value'];
 
-        if ($operator === 'like') {
+        if ($operator === 'like' || $operator === 'not like') {
             $value = Str::ensureLeft($value, '%');
             $value = Str::ensureRight($value, '%');
         }
 
-        $query->whereHas($resource->eagerLoadingRelations()->get($this->fieldtype->field()->handle()), function (Builder $query) use ($field, $operator, $value) {
-            $query->where($field, $operator, $value);
-        });
+        $relatedResource = Runway::findResource($this->fieldtype->config('resource'));
+
+        $ids = $relatedResource->model()->query()
+            ->where($field, $operator, $value)
+            ->select($relatedResource->primaryKey())
+            ->get()
+            ->pluck($relatedResource->primaryKey())
+            ->toArray();
+
+        // When we're dealing with an Eloquent query builder, we can take advantage of `whereHas` to filter.
+        // Otherwise, we'll just filter the IDs directly.
+        if (method_exists($query, 'getModel')) {
+            // This is the resource of the Eloquent model that the filter is querying.
+            $queryingResource = Runway::findResourceByModel($query->getModel());
+
+            $query->whereHas($queryingResource->eagerLoadingRelations()->get($this->fieldtype->field()->handle()), function (Builder $query) use ($relatedResource, $ids) {
+                $query->whereIn($relatedResource->primaryKey(), $ids);
+            });
+        } else {
+            $query->whereIn($this->fieldtype->field()->handle(), $ids);
+        }
     }
 
     public function badge($values)
