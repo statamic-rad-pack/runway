@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## v5.2.0 (2023-08-07)
+
+### What's new
+
+* Improved filtering Has Many / Belong To fields #313 by @duncanmcclean
+
+### What's fixed
+
+* Fixed an issue where appended attributes would appear as filterable in "Fields" filter #316 #317 by @duncanmcclean
+
 ## v5.1.2 (2023-08-07)
 
 ### What's improved
