@@ -29,7 +29,6 @@
     },
     "require": {
         "php": "^8.1",
-        "friendsofphp/php-cs-fixer": "^3.0",
         "pixelfear/composer-dist-plugin": "^0.1.5",
         "statamic/cms": "^4.0"
     },
@@ -40,9 +39,6 @@
         "spatie/test-time": "^1.2"
     },
     "scripts": {
-        "lint": [
-            "php-cs-fixer fix ./src"
-        ],
         "test": [
             "php -d memory_limit=-1 ./vendor/bin/phpunit"
         ]
