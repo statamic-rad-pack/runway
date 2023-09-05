@@ -14,9 +14,9 @@ use Statamic\Data\HasAugmentedInstance;
 use Statamic\Facades\Site;
 use Statamic\Search\Result as ResultInstance;
 
-class Searchable implements Contract, ContainsQueryableValues, Augmentable
+class Searchable implements Augmentable, ContainsQueryableValues, Contract
 {
-    use HasAugmentedInstance, ContainsSupplementalData;
+    use ContainsSupplementalData, HasAugmentedInstance;
 
     protected $model;
 

@@ -10,7 +10,7 @@ use Statamic\Contracts\Data\Augmentable;
 use Statamic\Data\ContainsSupplementalData;
 use Statamic\Data\HasAugmentedData;
 
-class RoutingModel implements Responsable, Augmentable
+class RoutingModel implements Augmentable, Responsable
 {
     use ContainsSupplementalData, HasAugmentedData;
 
