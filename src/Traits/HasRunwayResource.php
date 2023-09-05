@@ -12,7 +12,7 @@ use Statamic\Support\Traits\FluentlyGetsAndSets;
 
 trait HasRunwayResource
 {
-    use HasAugmentedInstance, FluentlyGetsAndSets;
+    use FluentlyGetsAndSets, HasAugmentedInstance;
     use ResolvesValues {
         resolveGqlValue as traitResolveGqlValue;
     }

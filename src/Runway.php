@@ -26,13 +26,22 @@ class Runway
                 if (! in_array(Traits\HasRunwayResource::class, class_uses_recursive($model))) {
                     throw new \Exception(__('The HasRunwayResource trait is missing from the [:model] model.', ['model' => $model]));
                 }
-
                 if (! isset($config['blueprint'])) {
                     throw new \Exception(__('The [:model] model is missing a blueprint.', ['model' => $model]));
                 }
 
                 if (is_string($config['blueprint'])) {
-                    $blueprint = Blueprint::find($config['blueprint']);
+                    try {
+                        $blueprint = Blueprint::find($config['blueprint']);
+                    } catch (\Exception $e) {
+                        // If we're running in a console & the blueprint doesn't exist, let's ignore the resource.
+                        // https://github.com/duncanmcclean/runway/pull/320
+                        if (app()->runningInConsole()) {
+                            return;
+                        }
+
+                        throw $e;
+                    }
                 }
 
                 if (is_array($config['blueprint'])) {
@@ -74,7 +83,7 @@ class Runway
 
     public static function findResourceByModel(object $model): ?Resource
     {
-        $resource = collect(static::$resources)->filter(fn (Resource $resource) => $resource->model()::class === $model::class)->first();
+        $resource = collect(static::$resources)->filter(fn (Resource $resource) => $model::class === $resource->model()::class)->first();
 
         if (! $resource) {
             throw new ResourceNotFound($model::class);
