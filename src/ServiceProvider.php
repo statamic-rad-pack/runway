@@ -7,7 +7,6 @@ use DoubleThreeDigital\Runway\Search\Provider as SearchProvider;
 use DoubleThreeDigital\Runway\Search\Searchable;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Traits\Conditionable;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
@@ -75,17 +74,7 @@ class ServiceProvider extends AddonServiceProvider
         ], 'runway-config');
 
         Statamic::booted(function () {
-            // We're try/catching this to cover cases where blueprints aren't available yet
-            // (eg. migrating to the Eloquent driver but haven't yet published the migrations)
-            try {
-                Runway::discoverResources();
-            } catch (\Exception $e) {
-                if (! $this->app->runningInConsole()) {
-                    throw $e;
-                }
-
-                Log::error($e->getMessage());
-            }
+            Runway::discoverResources();
 
             $this->registerPermissions();
             $this->registerPolicies();
