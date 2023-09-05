@@ -74,7 +74,7 @@ class Runway
 
     public static function findResourceByModel(object $model): ?Resource
     {
-        $resource = collect(static::$resources)->filter(fn (Resource $resource) => $resource->model()::class === $model::class)->first();
+        $resource = collect(static::$resources)->filter(fn (Resource $resource) => $model::class === $resource->model()::class)->first();
 
         if (! $resource) {
             throw new ResourceNotFound($model::class);

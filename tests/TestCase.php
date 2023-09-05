@@ -246,7 +246,7 @@ abstract class TestCase extends OrchestraTestCase
 
 class Post extends Model
 {
-    use RunwayRoutes, HasRunwayResource;
+    use HasRunwayResource, RunwayRoutes;
 
     protected $fillable = [
         'title', 'slug', 'body', 'values', 'author_id', 'sort_order',
