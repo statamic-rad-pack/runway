@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v5.2.1 (2023-09-06)
+
+### What's fixed
+
+* Fixed blueprint-related error when publishing Eloquent Driver migrations #319 #320 by @duncanmcclean
+
 ## v5.2.0 (2023-08-07)
 
 ### What's new
