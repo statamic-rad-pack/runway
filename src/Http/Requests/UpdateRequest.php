@@ -18,13 +18,4 @@ class UpdateRequest extends FormRequest
 
         return User::current()->can('edit', $resource);
     }
-
-    public function rules()
-    {
-        return Runway::findResource($this->resourceHandle)
-            ->blueprint()
-            ->fields()
-            ->validator()
-            ->rules();
-    }
 }

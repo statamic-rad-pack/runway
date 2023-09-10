@@ -18,13 +18,4 @@ class StoreRequest extends FormRequest
 
         return User::current()->can('create', $resource);
     }
-
-    public function rules()
-    {
-        return Runway::findResource($this->resourceHandle)
-            ->blueprint()
-            ->fields()
-            ->validator()
-            ->rules();
-    }
 }
