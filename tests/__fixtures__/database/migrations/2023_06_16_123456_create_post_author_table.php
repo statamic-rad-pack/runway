@@ -17,6 +17,8 @@ class CreatePostAuthorTable extends Migration
             $table->integer('post_id');
             $table->integer('author_id');
             $table->integer('pivot_sort_order')->nullable();
+            $table->datetime('start_date')->nullable();
+            $table->datetime('end_date')->nullable();
         });
     }
 

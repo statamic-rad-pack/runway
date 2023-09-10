@@ -187,6 +187,38 @@ class ResourceControllerTest extends TestCase
         ]);
     }
 
+    /**
+     * @test
+     * https://github.com/duncanmcclean/runway/issues/321
+     */
+    public function can_store_resource_and_ensure_date_comparison_validation_works()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $author = $this->authorFactory();
+
+        $this->actingAs($user)
+            ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
+                'title' => 'Jingle Bells',
+                'slug' => 'jingle-bells',
+                'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
+                'author_id' => [$author->id],
+                'start_date' => [
+                    'date' => '2023-09-01',
+                    'time' => '00:00',
+                ],
+                'end_date' => [
+                    'date' => '2023-08-01',
+                    'time' => '00:00',
+                ],
+            ])
+            ->assertSessionHasErrors('start_date');
+
+        $this->assertDatabaseMissing('posts', [
+            'title' => 'Jingle Bells',
+        ]);
+    }
+
     /** @test */
     public function can_edit_resource()
     {
