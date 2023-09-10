@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v5.2.2 (2023-09-10)
+
+### What's fixed
+
+* Fixed validation issues #321 #324 by @duncanmcclean
+* Fixed early return when discovering blueprints that was causing an error #322 #323 by @duncanmcclean
+
 ## v5.2.1 (2023-09-06)
 
 ### What's fixed
