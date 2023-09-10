@@ -156,6 +156,23 @@ abstract class TestCase extends OrchestraTestCase
                                             'visibility' => 'computed',
                                         ],
                                     ],
+                                    [
+                                        'handle' => 'start_date',
+                                        'field' => [
+                                            'type' => 'date',
+                                            'time_enabled' => true,
+                                            'validate' => [
+                                                'before:end_date',
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'handle' => 'end_date',
+                                        'field' => [
+                                            'type' => 'date',
+                                            'time_enabled' => true,
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
@@ -288,7 +305,7 @@ class Author extends Model
     use HasRunwayResource;
 
     protected $fillable = [
-        'name',
+        'name', 'start_date', 'end_date',
     ];
 
     public function posts()

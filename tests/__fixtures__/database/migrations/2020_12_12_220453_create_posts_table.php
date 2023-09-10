@@ -21,6 +21,8 @@ class CreatePostsTable extends Migration
             $table->json('values')->nullable();
             $table->integer('author_id');
             $table->integer('sort_order')->nullable();
+            $table->datetime('start_date')->nullable();
+            $table->datetime('end_date')->nullable();
             $table->timestamps();
         });
     }

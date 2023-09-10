@@ -91,6 +91,13 @@ class ResourceController extends CpController
 
     public function store(StoreRequest $request, $resourceHandle)
     {
+        Runway::findResource($resourceHandle)
+            ->blueprint()
+            ->fields()
+            ->addValues($request->all())
+            ->validator()
+            ->validate();
+
         $postCreatedHooks = [];
 
         $resource = Runway::findResource($resourceHandle);
@@ -247,6 +254,13 @@ class ResourceController extends CpController
     public function update(UpdateRequest $request, $resourceHandle, $record)
     {
         $resource = Runway::findResource($resourceHandle);
+
+        Runway::findResource($resourceHandle)
+            ->blueprint()
+            ->fields()
+            ->addValues($request->all())
+            ->validator()
+            ->validate();
 
         $record = $resource->model()
             ->where($resource->model()->qualifyColumn($resource->routeKey()), $record)
