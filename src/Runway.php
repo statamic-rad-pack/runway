@@ -37,7 +37,7 @@ class Runway
                         // If we're running in a console & the blueprint doesn't exist, let's ignore the resource.
                         // https://github.com/duncanmcclean/runway/pull/320
                         if (app()->runningInConsole()) {
-                            return;
+                            return [$handle => null];
                         }
 
                         throw $e;
@@ -60,6 +60,7 @@ class Runway
 
                 return [$handle => $resource];
             })
+            ->reject(fn ($resource, $handle) => is_null($resource))
             ->toArray();
 
         return new static();
