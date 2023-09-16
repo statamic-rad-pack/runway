@@ -320,7 +320,6 @@ class GenerateMigration extends Command
             ->join(PHP_EOL);
 
         $migrationContents = Str::of($migrationContents)
-            ->replace('{{ClassName}}', 'Create'.Str::title($resource->databaseTable()).'Table')
             ->replace('{{TableName}}', $resource->databaseTable())
             ->replace('{{TableColumns}}', $columnCode)
             ->__toString();
@@ -330,7 +329,9 @@ class GenerateMigration extends Command
             $migrationContents
         );
 
-        $process = new Process(['./vendor/bin/php-cs-fixer', 'fix', $migrationPath, '--rules=@PSR2,@PhpCsFixer'], base_path());
+        $rules = '@PSR2,@PhpCsFixer,no_space_after_class_name';
+
+        $process = new Process(['./vendor/bin/php-cs-fixer', 'fix', $migrationPath, '--rules='.$rules], base_path());
         $process->run();
     }
 }
