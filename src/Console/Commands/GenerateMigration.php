@@ -331,7 +331,7 @@ class GenerateMigration extends Command
 
         $rules = '@PSR2,@PhpCsFixer,no_space_after_class_name';
 
-        $process = new Process(['./vendor/bin/php-cs-fixer', 'fix', $migrationPath, '--rules=' . $rules], base_path());
+        $process = new Process(['./vendor/bin/php-cs-fixer', 'fix', $migrationPath, '--rules='.$rules], base_path());
         $process->run();
     }
 }
