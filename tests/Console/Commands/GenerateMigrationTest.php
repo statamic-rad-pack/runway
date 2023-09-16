@@ -36,7 +36,7 @@ class GenerateMigrationTest extends TestCase
     /** @test */
     public function can_generate_migrations_for_multiple_resources()
     {
-        //
+        $this->markTestIncomplete();
     }
 
     /** @test */
@@ -89,6 +89,9 @@ class GenerateMigrationTest extends TestCase
             $expectedMigrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_foods_table.php'
         );
 
+        // Assert migration is using the anonymous class syntax
+        $this->assertStringContainsString('return new class extends Migration', File::get($expectedMigrationPath));
+
         // Assert migration contains the right fields
         $this->assertStringContainsString('$table->text(\'name\')', File::get($expectedMigrationPath));
         $this->assertStringContainsString('$table->json(\'metadata\')', File::get($expectedMigrationPath));
@@ -103,37 +106,37 @@ class GenerateMigrationTest extends TestCase
     /** @test */
     public function can_generate_migration_where_table_already_exists()
     {
-        //
+        $this->markTestIncomplete();
     }
 
     /** @test */
     public function can_generate_migration_and_run_them_afterwards()
     {
-        //
+        $this->markTestIncomplete();
     }
 
     /** @test */
     public function can_generate_migration_and_ensure_normal_field_is_correct()
     {
-        //
+        $this->markTestIncomplete();
     }
 
     /** @test */
     public function can_generate_migration_and_ensure_max_items_1_field_is_correct()
     {
-        //
+        $this->markTestIncomplete();
     }
 
     /** @test */
     public function can_generate_migration_and_ensure_field_is_nullable_if_required_not_set()
     {
-        //
+        $this->markTestIncomplete();
     }
 
     /** @test */
     public function can_generate_migration_and_ensure_field_is_not_nullable_if_required_set()
     {
-        //
+        $this->markTestIncomplete();
     }
 }
 
