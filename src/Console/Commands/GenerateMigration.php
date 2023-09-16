@@ -201,7 +201,7 @@ class GenerateMigration extends Command
             $this->generateForResource($resource);
         }
 
-        if ($this->ask('Should we run your migrations?')) {
+        if ($this->ask('Should we run your migrations?') === 'yes') {
             Artisan::call('migrate');
         }
 
