@@ -173,6 +173,13 @@ abstract class TestCase extends OrchestraTestCase
                                             'time_enabled' => true,
                                         ],
                                     ],
+                                    [
+                                        'handle' => 'dont_save',
+                                        'field' => [
+                                            'type' => 'text',
+                                            'save' => false,
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
