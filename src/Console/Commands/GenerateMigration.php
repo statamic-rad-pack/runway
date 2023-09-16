@@ -242,7 +242,7 @@ class GenerateMigration extends Command
             ->unique('name')
             ->each(function ($column) use (&$errorMessages) {
                 if (is_null($column['type'])) {
-                    $errorMessages[] = "Field [{$column['name']}] could not be matched with a column type.";
+                    $errorMessages[] = "Field [{$column['name']}] could not be matched with a column type. Runway has left a TODO in the migration for you to complete manually.";
                 }
             })
             ->all();
@@ -299,6 +299,10 @@ class GenerateMigration extends Command
 
         $columnCode = collect($columns)
             ->map(function ($column) {
+                if (is_null($column['type'])) {
+                    return "// TODO: Implement `{$column['name']}` field.";
+                }
+
                 $code = '$table->'.$column['type'].'(\''.$column['name'].'\')';
 
                 if ($column['nullable']) {
