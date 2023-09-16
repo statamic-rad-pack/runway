@@ -99,7 +99,7 @@ class GenerateMigrationTest extends TestCase
         );
 
         $this->assertStringContainsString('return new class extends Migration', File::get($expectedDrinksMigrationPath));
-        $this->assertStringContainsString("Schema::create('drinks', function (Blueprint", File::get($expectedDrinksMigrationPath));;
+        $this->assertStringContainsString("Schema::create('drinks', function (Blueprint", File::get($expectedDrinksMigrationPath));
         $this->assertStringContainsString('$table->text(\'name\')', File::get($expectedDrinksMigrationPath));
         $this->assertStringContainsString('$table->json(\'metadata\')', File::get($expectedDrinksMigrationPath));
 
