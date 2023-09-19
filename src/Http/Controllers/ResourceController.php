@@ -374,7 +374,7 @@ class ResourceController extends CpController
         return $resource->titleField();
     }
 
-    private function shouldSaveField(Field $field): bool
+    protected function shouldSaveField(Field $field): bool
     {
         $config = $field->config();
 
