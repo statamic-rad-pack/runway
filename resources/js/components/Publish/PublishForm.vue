@@ -57,23 +57,25 @@
                     @blur="$refs.container.$emit('blur', $event)"
                 >
                     <template #actions="{ shouldShowSidebar }">
-                        <div
-                            v-if="resourceHasRoutes && permalink"
-                            :class="{ hi: !shouldShowSidebar }"
-                        >
-                            <div class="p-2 flex items-center -mx-1">
-                                <a
-                                    class="flex items-center justify-center btn-flat w-full mx-1 px-1"
-                                    v-if="permalink"
-                                    :href="permalink"
-                                    target="_blank"
-                                >
-                                    <svg-icon
-                                        name="external-link"
-                                        class="w-5 h-5 mr-1"
-                                    />
-                                    <span>{{ __('Visit URL') }}</span>
-                                </a>
+                        <div class="card p-0" :class="{ 'mb-5': resourceHasRoutes && permalink }">
+                            <div
+                                v-if="resourceHasRoutes && permalink"
+                                :class="{ hi: !shouldShowSidebar }"
+                            >
+                                <div class="p-2 flex items-center -mx-1">
+                                    <a
+                                        class="flex items-center justify-center btn-flat w-full mx-1 px-1"
+                                        v-if="permalink"
+                                        :href="permalink"
+                                        target="_blank"
+                                    >
+                                        <svg-icon
+                                            name="external-link"
+                                            class="w-5 h-5 mr-1"
+                                        />
+                                        <span>{{ __('Visit URL') }}</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </template>
