@@ -110,11 +110,6 @@ class ResourceController extends CpController
                 continue;
             }
 
-            // Skip section fields or computed fields as there's nothing to store.
-            if ($field->type() === 'section' || $field->visibility() === 'computed') {
-                continue;
-            }
-
             // Skip if the field exists in the model's $appends array and there's not a set mutator present for it on the model.
             if (in_array($fieldKey, $record->getAppends(), true) && ! $record->hasSetMutator($fieldKey) && ! $record->hasAttributeSetMutator($fieldKey)) {
                 continue;
@@ -277,8 +272,7 @@ class ResourceController extends CpController
                 continue;
             }
 
-            // Skip section, HasMany and computed fields as there's nothing to store.
-            if ($field->type() === 'section' || $field->type() === 'has_many' || $field->visibility() === 'computed') {
+            if ($field->type() === 'has_many') {
                 continue;
             }
 
@@ -377,6 +371,14 @@ class ResourceController extends CpController
     protected function shouldSaveField(Field $field): bool
     {
         $config = $field->config();
+
+        if ($field->type() === 'section') {
+            return false;
+        }
+
+        if ($field->visibility() === 'computed') {
+            return false;
+        }
 
         if (isset($config['save']) && $config['save'] === false) {
             return false;
