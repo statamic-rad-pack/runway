@@ -71,4 +71,56 @@ class ResourceTest extends TestCase
         $this->assertContains('author', $eagerLoadingRelations->toArray());
         $this->assertNotContains('runwayUri', $eagerLoadingRelations->toArray());
     }
+
+    /** @test */
+    public function can_get_generated_singular()
+    {
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $singular = $resource->singular();
+
+        $this->assertSame($singular, 'Post');
+    }
+
+    /** @test */
+    public function can_get_configured_singular()
+    {
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Post.singular', 'Bibliothek');
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $singular = $resource->singular();
+
+        $this->assertSame($singular, 'Bibliothek');
+    }
+
+    /** @test */
+    public function can_get_generated_plural()
+    {
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $plural = $resource->plural();
+
+        $this->assertSame($plural, 'Posts');
+    }
+
+    /** @test */
+    public function can_get_configured_plural()
+    {
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Post.plural', 'Bibliotheken');
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $plural = $resource->plural();
+
+        $this->assertSame($plural, 'Bibliotheken');
+    }
 }
