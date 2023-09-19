@@ -103,12 +103,12 @@ class Resource
 
     public function singular(): string
     {
-        return Str::singular($this->name);
+        return $this->config()->get('singular') ?? Str::singular($this->name);
     }
 
     public function plural(): string
     {
-        return Str::plural($this->name);
+        return $this->config()->get('plural') ?? Str::plural($this->name);
     }
 
     public function blueprint()
