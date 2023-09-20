@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+## v5.3.0 (2023-09-20)
+
+### What's new
+
+* Added `singular`/`plural` configuration options to resources #339 by @duncanmcclean
+* Migrations are now generated using the anonymous class syntax #332 by @duncanmcclean
+
+### What's improved
+
+* When generating migrations from a blueprint & a fieldtype can't be mapped to a column type, Runway will now add a `TODO` for you to complete the migration #334 by @duncanmcclean
+
+### What's fixed
+
+* Ensure migrations aren't run if the user didn't ask for them to be run #333 by @duncanmcclean
+* Fixed UI issues with the sidebar on the publish from #338 by @duncanmcclean
+
 ## v5.2.2 (2023-09-10)
 
 ### What's fixed
