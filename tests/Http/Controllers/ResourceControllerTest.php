@@ -234,6 +234,17 @@ class ResourceControllerTest extends TestCase
     }
 
     /** @test */
+    public function cant_edit_resource_when_it_does_not_exist()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $this->actingAs($user)
+            ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => 12345]))
+            ->assertNotFound()
+            ->assertSee('Page Not Found');
+    }
+
+    /** @test */
     public function can_edit_resource_with_simple_date_field()
     {
         $fields = Config::get('runway.resources.'.Post::class.'.blueprint.sections.main.fields');
