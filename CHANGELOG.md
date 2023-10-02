@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v5.3.1 (2023-10-02)
+
+### What's fixed
+
+* Query parameters are now preserved when using pagination with the Runway tag #349 #350 by @duncanmcclean
+* A 404 is now thrown when a record can't be found in the Control Panel, rather than an error #347 by @duncanmcclean
+
 ## v5.3.0 (2023-09-20)
 
 ### What's new
