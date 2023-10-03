@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v5.3.2 (2023-10-03)
+
+### What's fixed
+
+* Fixed an issue where *sometimes*, under certain circumstances, you'd get an error with the HasMany fieldtype #342
+
 ## v5.3.1 (2023-10-02)
 
 ### What's fixed
