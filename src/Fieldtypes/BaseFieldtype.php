@@ -337,7 +337,7 @@ class BaseFieldtype extends Relationship
         ];
     }
 
-    protected function makeTitle($record, $resource): string
+    protected function makeTitle($record, $resource): ?string
     {
         if (! $titleFormat = $this->config('title_format')) {
             $firstListableColumn = $resource->titleField();
