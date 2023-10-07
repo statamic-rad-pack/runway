@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v5.3.3 (2023-10-07)
+
+### What's fixed
+
+* 2nd attempt at fixing an issue where query parameters weren't being preserved in pagination links when using the Runway tag #349 #351
+
 ## v5.3.2 (2023-10-03)
 
 ### What's fixed
