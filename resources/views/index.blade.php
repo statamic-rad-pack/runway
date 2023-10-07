@@ -20,19 +20,11 @@
         @endif
     </div>
 
-    @if ($recordCount > 0)
-        <runway-listing
-            :filters="{{ $filters->toJson() }}"
-            :listing-config='@json($listingConfig)'
-            :initial-columns='@json($columns)'
-            action-url="{{ $actionUrl }}"
-            initial-primary-column="{{ $primaryColumn }}"
-        ></runway-listing>
-     @else
-        @include('statamic::partials.create-first', [
-            'resource' => $resource->singular(),
-            'svg' => 'empty/collection',
-            'route' => cp_route('runway.create', ['resourceHandle' => $resource->handle()]),
-        ])
-     @endif
+    <runway-listing
+        :filters="{{ $filters->toJson() }}"
+        :listing-config='@json($listingConfig)'
+        :initial-columns='@json($columns)'
+        action-url="{{ $actionUrl }}"
+        initial-primary-column="{{ $primaryColumn }}"
+    ></runway-listing>
 @endsection
