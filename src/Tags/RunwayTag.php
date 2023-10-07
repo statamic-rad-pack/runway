@@ -92,7 +92,7 @@ class RunwayTag extends Tags
         }
 
         if ($this->params->get('paginate') || $this->params->get('limit')) {
-            $paginator = $query->paginate($this->params->get('limit'))->withQueryString();
+            $paginator = $query->paginate($this->params->get('limit'));
 
             $paginator = app()->makeWith(LengthAwarePaginator::class, [
                 'items' => $paginator->items(),
@@ -100,7 +100,7 @@ class RunwayTag extends Tags
                 'perPage' => $paginator->perPage(),
                 'currentPage' => $paginator->currentPage(),
                 'options' => $paginator->getOptions(),
-            ]);
+            ])->withQueryString();
 
             $results = $paginator->items();
         } else {
