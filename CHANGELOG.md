@@ -2,6 +2,41 @@
 
 ## Unreleased
 
+## v5.3.3 (2023-10-07)
+
+### What's fixed
+
+* 2nd attempt at fixing an issue where query parameters weren't being preserved in pagination links when using the Runway tag #349 #351
+
+## v5.3.2 (2023-10-03)
+
+### What's fixed
+
+* Fixed an issue where *sometimes*, under certain circumstances, you'd get an error with the HasMany fieldtype #342
+
+## v5.3.1 (2023-10-02)
+
+### What's fixed
+
+* Query parameters are now preserved when using pagination with the Runway tag #349 #350 by @duncanmcclean
+* A 404 is now thrown when a record can't be found in the Control Panel, rather than an error #347 by @duncanmcclean
+
+## v5.3.0 (2023-09-20)
+
+### What's new
+
+* Added `singular`/`plural` configuration options to resources #339 by @duncanmcclean
+* Migrations are now generated using the anonymous class syntax #332 by @duncanmcclean
+
+### What's improved
+
+* When generating migrations from a blueprint & a fieldtype can't be mapped to a column type, Runway will now add a `TODO` for you to complete the migration #334 by @duncanmcclean
+
+### What's fixed
+
+* Ensure migrations aren't run if the user didn't ask for them to be run #333 by @duncanmcclean
+* Fixed UI issues with the sidebar on the publish from #338 by @duncanmcclean
+
 ## v5.2.2 (2023-09-10)
 
 ### What's fixed

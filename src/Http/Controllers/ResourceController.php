@@ -13,6 +13,7 @@ use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Support\Json;
 use Statamic\CP\Breadcrumbs;
+use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Facades\Scope;
 use Statamic\Facades\User;
 use Statamic\Fields\Field;
@@ -168,6 +169,10 @@ class ResourceController extends CpController
         $record = $resource->model()
             ->where($resource->model()->qualifyColumn($resource->routeKey()), $record)
             ->first();
+
+        if (! $record) {
+            throw new NotFoundHttpException();
+        }
 
         $values = [];
         $blueprintFieldKeys = $resource->blueprint()->fields()->all()->keys()->toArray();

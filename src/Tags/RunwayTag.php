@@ -100,7 +100,7 @@ class RunwayTag extends Tags
                 'perPage' => $paginator->perPage(),
                 'currentPage' => $paginator->currentPage(),
                 'options' => $paginator->getOptions(),
-            ]);
+            ])->withQueryString();
 
             $results = $paginator->items();
         } else {
