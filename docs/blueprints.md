@@ -141,3 +141,32 @@ You may also run this same command for all resources:
 ```
 php please runway:generate-blueprints
 ```
+
+## Computed Fields
+
+Like Statamic Core, Runway supports the concept of Computed Fields. However, instead of the computed values being part of a callback in your `AppServiceProvider`, they're accessors on your Eloquent model.
+
+For example, if you wanted to have a `full_name` field that's computed based on the user's first & last name, you'd do something like this in your `User` model:
+
+```php
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
+public function fullName(): Attribute
+{
+    return Attribute::make(
+        get: function () {
+            return "{$this->first_name} {$this->last_name}";
+        }
+    );
+}
+```
+
+Then, in your user blueprint, you'd define `visibility: computed` in the field's config, like you would normally:
+
+```yaml
+-
+    handle: full_name
+    field:
+        type: text
+        visibility: computed
+```
