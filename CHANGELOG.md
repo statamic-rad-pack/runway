@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## v5.4.0 (2023-10-20)
+
+### What's new
+
+* Added support for a new `save: false` config option on fields to disable field values being saved #353 by @edalzell
+
+### What's improved
+
+* When a resource has no records, you'll now see the listing table rather than an empty state #352 by @duncanmcclean
+
 ## v5.3.3 (2023-10-07)
 
 ### What's fixed
