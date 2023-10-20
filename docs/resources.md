@@ -58,23 +58,19 @@ Finally, you need to create a blueprint for your resource, there's [documentatio
 
 ## Resource Blueprints
 
-### Creating a new blueprint
+Blueprints are a key component to the content modeling process. They let you define the fields that should be available in the Control Panel and the way your data is stored.
 
-Unfortunately, you can’t yet create/edit blueprints used for Runway in the Control Panel but it’s something we’re hoping comes in the future (it’s a Statamic Core change).
+### Creating a resource blueprint
 
-However, we can workaround it for now. Instead, create a new blueprint for one of your collections, taxonomies etc (it doesn’t matter).
+Unfortunately, it's not yet possible to manage Runway blueprints in the Control Panel as there's no way for addons to "register" their own blueprints.
 
-When creating it, add in all the fields you need. Remember that the field handles need to match up with the column names, otherwise bad things will happen.
+In the meantime, you can create a blueprint for a collection, then move the outputted YAML file to the `resources/blueprints` directory.
 
-Once created via the CP, you’ll find the blueprint’s YAML file in a folder somewhere, probably something like `resources/blueprints/collections/pages/my-special-blueprint.yaml`.
+:::note Note!
+Remember that the field handles in your blueprint should match up exactly with the column names in the database, otherwise bad things will happen.
+:::
 
-You’ll want to move the file of the blueprint you just created into the root `resources/blueprints` folder.
-
-Next, you’ll want to actually use the blueprint… (explained in the next point)
-
-### Configure which blueprint to use
-
-To use the blueprint you just created (or use one you’ve already created), you can simply specify it’s ‘namespace’ as a `blueprint` key in your resource configuration.
+Now, to use the blueprint you just created, simply specify it's "namespace" (usually just its filename, minus the `.yaml` extension) as a `blueprint` key in your resources's config array:
 
 ```php
 'resources' => [
@@ -85,76 +81,11 @@ To use the blueprint you just created (or use one you’ve already created), you
 ],
 ```
 
-If you’re blueprint is in the root `resources/blueprints` directory (which I’d recommend by the way), you just need to specify the blueprint’s handle.
+If you want to store your resource's blueprint inside a directory, like `resources/blueprints/runway`, you'll need to specify the blueprint as `runway.blueprint_name`.
 
-If it’s inside a folder like `resources/blueprints/foo/order.yaml`, you can specify it like so: `foo.order`
+### More information
 
-### Generating migrations from your blueprints
-
-If you’ve already went and created a blueprint for your model(s) and still to do the database side of things, Runway can help!
-Runway can automatically generate migrations for your models, based on the fields defined in your blueprint, and their configurations.
-
-To generate a migration for a specific blueprint:
-
-```
-php please runway:generate-migrations resource-handle
-```
-
-You may also run this same command for all resources pending a migration.
-
-```
-php please runway:generate-migrations
-```
-
-### Generating blueprints from your database
-
-If you've already got an Eloquent model setup, Runway can help you turn it into a blueprint!
-
-Before you can generate, you'll need to install the [`doctrine/dbal`](https://github.com/doctrine/dbal) package as it'll be used by Runway to analyse your database columns. You'll also need to have migrated your database already.
-
-As well as having your model setup, you will also need to add the resource(s) to your `config/runway.php` config.
-
-To generate a blueprint for a specific resource:
-
-```
-php please runway:generate-blueprints resource-handle
-```
-
-You may also run this same command for all resources:
-
-```
-php please runway:generate-blueprints
-```
-
-### Nesting fields inside JSON columns
-
-To avoid creating a migration for every new field you add to a blueprint, fields can be stored within a JSON column. To do so, use the `->` symbol within the field handle:
-
-```yaml
-fields:
-  -
-    handle: 'values->excerpt'
-    field:
-      type: text
-```
-
-Your table will need to have a suitable column:
-
-```php
-$table->json('values')->nullable();
-```
-
-And the cast defined on the model:
-
-```php
-protected $casts = [
-    'values' => 'array', // or 'json', AsArrayObject::class
-];
-```
-
-:::note Note!
-Nested Fields aren't currently available in GraphQL.
-:::
+For more information about using Blueprints in Runway, please review the [Blueprints](/blueprints) page.
 
 ## Configuring resources
 
