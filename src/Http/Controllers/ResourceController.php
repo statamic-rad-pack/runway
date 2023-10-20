@@ -107,8 +107,7 @@ class ResourceController extends CpController
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
 
-            // Skip section fields or computed fields as there's nothing to store.
-            if ($field->type() === 'section' || $field->visibility() === 'computed') {
+            if (! $this->shouldSaveField($field)) {
                 continue;
             }
 
@@ -274,8 +273,11 @@ class ResourceController extends CpController
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
             $processedValue = $field->fieldtype()->process($request->get($fieldKey));
 
-            // Skip section, HasMany and computed fields as there's nothing to store.
-            if ($field->type() === 'section' || $field->type() === 'has_many' || $field->visibility() === 'computed') {
+            if (! $this->shouldSaveField($field)) {
+                continue;
+            }
+
+            if ($field->type() === 'has_many') {
                 continue;
             }
 
@@ -369,5 +371,24 @@ class ResourceController extends CpController
         }
 
         return $resource->titleField();
+    }
+
+    protected function shouldSaveField(Field $field): bool
+    {
+        $config = $field->config();
+
+        if ($field->type() === 'section') {
+            return false;
+        }
+
+        if ($field->visibility() === 'computed') {
+            return false;
+        }
+
+        if (isset($config['save']) && $config['save'] === false) {
+            return false;
+        }
+
+        return true;
     }
 }

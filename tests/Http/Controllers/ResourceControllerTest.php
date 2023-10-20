@@ -133,6 +133,34 @@ class ResourceControllerTest extends TestCase
 
     /**
      * @test
+     * https://github.com/duncanmcclean/runway/issues/331
+     */
+    public function can_store_resource_and_ensure_field_isnt_saved_to_database()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $author = $this->authorFactory();
+
+        $this->actingAs($user)
+            ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
+                'title' => 'Jingle Bells',
+                'slug' => 'jingle-bells',
+                'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
+                'author_id' => [$author->id],
+                'dont_save' => 25,
+            ])
+            ->assertOk()
+            ->assertJsonStructure([
+                'redirect',
+            ]);
+
+        $this->assertDatabaseHas('posts', [
+            'title' => 'Jingle Bells',
+        ]);
+    }
+
+    /**
+     * @test
      * https://github.com/duncanmcclean/runway/pull/247
      */
     public function can_store_resource_and_ensure_appended_attribute_doesnt_attempt_to_get_saved()
@@ -508,6 +536,34 @@ class ResourceControllerTest extends TestCase
                 'body' => $post->body,
                 'author_id' => [$post->author_id],
                 'age' => 19, // This is the computed field
+            ])
+            ->assertOk()
+            ->assertJsonStructure([
+                'data',
+            ]);
+
+        $post->refresh();
+
+        $this->assertSame($post->title, 'Santa is coming home');
+    }
+
+    /**
+     *  @test
+     * https://github.com/duncanmcclean/runway/issues/331
+     */
+    public function can_update_resource_and_ensure__field_isnt_saved_to_database()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $post = $this->postFactory();
+
+        $this->actingAs($user)
+            ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
+                'title' => 'Santa is coming home',
+                'slug' => 'santa-is-coming-home',
+                'body' => $post->body,
+                'author_id' => [$post->author_id],
+                'dont_save' => 19,
             ])
             ->assertOk()
             ->assertJsonStructure([
