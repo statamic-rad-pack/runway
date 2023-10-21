@@ -7,6 +7,7 @@ use DoubleThreeDigital\Runway\Query\Scopes\Filters\Fields\Models;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Statamic\CP\Column;
@@ -205,14 +206,22 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        $result = collect($values)
-            ->map(function ($item) use ($resource) {
-                if (is_array($item) && isset($item[$resource->primaryKey()])) {
-                    return $item[$resource->primaryKey()];
-                }
+        if ($values instanceof HasMany) {
+            $results = $values
+                ->get()
+                ->map->toAugmentedArray()
+                ->filter();
 
-                return $item;
-            })
+            if ($this->config('max_items') === 1) {
+                return $results->first();
+            }
+
+            return $results;
+        }
+
+        $values = Arr::wrap($values);
+
+        $results = collect($values)
             ->map(function ($record) use ($resource) {
                 if (! $record instanceof Model) {
                     $eagerLoadingRelations = collect($this->config('with') ?? [])->join(',');
@@ -230,15 +239,15 @@ class BaseFieldtype extends Relationship
                     return null;
                 }
 
-                return $resource->augment($record);
+                return $record->toAugmentedArray();
             })
             ->filter();
 
         if ($this->config('max_items') === 1) {
-            return $result->first();
+            return $results->first();
         }
 
-        return $result->toArray();
+        return $results->toArray();
     }
 
     // Provides the columns used if you're in 'Stacks' mode
