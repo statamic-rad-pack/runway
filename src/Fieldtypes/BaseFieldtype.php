@@ -250,6 +250,54 @@ class BaseFieldtype extends Relationship
         return $results->toArray();
     }
 
+    public function shallowAugment($values)
+    {
+        $resource = Runway::findResource($this->config('resource'));
+
+        if ($values instanceof HasMany) {
+            $results = $values
+                ->get()
+                ->map->toShallowAugmentedArray()
+                ->filter();
+
+            if ($this->config('max_items') === 1) {
+                return $results->first();
+            }
+
+            return $results;
+        }
+
+        $values = Arr::wrap($values);
+
+        $results = collect($values)
+            ->map(function ($record) use ($resource) {
+                if (! $record instanceof Model) {
+                    $eagerLoadingRelations = collect($this->config('with') ?? [])->join(',');
+
+                    $record = Blink::once("Runway::{$this->config('resource')}::{$record}}::{$eagerLoadingRelations}", function () use ($resource, $record) {
+                        return $resource->model()
+                            ->when($this->config('with'), function ($query) {
+                                $query->with(Arr::wrap($this->config('with')));
+                            })
+                            ->firstWhere($resource->primaryKey(), $record);
+                    });
+                }
+
+                if (! $record) {
+                    return null;
+                }
+
+                return $record->toShallowAugmentedArray();
+            })
+            ->filter();
+
+        if ($this->config('max_items') === 1) {
+            return $results->first();
+        }
+
+        return $results->toArray();
+    }
+
     // Provides the columns used if you're in 'Stacks' mode
     protected function getColumns()
     {
