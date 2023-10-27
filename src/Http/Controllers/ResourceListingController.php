@@ -5,6 +5,7 @@ namespace DoubleThreeDigital\Runway\Http\Controllers;
 use DoubleThreeDigital\Runway\Http\Resources\ResourceCollection;
 use DoubleThreeDigital\Runway\Runway;
 use Statamic\Facades\User;
+use Statamic\Fields\Field;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
 use Statamic\Query\Scopes\Filters\Concerns\QueriesFilters;
@@ -48,15 +49,15 @@ class ResourceListingController extends CpController
                     $query->runwaySearch($searchQuery);
                 },
                 function ($query) use ($searchQuery, $blueprint) {
-                    $blueprint->fields()->items()
-                        ->reject(function (array $field) {
-                            return $field['field']['type'] === 'has_many'
-                                || $field['field']['type'] === 'hidden'
-                                || $field['field']['type'] === 'section'
-                                || (isset($field['field']['visibility']) && $field['field']['visibility'] === 'computed');
+                    $blueprint->fields()->all()
+                        ->reject(function (Field $field) {
+                            return $field->type() === 'has_many'
+                                || $field->type() === 'hidden'
+                                || $field->type() === 'section'
+                                || $field->visibility() === 'computed';
                         })
-                        ->each(function (array $field) use ($query, $searchQuery) {
-                            $query->orWhere($field['handle'], 'LIKE', '%'.$searchQuery.'%');
+                        ->each(function (Field $field) use ($query, $searchQuery) {
+                            $query->orWhere($field->handle(), 'LIKE', '%'.$searchQuery.'%');
                         });
                 }
             );
