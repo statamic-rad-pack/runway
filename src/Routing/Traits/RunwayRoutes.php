@@ -83,7 +83,7 @@ trait RunwayRoutes
             }
 
             $uri = (new Parser())
-                ->parse($resource->route(), $resource->augment($model))
+                ->parse($resource->route(), $model->toAugmentedArray())
                 ->__toString();
 
             $uri = Str::start($uri, '/');
