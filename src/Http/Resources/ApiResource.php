@@ -14,9 +14,12 @@ class ApiResource extends JsonResource
      */
     public function toArray($request)
     {
-        return $this->resource
-            ->toAugmentedCollection()
-            ->withShallowNesting()
-            ->toArray();
+        return array_merge([
+                $this->resource->primaryKey() => $this->resource->model()->getKey(),   
+            ], $this->resource
+                ->toAugmentedCollection()
+                ->withShallowNesting()
+                ->toArray()
+            );
     }
 }
