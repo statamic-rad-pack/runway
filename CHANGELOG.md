@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v5.4.1 (2023-11-03)
+
+### What's fixed
+
+* Search on the Listing Table will no longer error when you have imported fields #355 by @edalzell
+
 ## v5.4.0 (2023-10-20)
 
 ### What's new
