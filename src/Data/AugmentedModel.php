@@ -5,6 +5,7 @@ namespace DoubleThreeDigital\Runway\Data;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Support\Collection;
 use Statamic\Data\AbstractAugmented;
+use Statamic\Fields\Value;
 
 class AugmentedModel extends AbstractAugmented
 {
@@ -32,6 +33,7 @@ class AugmentedModel extends AbstractAugmented
         return collect()
             ->merge($this->modelAttributes()->keys())
             ->merge($this->blueprintFields()->keys())
+            ->merge($this->eloquentRelationships()->values())
             ->merge($this->commonKeys())
             ->unique()->sort()->values()->all();
     }
@@ -64,8 +66,36 @@ class AugmentedModel extends AbstractAugmented
         return $this->resource->blueprint()->fields()->all();
     }
 
+    protected function eloquentRelationships()
+    {
+        return $this->resource->eagerLoadingRelations();
+    }
+
     protected function getFromData($handle)
     {
         return $this->supplements[$handle] ?? $this->data->$handle;
+    }
+
+    protected function wrapValue($value, $handle)
+    {
+        $fields = $this->blueprintFields();
+
+        if ($this->resource->eagerLoadingRelations()->flip()->has($handle)) {
+            $relatedField = $this->resource->eagerLoadingRelations()->flip()->get($handle);
+
+            return new Value(
+                $value,
+                $handle,
+                optional($fields->get($relatedField))->fieldtype(),
+                $this->data
+            );
+        }
+
+        return new Value(
+            $value,
+            $handle,
+            optional($fields->get($handle))->fieldtype(),
+            $this->data
+        );
     }
 }

@@ -8,6 +8,7 @@ use DoubleThreeDigital\Runway\Tests\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Antlers;
+use Statamic\Fields\Value;
 
 class RunwayTagTest extends TestCase
 {
@@ -58,25 +59,25 @@ class RunwayTagTest extends TestCase
 
         $this->assertSame(5, count($usage));
 
-        $this->assertSame((string) $usage[0]['title'], $posts[0]->title);
-        $this->assertSame((string) $usage[0]['slug'], $posts[0]->slug);
-        $this->assertEmpty((string) $usage[0]['body']);
+        $this->assertSame((string) $usage[0]['title']->value(), $posts[0]->title);
+        $this->assertSame((string) $usage[0]['slug']->value(), $posts[0]->slug);
+        $this->assertEmpty((string) $usage[0]['body']->value());
 
-        $this->assertSame((string) $usage[1]['title'], $posts[1]->title);
-        $this->assertSame((string) $usage[1]['slug'], $posts[1]->slug);
-        $this->assertEmpty((string) $usage[1]['body']);
+        $this->assertSame((string) $usage[1]['title']->value(), $posts[1]->title);
+        $this->assertSame((string) $usage[1]['slug']->value(), $posts[1]->slug);
+        $this->assertEmpty((string) $usage[1]['body']->value());
 
-        $this->assertSame((string) $usage[2]['title'], $posts[2]->title);
-        $this->assertSame((string) $usage[2]['slug'], $posts[2]->slug);
-        $this->assertEmpty((string) $usage[2]['body']);
+        $this->assertSame((string) $usage[2]['title']->value(), $posts[2]->title);
+        $this->assertSame((string) $usage[2]['slug']->value(), $posts[2]->slug);
+        $this->assertEmpty((string) $usage[2]['body']->value());
 
-        $this->assertSame((string) $usage[3]['title'], $posts[3]->title);
-        $this->assertSame((string) $usage[3]['slug'], $posts[3]->slug);
-        $this->assertEmpty((string) $usage[3]['body']);
+        $this->assertSame((string) $usage[3]['title']->value(), $posts[3]->title);
+        $this->assertSame((string) $usage[3]['slug']->value(), $posts[3]->slug);
+        $this->assertEmpty((string) $usage[3]['body']->value());
 
-        $this->assertSame((string) $usage[4]['title'], $posts[4]->title);
-        $this->assertSame((string) $usage[4]['slug'], $posts[4]->slug);
-        $this->assertEmpty((string) $usage[4]['body']);
+        $this->assertSame((string) $usage[4]['title']->value(), $posts[4]->title);
+        $this->assertSame((string) $usage[4]['slug']->value(), $posts[4]->slug);
+        $this->assertEmpty((string) $usage[4]['body']->value());
     }
 
     /** @test */
@@ -95,9 +96,9 @@ class RunwayTagTest extends TestCase
         $usage = $this->tag->wildcard('post');
 
         $this->assertSame(3, count($usage));
-        $this->assertSame((string) $usage[0]['title'], 'Pasta');
-        $this->assertSame((string) $usage[1]['title'], 'Apple');
-        $this->assertSame((string) $usage[2]['title'], 'Burger');
+        $this->assertSame((string) $usage[0]['title']->value(), 'Pasta');
+        $this->assertSame((string) $usage[1]['title']->value(), 'Apple');
+        $this->assertSame((string) $usage[2]['title']->value(), 'Burger');
     }
 
     /** @test */
@@ -120,7 +121,7 @@ class RunwayTagTest extends TestCase
         $usage = $this->tag->wildcard('post');
 
         $this->assertSame(1, count($usage));
-        $this->assertSame((string) $usage[0]['title'], 'Apple');
+        $this->assertSame((string) $usage[0]['title']->value(), 'Apple');
     }
 
     /** @test */
@@ -143,7 +144,7 @@ class RunwayTagTest extends TestCase
         $usage = $this->tag->wildcard('post');
 
         $this->assertSame(1, count($usage));
-        $this->assertSame((string) $usage[0]['title'], 'Apple');
+        $this->assertSame((string) $usage[0]['title']->value(), 'Apple');
     }
 
     /** @test */
@@ -160,7 +161,7 @@ class RunwayTagTest extends TestCase
         $usage = $this->tag->wildcard('post');
 
         $this->assertSame(1, count($usage));
-        $this->assertSame((string) $usage[0]['title'], 'penguin');
+        $this->assertSame((string) $usage[0]['title']->value(), 'penguin');
     }
 
     /** @test */
@@ -180,9 +181,9 @@ class RunwayTagTest extends TestCase
         $usage = $this->tag->wildcard('post');
 
         $this->assertSame(3, count($usage));
-        $this->assertSame((string) $usage[0]['title'], $posts[0]->title);
-        $this->assertSame((string) $usage[1]['title'], $posts[2]->title);
-        $this->assertSame((string) $usage[2]['title'], $posts[3]->title);
+        $this->assertSame((string) $usage[0]['title']->value(), $posts[0]->title);
+        $this->assertSame((string) $usage[1]['title']->value(), $posts[2]->title);
+        $this->assertSame((string) $usage[2]['title']->value(), $posts[3]->title);
     }
 
     /** @test */
@@ -201,8 +202,8 @@ class RunwayTagTest extends TestCase
         $this->assertSame(5, count($usage));
         $this->assertSame((string) $usage[0]['title'], 'tiger');
 
-        $this->assertIsArray($usage[0]['author']);
-        $this->assertSame($usage[0]['author']['name'], $posts[0]->author->name);
+        $this->assertInstanceOf(Value::class, $usage[0]['author']);
+        $this->assertSame($usage[0]['author']->value()['name']->value(), $posts[0]->author->name);
     }
 
     /** @test */
@@ -298,11 +299,11 @@ class RunwayTagTest extends TestCase
 
         $this->assertSame(2, count($usage));
 
-        $this->assertSame($usage[0]['id'], $posts[0]['id']);
-        $this->assertSame($usage[1]['id'], $posts[1]['id']);
+        $this->assertSame($usage[0]['id']->value(), $posts[0]['id']);
+        $this->assertSame($usage[1]['id']->value(), $posts[1]['id']);
 
-        $this->assertSame((string) $usage[0]['title'], $posts[0]['title']);
-        $this->assertSame((string) $usage[1]['title'], $posts[1]['title']);
+        $this->assertSame((string) $usage[0]['title']->value(), $posts[0]['title']);
+        $this->assertSame((string) $usage[1]['title']->value(), $posts[1]['title']);
     }
 
     /** @test */

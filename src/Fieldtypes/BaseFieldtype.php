@@ -7,6 +7,7 @@ use DoubleThreeDigital\Runway\Query\Scopes\Filters\Fields\Models;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -207,6 +208,19 @@ class BaseFieldtype extends Relationship
         $resource = Runway::findResource($this->config('resource'));
 
         if ($values instanceof HasMany) {
+            $results = $values
+                ->get()
+                ->map->toAugmentedArray()
+                ->filter();
+
+            if ($this->config('max_items') === 1) {
+                return $results->first();
+            }
+
+            return $results;
+        }
+
+        if ($values instanceof BelongsTo) {
             $results = $values
                 ->get()
                 ->map->toAugmentedArray()
