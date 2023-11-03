@@ -157,7 +157,7 @@ class ServiceProvider extends AddonServiceProvider
                 GraphQL::addQuery("runway_graphql_queries_{$resource->handle()}_show");
             });
     }
-    
+
     protected function bootRestApi()
     {
         if (config('statamic.api.enabled')) {
@@ -169,7 +169,7 @@ class ServiceProvider extends AddonServiceProvider
                 Route::middleware(config('statamic.api.middleware'))
                     ->name('statamic.api.')
                     ->prefix(config('statamic.api.route'))
-                    ->group(function () { 
+                    ->group(function () {
                         Runway::allResources()
                             ->each(function (Resource $resource) {
                                 Route::name('runway.'.$resource->handle().'.index')->get('runway/{resource}', [RestApiController::class, 'index']);

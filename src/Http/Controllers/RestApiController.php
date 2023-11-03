@@ -13,44 +13,47 @@ use Statamic\Http\Controllers\API\ApiController;
 class RestApiController extends ApiController
 {
     private $config;
+
     protected $resourceConfigKey = 'runway';
+
     protected $routeResourceKey = 'resource';
+
     protected $resourceHandle;
 
     public function index($resource)
     {
         $this->abortIfDisabled();
-        
+
         $this->resourceHandle = $resource;
 
         $resource = Runway::findResource($resource);
-            
+
         if (! $resource) {
             throw new NotFoundHttpException;
         }
-        
+
         $results = $this->filterSortAndPaginate($resource->model()->query());
         $results->setCollection($results->getCollection()->map(fn ($model) => $this->makeResourceFromModel($resource, $model)));
-        
+
         return ApiResource::collection($results);
     }
 
     public function show($resource, $id)
     {
         $this->abortIfDisabled();
-        
+
         $this->resourceHandle = $resource;
-        
+
         $resource = Runway::findResource($resource);
-            
+
         if (! $resource) {
             throw new NotFoundHttpException;
         }
-        
+
         if (! $model = $resource->model()->find($id)) {
             throw new NotFoundHttpException;
         }
-        
+
         return ApiResource::make($this->makeResourceFromModel($resource, $model));
     }
 
@@ -58,7 +61,7 @@ class RestApiController extends ApiController
     {
         return FilterAuthorizer::allowedForSubResources('api', $this->resourceConfigKey, $this->resourceHandle);
     }
-    
+
     private function makeResourceFromModel($resource, $model)
     {
         if (! $this->config) {
