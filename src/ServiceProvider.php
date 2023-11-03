@@ -2,16 +2,21 @@
 
 namespace DoubleThreeDigital\Runway;
 
+use DoubleThreeDigital\Runway\Http\Controllers\RestApiController;
 use DoubleThreeDigital\Runway\Policies\ResourcePolicy;
 use DoubleThreeDigital\Runway\Search\Provider as SearchProvider;
 use DoubleThreeDigital\Runway\Search\Searchable;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Traits\Conditionable;
+use Statamic\API\Middleware\Cache;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
 use Statamic\Facades\Permission;
 use Statamic\Facades\Search;
+use Statamic\Http\Middleware\API\SwapExceptionHandler as SwapAPIExceptionHandler;
+use Statamic\Http\Middleware\RequireStatamicPro;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 
@@ -80,6 +85,7 @@ class ServiceProvider extends AddonServiceProvider
             $this->registerPolicies();
             $this->registerNavigation();
             $this->bootGraphQl();
+            $this->bootRestApi();
 
             SearchProvider::register();
             $this->bootModelEventListeners();
@@ -150,6 +156,28 @@ class ServiceProvider extends AddonServiceProvider
                 GraphQL::addQuery("runway_graphql_queries_{$resource->handle()}_index");
                 GraphQL::addQuery("runway_graphql_queries_{$resource->handle()}_show");
             });
+    }
+    
+    protected function bootRestApi()
+    {
+        if (config('statamic.api.enabled')) {
+            Route::middleware([
+                SwapApiExceptionHandler::class,
+                RequireStatamicPro::class,
+                Cache::class,
+            ])->group(function () {
+                Route::middleware(config('statamic.api.middleware'))
+                    ->name('statamic.api.')
+                    ->prefix(config('statamic.api.route'))
+                    ->group(function () { 
+                        Runway::allResources()
+                            ->each(function (Resource $resource) {
+                                Route::name('runway.'.$resource->handle().'.index')->get('runway/{resource}', [RestApiController::class, 'index']);
+                                Route::name('runway.'.$resource->handle().'.show')->get('runway/{resource}/{id}', [RestApiController::class, 'show']);
+                            });
+                    });
+            });
+        }
     }
 
     protected function bootModelEventListeners()
