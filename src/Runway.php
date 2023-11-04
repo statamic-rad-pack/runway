@@ -17,20 +17,21 @@ class Runway
         static::$resources = collect(config('runway.resources'))
             ->mapWithKeys(function ($config, $model) {
                 $blueprint = null;
-                $handle = Str::lower(class_basename($model));
+                $config = collect($config);
 
-                if (isset($config['handle'])) {
-                    $handle = $config['handle'];
-                }
+                $handle = $config->get('handle', Str::lower(class_basename($model)));
 
-                if (! in_array(Traits\HasRunwayResource::class, class_uses_recursive($model))) {
-                    throw new \Exception(__('The HasRunwayResource trait is missing from the [:model] model.', ['model' => $model]));
-                }
-                if (! isset($config['blueprint'])) {
-                    throw new \Exception(__('The [:model] model is missing a blueprint.', ['model' => $model]));
-                }
+                throw_if(
+                    ! in_array(Traits\HasRunwayResource::class, class_uses_recursive($model)),
+                    new \Exception(__('The HasRunwayResource trait is missing from the [:model] model.', ['model' => $model]))
+                );
 
-                if (is_string($config['blueprint'])) {
+                throw_if(
+                    ! $config->has('blueprint'),
+                    new \Exception(__('The [:model] model is missing a blueprint.', ['model' => $model]))
+                );
+
+                if (is_string($config->get('blueprint'))) {
                     try {
                         $blueprint = Blueprint::find($config['blueprint']);
                     } catch (\Exception $e) {
@@ -44,10 +45,8 @@ class Runway
                     }
                 }
 
-                if (is_array($config['blueprint'])) {
-                    $blueprint = Blueprint::make()
-                        ->setHandle($handle)
-                        ->setContents($config['blueprint']);
+                if (is_array($config->get('blueprint'))) {
+                    $blueprint = Blueprint::make()->setHandle($handle)->setContents($config['blueprint']);
                 }
 
                 $resource = new Resource(
@@ -60,7 +59,7 @@ class Runway
 
                 return [$handle => $resource];
             })
-            ->reject(fn ($resource, $handle) => is_null($resource))
+            ->filter()
             ->toArray();
 
         return new static();
@@ -95,9 +94,6 @@ class Runway
 
     public static function usesRouting(): bool
     {
-        return static::allResources()
-            ->filter
-            ->hasRouting()
-            ->count() >= 1;
+        return static::allResources()->filter->hasRouting()->count() >= 1;
     }
 }
