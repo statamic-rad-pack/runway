@@ -15,16 +15,8 @@ jobs:
         with:
           regex: '^\[\d+\.x\]\s'
 
-      - name: Validate if PR targets a release branch
-        uses: actions-ecosystem/action-regex-match@v2
-        id: targets-release
-        if: always() && (steps.validate-pr-title.outcome == 'failure')
-        with:
-          text: ${{ github.base_ref }}
-          regex: '^\[\d+\.x\]\s'
-
       - name: Update PR title
-        if: always() && (steps.validate-pr-title.outcome == 'failure' && steps.targets-release.outcome != 'failure')
+        if: always() && (steps.validate-pr-title.outcome == 'failure')
         run: |
           echo "Updating PR title"
           curl -X PATCH \
