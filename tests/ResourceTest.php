@@ -143,7 +143,7 @@ class ResourceTest extends TestCase
                         ['handle' => 'summary', 'field' => ['type' => 'textarea', 'listable' => true]],
                         ['handle' => 'body', 'field' => ['type' => 'markdown', 'listable' => 'hidden']],
                         ['handle' => 'thumbnail', 'field' => ['type' => 'assets', 'listable' => false]],
-                        ['import' => 'seo']
+                        ['import' => 'seo'],
                     ],
                 ],
             ],
