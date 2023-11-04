@@ -100,6 +100,23 @@ class BelongsToFieldtypeTest extends TestCase
     }
 
     /** @test */
+    public function can_get_index_items_and_search()
+    {
+        Author::factory()->count(10)->create();
+        $hasselhoff = Author::factory()->create(['name' => 'David Hasselhoff']);
+
+        $getIndexItems = $this->fieldtype->getIndexItems(
+            new FilteredRequest(['search' => 'hasselhoff'])
+        );
+
+        $this->assertIsObject($getIndexItems);
+        $this->assertTrue($getIndexItems instanceof Paginator);
+        $this->assertEquals($getIndexItems->count(), 1);
+
+        $this->assertEquals($getIndexItems->first()['id'], $hasselhoff->id);
+    }
+
+    /** @test */
     public function can_get_item_array_with_title_format()
     {
         $author = Author::factory()->create();

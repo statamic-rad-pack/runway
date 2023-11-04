@@ -15,6 +15,7 @@ return [
                                 'handle' => 'title',
                                 'field' => [
                                     'type' => 'text',
+                                    'listable' => true,
                                 ],
                             ],
                             [
@@ -114,6 +115,7 @@ return [
                                 'handle' => 'name',
                                 'field' => [
                                     'type' => 'text',
+                                    'listable' => true,
                                 ],
                             ],
                             // [

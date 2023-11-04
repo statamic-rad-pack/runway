@@ -2,11 +2,13 @@
 
 namespace DoubleThreeDigital\Runway;
 
+use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Fields\Blueprint;
+use Statamic\Fields\Field;
 use Statamic\Support\Traits\FluentlyGetsAndSets;
 
 class Resource
@@ -216,7 +218,7 @@ class Resource
     {
         return $this
             ->fluentlyGetOrSet('titleField')
-            ->getter(fn ($field) => $field ?? $this->listableColumns()[0])
+            ->getter(fn ($field) => $field ?? $this->listableColumns()->first())
             ->args(func_get_args());
     }
 
@@ -229,40 +231,36 @@ class Resource
         return $this->fluentlyGetOrSet('eagerLoadingRelations')
             ->getter(function ($eagerLoadingRelations) {
                 if (! $eagerLoadingRelations) {
-                    return $this->blueprint()->fields()->items()
-                        ->filter(function ($field) {
-                            $type = $field['field']['type'] ?? null;
-
-                            return $type === 'belongs_to'
-                                || $type === 'has_many';
+                    return $this->blueprint()->fields()->all()
+                        ->filter(function (Field $field) {
+                            return $field->fieldtype() instanceof BelongsToFieldtype
+                                || $field->fieldtype() instanceof \DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
                         })
-                        ->mapWithKeys(function ($field) {
-                            $relationName = $field['handle'];
+                        ->mapWithKeys(function (Field $field) {
+                            $eloquentRelationship = $field->handle();
 
                             // If the field has a `relationship_name` config key, use that instead.
                             // Sometimes a column name will be different to the relationship name
                             // (the method on the model) so our magic won't be able to figure out what's what.
                             // Eg. standard_parent_id -> parent
-                            if (isset($field['field']['relationship_name'])) {
-                                $relationName = $field['field']['relationship_name'];
+                            if ($field->get('relationship_name')) {
+                                $eloquentRelationship = $field->get('relationship_name');
                             }
 
                             // If field handle is `author_id`, strip off the `_id`
-                            if (str_contains($relationName, '_id')) {
-                                $relationName = Str::replaceLast('_id', '', $relationName);
+                            if (str_contains($eloquentRelationship, '_id')) {
+                                $eloquentRelationship = Str::replaceLast('_id', '', $eloquentRelationship);
                             }
 
                             // If field handle contains an underscore, convert the name to camel case
-                            if (str_contains($relationName, '_')) {
-                                $relationName = Str::camel($relationName);
+                            if (str_contains($eloquentRelationship, '_')) {
+                                $eloquentRelationship = Str::camel($eloquentRelationship);
                             }
 
-                            return [
-                                $field['handle'] => $relationName,
-                            ];
+                            return [$field->handle() => $eloquentRelationship];
                         })
                         ->merge(['runwayUri'])
-                        ->filter(fn ($relationName) => method_exists($this->model(), $relationName));
+                        ->filter(fn ($eloquentRelationship) => method_exists($this->model(), $eloquentRelationship));
                 }
 
                 return collect($eagerLoadingRelations);
@@ -270,19 +268,12 @@ class Resource
             ->args(func_get_args());
     }
 
-    /**
-     * Returns an array of column handles that are marked as listable.
-     */
-    public function listableColumns(): array
+    public function listableColumns(): Collection
     {
-        return $this->blueprint()->fields()->items()
-            ->reject(function ($field) {
-                return isset($field['import'])
-                    || (isset($field['field']['listable']) && $field['field']['listable'] === 'hidden')
-                    || (isset($field['field']['listable']) && $field['field']['listable'] === false);
-            })
-            ->pluck('handle')
-            ->toArray();
+        return $this->blueprint()->fields()->all()
+            ->filter(fn (Field $field) => $field->isVisibleOnListing())
+            ->map->handle()
+            ->values();
     }
 
     public function hasRouting(): bool

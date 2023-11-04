@@ -13,6 +13,8 @@ use Illuminate\Support\Collection;
 use Statamic\CP\Column;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
+use Statamic\Fields\Field;
+use Statamic\Fieldtypes\Hidden;
 use Statamic\Fieldtypes\Relationship;
 
 class BaseFieldtype extends Relationship
@@ -104,17 +106,9 @@ class BaseFieldtype extends Relationship
                     $query->hasNamedScope('runwaySearch'),
                     fn ($query) => $query->runwaySearch($searchQuery),
                     function ($query) use ($searchQuery, $resource) {
-                        $resource
-                            ->blueprint()
-                            ->fields()
-                            ->items()
-                            ->reject(function (array $field) {
-                                return $field['field']['type'] === 'has_many'
-                                    || $field['field']['type'] === 'hidden';
-                            })
-                            ->each(function (array $field) use ($query, $searchQuery) {
-                                $query->orWhere($field['handle'], 'LIKE', '%'.$searchQuery.'%');
-                            });
+                        $resource->blueprint()->fields()->all()
+                            ->reject(fn (Field $field) => $field->fieldtype() instanceof HasManyFieldtype || $field->fieldtype() instanceof Hidden)
+                            ->each(fn (Field $field) => $query->orWhere($field->handle(), 'LIKE', '%'.$searchQuery.'%'));
                     }
                 );
             });
@@ -125,7 +119,7 @@ class BaseFieldtype extends Relationship
 
         $items
             ->transform(function ($record) use ($resource) {
-                return collect($resource->listableColumns())
+                return $resource->listableColumns()
                     ->mapWithKeys(function ($columnKey) use ($record) {
                         $value = $record->{$columnKey};
 
@@ -322,7 +316,7 @@ class BaseFieldtype extends Relationship
         $resource = Runway::findResource($this->config('resource'));
         $blueprint = $resource->blueprint();
 
-        return collect($resource->listableColumns())
+        return $resource->listableColumns()
             ->map(function ($columnKey, $index) use ($blueprint) {
                 /** @var \Statamic\Fields\Field $field */
                 $blueprintField = $blueprint->field($columnKey);
