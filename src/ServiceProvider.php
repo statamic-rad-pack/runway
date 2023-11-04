@@ -9,6 +9,7 @@ use DoubleThreeDigital\Runway\Search\Searchable;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Statamic\API\Middleware\Cache;
 use Statamic\Facades\CP\Nav;
@@ -172,8 +173,9 @@ class ServiceProvider extends AddonServiceProvider
                     ->group(function () {
                         Runway::allResources()
                             ->each(function (Resource $resource) {
-                                Route::name('runway.'.$resource->handle().'.index')->get('runway/{resource}', [RestApiController::class, 'index']);
-                                Route::name('runway.'.$resource->handle().'.show')->get('runway/{resource}/{id}', [RestApiController::class, 'show']);
+                                $handle = Str::plural($resource->handle());
+                                Route::name('runway.'.$handle.'.index')->get('runway/{resource}', [RestApiController::class, 'index']);
+                                Route::name('runway.'.$handle.'.show')->get('runway/{resource}/{id}', [RestApiController::class, 'show']);
                             });
                     });
             });

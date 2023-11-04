@@ -24,9 +24,9 @@ class RestApiController extends ApiController
     {
         $this->abortIfDisabled();
 
-        $this->resourceHandle = $resource;
+        $this->resourceHandle = Str::singular($resource);
 
-        $resource = Runway::findResource($resource);
+        $resource = Runway::findResource($this->resourceHandle);
 
         if (! $resource) {
             throw new NotFoundHttpException;
@@ -42,9 +42,9 @@ class RestApiController extends ApiController
     {
         $this->abortIfDisabled();
 
-        $this->resourceHandle = $resource;
+        $this->resourceHandle = Str::singular($resource);
 
-        $resource = Runway::findResource($resource);
+        $resource = Runway::findResource($this->resourceHandle);
 
         if (! $resource) {
             throw new NotFoundHttpException;
