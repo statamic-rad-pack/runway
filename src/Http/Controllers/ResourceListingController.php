@@ -4,9 +4,7 @@ namespace DoubleThreeDigital\Runway\Http\Controllers;
 
 use DoubleThreeDigital\Runway\Http\Resources\ResourceCollection;
 use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
 use Statamic\Facades\User;
-use Statamic\Fields\Field;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
 use Statamic\Query\Scopes\Filters\Concerns\QueriesFilters;

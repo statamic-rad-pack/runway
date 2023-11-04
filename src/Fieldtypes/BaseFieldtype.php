@@ -13,8 +13,6 @@ use Illuminate\Support\Collection;
 use Statamic\CP\Column;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
-use Statamic\Fields\Field;
-use Statamic\Fieldtypes\Hidden;
 use Statamic\Fieldtypes\Relationship;
 
 class BaseFieldtype extends Relationship

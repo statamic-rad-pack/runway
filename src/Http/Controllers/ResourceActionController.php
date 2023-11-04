@@ -3,7 +3,6 @@
 namespace DoubleThreeDigital\Runway\Http\Controllers;
 
 use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Http\Request;
 use Statamic\Http\Controllers\CP\ActionController;
 

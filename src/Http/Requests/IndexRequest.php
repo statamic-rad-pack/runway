@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway\Http\Requests;
 
-use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Foundation\Http\FormRequest;
 use Statamic\Facades\User;
 
