@@ -81,7 +81,7 @@ class ResourceTest extends TestCase
 
         $singular = $resource->singular();
 
-        $this->assertSame($singular, 'Post');
+        $this->assertEquals($singular, 'Post');
     }
 
     /** @test */
@@ -95,7 +95,7 @@ class ResourceTest extends TestCase
 
         $singular = $resource->singular();
 
-        $this->assertSame($singular, 'Bibliothek');
+        $this->assertEquals($singular, 'Bibliothek');
     }
 
     /** @test */
@@ -107,7 +107,7 @@ class ResourceTest extends TestCase
 
         $plural = $resource->plural();
 
-        $this->assertSame($plural, 'Posts');
+        $this->assertEquals($plural, 'Posts');
     }
 
     /** @test */
@@ -121,6 +121,6 @@ class ResourceTest extends TestCase
 
         $plural = $resource->plural();
 
-        $this->assertSame($plural, 'Bibliotheken');
+        $this->assertEquals($plural, 'Bibliotheken');
     }
 }

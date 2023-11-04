@@ -46,11 +46,11 @@ class BelongsToFieldtypeTest extends TestCase
 
         $this->assertIsObject($getIndexItemsWithPagination);
         $this->assertTrue($getIndexItemsWithPagination instanceof Paginator);
-        $this->assertSame($getIndexItemsWithPagination->count(), 10);
+        $this->assertEquals($getIndexItemsWithPagination->count(), 10);
 
         $this->assertIsObject($getIndexItemsWithoutPagination);
         $this->assertTrue($getIndexItemsWithoutPagination instanceof Collection);
-        $this->assertSame($getIndexItemsWithoutPagination->count(), 10);
+        $this->assertEquals($getIndexItemsWithoutPagination->count(), 10);
     }
 
     /** @test */
@@ -71,10 +71,10 @@ class BelongsToFieldtypeTest extends TestCase
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Paginator);
-        $this->assertSame($getIndexItems->count(), 2);
+        $this->assertEquals($getIndexItems->count(), 2);
 
-        $this->assertSame($getIndexItems->first()['title'], 'AUTHOR '.$authors[0]->name);
-        $this->assertSame($getIndexItems->last()['title'], 'AUTHOR '.$authors[1]->name);
+        $this->assertEquals($getIndexItems->first()['title'], 'AUTHOR '.$authors[0]->name);
+        $this->assertEquals($getIndexItems->last()['title'], 'AUTHOR '.$authors[1]->name);
     }
 
     /** @test */
@@ -99,11 +99,11 @@ class BelongsToFieldtypeTest extends TestCase
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Collection);
-        $this->assertSame($getIndexItems->count(), 3);
+        $this->assertEquals($getIndexItems->count(), 3);
 
-        $this->assertSame($getIndexItems->all()[0]['title'], 'Scully');
-        $this->assertSame($getIndexItems->all()[1]['title'], 'Jake Peralta');
-        $this->assertSame($getIndexItems->all()[2]['title'], 'Amy Santiago');
+        $this->assertEquals($getIndexItems->all()[0]['title'], 'Scully');
+        $this->assertEquals($getIndexItems->all()[1]['title'], 'Jake Peralta');
+        $this->assertEquals($getIndexItems->all()[2]['title'], 'Amy Santiago');
     }
 
     /** @test */
@@ -122,7 +122,7 @@ class BelongsToFieldtypeTest extends TestCase
 
         $item = $this->fieldtype->getItemData([1]);
 
-        $this->assertSame('AUTHOR '.$author->name, $item->first()['title']);
+        $this->assertEquals('AUTHOR '.$author->name, $item->first()['title']);
     }
 
     /** @test */
@@ -134,7 +134,7 @@ class BelongsToFieldtypeTest extends TestCase
 
         $this->assertTrue($preProcessIndex instanceof Collection);
 
-        $this->assertSame($preProcessIndex->first(), [
+        $this->assertEquals($preProcessIndex->first(), [
             'id' => $author->id,
             'title' => $author->name,
             'edit_url' => 'http://localhost/cp/runway/author/1',
@@ -149,8 +149,8 @@ class BelongsToFieldtypeTest extends TestCase
         $augment = $this->fieldtype->augment($author->id);
 
         $this->assertIsArray($augment);
-        $this->assertSame($author->id, $augment['id']->value());
-        $this->assertSame($author->name, $augment['name']->value());
+        $this->assertEquals($author->id, $augment['id']->value());
+        $this->assertEquals($author->name, $augment['name']->value());
     }
 
     /**

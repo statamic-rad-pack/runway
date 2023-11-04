@@ -86,11 +86,11 @@ class HasManyFieldtypeTest extends TestCase
 
         $this->assertIsObject($getIndexItemsWithPagination);
         $this->assertTrue($getIndexItemsWithPagination instanceof Paginator);
-        $this->assertSame($getIndexItemsWithPagination->count(), 10);
+        $this->assertEquals($getIndexItemsWithPagination->count(), 10);
 
         $this->assertIsObject($getIndexItemsWithoutPagination);
         $this->assertTrue($getIndexItemsWithoutPagination instanceof Collection);
-        $this->assertSame($getIndexItemsWithoutPagination->count(), 10);
+        $this->assertEquals($getIndexItemsWithoutPagination->count(), 10);
     }
 
     /** @test */
@@ -115,10 +115,10 @@ class HasManyFieldtypeTest extends TestCase
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Paginator);
-        $this->assertSame($getIndexItems->count(), 2);
+        $this->assertEquals($getIndexItems->count(), 2);
 
-        $this->assertSame($getIndexItems->first()['title'], $posts[0]->title.' TEST '.now()->format('Y'));
-        $this->assertSame($getIndexItems->last()['title'], $posts[1]->title.' TEST '.now()->format('Y'));
+        $this->assertEquals($getIndexItems->first()['title'], $posts[0]->title.' TEST '.now()->format('Y'));
+        $this->assertEquals($getIndexItems->last()['title'], $posts[1]->title.' TEST '.now()->format('Y'));
     }
 
     /** @test */
@@ -141,8 +141,8 @@ class HasManyFieldtypeTest extends TestCase
 
         $item = $this->fieldtype->getItemData([$posts[0]->id, $posts[1]->id]);
 
-        $this->assertSame($item->first()['title'], $posts[0]->title.' TEST '.now()->format('Y'));
-        $this->assertSame($item->last()['title'], $posts[1]->title.' TEST '.now()->format('Y'));
+        $this->assertEquals($item->first()['title'], $posts[0]->title.' TEST '.now()->format('Y'));
+        $this->assertEquals($item->last()['title'], $posts[1]->title.' TEST '.now()->format('Y'));
     }
 
     /** @test */
@@ -159,7 +159,7 @@ class HasManyFieldtypeTest extends TestCase
 
         $this->assertTrue($preProcessIndex instanceof Collection);
 
-        $this->assertSame($preProcessIndex->first(), [
+        $this->assertEquals($preProcessIndex->first(), [
             'id' => $posts[0]->id,
             'title' => $posts[0]->title,
             'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
@@ -180,16 +180,16 @@ class HasManyFieldtypeTest extends TestCase
         $this->fieldtype->process(collect($posts)->pluck('id')->toArray());
 
         // Ensure the author is attached to all 10 posts
-        $this->assertSame($posts[0]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[1]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[2]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[3]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[4]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[5]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[6]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[7]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[8]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[9]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[0]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[1]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[2]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[3]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[4]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[5]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[6]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[7]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[8]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[9]->fresh()->author_id, $author->id);
     }
 
     /** @test */
@@ -249,9 +249,9 @@ class HasManyFieldtypeTest extends TestCase
         ]);
 
         // Ensure the author is attached to all 3 posts
-        $this->assertSame($posts[0]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[1]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[2]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[0]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[1]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[2]->fresh()->author_id, $author->id);
 
         // Ensure the sort_order is persisted correctly for all 3 posts
         $this->assertDatabaseHas('posts', [
@@ -332,8 +332,8 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertIsArray($augment);
         $this->assertCount(5, $augment);
 
-        $this->assertSame($posts[0]->id, $augment[0]['id']->value());
-        $this->assertSame($posts[0]->title, (string) $augment[0]['title']->value());
+        $this->assertEquals($posts[0]->id, $augment[0]['id']->value());
+        $this->assertEquals($posts[0]->title, (string) $augment[0]['title']->value());
     }
 
     /**

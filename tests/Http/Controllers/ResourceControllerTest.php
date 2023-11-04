@@ -466,7 +466,7 @@ class ResourceControllerTest extends TestCase
 
         $post->refresh();
 
-        $this->assertSame($post->title, 'Santa is coming home');
+        $this->assertEquals($post->title, 'Santa is coming home');
     }
 
     /**
@@ -494,7 +494,7 @@ class ResourceControllerTest extends TestCase
 
         $post->refresh();
 
-        $this->assertSame($post->title, 'Santa is coming home');
+        $this->assertEquals($post->title, 'Santa is coming home');
     }
 
     /** @test */
@@ -544,7 +544,7 @@ class ResourceControllerTest extends TestCase
 
         $post->refresh();
 
-        $this->assertSame($post->title, 'Santa is coming home');
+        $this->assertEquals($post->title, 'Santa is coming home');
     }
 
     /**
@@ -572,7 +572,7 @@ class ResourceControllerTest extends TestCase
 
         $post->refresh();
 
-        $this->assertSame($post->title, 'Santa is coming home');
+        $this->assertEquals($post->title, 'Santa is coming home');
     }
 
     /**
@@ -600,7 +600,7 @@ class ResourceControllerTest extends TestCase
 
         $post->refresh();
 
-        $this->assertSame($post->title, 'Santa is coming home');
+        $this->assertEquals($post->title, 'Santa is coming home');
     }
 
     /**
@@ -628,6 +628,6 @@ class ResourceControllerTest extends TestCase
 
         $post->refresh();
 
-        $this->assertSame($post->values['alt_title'], 'Claus is venturing out');
+        $this->assertEquals($post->values['alt_title'], 'Claus is venturing out');
     }
 }

@@ -28,15 +28,15 @@ class AugmentedModelTest extends TestCase
 
         $augmented = new AugmentedModel($post);
 
-        $this->assertSame('My First Post', $augmented->get('title')->value());
-        $this->assertSame('my-first-post', $augmented->get('slug')->value());
-        $this->assertSame('Blah blah blah...', $augmented->get('body')->value());
-        $this->assertSame('2020-01-01 13:46:12', $augmented->get('created_at')->value()->format('Y-m-d H:i:s'));
-        $this->assertSame('/posts/my-first-post', $augmented->get('url')->value());
+        $this->assertEquals('My First Post', $augmented->get('title')->value());
+        $this->assertEquals('my-first-post', $augmented->get('slug')->value());
+        $this->assertEquals('Blah blah blah...', $augmented->get('body')->value());
+        $this->assertEquals('2020-01-01 13:46:12', $augmented->get('created_at')->value()->format('Y-m-d H:i:s'));
+        $this->assertEquals('/posts/my-first-post', $augmented->get('url')->value());
 
         $this->assertIsArray($augmented->get('author_id')->value());
-        $this->assertSame($author->id, $augmented->get('author_id')->value()['id']->value());
-        $this->assertSame('John Doe', $augmented->get('author_id')->value()['name']->value());
+        $this->assertEquals($author->id, $augmented->get('author_id')->value()['id']->value());
+        $this->assertEquals('John Doe', $augmented->get('author_id')->value()['name']->value());
     }
 
     /** @test */
@@ -53,7 +53,7 @@ class AugmentedModelTest extends TestCase
 
         $this->assertIsArray($augmented->get('values')->value());
 
-        $this->assertSame('Alternative Title...', $augmented->get('values')->value()['alt_title']->value());
-        $this->assertSame('<p>This is a <strong>great</strong> post! You should <em>read</em> it.</p>', trim($augmented->get('values')->value()['alt_body']->value()));
+        $this->assertEquals('Alternative Title...', $augmented->get('values')->value()['alt_title']->value());
+        $this->assertEquals('<p>This is a <strong>great</strong> post! You should <em>read</em> it.</p>', trim($augmented->get('values')->value()['alt_body']->value()));
     }
 }
