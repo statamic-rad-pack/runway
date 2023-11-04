@@ -124,9 +124,9 @@ class HasManyFieldtypeTest extends TestCase
 
         Runway::discoverResources();
 
-        $postA = Post::factory()->create(['title' => 'Arnold A']);
-        $postB = Post::factory()->create(['title' => 'Richard B']);
-        $postC = Post::factory()->create(['title' => 'Graham C']);
+        Post::factory()->create(['title' => 'Arnold A']);
+        Post::factory()->create(['title' => 'Richard B']);
+        Post::factory()->create(['title' => 'Graham C']);
 
         $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest(['paginate' => false]));
 
