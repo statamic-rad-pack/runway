@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway;
 
-use DoubleThreeDigital\Runway\Data\AugmentedModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
@@ -323,11 +322,6 @@ class Resource
             'hidden' => $this->hidden(),
             'route' => $this->route(),
         ];
-    }
-
-    public function augment(Model $model): array
-    {
-        return AugmentedModel::augment($model, $this->blueprint());
     }
 
     public function __get($name)

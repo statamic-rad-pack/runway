@@ -122,8 +122,8 @@ class RunwayTag extends Tags
     {
         return collect($query)
             ->map(function ($record, $key) use ($resource) {
-                return Blink::once("Runway::Tag::AugmentRecords::{$resource->handle()}::{$record->{$resource->primaryKey()}}", function () use ($resource, $record) {
-                    return $resource->augment($record);
+                return Blink::once("Runway::Tag::AugmentRecords::{$resource->handle()}::{$record->{$resource->primaryKey()}}", function () use ($record) {
+                    return $record->toAugmentedArray();
                 });
             })
             ->toArray();

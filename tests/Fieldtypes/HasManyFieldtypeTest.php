@@ -326,14 +326,14 @@ class HasManyFieldtypeTest extends TestCase
         }
 
         $augment = $this->fieldtype->augment(
-            $author->posts
+            $author->posts->pluck('id')->toArray()
         );
 
         $this->assertIsArray($augment);
-        $this->assertSame(count($augment), 5);
+        $this->assertCount(5, $augment);
 
-        $this->assertSame($posts[0]->id, $augment[0]['id']);
-        $this->assertSame($posts[0]->title, (string) $augment[0]['title']);
+        $this->assertSame($posts[0]->id, $augment[0]['id']->value());
+        $this->assertSame($posts[0]->title, (string) $augment[0]['title']->value());
     }
 
     /**

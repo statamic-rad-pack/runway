@@ -144,17 +144,13 @@ class BelongsToFieldtypeTest extends TestCase
     /** @test */
     public function can_get_augment_value()
     {
-        $authors = $this->authorFactory(5);
+        $author = $this->authorFactory();
 
-        $augment = $this->fieldtype->augment(
-            collect($authors)->pluck('id')->toArray()
-        );
+        $augment = $this->fieldtype->augment($author->id);
 
         $this->assertIsArray($augment);
-        $this->assertSame(count($augment), 5);
-
-        $this->assertSame($authors[0]->id, $augment['id']);
-        $this->assertSame($authors[0]->name, (string) $augment['name']);
+        $this->assertSame($author->id, $augment['id']->value());
+        $this->assertSame($author->name, $augment['name']->value());
     }
 
     /**
@@ -164,11 +160,9 @@ class BelongsToFieldtypeTest extends TestCase
      */
     public function can_get_item_data()
     {
-        $authors = $this->authorFactory(2);
+        $author = $this->authorFactory();
 
-        $getItemData = $this->fieldtype->getItemData(
-            collect($authors)->pluck('id')->toArray()
-        );
+        $getItemData = $this->fieldtype->getItemData($author->id);
 
         $this->assertIsObject($getItemData);
         $this->assertTrue($getItemData instanceof Collection);
@@ -176,9 +170,5 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertArrayHasKey('id', $getItemData[0]);
         $this->assertArrayHasKey('title', $getItemData[0]);
         $this->assertArrayNotHasKey('created_at', $getItemData[0]);
-
-        $this->assertArrayHasKey('id', $getItemData[1]);
-        $this->assertArrayHasKey('title', $getItemData[1]);
-        $this->assertArrayNotHasKey('created_at', $getItemData[1]);
     }
 }

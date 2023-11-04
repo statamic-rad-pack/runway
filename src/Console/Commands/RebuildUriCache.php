@@ -69,7 +69,7 @@ class RebuildUriCache extends Command
                     $this->line("{$resource->name()}: {$model->{$resource->primaryKey()}}");
 
                     $uri = (new Parser())
-                        ->parse($resource->route(), $resource->augment($model))
+                        ->parse($resource->route(), $model->toAugmentedArray())
                         ->__toString();
 
                     $uri = Str::start($uri, '/');

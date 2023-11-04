@@ -134,6 +134,12 @@ abstract class TestCase extends OrchestraTestCase
                                         ],
                                     ],
                                     [
+                                        'handle' => 'values->alt_body',
+                                        'field' => [
+                                            'type' => 'markdown',
+                                        ],
+                                    ],
+                                    [
                                         'handle' => 'excerpt',
                                         'field' => [
                                             'type' => 'textarea',

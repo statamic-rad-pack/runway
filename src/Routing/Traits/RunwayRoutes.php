@@ -26,6 +26,11 @@ trait RunwayRoutes
         return $this->routingModel;
     }
 
+    public function slug()
+    {
+        return $this->getAttribute('slug');
+    }
+
     public function route()
     {
         if (! $this->runwayUri) {
@@ -83,7 +88,7 @@ trait RunwayRoutes
             }
 
             $uri = (new Parser())
-                ->parse($resource->route(), $resource->augment($model))
+                ->parse($resource->route(), $model->toAugmentedArray())
                 ->__toString();
 
             $uri = Str::start($uri, '/');
