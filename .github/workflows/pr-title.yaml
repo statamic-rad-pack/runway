@@ -20,7 +20,7 @@ jobs:
         id: targets-release
         if: always() && (steps.validate-pr-title.outcome == 'failure')
         with:
-          text: ${{ github.event.comment.body }}
+          text: ${{ github.base_ref }}
           regex: '^/label\s*(.*?)\s*$'
 
       - name: Update PR title
