@@ -21,14 +21,14 @@ class ResourceCollection extends LaravelResourceCollection
 
     protected $columnPreferenceKey;
 
-    public function setColumnPreferenceKey($key)
+    public function setColumnPreferenceKey($key): self
     {
         $this->columnPreferenceKey = $key;
 
         return $this;
     }
 
-    public function setColumns($originalColumns)
+    public function setColumns($originalColumns): self
     {
         $columns = $this->runwayResource->blueprint()->columns()
             ->filter(fn ($column) => in_array($column->field, collect($originalColumns)->pluck('handle')->toArray()));
@@ -42,7 +42,7 @@ class ResourceCollection extends LaravelResourceCollection
         return $this;
     }
 
-    public function setResourceHandle($handle)
+    public function setResourceHandle($handle): self
     {
         $this->runwayResource = Runway::findResource($handle);
         $this->resourceHandle = $handle;
@@ -50,7 +50,7 @@ class ResourceCollection extends LaravelResourceCollection
         return $this;
     }
 
-    public function toArray($request)
+    public function toArray($request): array
     {
         $columns = $this->columns->pluck('field')->toArray();
         $handle = $this->resourceHandle;
@@ -102,9 +102,7 @@ class ResourceCollection extends LaravelResourceCollection
 
                 return $row;
             }),
-            'meta' => [
-                'columns' => $this->columns,
-            ],
+            'meta' => ['columns' => $this->columns],
         ];
     }
 }

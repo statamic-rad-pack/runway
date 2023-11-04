@@ -52,7 +52,7 @@ class ResourceIndexQuery extends Query
         );
     }
 
-    protected function filterQuery($query, $filters)
+    protected function filterQuery($query, $filters): void
     {
         foreach ($filters as $field => $definitions) {
             if (! is_array($definitions)) {
@@ -72,7 +72,7 @@ class ResourceIndexQuery extends Query
         }
     }
 
-    protected function sortQuery($query, $sorts)
+    protected function sortQuery($query, $sorts): void
     {
         if (empty($sorts)) {
             $sorts = ['id'];
