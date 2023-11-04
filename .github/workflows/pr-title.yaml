@@ -21,7 +21,7 @@ jobs:
         if: always() && (steps.validate-pr-title.outcome == 'failure')
         with:
           text: ${{ github.base_ref }}
-          regex: '^/label\s*(.*?)\s*$'
+          regex: '^\[\d+\.x\]\s'
 
       - name: Update PR title
         if: always() && (steps.validate-pr-title.outcome == 'failure' || steps.targets-release.outcome != 'failure')
