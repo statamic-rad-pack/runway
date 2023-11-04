@@ -4,6 +4,7 @@ namespace DoubleThreeDigital\Runway\Tests\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -97,6 +98,23 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItems->all()[0]['title'], 'Scully');
         $this->assertEquals($getIndexItems->all()[1]['title'], 'Jake Peralta');
         $this->assertEquals($getIndexItems->all()[2]['title'], 'Amy Santiago');
+    }
+
+    /** @test */
+    public function can_get_index_items_and_search()
+    {
+        Author::factory()->count(10)->create();
+        $hasselhoff = Author::factory()->create(['name' => 'David Hasselhoff']);
+
+        $getIndexItems = $this->fieldtype->getIndexItems(
+            new FilteredRequest(['search' => 'hasselhoff'])
+        );
+
+        $this->assertIsObject($getIndexItems);
+        $this->assertTrue($getIndexItems instanceof Paginator);
+        $this->assertEquals($getIndexItems->count(), 1);
+
+        $this->assertEquals($getIndexItems->first()['id'], $hasselhoff->id);
     }
 
     /** @test */

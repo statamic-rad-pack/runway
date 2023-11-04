@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway\Tests\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
+use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
@@ -113,6 +114,49 @@ class HasManyFieldtypeTest extends TestCase
 
         $this->assertEquals($getIndexItems->first()['title'], $posts[0]->title.' TEST '.now()->format('Y'));
         $this->assertEquals($getIndexItems->last()['title'], $posts[1]->title.' TEST '.now()->format('Y'));
+    }
+
+    /** @test */
+    public function can_get_index_items_in_order_specified_in_runway_config()
+    {
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.order_by', 'title');
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.order_by_direction', 'asc');
+
+        Runway::discoverResources();
+
+        $postA = Post::factory()->create(['title' => 'Arnold A']);
+        $postB = Post::factory()->create(['title' => 'Richard B']);
+        $postC = Post::factory()->create(['title' => 'Graham C']);
+
+        $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest(['paginate' => false]));
+
+        $this->assertIsObject($getIndexItems);
+        $this->assertTrue($getIndexItems instanceof Collection);
+        $this->assertEquals($getIndexItems->count(), 3);
+
+        $this->assertEquals($getIndexItems->all()[0]['title'], 'Arnold A');
+        $this->assertEquals($getIndexItems->all()[1]['title'], 'Graham C');
+        $this->assertEquals($getIndexItems->all()[2]['title'], 'Richard B');
+    }
+
+    /** @test */
+    public function can_get_index_items_and_search()
+    {
+        $author = Author::factory()->create();
+        Post::factory()->count(10)->create(['author_id' => $author->id]);
+        $spacePandaPosts = Post::factory()->count(3)->create(['author_id' => $author->id, 'title' => 'Space Pandas']);
+
+        $getIndexItems = $this->fieldtype->getIndexItems(
+            new FilteredRequest(['search' => 'space pan'])
+        );
+
+        $this->assertIsObject($getIndexItems);
+        $this->assertTrue($getIndexItems instanceof Paginator);
+        $this->assertEquals($getIndexItems->count(), 3);
+
+        $this->assertEquals($getIndexItems->first()['title'], $spacePandaPosts[0]->title);
+        $this->assertEquals($getIndexItems->last()['title'], $spacePandaPosts[1]->title);
+        $this->assertEquals($getIndexItems->last()['title'], $spacePandaPosts[2]->title);
     }
 
     /** @test */

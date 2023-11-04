@@ -13,6 +13,8 @@ use Illuminate\Support\Collection;
 use Statamic\CP\Column;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
+use Statamic\Fields\Field;
+use Statamic\Fieldtypes\Hidden;
 use Statamic\Fieldtypes\Relationship;
 
 class BaseFieldtype extends Relationship
@@ -104,17 +106,9 @@ class BaseFieldtype extends Relationship
                     $query->hasNamedScope('runwaySearch'),
                     fn ($query) => $query->runwaySearch($searchQuery),
                     function ($query) use ($searchQuery, $resource) {
-                        $resource
-                            ->blueprint()
-                            ->fields()
-                            ->items()
-                            ->reject(function (array $field) {
-                                return $field['field']['type'] === 'has_many'
-                                    || $field['field']['type'] === 'hidden';
-                            })
-                            ->each(function (array $field) use ($query, $searchQuery) {
-                                $query->orWhere($field['handle'], 'LIKE', '%'.$searchQuery.'%');
-                            });
+                        $resource->blueprint()->fields()->all()
+                            ->reject(fn (Field $field) => $field->fieldtype() instanceof HasManyFieldtype || $field->fieldtype() instanceof Hidden)
+                            ->each(fn (Field $field) => $query->orWhere($field->handle(), 'LIKE', '%'.$searchQuery.'%'));
                     }
                 );
             });
