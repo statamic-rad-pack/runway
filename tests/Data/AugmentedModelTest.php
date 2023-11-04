@@ -45,7 +45,7 @@ class AugmentedModelTest extends TestCase
         $post = $this->postFactory(1, [
             'values' => [
                 'alt_title' => 'Alternative Title...',
-                'alt_body' => 'This is a **great** post! You should *read* it.'
+                'alt_body' => 'This is a **great** post! You should *read* it.',
             ],
         ]);
 

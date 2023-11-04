@@ -4,10 +4,10 @@ namespace DoubleThreeDigital\Runway\Data;
 
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Statamic\Data\AbstractAugmented;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
-use Illuminate\Support\Str;
 
 class AugmentedModel extends AbstractAugmented
 {
