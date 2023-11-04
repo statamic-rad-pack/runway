@@ -1,6 +1,6 @@
 <template>
-    <component
-        :is="componentName"
+
+    <relationship-input
         ref="input"
         :name="name"
         :value="value"
@@ -24,19 +24,20 @@
         :search="canSearch"
         :read-only="isReadOnly"
         :taggable="taggable"
-        :action-url="meta.actionUrl"
+        :tree="meta.tree"
         @focus="$emit('focus')"
         @blur="$emit('blur')"
         @input="update"
         @item-data-updated="itemDataUpdated"
     />
+
 </template>
 
 <script>
-// Note: this file has been copied from Statamic almost completely APART from the 'componentName' computed property which we've added.
-import qs from 'qs'
+import qs from 'qs';
 
 export default {
+
     mixins: [Fieldtype],
 
     data() {
@@ -47,82 +48,66 @@ export default {
 
     inject: {
         storeName: {
-            default: null,
-        },
+            default: null
+        }
     },
 
     computed: {
-        componentName() {
-            return this.config.mode === 'table'
-                ? 'relationship-table-mode'
-                : 'relationship-input'
-        },
 
         maxItems() {
-            return this.config.max_items || Infinity
+            return this.config.max_items || Infinity;
         },
 
         columns() {
-            return this.meta.columns
+            return this.meta.columns;
         },
 
         itemComponent() {
-            return this.meta.itemComponent
+            return this.meta.itemComponent;
         },
 
         itemDataUrl() {
-            return (
-                this.meta.itemDataUrl +
-                '?' +
-                qs.stringify({ config: this.configParameter })
-            )
+            return this.meta.itemDataUrl + '?' + qs.stringify({ config: this.configParameter });
         },
 
         filtersUrl() {
-            return (
-                this.meta.filtersUrl +
-                '?' +
-                qs.stringify({ config: this.configParameter })
-            )
+            return this.meta.filtersUrl + '?' + qs.stringify({ config: this.configParameter });
         },
 
         selectionsUrl() {
-            return (
-                this.baseSelectionsUrl +
-                '?' +
-                qs.stringify({
-                    config: this.configParameter,
-                    ...this.meta.getBaseSelectionsUrlParameters,
-                })
-            )
+            return this.baseSelectionsUrl + '?' + qs.stringify({
+                config: this.configParameter,
+                ...this.meta.getBaseSelectionsUrlParameters,
+            });
         },
 
         baseSelectionsUrl() {
-            return this.meta.baseSelectionsUrl
+            return this.meta.baseSelectionsUrl;
         },
 
         configParameter() {
-            return utf8btoa(JSON.stringify(this.config))
+            return utf8btoa(JSON.stringify(this.config));
         },
 
         site() {
-            if (!this.storeName) return this.$config.get('selectedSite')
+            if (! this.storeName) return this.$config.get('selectedSite');
 
-            return this.$store.state.publish[this.storeName].site
+            return this.$store.state.publish[this.storeName].site;
         },
 
         canEdit() {
-            return this.meta.canEdit
+            return this.meta.canEdit;
         },
 
         canCreate() {
-            return this.meta.canCreate
+            return this.meta.canCreate;
         },
 
         canSearch() {
-            return this.meta.canSearch
+            return this.meta.canSearch;
         },
 
+        // TODO: This is the only part of this file we've changed from the version in Core - can we refactor stuff to workaround this?
         canReorder() {
             return (
                 this.maxItems > 1 &&
@@ -132,43 +117,48 @@ export default {
         },
 
         statusIcons() {
-            return this.meta.statusIcons
+            return this.meta.statusIcons;
         },
 
         creatables() {
-            return this.meta.creatables
+            return this.meta.creatables;
         },
 
         formComponent() {
-            return this.meta.formComponent
+            return this.meta.formComponent;
         },
 
         formComponentProps() {
-            return this.meta.formComponentProps
+            return this.meta.formComponentProps;
         },
 
         taggable() {
-            return this.meta.taggable
+            return this.meta.taggable;
         },
 
         replicatorPreview() {
-            return this.value.map((id) => {
-                const item = _.findWhere(this.meta.data, { id })
-                return item ? item.title : id
-            })
-        },
+            return this.value.map(id => {
+                const item = _.findWhere(this.meta.data, { id });
+                return item ? item.title : id;
+            });
+        }
+
     },
 
+
     methods: {
+
         itemDataUpdated(data) {
-            const meta = clone(this.meta)
-            meta.data = data
-            this.updateMeta(meta)
+            const meta = clone(this.meta);
+            meta.data = data;
+            this.updateMeta(meta);
         },
 
         linkExistingItem() {
-            this.$refs.input.$refs.existing.click()
-        },
-    },
+            this.$refs.input.$refs.existing.click();
+        }
+
+    }
+
 }
 </script>

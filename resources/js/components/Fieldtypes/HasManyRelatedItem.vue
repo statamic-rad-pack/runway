@@ -1,39 +1,6 @@
 <template>
-    <div
-        :is="config.mode == 'table' ? 'tr' : 'div'"
-        :class="{ 'sortable-row outline-none': config.mode === 'table' }"
-    >
-        <template v-if="config.mode == 'table'">
-            <td>
-                <a @click="edit">{{ item.title }}</a>
-            </td>
-
-            <td class="actions-column" v-if="!readOnly">
-                <dropdown-list>
-                    <dropdown-item
-                        :text="__('Edit')"
-                        @click="edit"
-                        v-if="editable"
-                    />
-                    <dropdown-item
-                        :text="__('Delete')"
-                        class="warning"
-                        @click="$emit('removed')"
-                    />
-                </dropdown-list>
-            </td>
-
-            <inline-edit-form
-                v-if="isEditing"
-                :item="item"
-                :component="formComponent"
-                :component-props="formComponentProps"
-                @updated="itemUpdated"
-                @closed="isEditing = false"
-            />
-        </template>
-
-        <template v-else>
+    <div>
+        <template>
             <div class="item-move" v-if="sortable">&nbsp;</div>
 
             <div class="item-inner">

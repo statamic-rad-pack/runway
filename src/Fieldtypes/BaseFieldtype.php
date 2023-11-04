@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
-use DoubleThreeDigital\Runway\Actions\DeleteModel;
 use DoubleThreeDigital\Runway\Query\Scopes\Filters\Fields\Models;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -12,10 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Statamic\CP\Column;
-use Statamic\Facades\Action;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
-use Statamic\Facades\User;
 use Statamic\Fieldtypes\Relationship;
 
 class BaseFieldtype extends Relationship
@@ -366,33 +363,6 @@ class BaseFieldtype extends Relationship
             'resourceHandle' => $resource->handle(),
             'record' => $record->{$resource->routeKey()},
         ]);
-
-        // When using Table mode, we want to return each item differently.
-        if ($this->config('mode') === 'table') {
-            return collect($resource->listableColumns())
-                ->mapWithKeys(function ($columnKey) use ($record, $resource) {
-                    $value = $record->{$columnKey};
-
-                    // When $value is an Eloquent Collection, we want to map over each item & process its values.
-                    if ($value instanceof EloquentCollection) {
-                        $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
-                    }
-
-                    // We need to put each column through preProcessIndex so it's formatted properly for the listing table.
-                    $value = $resource->blueprint()->field($columnKey)->setValue($value)->preProcessIndex()->value();
-
-                    return [$columnKey => $value];
-                })
-                ->merge([
-                    'id' => $record->{$resource->primaryKey()},
-                    'title' => $this->makeTitle($record, $resource),
-                    'edit_url' => $editUrl,
-                    'editable' => User::current()->can('edit', $resource),
-                    'viewable' => User::current()->can('view', $resource),
-                    'actions' => Action::for($record, ['resource' => $resource->handle()])->reject(fn ($action) => $action instanceof DeleteModel)->toArray(),
-                ])
-                ->toArray();
-        }
 
         return [
             'id' => $record->getKey(),
