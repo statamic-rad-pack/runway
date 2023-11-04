@@ -8,7 +8,7 @@ trait HasListingColumns
 {
     protected function buildColumns(Resource $resource, $blueprint)
     {
-        return collect($resource->listableColumns())
+        return $resource->listableColumns()
             ->map(function ($columnKey) use ($blueprint) {
                 $field = $blueprint->field($columnKey);
 

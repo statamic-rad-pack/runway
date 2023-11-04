@@ -119,7 +119,7 @@ class BaseFieldtype extends Relationship
 
         $items
             ->transform(function ($record) use ($resource) {
-                return collect($resource->listableColumns())
+                return $resource->listableColumns()
                     ->mapWithKeys(function ($columnKey) use ($record) {
                         $value = $record->{$columnKey};
 
@@ -316,7 +316,7 @@ class BaseFieldtype extends Relationship
         $resource = Runway::findResource($this->config('resource'));
         $blueprint = $resource->blueprint();
 
-        return collect($resource->listableColumns())
+        return $resource->listableColumns()
             ->map(function ($columnKey, $index) use ($blueprint) {
                 /** @var \Statamic\Fields\Field $field */
                 $blueprintField = $blueprint->field($columnKey);

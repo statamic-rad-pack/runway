@@ -156,6 +156,6 @@ class ResourceTest extends TestCase
             'summary',
             'seo_title',
             'seo_description',
-        ], $resource->listableColumns());
+        ], $resource->listableColumns()->toArray());
     }
 }

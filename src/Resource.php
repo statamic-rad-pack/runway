@@ -218,7 +218,7 @@ class Resource
     {
         return $this
             ->fluentlyGetOrSet('titleField')
-            ->getter(fn ($field) => $field ?? $this->listableColumns()[0])
+            ->getter(fn ($field) => $field ?? $this->listableColumns()->first())
             ->args(func_get_args());
     }
 
@@ -268,13 +268,12 @@ class Resource
             ->args(func_get_args());
     }
 
-    public function listableColumns(): array
+    public function listableColumns(): Collection
     {
         return $this->blueprint()->fields()->all()
             ->filter(fn (Field $field) => $field->isVisibleOnListing())
             ->map->handle()
-            ->values()
-            ->toArray();
+            ->values();
     }
 
     public function hasRouting(): bool
