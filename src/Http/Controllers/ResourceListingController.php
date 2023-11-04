@@ -3,9 +3,8 @@
 namespace DoubleThreeDigital\Runway\Http\Controllers;
 
 use DoubleThreeDigital\Runway\Http\Resources\ResourceCollection;
-use DoubleThreeDigital\Runway\Runway;
+use DoubleThreeDigital\Runway\Resource;
 use Statamic\Facades\User;
-use Statamic\Fields\Field;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
 use Statamic\Query\Scopes\Filters\Concerns\QueriesFilters;
@@ -14,9 +13,8 @@ class ResourceListingController extends CpController
 {
     use QueriesFilters, Traits\HasListingColumns;
 
-    public function index(FilteredRequest $request, $resourceHandle)
+    public function index(FilteredRequest $request, Resource $resource)
     {
-        $resource = Runway::findResource($resourceHandle);
         $blueprint = $resource->blueprint();
 
         if (! User::current()->can('view', $resource)) {
@@ -34,15 +32,15 @@ class ResourceListingController extends CpController
         $query->when($request->search, fn ($query) => $query->runwaySearch($request->search));
 
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
-            'resource' => $resourceHandle,
+            'resource' => $resource->handle(),
             'blueprints' => [$blueprint],
         ]);
 
         $results = $query->paginate($request->input('perPage', config('statamic.cp.pagination_size')));
 
         return (new ResourceCollection($results))
-            ->setResourceHandle($resourceHandle)
-            ->setColumnPreferenceKey('runway.'.$resourceHandle.'.columns')
+            ->setResourceHandle($resource->handle())
+            ->setColumnPreferenceKey("runway.{$resource->handle()}.columns")
             ->setColumns($this->buildColumns($resource, $blueprint))
             ->additional([
                 'meta' => [

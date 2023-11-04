@@ -13,8 +13,6 @@ use Illuminate\Support\Collection;
 use Statamic\CP\Column;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
-use Statamic\Fields\Field;
-use Statamic\Fieldtypes\Hidden;
 use Statamic\Fieldtypes\Relationship;
 
 class BaseFieldtype extends Relationship
@@ -162,7 +160,7 @@ class BaseFieldtype extends Relationship
             }
 
             $url = cp_route('runway.edit', [
-                'resourceHandle' => $resource->handle(),
+                'resource' => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},
             ]);
 
@@ -332,7 +330,7 @@ class BaseFieldtype extends Relationship
         }
 
         $editUrl = cp_route('runway.edit', [
-            'resourceHandle' => $resource->handle(),
+            'resource' => $resource->handle(),
             'record' => $record->{$resource->routeKey()},
         ]);
 
@@ -351,7 +349,7 @@ class BaseFieldtype extends Relationship
             [
                 'title' => $resource->singular(),
                 'url' => cp_route('runway.create', [
-                    'resourceHandle' => $resource->handle(),
+                    'resource' => $resource->handle(),
                 ]),
             ],
         ];

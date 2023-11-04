@@ -20,7 +20,7 @@ class ResourceListingControllerTest extends TestCase
     {
         $this
             ->actingAs(User::make()->save())
-            ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']))
+            ->get(cp_route('runway.listing-api', ['resource' => 'post']))
             ->assertRedirect();
     }
 
@@ -32,7 +32,7 @@ class ResourceListingControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']))
+            ->get(cp_route('runway.listing-api', ['resource' => 'post']))
             ->assertOk()
             ->assertJson([
                 'data' => [
@@ -63,7 +63,7 @@ class ResourceListingControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']))
+            ->get(cp_route('runway.listing-api', ['resource' => 'post']))
             ->assertOk()
             ->assertJson([
                 'data' => [
@@ -91,7 +91,7 @@ class ResourceListingControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post', 'search' => 'Apple']))
+            ->get(cp_route('runway.listing-api', ['resource' => 'post', 'search' => 'Apple']))
             ->assertOk()
             ->assertJson([
                 'data' => [
@@ -132,7 +132,7 @@ class ResourceListingControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->get(cp_route('runway.listing-api', [
-                'resourceHandle' => 'author',
+                'resource' => 'author',
                 'search' => 'Colin',
                 'columns' => 'name,posts',
             ]))
@@ -156,7 +156,7 @@ class ResourceListingControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']).'?perPage=5')
+            ->get(cp_route('runway.listing-api', ['resource' => 'post']).'?perPage=5')
             ->assertOk()
             ->assertJson([
                 'meta' => [
@@ -183,7 +183,7 @@ class ResourceListingControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']).'?columns=title,values->alt_title')
+            ->get(cp_route('runway.listing-api', ['resource' => 'post']).'?columns=title,values->alt_title')
             ->assertOk()
             ->assertSee($posts[0]->values['alt_title'])
             ->assertSee($posts[1]->values['alt_title'])

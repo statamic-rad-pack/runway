@@ -12,6 +12,7 @@ use DoubleThreeDigital\Runway\Http\Requests\UpdateRequest;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Support\Json;
+use Illuminate\Database\Eloquent\Model;
 use Statamic\CP\Breadcrumbs;
 use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Facades\Scope;
@@ -23,15 +24,14 @@ class ResourceController extends CpController
 {
     use Traits\HasListingColumns;
 
-    public function index(IndexRequest $request, $resourceHandle)
+    public function index(IndexRequest $request, Resource $resource)
     {
-        $resource = Runway::findResource($resourceHandle);
         $blueprint = $resource->blueprint();
 
         $listingConfig = [
             'preferencesPrefix' => "runway.{$resource->handle()}",
-            'requestUrl' => cp_route('runway.listing-api', ['resourceHandle' => $resource->handle()]),
-            'listingUrl' => cp_route('runway.index', ['resourceHandle' => $resource->handle()]),
+            'requestUrl' => cp_route('runway.listing-api', ['resource' => $resource->handle()]),
+            'listingUrl' => cp_route('runway.index', ['resource' => $resource->handle()]),
         ];
 
         $columns = $this->buildColumns($resource, $blueprint);
@@ -47,14 +47,12 @@ class ResourceController extends CpController
                 ->values(),
             'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
             'listingConfig' => $listingConfig,
-            'actionUrl' => cp_route('runway.actions.run', ['resourceHandle' => $resourceHandle]),
+            'actionUrl' => cp_route('runway.actions.run', ['resource' => $resource->handle()]),
         ]);
     }
 
-    public function create(CreateRequest $request, $resourceHandle)
+    public function create(CreateRequest $request, Resource $resource)
     {
-        $resource = Runway::findResource($resourceHandle);
-
         $blueprint = $resource->blueprint();
         $fields = $blueprint->fields();
         $fields = $fields->preProcess();
@@ -63,13 +61,13 @@ class ResourceController extends CpController
             'title' => __('Create :resource', [
                 'resource' => $resource->singular(),
             ]),
-            'action' => cp_route('runway.store', ['resourceHandle' => $resource->handle()]),
+            'action' => cp_route('runway.store', ['resource' => $resource->handle()]),
             'method' => 'POST',
             'breadcrumbs' => new Breadcrumbs([
                 [
                     'text' => $resource->plural(),
                     'url' => cp_route('runway.index', [
-                        'resourceHandle' => $resource->handle(),
+                        'resource' => $resource->handle(),
                     ]),
                 ],
             ]),
@@ -90,9 +88,9 @@ class ResourceController extends CpController
         return view('runway::create', $viewData);
     }
 
-    public function store(StoreRequest $request, $resourceHandle)
+    public function store(StoreRequest $request, Resource $resource)
     {
-        Runway::findResource($resourceHandle)
+        $resource
             ->blueprint()
             ->fields()
             ->addValues($request->all())
@@ -101,7 +99,6 @@ class ResourceController extends CpController
 
         $postCreatedHooks = [];
 
-        $resource = Runway::findResource($resourceHandle);
         $record = $resource->model();
 
         foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
@@ -156,16 +153,14 @@ class ResourceController extends CpController
         return [
             'data' => $this->getReturnData($resource, $record),
             'redirect' => cp_route('runway.edit', [
-                'resourceHandle' => $resource->handle(),
+                'resource' => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},
             ]),
         ];
     }
 
-    public function edit(EditRequest $request, $resourceHandle, $record)
+    public function edit(EditRequest $request, Resource $resource, $record)
     {
-        $resource = Runway::findResource($resourceHandle);
-
         $record = $resource->model()
             ->where($resource->model()->qualifyColumn($resource->routeKey()), $record)
             ->first();
@@ -221,7 +216,7 @@ class ResourceController extends CpController
                 'resource' => $resource->singular(),
             ]),
             'action' => cp_route('runway.update', [
-                'resourceHandle' => $resource->handle(),
+                'resource' => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},
             ]),
             'method' => 'PATCH',
@@ -229,7 +224,7 @@ class ResourceController extends CpController
                 [
                     'text' => $resource->plural(),
                     'url' => cp_route('runway.index', [
-                        'resourceHandle' => $resource->handle(),
+                        'resource' => $resource->handle(),
                     ]),
                 ],
             ]),
@@ -255,11 +250,9 @@ class ResourceController extends CpController
         return view('runway::edit', $viewData);
     }
 
-    public function update(UpdateRequest $request, $resourceHandle, $record)
+    public function update(UpdateRequest $request, Resource $resource, $record)
     {
-        $resource = Runway::findResource($resourceHandle);
-
-        Runway::findResource($resourceHandle)
+        $resource
             ->blueprint()
             ->fields()
             ->addValues($request->all())
@@ -329,7 +322,7 @@ class ResourceController extends CpController
                             $model->title = $model->{$column};
 
                             $model->edit_url = cp_route('runway.edit', [
-                                'resourceHandle' => $relatedResource->handle(),
+                                'resource' => $relatedResource->handle(),
                                 'record' => $model->{$relatedResource->routeKey()},
                             ]);
 
@@ -346,12 +339,12 @@ class ResourceController extends CpController
     /**
      * Build an array with the correct return data for the inline publish forms.
      */
-    protected function getReturnData($resource, $record)
+    protected function getReturnData(Resource $resource, Model $record)
     {
         return array_merge($record->toArray(), [
             'title' => $record->{$resource->titleField()},
             'edit_url' => cp_route('runway.edit', [
-                'resourceHandle' => $resource->handle(),
+                'resource' => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},
             ]),
         ]);
