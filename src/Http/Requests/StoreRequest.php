@@ -10,7 +10,7 @@ class StoreRequest extends FormRequest
 {
     public function authorize()
     {
-        $resource = Runway::findResource($this->resourceHandle);
+        $resource = $this->route('resource');
 
         if ($resource->readOnly()) {
             return false;

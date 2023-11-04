@@ -54,7 +54,7 @@ class HasManyFieldtype extends BaseFieldtype
         $resource = Runway::findResource($this->config('resource'));
 
         // Determine whether or not this field is on a resource or a collection
-        $resourceHandle = request()->route('resourceHandle');
+        $resourceHandle = request()->route('resource');
 
         if (! $resourceHandle) {
             return $data;
@@ -69,7 +69,7 @@ class HasManyFieldtype extends BaseFieldtype
     public function process($data)
     {
         // Determine whether or not this field is on a resource or a collection
-        $resourceHandle = request()->route('resourceHandle') ?? Blink::get('RunwayRouteResource');
+        $resourceHandle = request()->route('resource') ?? Blink::get('RunwayRouteResource');
 
         if (! $resourceHandle) {
             return $data;
@@ -170,7 +170,7 @@ class HasManyFieldtype extends BaseFieldtype
     {
         return array_merge(parent::preload(), [
             'actionUrl' => cp_route('runway.actions.run', [
-                'resourceHandle' => $this->config('resource'),
+                'resource' => $this->config('resource'),
             ]),
         ]);
     }

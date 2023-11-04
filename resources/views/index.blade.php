@@ -10,7 +10,7 @@
             @can('create', $resource)
                 <a
                     class="btn-primary"
-                    href="{{ cp_route('runway.create', ['resourceHandle' => $resource->handle()]) }}"
+                    href="{{ cp_route('runway.create', ['resource' => $resource->handle()]) }}"
                 >
                     {{ __('Create :resource', [
                         'resource' => $resource->singular()

@@ -162,7 +162,7 @@ class BaseFieldtype extends Relationship
             }
 
             $url = cp_route('runway.edit', [
-                'resourceHandle' => $resource->handle(),
+                'resource' => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},
             ]);
 
@@ -332,7 +332,7 @@ class BaseFieldtype extends Relationship
         }
 
         $editUrl = cp_route('runway.edit', [
-            'resourceHandle' => $resource->handle(),
+            'resource' => $resource->handle(),
             'record' => $record->{$resource->routeKey()},
         ]);
 
@@ -351,7 +351,7 @@ class BaseFieldtype extends Relationship
             [
                 'title' => $resource->singular(),
                 'url' => cp_route('runway.create', [
-                    'resourceHandle' => $resource->handle(),
+                    'resource' => $resource->handle(),
                 ]),
             ],
         ];

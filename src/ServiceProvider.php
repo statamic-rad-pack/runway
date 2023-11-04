@@ -7,6 +7,7 @@ use DoubleThreeDigital\Runway\Search\Provider as SearchProvider;
 use DoubleThreeDigital\Runway\Search\Searchable;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Traits\Conditionable;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
@@ -76,6 +77,7 @@ class ServiceProvider extends AddonServiceProvider
         Statamic::booted(function () {
             Runway::discoverResources();
 
+            $this->registerRouteBindings();
             $this->registerPermissions();
             $this->registerPolicies();
             $this->registerNavigation();
@@ -88,6 +90,13 @@ class ServiceProvider extends AddonServiceProvider
                 $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
                     ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
             });
+        });
+    }
+
+    protected function registerRouteBindings()
+    {
+        Route::bind('resource', function ($value) {
+            return Runway::findResource($value);
         });
     }
 
@@ -126,7 +135,7 @@ class ServiceProvider extends AddonServiceProvider
                     $nav->create($resource->name())
                         ->section(__('Content'))
                         ->icon($resource->cpIcon())
-                        ->route('runway.index', ['resourceHandle' => $resource->handle()])
+                        ->route('runway.index', ['resource' => $resource->handle()])
                         ->can('view', $resource);
                 });
         });

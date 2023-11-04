@@ -10,7 +10,7 @@ class EditRequest extends FormRequest
 {
     public function authorize()
     {
-        $resource = Runway::findResource($this->resourceHandle);
+        $resource = $this->route('resource');
 
         return User::current()->can('edit', $resource);
     }
