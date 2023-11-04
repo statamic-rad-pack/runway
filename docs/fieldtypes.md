@@ -101,29 +101,6 @@ If you're using a pivot table for the relationship, the order column must exist 
         order_column: sort_order  // [tl! add]
 ```
 
-### Table Mode
-
-By default, [Relationship Fieldtypes](https://statamic.dev/extending/relationship-fieldtypes#content) in Statamic have three modes: `default`/`select`/`typeahead`.
-
-However, the Has Many fieldtype offers an additional `table` mode. This displays the related Eloquent models in a table (similar to listing tables used elsewhere in the Control Panel), allowing you to see more information about each model.
-
-![Table Mode](/img/runway/table-mode.png)
-
-You may enable Table Mode by adjusting the `mode` configuration option:
-
-```yaml
-# resources/blueprints/post.yaml
-
--
-    handle: categories
-    field:
-        type: has_many
-        resource: category
-        mode: default // [tl! remove]
-        mode: table // [tl! add]
-        display: Categories
-```
-
 ## Title Format
 
 The `title_format` configuration option allows you to specify a title format to be used when related models are displayed in the Control Panel.
