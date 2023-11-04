@@ -59,7 +59,7 @@ class RestApiController extends ApiController
 
     protected function allowedFilters()
     {
-        return FilterAuthorizer::allowedForSubResources('api', $this->resourceConfigKey, $this->resourceHandle);
+        return FilterAuthorizer::allowedForSubResources('api', $this->resourceConfigKey, Str::plural($this->resourceHandle));
     }
 
     private function makeResourceFromModel($resource, $model)
