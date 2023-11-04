@@ -11,3 +11,12 @@ jobs:
       - uses: deepakputhraya/action-pr-title@master
         with:
           regex: '^\[\d+\.x\]\s'
+
+      - name: Update the PR
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update PR title
+          title: "[${{ github.event.pull_request.head.ref }}] ${{ steps.pr-title.outputs.title }}"
+          branch: ${{ github.event.pull_request.head.ref }}
+          base: ${{ github.event.pull_request.base.ref }}
