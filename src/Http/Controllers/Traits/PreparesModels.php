@@ -22,7 +22,7 @@ trait PreparesModels
         $blueprint = $resource->blueprint();
 
         return $blueprint->fields()->all()
-            ->mapWithKeys(function (Field $field) use ($model, $blueprint) {
+            ->mapWithKeys(function (Field $field) use ($model) {
                 $value = data_get($model, Str::replace('->', '.', $field->handle()));
 
                 // When $value is a Carbon instance, format it it with the format defined in the blueprint.
