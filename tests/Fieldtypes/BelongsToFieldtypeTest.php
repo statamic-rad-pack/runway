@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway\Tests\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -34,7 +35,7 @@ class BelongsToFieldtypeTest extends TestCase
     /** @test */
     public function can_get_index_items()
     {
-        $authors = $this->authorFactory(10);
+        Author::factory()->count(10)->create();
 
         $getIndexItemsWithPagination = $this->fieldtype->getIndexItems(
             new FilteredRequest(['paginate' => true])
@@ -56,7 +57,7 @@ class BelongsToFieldtypeTest extends TestCase
     /** @test */
     public function can_get_index_items_with_title_format()
     {
-        $authors = $this->authorFactory(2);
+        $authors = Author::factory()->count(2)->create();
 
         $this->fieldtype->setField(new Field('author', [
             'max_items' => 1,
@@ -83,17 +84,9 @@ class BelongsToFieldtypeTest extends TestCase
         Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.order_by', 'name');
         Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.order_by_direction', 'desc');
 
-        $authorOne = $this->authorFactory(1, [
-            'name' => 'Scully',
-        ]);
-
-        $authorTwo = $this->authorFactory(1, [
-            'name' => 'Jake Peralta',
-        ]);
-
-        $authorThree = $this->authorFactory(1, [
-            'name' => 'Amy Santiago',
-        ]);
+        $authorOne = Author::factory()->create(['name' => 'Scully']);
+        $authorTwo = Author::factory()->create(['name' => 'Jake Peralta']);
+        $authorThree = Author::factory()->create(['name' => 'Amy Santiago']);
 
         $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest(['paginate' => false]));
 
@@ -109,7 +102,7 @@ class BelongsToFieldtypeTest extends TestCase
     /** @test */
     public function can_get_item_array_with_title_format()
     {
-        $author = $this->authorFactory();
+        $author = Author::factory()->create();
 
         $this->fieldtype->setField(new Field('author', [
             'max_items' => 1,
@@ -128,7 +121,7 @@ class BelongsToFieldtypeTest extends TestCase
     /** @test */
     public function can_get_pre_process_index()
     {
-        $author = $this->authorFactory();
+        $author = Author::factory()->create();
 
         $preProcessIndex = $this->fieldtype->preProcessIndex($author->id);
 
@@ -144,7 +137,7 @@ class BelongsToFieldtypeTest extends TestCase
     /** @test */
     public function can_get_augment_value()
     {
-        $author = $this->authorFactory();
+        $author = Author::factory()->create();
 
         $augment = $this->fieldtype->augment($author->id);
 
@@ -160,7 +153,7 @@ class BelongsToFieldtypeTest extends TestCase
      */
     public function can_get_item_data()
     {
-        $author = $this->authorFactory();
+        $author = Author::factory()->create();
 
         $getItemData = $this->fieldtype->getItemData($author->id);
 

@@ -3,6 +3,8 @@
 namespace DoubleThreeDigital\Runway\Tests\AugmentedModelTest;
 
 use DoubleThreeDigital\Runway\Data\AugmentedModel;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Spatie\TestTime\TestTime;
 
@@ -13,11 +15,9 @@ class AugmentedModelTest extends TestCase
     {
         TestTime::freeze('Y-m-d H:i:s', '2020-01-01 13:46:12');
 
-        $author = $this->authorFactory(1, [
-            'name' => 'John Doe',
-        ]);
+        $author = Author::factory()->create(['name' => 'John Doe']);
 
-        $post = $this->postFactory(1, [
+        $post = Post::factory()->create([
             'title' => 'My First Post',
             'slug' => 'my-first-post',
             'body' => 'Blah blah blah...',
@@ -42,7 +42,7 @@ class AugmentedModelTest extends TestCase
     /** @test */
     public function it_gets_nested_values()
     {
-        $post = $this->postFactory(1, [
+        $post = Post::factory()->create([
             'values' => [
                 'alt_title' => 'Alternative Title...',
                 'alt_body' => 'This is a **great** post! You should *read* it.',

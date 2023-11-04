@@ -3,22 +3,23 @@
 namespace DoubleThreeDigital\Runway\Tests\Http\Controllers;
 
 use DoubleThreeDigital\Runway\Runway;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Statamic\Facades\Config;
 use Statamic\Facades\User;
 
 class ResourceControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     /** @test */
     public function get_model_index()
     {
+        Post::factory()->count(2)->create();
         $user = User::make()->makeSuper()->save();
-
-        $posts = $this->postFactory(2);
 
         $this->actingAs($user)
             ->get(cp_route('runway.index', ['resourceHandle' => 'post']))
@@ -57,9 +58,8 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_store_resource()
     {
+        $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $author = $this->authorFactory();
 
         $this->actingAs($user)
             ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
@@ -85,9 +85,8 @@ class ResourceControllerTest extends TestCase
 
         Runway::discoverResources();
 
+        $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $author = $this->authorFactory();
 
         $this->actingAs($user)
             ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
@@ -109,9 +108,8 @@ class ResourceControllerTest extends TestCase
      */
     public function can_store_resource_and_ensure_computed_field_isnt_saved_to_database()
     {
+        $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $author = $this->authorFactory();
 
         $this->actingAs($user)
             ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
@@ -137,9 +135,8 @@ class ResourceControllerTest extends TestCase
      */
     public function can_store_resource_and_ensure_field_isnt_saved_to_database()
     {
+        $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $author = $this->authorFactory();
 
         $this->actingAs($user)
             ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
@@ -165,9 +162,8 @@ class ResourceControllerTest extends TestCase
      */
     public function can_store_resource_and_ensure_appended_attribute_doesnt_attempt_to_get_saved()
     {
+        $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $author = $this->authorFactory();
 
         $this->actingAs($user)
             ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
@@ -193,9 +189,8 @@ class ResourceControllerTest extends TestCase
      */
     public function can_store_resource_with_nested_field()
     {
+        $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $author = $this->authorFactory();
 
         $this->actingAs($user)
             ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
@@ -221,9 +216,8 @@ class ResourceControllerTest extends TestCase
      */
     public function can_store_resource_and_ensure_date_comparison_validation_works()
     {
+        $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $author = $this->authorFactory();
 
         $this->actingAs($user)
             ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
@@ -250,9 +244,8 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_edit_resource()
     {
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $post = $this->postFactory();
 
         $this->actingAs($user)
             ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))
@@ -292,7 +285,7 @@ class ResourceControllerTest extends TestCase
         Runway::discoverResources();
 
         $user = User::make()->makeSuper()->save();
-        $post = $this->postFactory();
+        $post = Post::factory()->create();
 
         $resource = Runway::findResource('post');
         $record = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
@@ -335,8 +328,8 @@ class ResourceControllerTest extends TestCase
 
         Runway::discoverResources();
 
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
-        $post = $this->postFactory();
 
         $resource = Runway::findResource('post');
         $record = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
@@ -379,8 +372,8 @@ class ResourceControllerTest extends TestCase
 
         Runway::discoverResources();
 
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
-        $post = $this->postFactory();
 
         $resource = Runway::findResource('post');
         $record = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
@@ -409,15 +402,13 @@ class ResourceControllerTest extends TestCase
      */
     public function can_edit_resource_with_nested_field()
     {
-        $user = User::make()->makeSuper()->save();
-
-        $post = $this->postFactory(
-            attributes: [
-                'values' => [
-                    'alt_title' => $this->faker->words(6, asText: true),
-                ],
+        $post = Post::factory()->create([
+            'values' => [
+                'alt_title' => $this->faker->words(6, asText: true),
             ],
-        );
+        ]);
+
+        $user = User::make()->makeSuper()->save();
 
         $this->actingAs($user)
             ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))
@@ -434,9 +425,8 @@ class ResourceControllerTest extends TestCase
 
         Runway::discoverResources();
 
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $post = $this->postFactory();
 
         $this->actingAs($user)
             ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))
@@ -448,9 +438,8 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_update_resource()
     {
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $post = $this->postFactory();
 
         $this->actingAs($user)
             ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
@@ -475,9 +464,8 @@ class ResourceControllerTest extends TestCase
      */
     public function can_update_resource_when_being_updated_from_inline_publish_form()
     {
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $post = $this->postFactory();
 
         $this->actingAs($user)
             ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
@@ -504,9 +492,8 @@ class ResourceControllerTest extends TestCase
 
         Runway::discoverResources();
 
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $post = $this->postFactory();
 
         $this->actingAs($user)
             ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
@@ -525,9 +512,8 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_update_resource_and_ensure_computed_field_isnt_saved_to_database()
     {
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $post = $this->postFactory();
 
         $this->actingAs($user)
             ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
@@ -553,9 +539,8 @@ class ResourceControllerTest extends TestCase
      */
     public function can_update_resource_and_ensure__field_isnt_saved_to_database()
     {
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $post = $this->postFactory();
 
         $this->actingAs($user)
             ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
@@ -581,9 +566,8 @@ class ResourceControllerTest extends TestCase
      */
     public function can_update_resource_and_ensure_appended_attribute_doesnt_attempt_to_get_saved()
     {
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $post = $this->postFactory();
 
         $this->actingAs($user)
             ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
@@ -609,9 +593,8 @@ class ResourceControllerTest extends TestCase
      */
     public function can_update_resource_with_nested_field()
     {
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
-
-        $post = $this->postFactory();
 
         $this->actingAs($user)
             ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [

@@ -3,12 +3,14 @@
 namespace DoubleThreeDigital\Runway\Tests\Fixtures\Models;
 
 use DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Database\Factories\PostFactory;
 use DoubleThreeDigital\Runway\Traits\HasRunwayResource;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    use HasRunwayResource, RunwayRoutes;
+    use HasFactory, HasRunwayResource, RunwayRoutes;
 
     protected $fillable = [
         'title', 'slug', 'body', 'values', 'author_id', 'sort_order',
@@ -42,5 +44,10 @@ class Post extends Model
     public function getExcerptAttribute()
     {
         return 'This is an excerpt.';
+    }
+
+    protected static function newFactory()
+    {
+        return PostFactory::new();
     }
 }

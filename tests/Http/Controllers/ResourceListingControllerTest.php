@@ -3,14 +3,17 @@
 namespace DoubleThreeDigital\Runway\Tests\Http\Controllers;
 
 use DoubleThreeDigital\Runway\Runway;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\User;
 
 class ResourceListingControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     /** @test */
     public function user_with_no_permissions_cannot_access_resource_listing()
@@ -27,7 +30,7 @@ class ResourceListingControllerTest extends TestCase
     {
         $user = User::make()->makeSuper()->save();
 
-        $posts = $this->postFactory(2);
+        $posts = Post::factory()->count(2)->create();
 
         $this->actingAs($user)
             ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']))
@@ -58,7 +61,7 @@ class ResourceListingControllerTest extends TestCase
 
         $user = User::make()->makeSuper()->save();
 
-        $posts = $this->postFactory(2);
+        $posts = Post::factory()->count(2)->create();
 
         $this->actingAs($user)
             ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']))
@@ -84,7 +87,7 @@ class ResourceListingControllerTest extends TestCase
     {
         $user = User::make()->makeSuper()->save();
 
-        $posts = $this->postFactory(2);
+        $posts = Post::factory()->count(2)->create();
 
         $posts[0]->update(['title' => 'Apple Pie']);
 
@@ -126,9 +129,7 @@ class ResourceListingControllerTest extends TestCase
 
         $user = User::make()->makeSuper()->save();
 
-        $author = $this->authorFactory(1, ['name' => 'Colin The Caterpillar']);
-
-        $posts = $this->postFactory(5, ['author_id' => $author->id]);
+        $author = Author::factory()->withPosts()->create(['name' => 'Colin The Caterpillar']);
 
         $this->actingAs($user)
             ->get(cp_route('runway.listing-api', [
@@ -151,9 +152,8 @@ class ResourceListingControllerTest extends TestCase
     /** @test */
     public function can_paginate_results()
     {
+        Post::factory()->count(15)->create();
         $user = User::make()->makeSuper()->save();
-
-        $posts = $this->postFactory(15);
 
         $this->actingAs($user)
             ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']).'?perPage=5')
@@ -173,13 +173,13 @@ class ResourceListingControllerTest extends TestCase
      */
     public function can_get_values_from_nested_fields()
     {
-        $user = User::make()->makeSuper()->save();
-
-        $posts = $this->postFactory(3, [
+        $posts = Post::factory()->count(3)->create([
             'values' => [
                 'alt_title' => $this->faker()->words(6, true),
             ],
         ]);
+
+        $user = User::make()->makeSuper()->save();
 
         $this->actingAs($user)
             ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']).'?columns=title,values->alt_title')

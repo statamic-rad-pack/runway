@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway\Tests\Routing;
 
 use DoubleThreeDigital\Runway\Routing\RoutingModel;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Statamic\Facades\Data;
 
@@ -11,7 +12,7 @@ class ResourceRoutingRepositoryTest extends TestCase
     /** @test */
     public function can_find_by_uri()
     {
-        $post = $this->postFactory();
+        $post = Post::factory()->create();
         $runwayUri = $post->fresh()->runwayUri;
 
         $this->assertEquals($runwayUri->uri, "/posts/{$post->slug}");
@@ -25,9 +26,7 @@ class ResourceRoutingRepositoryTest extends TestCase
     /** @test */
     public function can_find_by_uri_where_multiple_matches_are_found()
     {
-        $posts = $this->postFactory(5, [
-            'slug' => 'chicken-fried-rice',
-        ]);
+        $posts = Post::factory()->count(5)->create(['slug' => 'chicken-fried-rice']);
 
         $findByUri = Data::findByUri("/posts/{$posts[0]->slug}");
 
@@ -46,7 +45,7 @@ class ResourceRoutingRepositoryTest extends TestCase
     /** @test */
     public function cant_find_by_uri_if_a_similar_uri_exists()
     {
-        $post = $this->postFactory();
+        $post = Post::factory()->create();
         $runwayUri = $post->fresh()->runwayUri;
 
         $this->assertEquals($runwayUri->uri, "/posts/{$post->slug}");

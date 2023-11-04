@@ -3,6 +3,8 @@
 namespace DoubleThreeDigital\Runway\Tests\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -69,8 +71,8 @@ class HasManyFieldtypeTest extends TestCase
     /** @test */
     public function can_get_index_items()
     {
-        $posts = $this->postFactory(10);
-        $author = $this->authorFactory();
+        $posts = Post::factory()->count(10)->create();
+        $author = Author::factory()->create();
 
         foreach ($posts as $post) {
             $post->update(['author_id' => $author->id]);
@@ -96,8 +98,8 @@ class HasManyFieldtypeTest extends TestCase
     /** @test */
     public function can_get_index_items_with_title_format()
     {
-        $posts = $this->postFactory(2);
-        $author = $this->authorFactory();
+        $posts = Post::factory()->count(2)->create();
+        $author = Author::factory()->create();
 
         foreach ($posts as $post) {
             $post->update(['author_id' => $author->id]);
@@ -124,8 +126,8 @@ class HasManyFieldtypeTest extends TestCase
     /** @test */
     public function can_get_item_array_with_title_format()
     {
-        $posts = $this->postFactory(2);
-        $author = $this->authorFactory();
+        $posts = Post::factory()->count(2)->create();
+        $author = Author::factory()->create();
 
         foreach ($posts as $post) {
             $post->update(['author_id' => $author->id]);
@@ -148,8 +150,8 @@ class HasManyFieldtypeTest extends TestCase
     /** @test */
     public function can_get_pre_process_index()
     {
-        $posts = $this->postFactory(10);
-        $author = $this->authorFactory();
+        $posts = Post::factory()->count(10)->create();
+        $author = Author::factory()->create();
 
         foreach ($posts as $post) {
             $post->update(['author_id' => $author->id]);
@@ -169,8 +171,8 @@ class HasManyFieldtypeTest extends TestCase
     /** @test */
     public function can_process_and_add_relations_to_model()
     {
-        $posts = $this->postFactory(10);
-        $author = $this->authorFactory();
+        $posts = Post::factory()->count(10)->create();
+        $author = Author::factory()->create();
 
         // Usually these bits would be fetched from the request. However, as we can't mock
         // the request, we're using Blink.
@@ -195,8 +197,8 @@ class HasManyFieldtypeTest extends TestCase
     /** @test */
     public function can_process_and_add_relations_to_model_with_pivot_table()
     {
-        $posts = $this->postFactory(3);
-        $author = $this->authorFactory();
+        $posts = Post::factory()->count(3)->create();
+        $author = Author::factory()->create();
 
         // Usually these bits would be fetched from the request. However, as we can't mock
         // the request, we're using Blink.
@@ -229,8 +231,8 @@ class HasManyFieldtypeTest extends TestCase
     /** @test */
     public function can_process_and_add_relations_to_model_and_can_persist_users_sort_order()
     {
-        $posts = $this->postFactory(3);
-        $author = $this->authorFactory();
+        $posts = Post::factory()->count(3)->create();
+        $author = Author::factory()->create();
 
         $this->fieldtype->field()->setConfig(array_merge($this->fieldtype->field()->config(), [
             'reorderable' => true,
@@ -276,8 +278,8 @@ class HasManyFieldtypeTest extends TestCase
      */
     public function can_process_and_add_relations_to_model_and_can_persist_users_sort_order_on_pivot_table()
     {
-        $posts = $this->postFactory(3);
-        $author = $this->authorFactory();
+        $posts = Post::factory()->count(3)->create();
+        $author = Author::factory()->create();
 
         $this->fieldtypeUsingPivotTable->field()->setConfig(array_merge($this->fieldtypeUsingPivotTable->field()->config(), [
             'reorderable' => true,
@@ -318,8 +320,8 @@ class HasManyFieldtypeTest extends TestCase
     /** @test */
     public function can_get_augment_value()
     {
-        $posts = $this->postFactory(5);
-        $author = $this->authorFactory();
+        $posts = Post::factory()->count(5)->create();
+        $author = Author::factory()->create();
 
         foreach ($posts as $post) {
             $post->update(['author_id' => $author->id]);
@@ -343,8 +345,8 @@ class HasManyFieldtypeTest extends TestCase
      */
     public function can_get_item_data()
     {
-        $posts = $this->postFactory(5);
-        $author = $this->authorFactory();
+        $posts = Post::factory()->count(5)->create();
+        $author = Author::factory()->create();
 
         foreach ($posts as $post) {
             $post->update(['author_id' => $author->id]);

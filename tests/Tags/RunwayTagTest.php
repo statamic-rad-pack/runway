@@ -4,6 +4,7 @@ namespace DoubleThreeDigital\Runway\Tests\Tags;
 
 use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tags\RunwayTag;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
@@ -32,7 +33,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_no_parameters()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $this->tag->setParameters([]);
         $usage = $this->tag->wildcard('post');
@@ -49,7 +50,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_select_parameter()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $this->tag->setParameters([
             'select' => 'id,title,slug',
@@ -83,7 +84,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_scope_parameter()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $posts[0]->update(['title' => 'Pasta']);
         $posts[2]->update(['title' => 'Apple']);
@@ -104,7 +105,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_scope_parameter_and_scope_arguments()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $posts[0]->update(['title' => 'Pasta']);
         $posts[2]->update(['title' => 'Apple']);
@@ -127,7 +128,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_scope_parameter_and_scope_arguments_and_multiple_scopes()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $posts[0]->update(['title' => 'Pasta']);
         $posts[2]->update(['title' => 'Apple']);
@@ -150,7 +151,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_where_parameter()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $posts[0]->update(['title' => 'penguin']);
 
@@ -167,8 +168,8 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_where_parameter_when_condition_is_on_relationship_field()
     {
-        $posts = $this->postFactory(5);
-        $author = $this->authorFactory();
+        $posts = Post::factory()->count(5)->create();
+        $author = Author::factory()->create();
 
         $posts[0]->update(['author_id' => $author->id]);
         $posts[2]->update(['author_id' => $author->id]);
@@ -189,7 +190,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_with_parameter()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $posts[0]->update(['title' => 'tiger']);
 
@@ -209,7 +210,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_sort_parameter()
     {
-        $posts = $this->postFactory(2);
+        $posts = Post::factory()->count(2)->create();
 
         $posts[0]->update(['title' => 'abc']);
         $posts[1]->update(['title' => 'def']);
@@ -229,7 +230,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_scoping()
     {
-        $posts = $this->postFactory(2);
+        $posts = Post::factory()->count(2)->create();
 
         $posts[0]->update(['title' => 'abc']);
         $posts[1]->update(['title' => 'def']);
@@ -249,7 +250,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_limit_parameter()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $this->tag->setParameters([
             'limit' => 2,
@@ -268,7 +269,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_scoping_and_pagination()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $this->tag->setParameters([
             'limit' => 2,
@@ -291,7 +292,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_and_non_blueprint_columns_are_returned()
     {
-        $posts = $this->postFactory(2);
+        $posts = Post::factory()->count(2)->create();
 
         $this->tag->setParameters([]);
 
@@ -313,7 +314,7 @@ class RunwayTagTest extends TestCase
 
         Runway::discoverResources();
 
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $this->tag->setParameters([]);
         $usage = $this->tag->wildcard('blog_posts');

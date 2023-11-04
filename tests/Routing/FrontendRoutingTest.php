@@ -4,14 +4,17 @@ namespace DoubleThreeDigital\Runway\Tests\Routing;
 
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
 
 class FrontendRoutingTest extends TestCase
 {
+    use WithFaker;
+
     /** @test */
     public function returns_resource_response_for_resource()
     {
-        $post = $this->postFactory();
+        $post = Post::factory()->create();
         $runwayUri = $post->fresh()->runwayUri;
 
         $this
@@ -28,13 +31,11 @@ class FrontendRoutingTest extends TestCase
      */
     public function returns_resource_response_for_resource_with_nested_field()
     {
-        $post = $this->postFactory(
-            attributes: [
-                'values' => [
-                    'alt_title' => $this->faker->words(6, asText: true),
-                ],
+        $post = Post::factory()->create([
+            'values' => [
+                'alt_title' => $this->faker->words(6, asText: true),
             ],
-        );
+        ]);
 
         $runwayUri = $post->fresh()->runwayUri;
 
@@ -54,7 +55,7 @@ class FrontendRoutingTest extends TestCase
         // TODO: find way of mocking the template & rebooting Runway's resources
         Config::set('runway.resources.'.Post::class.'.template', 'custom');
 
-        $post = $this->postFactory();
+        $post = Post::factory()->create();
         $runwayUri = $post->fresh()->runwayUri;
 
         $this
@@ -73,7 +74,7 @@ class FrontendRoutingTest extends TestCase
         // TODO: find way of mocking the template & rebooting Runway's resources
         Config::set('runway.resources.'.Post::class.'.layout', 'blog-layout');
 
-        $post = $this->postFactory();
+        $post = Post::factory()->create();
         $runwayUri = $post->fresh()->runwayUri;
 
         $this
