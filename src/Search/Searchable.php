@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway\Search;
 
 use DoubleThreeDigital\Runway\Data\AugmentedModel;
+use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Statamic\Contracts\Data\Augmentable;
 use Statamic\Contracts\Data\Augmented;
@@ -28,7 +29,7 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
         $this->resource = Runway::findResourceByModel($model);
     }
 
-    public function resource()
+    public function resource(): Resource
     {
         return $this->resource;
     }
@@ -60,17 +61,17 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
         return new ResultInstance($this, 'runway:'.$this->resource->handle());
     }
 
-    public function getCpSearchResultTitle()
+    public function getCpSearchResultTitle(): string
     {
         return $this->model->{$this->resource->titleField()};
     }
 
-    public function getCpSearchResultUrl()
+    public function getCpSearchResultUrl(): string
     {
         return cp_route('runway.edit', [$this->resource->handle(), $this->model->getRouteKey()]);
     }
 
-    public function getCpSearchResultBadge()
+    public function getCpSearchResultBadge(): string
     {
         return $this->resource->name();
     }

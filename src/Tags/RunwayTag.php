@@ -15,7 +15,7 @@ class RunwayTag extends Tags
 {
     protected static $handle = 'runway';
 
-    public function wildcard($resourceHandle = null)
+    public function wildcard($resourceHandle = null): array
     {
         try {
             $resource = Runway::findResource(
@@ -118,7 +118,7 @@ class RunwayTag extends Tags
         ];
     }
 
-    protected function augmentRecords($query, Resource $resource)
+    protected function augmentRecords($query, Resource $resource): array
     {
         return collect($query)
             ->map(function ($record, $key) use ($resource) {
@@ -129,7 +129,7 @@ class RunwayTag extends Tags
             ->toArray();
     }
 
-    protected function getPaginationData($paginator)
+    protected function getPaginationData($paginator): array
     {
         return [
             'total_items' => $paginator->total(),

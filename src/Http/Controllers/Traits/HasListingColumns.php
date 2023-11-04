@@ -7,7 +7,7 @@ use Statamic\Facades\User;
 
 trait HasListingColumns
 {
-    protected function buildColumns(Resource $resource, $blueprint)
+    protected function buildColumns(Resource $resource, $blueprint): array
     {
         return $resource->listableColumns()
             ->map(function ($columnKey) use ($blueprint) {

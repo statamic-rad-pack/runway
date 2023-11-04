@@ -10,7 +10,7 @@ use Statamic\Support\Str;
 
 class Models extends FieldtypeFilter
 {
-    public function fieldItems()
+    public function fieldItems(): array
     {
         $resource = Runway::findResource($this->fieldtype->config('resource'));
 
@@ -43,7 +43,7 @@ class Models extends FieldtypeFilter
         ];
     }
 
-    public function apply($query, $handle, $values)
+    public function apply($query, $handle, $values): void
     {
         $field = $values['field'];
         $operator = $values['operator'];
@@ -77,7 +77,7 @@ class Models extends FieldtypeFilter
         }
     }
 
-    public function badge($values)
+    public function badge($values): string
     {
         $field = $this->fieldtype->field()->display();
         $selectedField = $values['field'];

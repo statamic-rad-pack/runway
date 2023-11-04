@@ -22,11 +22,9 @@ class ResourceResponse implements Responsable
     {
         $this->request = $request;
 
-        $this
-            ->addViewPaths();
+        $this->addViewPaths();
 
-        $response = response()
-            ->make($this->contents());
+        $response = response()->make($this->contents());
 
         ResponseCreated::dispatch($response, $this->data);
 

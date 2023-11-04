@@ -345,14 +345,12 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        return [
-            [
-                'title' => $resource->singular(),
-                'url' => cp_route('runway.create', [
-                    'resource' => $resource->handle(),
-                ]),
-            ],
-        ];
+        return [[
+            'title' => $resource->singular(),
+            'url' => cp_route('runway.create', [
+                'resource' => $resource->handle(),
+            ]),
+        ]];
     }
 
     protected function makeTitle($record, $resource): ?string
