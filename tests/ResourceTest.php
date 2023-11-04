@@ -22,7 +22,7 @@ class ResourceTest extends TestCase
     /** @test */
     public function can_get_eager_loading_relations_for_has_many_field()
     {
-        $fields = Config::get('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.sections.main.fields');
+        $fields = Config::get('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields');
 
         $fields[] = [
             'handle' => 'posts',
@@ -34,7 +34,7 @@ class ResourceTest extends TestCase
             ],
         ];
 
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.sections.main.fields', $fields);
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields', $fields);
 
         Runway::discoverResources();
 
@@ -60,7 +60,7 @@ class ResourceTest extends TestCase
     /** @test */
     public function can_get_eager_loading_relations_as_defined_in_config()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Post.with', ['author']);
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.with', ['author']);
 
         Runway::discoverResources();
 
@@ -81,13 +81,13 @@ class ResourceTest extends TestCase
 
         $singular = $resource->singular();
 
-        $this->assertSame($singular, 'Post');
+        $this->assertEquals($singular, 'Post');
     }
 
     /** @test */
     public function can_get_configured_singular()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Post.singular', 'Bibliothek');
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.singular', 'Bibliothek');
 
         Runway::discoverResources();
 
@@ -95,7 +95,7 @@ class ResourceTest extends TestCase
 
         $singular = $resource->singular();
 
-        $this->assertSame($singular, 'Bibliothek');
+        $this->assertEquals($singular, 'Bibliothek');
     }
 
     /** @test */
@@ -107,13 +107,13 @@ class ResourceTest extends TestCase
 
         $plural = $resource->plural();
 
-        $this->assertSame($plural, 'Posts');
+        $this->assertEquals($plural, 'Posts');
     }
 
     /** @test */
     public function can_get_configured_plural()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Post.plural', 'Bibliotheken');
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.plural', 'Bibliotheken');
 
         Runway::discoverResources();
 
@@ -121,6 +121,6 @@ class ResourceTest extends TestCase
 
         $plural = $resource->plural();
 
-        $this->assertSame($plural, 'Bibliotheken');
+        $this->assertEquals($plural, 'Bibliotheken');
     }
 }

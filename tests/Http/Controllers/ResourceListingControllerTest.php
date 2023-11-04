@@ -3,21 +3,23 @@
 namespace DoubleThreeDigital\Runway\Tests\Http\Controllers;
 
 use DoubleThreeDigital\Runway\Runway;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\User;
 
 class ResourceListingControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     /** @test */
     public function user_with_no_permissions_cannot_access_resource_listing()
     {
-        $user = User::make()->save();
-
-        $this->actingAs($user)
+        $this
+            ->actingAs(User::make()->save())
             ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']))
             ->assertRedirect();
     }
@@ -26,22 +28,22 @@ class ResourceListingControllerTest extends TestCase
     public function can_sort_listing_rows()
     {
         $user = User::make()->makeSuper()->save();
+        $posts = Post::factory()->count(2)->create();
 
-        $posts = $this->postFactory(2);
-
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']))
             ->assertOk()
             ->assertJson([
                 'data' => [
                     [
                         'title' => $posts[0]->title,
-                        'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
+                        'edit_url' => "http://localhost/cp/runway/post/{$posts[0]->id}",
                         'id' => $posts[0]->id,
                     ],
                     [
                         'title' => $posts[1]->title,
-                        'edit_url' => 'http://localhost/cp/runway/post/'.$posts[1]->id,
+                        'edit_url' => "http://localhost/cp/runway/post/{$posts[1]->id}",
                         'id' => $posts[1]->id,
                     ],
                 ],
@@ -51,28 +53,28 @@ class ResourceListingControllerTest extends TestCase
     /** @test */
     public function listing_rows_are_ordered_as_per_config()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Post.order_by', 'id');
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Post.order_by_direction', 'desc');
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.order_by', 'id');
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.order_by_direction', 'desc');
 
         Runway::discoverResources();
 
         $user = User::make()->makeSuper()->save();
+        $posts = Post::factory()->count(2)->create();
 
-        $posts = $this->postFactory(2);
-
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']))
             ->assertOk()
             ->assertJson([
                 'data' => [
                     [
                         'title' => $posts[1]->title,
-                        'edit_url' => 'http://localhost/cp/runway/post/'.$posts[1]->id,
+                        'edit_url' => "http://localhost/cp/runway/post/{$posts[1]->id}",
                         'id' => $posts[1]->id,
                     ],
                     [
                         'title' => $posts[0]->title,
-                        'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
+                        'edit_url' => "http://localhost/cp/runway/post/{$posts[0]->id}",
                         'id' => $posts[0]->id,
                     ],
                 ],
@@ -83,19 +85,19 @@ class ResourceListingControllerTest extends TestCase
     public function can_search()
     {
         $user = User::make()->makeSuper()->save();
-
-        $posts = $this->postFactory(2);
+        $posts = Post::factory()->count(2)->create();
 
         $posts[0]->update(['title' => 'Apple Pie']);
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post', 'search' => 'Apple']))
             ->assertOk()
             ->assertJson([
                 'data' => [
                     [
                         'title' => $posts[0]->title,
-                        'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
+                        'edit_url' => "http://localhost/cp/runway/post/{$posts[0]->id}",
                         'id' => $posts[0]->id,
                     ],
                 ],
@@ -105,7 +107,7 @@ class ResourceListingControllerTest extends TestCase
     /** @test */
     public function can_search_records_with_has_many_relationship()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.sections.main.fields', [
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields', [
             [
                 'handle' => 'name',
                 'field' => [
@@ -125,12 +127,10 @@ class ResourceListingControllerTest extends TestCase
         Runway::discoverResources();
 
         $user = User::make()->makeSuper()->save();
+        $author = Author::factory()->withPosts()->create(['name' => 'Colin The Caterpillar']);
 
-        $author = $this->authorFactory(1, ['name' => 'Colin The Caterpillar']);
-
-        $posts = $this->postFactory(5, ['author_id' => $author->id]);
-
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->get(cp_route('runway.listing-api', [
                 'resourceHandle' => 'author',
                 'search' => 'Colin',
@@ -141,7 +141,7 @@ class ResourceListingControllerTest extends TestCase
                 'data' => [
                     [
                         'name' => 'Colin The Caterpillar',
-                        'edit_url' => 'http://localhost/cp/runway/author/'.$author->id,
+                        'edit_url' => "http://localhost/cp/runway/author/{$author->id}",
                         'id' => $author->id,
                     ],
                 ],
@@ -151,11 +151,11 @@ class ResourceListingControllerTest extends TestCase
     /** @test */
     public function can_paginate_results()
     {
+        Post::factory()->count(15)->create();
         $user = User::make()->makeSuper()->save();
 
-        $posts = $this->postFactory(15);
-
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']).'?perPage=5')
             ->assertOk()
             ->assertJson([
@@ -173,15 +173,16 @@ class ResourceListingControllerTest extends TestCase
      */
     public function can_get_values_from_nested_fields()
     {
-        $user = User::make()->makeSuper()->save();
-
-        $posts = $this->postFactory(3, [
+        $posts = Post::factory()->count(3)->create([
             'values' => [
                 'alt_title' => $this->faker()->words(6, true),
             ],
         ]);
 
-        $this->actingAs($user)
+        $user = User::make()->makeSuper()->save();
+
+        $this
+            ->actingAs($user)
             ->get(cp_route('runway.listing-api', ['resourceHandle' => 'post']).'?columns=title,values->alt_title')
             ->assertOk()
             ->assertSee($posts[0]->values['alt_title'])

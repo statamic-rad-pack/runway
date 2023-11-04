@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Helpers;
+namespace DoubleThreeDigital\Runway\Tests\UpdateScripts;
 
 trait RunsUpdateScripts
 {

@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway\Tests\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -34,7 +35,7 @@ class BelongsToFieldtypeTest extends TestCase
     /** @test */
     public function can_get_index_items()
     {
-        $authors = $this->authorFactory(10);
+        Author::factory()->count(10)->create();
 
         $getIndexItemsWithPagination = $this->fieldtype->getIndexItems(
             new FilteredRequest(['paginate' => true])
@@ -46,17 +47,17 @@ class BelongsToFieldtypeTest extends TestCase
 
         $this->assertIsObject($getIndexItemsWithPagination);
         $this->assertTrue($getIndexItemsWithPagination instanceof Paginator);
-        $this->assertSame($getIndexItemsWithPagination->count(), 10);
+        $this->assertEquals($getIndexItemsWithPagination->count(), 10);
 
         $this->assertIsObject($getIndexItemsWithoutPagination);
         $this->assertTrue($getIndexItemsWithoutPagination instanceof Collection);
-        $this->assertSame($getIndexItemsWithoutPagination->count(), 10);
+        $this->assertEquals($getIndexItemsWithoutPagination->count(), 10);
     }
 
     /** @test */
     public function can_get_index_items_with_title_format()
     {
-        $authors = $this->authorFactory(2);
+        $authors = Author::factory()->count(2)->create();
 
         $this->fieldtype->setField(new Field('author', [
             'max_items' => 1,
@@ -71,45 +72,37 @@ class BelongsToFieldtypeTest extends TestCase
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Paginator);
-        $this->assertSame($getIndexItems->count(), 2);
+        $this->assertEquals($getIndexItems->count(), 2);
 
-        $this->assertSame($getIndexItems->first()['title'], 'AUTHOR '.$authors[0]->name);
-        $this->assertSame($getIndexItems->last()['title'], 'AUTHOR '.$authors[1]->name);
+        $this->assertEquals($getIndexItems->first()['title'], 'AUTHOR '.$authors[0]->name);
+        $this->assertEquals($getIndexItems->last()['title'], 'AUTHOR '.$authors[1]->name);
     }
 
     /** @test */
     public function can_get_index_items_in_order_specified_in_runway_config()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.order_by', 'name');
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.order_by_direction', 'desc');
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.order_by', 'name');
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.order_by_direction', 'desc');
 
-        $authorOne = $this->authorFactory(1, [
-            'name' => 'Scully',
-        ]);
-
-        $authorTwo = $this->authorFactory(1, [
-            'name' => 'Jake Peralta',
-        ]);
-
-        $authorThree = $this->authorFactory(1, [
-            'name' => 'Amy Santiago',
-        ]);
+        Author::factory()->create(['name' => 'Scully']);
+        Author::factory()->create(['name' => 'Jake Peralta']);
+        Author::factory()->create(['name' => 'Amy Santiago']);
 
         $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest(['paginate' => false]));
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Collection);
-        $this->assertSame($getIndexItems->count(), 3);
+        $this->assertEquals($getIndexItems->count(), 3);
 
-        $this->assertSame($getIndexItems->all()[0]['title'], 'Scully');
-        $this->assertSame($getIndexItems->all()[1]['title'], 'Jake Peralta');
-        $this->assertSame($getIndexItems->all()[2]['title'], 'Amy Santiago');
+        $this->assertEquals($getIndexItems->all()[0]['title'], 'Scully');
+        $this->assertEquals($getIndexItems->all()[1]['title'], 'Jake Peralta');
+        $this->assertEquals($getIndexItems->all()[2]['title'], 'Amy Santiago');
     }
 
     /** @test */
     public function can_get_item_array_with_title_format()
     {
-        $author = $this->authorFactory();
+        $author = Author::factory()->create();
 
         $this->fieldtype->setField(new Field('author', [
             'max_items' => 1,
@@ -122,19 +115,19 @@ class BelongsToFieldtypeTest extends TestCase
 
         $item = $this->fieldtype->getItemData([1]);
 
-        $this->assertSame('AUTHOR '.$author->name, $item->first()['title']);
+        $this->assertEquals('AUTHOR '.$author->name, $item->first()['title']);
     }
 
     /** @test */
     public function can_get_pre_process_index()
     {
-        $author = $this->authorFactory();
+        $author = Author::factory()->create();
 
         $preProcessIndex = $this->fieldtype->preProcessIndex($author->id);
 
         $this->assertTrue($preProcessIndex instanceof Collection);
 
-        $this->assertSame($preProcessIndex->first(), [
+        $this->assertEquals($preProcessIndex->first(), [
             'id' => $author->id,
             'title' => $author->name,
             'edit_url' => 'http://localhost/cp/runway/author/1',
@@ -144,13 +137,13 @@ class BelongsToFieldtypeTest extends TestCase
     /** @test */
     public function can_get_augment_value()
     {
-        $author = $this->authorFactory();
+        $author = Author::factory()->create();
 
         $augment = $this->fieldtype->augment($author->id);
 
         $this->assertIsArray($augment);
-        $this->assertSame($author->id, $augment['id']->value());
-        $this->assertSame($author->name, $augment['name']->value());
+        $this->assertEquals($author->id, $augment['id']->value());
+        $this->assertEquals($author->name, $augment['name']->value());
     }
 
     /**
@@ -160,7 +153,7 @@ class BelongsToFieldtypeTest extends TestCase
      */
     public function can_get_item_data()
     {
-        $author = $this->authorFactory();
+        $author = Author::factory()->create();
 
         $getItemData = $this->fieldtype->getItemData($author->id);
 

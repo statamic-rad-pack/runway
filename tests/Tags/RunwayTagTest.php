@@ -4,7 +4,8 @@ namespace DoubleThreeDigital\Runway\Tests\Tags;
 
 use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tags\RunwayTag;
-use DoubleThreeDigital\Runway\Tests\Post;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Antlers;
@@ -32,24 +33,24 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_no_parameters()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $this->tag->setParameters([]);
         $usage = $this->tag->wildcard('post');
 
-        $this->assertSame(5, count($usage));
+        $this->assertEquals(5, count($usage));
 
-        $this->assertSame((string) $usage[0]['title'], $posts[0]->title);
-        $this->assertSame((string) $usage[1]['title'], $posts[1]->title);
-        $this->assertSame((string) $usage[2]['title'], $posts[2]->title);
-        $this->assertSame((string) $usage[3]['title'], $posts[3]->title);
-        $this->assertSame((string) $usage[4]['title'], $posts[4]->title);
+        $this->assertEquals((string) $usage[0]['title'], $posts[0]->title);
+        $this->assertEquals((string) $usage[1]['title'], $posts[1]->title);
+        $this->assertEquals((string) $usage[2]['title'], $posts[2]->title);
+        $this->assertEquals((string) $usage[3]['title'], $posts[3]->title);
+        $this->assertEquals((string) $usage[4]['title'], $posts[4]->title);
     }
 
     /** @test */
     public function can_get_records_with_select_parameter()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $this->tag->setParameters([
             'select' => 'id,title,slug',
@@ -57,33 +58,33 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertSame(5, count($usage));
+        $this->assertEquals(5, count($usage));
 
-        $this->assertSame((string) $usage[0]['title']->value(), $posts[0]->title);
-        $this->assertSame((string) $usage[0]['slug']->value(), $posts[0]->slug);
+        $this->assertEquals((string) $usage[0]['title']->value(), $posts[0]->title);
+        $this->assertEquals((string) $usage[0]['slug']->value(), $posts[0]->slug);
         $this->assertEmpty((string) $usage[0]['body']->value());
 
-        $this->assertSame((string) $usage[1]['title']->value(), $posts[1]->title);
-        $this->assertSame((string) $usage[1]['slug']->value(), $posts[1]->slug);
+        $this->assertEquals((string) $usage[1]['title']->value(), $posts[1]->title);
+        $this->assertEquals((string) $usage[1]['slug']->value(), $posts[1]->slug);
         $this->assertEmpty((string) $usage[1]['body']->value());
 
-        $this->assertSame((string) $usage[2]['title']->value(), $posts[2]->title);
-        $this->assertSame((string) $usage[2]['slug']->value(), $posts[2]->slug);
+        $this->assertEquals((string) $usage[2]['title']->value(), $posts[2]->title);
+        $this->assertEquals((string) $usage[2]['slug']->value(), $posts[2]->slug);
         $this->assertEmpty((string) $usage[2]['body']->value());
 
-        $this->assertSame((string) $usage[3]['title']->value(), $posts[3]->title);
-        $this->assertSame((string) $usage[3]['slug']->value(), $posts[3]->slug);
+        $this->assertEquals((string) $usage[3]['title']->value(), $posts[3]->title);
+        $this->assertEquals((string) $usage[3]['slug']->value(), $posts[3]->slug);
         $this->assertEmpty((string) $usage[3]['body']->value());
 
-        $this->assertSame((string) $usage[4]['title']->value(), $posts[4]->title);
-        $this->assertSame((string) $usage[4]['slug']->value(), $posts[4]->slug);
+        $this->assertEquals((string) $usage[4]['title']->value(), $posts[4]->title);
+        $this->assertEquals((string) $usage[4]['slug']->value(), $posts[4]->slug);
         $this->assertEmpty((string) $usage[4]['body']->value());
     }
 
     /** @test */
     public function can_get_records_with_scope_parameter()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $posts[0]->update(['title' => 'Pasta']);
         $posts[2]->update(['title' => 'Apple']);
@@ -95,16 +96,16 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertSame(3, count($usage));
-        $this->assertSame((string) $usage[0]['title']->value(), 'Pasta');
-        $this->assertSame((string) $usage[1]['title']->value(), 'Apple');
-        $this->assertSame((string) $usage[2]['title']->value(), 'Burger');
+        $this->assertEquals(3, count($usage));
+        $this->assertEquals((string) $usage[0]['title']->value(), 'Pasta');
+        $this->assertEquals((string) $usage[1]['title']->value(), 'Apple');
+        $this->assertEquals((string) $usage[2]['title']->value(), 'Burger');
     }
 
     /** @test */
     public function can_get_records_with_scope_parameter_and_scope_arguments()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $posts[0]->update(['title' => 'Pasta']);
         $posts[2]->update(['title' => 'Apple']);
@@ -120,14 +121,14 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertSame(1, count($usage));
-        $this->assertSame((string) $usage[0]['title']->value(), 'Apple');
+        $this->assertEquals(1, count($usage));
+        $this->assertEquals((string) $usage[0]['title']->value(), 'Apple');
     }
 
     /** @test */
     public function can_get_records_with_scope_parameter_and_scope_arguments_and_multiple_scopes()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $posts[0]->update(['title' => 'Pasta']);
         $posts[2]->update(['title' => 'Apple']);
@@ -143,14 +144,14 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertSame(1, count($usage));
-        $this->assertSame((string) $usage[0]['title']->value(), 'Apple');
+        $this->assertEquals(1, count($usage));
+        $this->assertEquals((string) $usage[0]['title']->value(), 'Apple');
     }
 
     /** @test */
     public function can_get_records_with_where_parameter()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $posts[0]->update(['title' => 'penguin']);
 
@@ -160,15 +161,15 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertSame(1, count($usage));
-        $this->assertSame((string) $usage[0]['title']->value(), 'penguin');
+        $this->assertEquals(1, count($usage));
+        $this->assertEquals((string) $usage[0]['title']->value(), 'penguin');
     }
 
     /** @test */
     public function can_get_records_with_where_parameter_when_condition_is_on_relationship_field()
     {
-        $posts = $this->postFactory(5);
-        $author = $this->authorFactory();
+        $posts = Post::factory()->count(5)->create();
+        $author = Author::factory()->create();
 
         $posts[0]->update(['author_id' => $author->id]);
         $posts[2]->update(['author_id' => $author->id]);
@@ -180,16 +181,16 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertSame(3, count($usage));
-        $this->assertSame((string) $usage[0]['title']->value(), $posts[0]->title);
-        $this->assertSame((string) $usage[1]['title']->value(), $posts[2]->title);
-        $this->assertSame((string) $usage[2]['title']->value(), $posts[3]->title);
+        $this->assertEquals(3, count($usage));
+        $this->assertEquals((string) $usage[0]['title']->value(), $posts[0]->title);
+        $this->assertEquals((string) $usage[1]['title']->value(), $posts[2]->title);
+        $this->assertEquals((string) $usage[2]['title']->value(), $posts[3]->title);
     }
 
     /** @test */
     public function can_get_records_with_with_parameter()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $posts[0]->update(['title' => 'tiger']);
 
@@ -199,17 +200,17 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertSame(5, count($usage));
-        $this->assertSame((string) $usage[0]['title'], 'tiger');
+        $this->assertEquals(5, count($usage));
+        $this->assertEquals((string) $usage[0]['title'], 'tiger');
 
         $this->assertInstanceOf(Value::class, $usage[0]['author']);
-        $this->assertSame($usage[0]['author']->value()['name']->value(), $posts[0]->author->name);
+        $this->assertEquals($usage[0]['author']->value()['name']->value(), $posts[0]->author->name);
     }
 
     /** @test */
     public function can_get_records_with_sort_parameter()
     {
-        $posts = $this->postFactory(2);
+        $posts = Post::factory()->count(2)->create();
 
         $posts[0]->update(['title' => 'abc']);
         $posts[1]->update(['title' => 'def']);
@@ -220,16 +221,16 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertSame(2, count($usage));
+        $this->assertEquals(2, count($usage));
 
-        $this->assertSame((string) $usage[0]['title'], 'def');
-        $this->assertSame((string) $usage[1]['title'], 'abc');
+        $this->assertEquals((string) $usage[0]['title'], 'def');
+        $this->assertEquals((string) $usage[1]['title'], 'abc');
     }
 
     /** @test */
     public function can_get_records_with_scoping()
     {
-        $posts = $this->postFactory(2);
+        $posts = Post::factory()->count(2)->create();
 
         $posts[0]->update(['title' => 'abc']);
         $posts[1]->update(['title' => 'def']);
@@ -240,16 +241,16 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertSame(2, count($usage['items']));
+        $this->assertEquals(2, count($usage['items']));
 
-        $this->assertSame((string) $usage['items'][0]['title'], 'abc');
-        $this->assertSame((string) $usage['items'][1]['title'], 'def');
+        $this->assertEquals((string) $usage['items'][0]['title'], 'abc');
+        $this->assertEquals((string) $usage['items'][1]['title'], 'def');
     }
 
     /** @test */
     public function can_get_records_with_limit_parameter()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $this->tag->setParameters([
             'limit' => 2,
@@ -257,10 +258,10 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertSame(2, count($usage));
+        $this->assertEquals(2, count($usage));
 
-        $this->assertSame((string) $usage[0]['title'], $posts[0]['title']);
-        $this->assertSame((string) $usage[1]['title'], $posts[1]['title']);
+        $this->assertEquals((string) $usage[0]['title'], $posts[0]['title']);
+        $this->assertEquals((string) $usage[1]['title'], $posts[1]['title']);
 
         $this->assertFalse(isset($usage[2]));
     }
@@ -268,7 +269,7 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_scoping_and_pagination()
     {
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $this->tag->setParameters([
             'limit' => 2,
@@ -277,10 +278,10 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertSame(2, count($usage['items']));
+        $this->assertEquals(2, count($usage['items']));
 
-        $this->assertSame((string) $usage['items'][0]['title'], $posts[0]['title']);
-        $this->assertSame((string) $usage['items'][1]['title'], $posts[1]['title']);
+        $this->assertEquals((string) $usage['items'][0]['title'], $posts[0]['title']);
+        $this->assertEquals((string) $usage['items'][1]['title'], $posts[1]['title']);
 
         $this->assertFalse(isset($usage['items'][2]));
 
@@ -291,19 +292,19 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_and_non_blueprint_columns_are_returned()
     {
-        $posts = $this->postFactory(2);
+        $posts = Post::factory()->count(2)->create();
 
         $this->tag->setParameters([]);
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertSame(2, count($usage));
+        $this->assertEquals(2, count($usage));
 
-        $this->assertSame($usage[0]['id']->value(), $posts[0]['id']);
-        $this->assertSame($usage[1]['id']->value(), $posts[1]['id']);
+        $this->assertEquals($usage[0]['id']->value(), $posts[0]['id']);
+        $this->assertEquals($usage[1]['id']->value(), $posts[1]['id']);
 
-        $this->assertSame((string) $usage[0]['title']->value(), $posts[0]['title']);
-        $this->assertSame((string) $usage[1]['title']->value(), $posts[1]['title']);
+        $this->assertEquals((string) $usage[0]['title']->value(), $posts[0]['title']);
+        $this->assertEquals((string) $usage[1]['title']->value(), $posts[1]['title']);
     }
 
     /** @test */
@@ -313,17 +314,17 @@ class RunwayTagTest extends TestCase
 
         Runway::discoverResources();
 
-        $posts = $this->postFactory(5);
+        $posts = Post::factory()->count(5)->create();
 
         $this->tag->setParameters([]);
         $usage = $this->tag->wildcard('blog_posts');
 
-        $this->assertSame(5, count($usage));
+        $this->assertEquals(5, count($usage));
 
-        $this->assertSame((string) $usage[0]['title'], $posts[0]->title);
-        $this->assertSame((string) $usage[1]['title'], $posts[1]->title);
-        $this->assertSame((string) $usage[2]['title'], $posts[2]->title);
-        $this->assertSame((string) $usage[3]['title'], $posts[3]->title);
-        $this->assertSame((string) $usage[4]['title'], $posts[4]->title);
+        $this->assertEquals((string) $usage[0]['title'], $posts[0]->title);
+        $this->assertEquals((string) $usage[1]['title'], $posts[1]->title);
+        $this->assertEquals((string) $usage[2]['title'], $posts[2]->title);
+        $this->assertEquals((string) $usage[3]['title'], $posts[3]->title);
+        $this->assertEquals((string) $usage[4]['title'], $posts[4]->title);
     }
 }

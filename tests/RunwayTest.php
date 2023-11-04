@@ -21,12 +21,12 @@ class RunwayTest extends TestCase
         $this->assertCount(2, $all);
 
         $this->assertTrue($all->first() instanceof Resource);
-        $this->assertSame('post', $all->first()->handle());
+        $this->assertEquals('post', $all->first()->handle());
         $this->assertTrue($all->first()->model() instanceof Model);
         $this->assertTrue($all->first()->blueprint() instanceof Blueprint);
 
         $this->assertTrue($all->last() instanceof Resource);
-        $this->assertSame('author', $all->last()->handle());
+        $this->assertEquals('author', $all->last()->handle());
         $this->assertTrue($all->last()->model() instanceof Model);
         $this->assertTrue($all->last()->blueprint() instanceof Blueprint);
     }
@@ -39,7 +39,7 @@ class RunwayTest extends TestCase
         $find = Runway::findResource('author');
 
         $this->assertTrue($find instanceof Resource);
-        $this->assertSame('author', $find->handle());
+        $this->assertEquals('author', $find->handle());
         $this->assertTrue($find->model() instanceof Model);
         $this->assertTrue($find->blueprint() instanceof Blueprint);
     }

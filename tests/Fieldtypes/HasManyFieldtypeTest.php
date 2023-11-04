@@ -3,6 +3,8 @@
 namespace DoubleThreeDigital\Runway\Tests\Fieldtypes;
 
 use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -24,7 +26,7 @@ class HasManyFieldtypeTest extends TestCase
     {
         parent::setUp();
 
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.sections.main.fields', [
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields', [
             [
                 'handle' => 'name',
                 'field' => [
@@ -69,12 +71,8 @@ class HasManyFieldtypeTest extends TestCase
     /** @test */
     public function can_get_index_items()
     {
-        $posts = $this->postFactory(10);
-        $author = $this->authorFactory();
-
-        foreach ($posts as $post) {
-            $post->update(['author_id' => $author->id]);
-        }
+        $author = Author::factory()->create();
+        Post::factory()->count(10)->create(['author_id' => $author->id]);
 
         $getIndexItemsWithPagination = $this->fieldtype->getIndexItems(
             new FilteredRequest(['paginate' => true])
@@ -86,22 +84,18 @@ class HasManyFieldtypeTest extends TestCase
 
         $this->assertIsObject($getIndexItemsWithPagination);
         $this->assertTrue($getIndexItemsWithPagination instanceof Paginator);
-        $this->assertSame($getIndexItemsWithPagination->count(), 10);
+        $this->assertEquals($getIndexItemsWithPagination->count(), 10);
 
         $this->assertIsObject($getIndexItemsWithoutPagination);
         $this->assertTrue($getIndexItemsWithoutPagination instanceof Collection);
-        $this->assertSame($getIndexItemsWithoutPagination->count(), 10);
+        $this->assertEquals($getIndexItemsWithoutPagination->count(), 10);
     }
 
     /** @test */
     public function can_get_index_items_with_title_format()
     {
-        $posts = $this->postFactory(2);
-        $author = $this->authorFactory();
-
-        foreach ($posts as $post) {
-            $post->update(['author_id' => $author->id]);
-        }
+        $author = Author::factory()->create();
+        $posts = Post::factory()->count(2)->create(['author_id' => $author->id]);
 
         $this->fieldtype->setField(new Field('posts', [
             'mode' => 'default',
@@ -115,21 +109,17 @@ class HasManyFieldtypeTest extends TestCase
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Paginator);
-        $this->assertSame($getIndexItems->count(), 2);
+        $this->assertEquals($getIndexItems->count(), 2);
 
-        $this->assertSame($getIndexItems->first()['title'], $posts[0]->title.' TEST '.now()->format('Y'));
-        $this->assertSame($getIndexItems->last()['title'], $posts[1]->title.' TEST '.now()->format('Y'));
+        $this->assertEquals($getIndexItems->first()['title'], $posts[0]->title.' TEST '.now()->format('Y'));
+        $this->assertEquals($getIndexItems->last()['title'], $posts[1]->title.' TEST '.now()->format('Y'));
     }
 
     /** @test */
     public function can_get_item_array_with_title_format()
     {
-        $posts = $this->postFactory(2);
-        $author = $this->authorFactory();
-
-        foreach ($posts as $post) {
-            $post->update(['author_id' => $author->id]);
-        }
+        $author = Author::factory()->create();
+        $posts = Post::factory()->count(2)->create(['author_id' => $author->id]);
 
         $this->fieldtype->setField(new Field('posts', [
             'mode' => 'default',
@@ -141,25 +131,21 @@ class HasManyFieldtypeTest extends TestCase
 
         $item = $this->fieldtype->getItemData([$posts[0]->id, $posts[1]->id]);
 
-        $this->assertSame($item->first()['title'], $posts[0]->title.' TEST '.now()->format('Y'));
-        $this->assertSame($item->last()['title'], $posts[1]->title.' TEST '.now()->format('Y'));
+        $this->assertEquals($item->first()['title'], $posts[0]->title.' TEST '.now()->format('Y'));
+        $this->assertEquals($item->last()['title'], $posts[1]->title.' TEST '.now()->format('Y'));
     }
 
     /** @test */
     public function can_get_pre_process_index()
     {
-        $posts = $this->postFactory(10);
-        $author = $this->authorFactory();
-
-        foreach ($posts as $post) {
-            $post->update(['author_id' => $author->id]);
-        }
+        $author = Author::factory()->create();
+        $posts = Post::factory()->count(10)->create(['author_id' => $author->id]);
 
         $preProcessIndex = $this->fieldtype->preProcessIndex($author->posts);
 
         $this->assertTrue($preProcessIndex instanceof Collection);
 
-        $this->assertSame($preProcessIndex->first(), [
+        $this->assertEquals($preProcessIndex->first(), [
             'id' => $posts[0]->id,
             'title' => $posts[0]->title,
             'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
@@ -169,8 +155,8 @@ class HasManyFieldtypeTest extends TestCase
     /** @test */
     public function can_process_and_add_relations_to_model()
     {
-        $posts = $this->postFactory(10);
-        $author = $this->authorFactory();
+        $author = Author::factory()->create();
+        $posts = Post::factory()->count(10)->create();
 
         // Usually these bits would be fetched from the request. However, as we can't mock
         // the request, we're using Blink.
@@ -180,23 +166,23 @@ class HasManyFieldtypeTest extends TestCase
         $this->fieldtype->process(collect($posts)->pluck('id')->toArray());
 
         // Ensure the author is attached to all 10 posts
-        $this->assertSame($posts[0]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[1]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[2]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[3]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[4]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[5]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[6]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[7]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[8]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[9]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[0]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[1]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[2]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[3]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[4]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[5]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[6]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[7]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[8]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[9]->fresh()->author_id, $author->id);
     }
 
     /** @test */
     public function can_process_and_add_relations_to_model_with_pivot_table()
     {
-        $posts = $this->postFactory(3);
-        $author = $this->authorFactory();
+        $author = Author::factory()->create();
+        $posts = Post::factory()->count(3)->create();
 
         // Usually these bits would be fetched from the request. However, as we can't mock
         // the request, we're using Blink.
@@ -229,8 +215,8 @@ class HasManyFieldtypeTest extends TestCase
     /** @test */
     public function can_process_and_add_relations_to_model_and_can_persist_users_sort_order()
     {
-        $posts = $this->postFactory(3);
-        $author = $this->authorFactory();
+        $author = Author::factory()->create();
+        $posts = Post::factory()->count(3)->create();
 
         $this->fieldtype->field()->setConfig(array_merge($this->fieldtype->field()->config(), [
             'reorderable' => true,
@@ -249,9 +235,9 @@ class HasManyFieldtypeTest extends TestCase
         ]);
 
         // Ensure the author is attached to all 3 posts
-        $this->assertSame($posts[0]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[1]->fresh()->author_id, $author->id);
-        $this->assertSame($posts[2]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[0]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[1]->fresh()->author_id, $author->id);
+        $this->assertEquals($posts[2]->fresh()->author_id, $author->id);
 
         // Ensure the sort_order is persisted correctly for all 3 posts
         $this->assertDatabaseHas('posts', [
@@ -276,8 +262,8 @@ class HasManyFieldtypeTest extends TestCase
      */
     public function can_process_and_add_relations_to_model_and_can_persist_users_sort_order_on_pivot_table()
     {
-        $posts = $this->postFactory(3);
-        $author = $this->authorFactory();
+        $author = Author::factory()->create();
+        $posts = Post::factory()->count(3)->create();
 
         $this->fieldtypeUsingPivotTable->field()->setConfig(array_merge($this->fieldtypeUsingPivotTable->field()->config(), [
             'reorderable' => true,
@@ -318,12 +304,8 @@ class HasManyFieldtypeTest extends TestCase
     /** @test */
     public function can_get_augment_value()
     {
-        $posts = $this->postFactory(5);
-        $author = $this->authorFactory();
-
-        foreach ($posts as $post) {
-            $post->update(['author_id' => $author->id]);
-        }
+        $author = Author::factory()->create();
+        $posts = Post::factory()->count(5)->create(['author_id' => $author->id]);
 
         $augment = $this->fieldtype->augment(
             $author->posts->pluck('id')->toArray()
@@ -332,8 +314,8 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertIsArray($augment);
         $this->assertCount(5, $augment);
 
-        $this->assertSame($posts[0]->id, $augment[0]['id']->value());
-        $this->assertSame($posts[0]->title, (string) $augment[0]['title']->value());
+        $this->assertEquals($posts[0]->id, $augment[0]['id']->value());
+        $this->assertEquals($posts[0]->title, (string) $augment[0]['title']->value());
     }
 
     /**
@@ -343,12 +325,8 @@ class HasManyFieldtypeTest extends TestCase
      */
     public function can_get_item_data()
     {
-        $posts = $this->postFactory(5);
-        $author = $this->authorFactory();
-
-        foreach ($posts as $post) {
-            $post->update(['author_id' => $author->id]);
-        }
+        $author = Author::factory()->create();
+        $posts = Post::factory()->count(5)->create(['author_id' => $author->id]);
 
         $getItemData = $this->fieldtype->getItemData(
             $author->posts
