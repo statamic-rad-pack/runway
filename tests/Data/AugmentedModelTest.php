@@ -6,7 +6,7 @@ use DoubleThreeDigital\Runway\Data\AugmentedModel;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Spatie\TestTime\TestTime;
 
-class ResourceTest extends TestCase
+class AugmentedModelTest extends TestCase
 {
     /** @test */
     public function it_gets_values()
