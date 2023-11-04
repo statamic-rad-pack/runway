@@ -4,6 +4,7 @@ namespace DoubleThreeDigital\Runway\Tests;
 
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Support\Facades\Config;
+use Statamic\Facades\Fieldset;
 
 class ResourceTest extends TestCase
 {
@@ -122,5 +123,39 @@ class ResourceTest extends TestCase
         $plural = $resource->plural();
 
         $this->assertEquals($plural, 'Bibliotheken');
+    }
+
+    /** @test */
+    public function can_get_listable_columns()
+    {
+        Fieldset::make('seo')->setContents([
+            'fields' => [
+                ['handle' => 'seo_title', 'field' => ['type' => 'text', 'listable' => true]],
+                ['handle' => 'seo_description', 'field' => ['type' => 'textarea', 'listable' => true]],
+            ],
+        ])->save();
+
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.blueprint', [
+            'sections' => [
+                'main' => [
+                    'fields' => [
+                        ['handle' => 'title', 'field' => ['type' => 'text', 'listable' => true]],
+                        ['handle' => 'summary', 'field' => ['type' => 'textarea', 'listable' => true]],
+                        ['handle' => 'body', 'field' => ['type' => 'markdown', 'listable' => 'hidden']],
+                        ['handle' => 'thumbnail', 'field' => ['type' => 'assets', 'listable' => false]],
+                        ['import' => 'seo']
+                    ],
+                ],
+            ],
+        ]);
+
+        $resource = Runway::discoverResources()->findResource('post');
+
+        $this->assertEquals([
+            'title',
+            'summary',
+            'seo_title',
+            'seo_description',
+        ], $resource->listableColumns());
     }
 }
