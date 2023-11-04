@@ -69,13 +69,11 @@ class HasManyFieldtype extends BaseFieldtype
     public function process($data)
     {
         // Determine whether or not this field is on a resource or a collection
-        $resourceHandle = request()->route('resource') ?? Blink::get('RunwayRouteResource');
+        $resource = request()->route('resource') ?? Blink::get('RunwayRouteResource');
 
-        if (! $resourceHandle) {
+        if (! $resource) {
             return $data;
         }
-
-        $resource = Runway::findResource($resourceHandle);
 
         $record = $resource->model()->firstWhere(
             $resource->routeKey(),
