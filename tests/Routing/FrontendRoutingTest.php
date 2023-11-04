@@ -2,6 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Tests\Routing;
 
+use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
@@ -47,10 +48,9 @@ class FrontendRoutingTest extends TestCase
     /** @test */
     public function returns_resource_response_for_resource_with_custom_template()
     {
-        $this->markTestIncomplete();
-
-        // TODO: find way of mocking the template & rebooting Runway's resources
         Config::set('runway.resources.'.Post::class.'.template', 'custom');
+
+        Runway::discoverResources();
 
         $post = Post::factory()->create();
         $runwayUri = $post->fresh()->runwayUri;
@@ -66,10 +66,9 @@ class FrontendRoutingTest extends TestCase
     /** @test */
     public function returns_resource_response_for_resource_with_custom_layout()
     {
-        $this->markTestIncomplete();
-
-        // TODO: find way of mocking the template & rebooting Runway's resources
         Config::set('runway.resources.'.Post::class.'.layout', 'blog-layout');
+
+        Runway::discoverResources();
 
         $post = Post::factory()->create();
         $runwayUri = $post->fresh()->runwayUri;
