@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway\Http\Controllers;
 
 use Carbon\CarbonInterface;
+use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
 use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
 use DoubleThreeDigital\Runway\Http\Requests\CreateRequest;
 use DoubleThreeDigital\Runway\Http\Requests\EditRequest;
@@ -125,44 +126,7 @@ class ResourceController extends CpController
             throw new NotFoundHttpException();
         }
 
-        $values = [];
-        $blueprintFieldKeys = $resource->blueprint()->fields()->all()->keys()->toArray();
-
-        foreach ($blueprintFieldKeys as $fieldKey) {
-            $value = data_get($record, str_replace('->', '.', $fieldKey));
-
-            // When $value is a Carbon instance, format it with the format
-            // specified in the blueprint.
-            if ($value instanceof CarbonInterface) {
-                $format = $defaultFormat = 'Y-m-d H:i';
-
-                if ($field = $resource->blueprint()->field($fieldKey)) {
-                    $format = $field->get('format', $defaultFormat);
-                }
-
-                $value = $value->format($format);
-            }
-
-            // When $value is a JSON string, decode it.
-            if (Json::isJson($value)) {
-                $value = json_decode((string) $value, true);
-            }
-
-            // HasMany field: if reordering is enabled, ensure the models are returned in the right order.
-            if (
-                $resource->blueprint()->field($fieldKey)->fieldtype() instanceof HasManyFieldtype
-                && isset($resource->blueprint()->field($fieldKey)->config()['reorderable'])
-                && $resource->blueprint()->field($fieldKey)->config()['reorderable'] === true
-            ) {
-                $orderColumn = $resource->blueprint()->field($fieldKey)->config()['order_column'];
-
-                $value = $record->{$fieldKey}()
-                    ->reorder($orderColumn, 'ASC')
-                    ->get();
-            }
-
-            $values[$fieldKey] = $value;
-        }
+        $values = $this->prepareModelForPublishForm($resource, $record);
 
         $blueprint = $resource->blueprint();
         $fields = $blueprint->fields()->addValues($values)->preProcess();
@@ -204,52 +168,23 @@ class ResourceController extends CpController
     {
         $resource->blueprint()->fields()->addValues($request->all())->validator()->validate();
 
-        $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $record)->sole();
+        $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $record)->first();
 
         $this->prepareModelForSaving($resource, $model, $request);
 
         $model->save();
 
-        // In the case of the 'Relationship' fields in Table Mode, when a model is updated
-        // in the stack, we also need to return it's relations.
         if ($request->get('from_inline_publish_form')) {
-            collect($resource->blueprint()->fields()->all())
-                ->filter(function (Field $field) {
-                    return $field->type() === 'belongs_to'
-                        || $field->type() === 'has_many';
-                })
-                ->each(function (Field $field) use (&$model, $resource) {
-                    $relatedResource = Runway::findResource($field->get('resource'));
-
-                    $column = $relatedResource->titleField();
-
-                    $relationshipName = $resource->eagerLoadingRelations()->get($field->handle()) ?? $field->handle();
-
-                    $model->{$field->handle()} = $model->{$relationshipName}()
-                        ->select($relatedResource->model()->qualifyColumn($relatedResource->primaryKey()), $column)
-                        ->get()
-                        ->each(function ($model) use ($relatedResource, $column) {
-                            $model->title = $model->{$column};
-
-                            $model->edit_url = cp_route('runway.edit', [
-                                'resource' => $relatedResource->handle(),
-                                'record' => $model->{$relatedResource->routeKey()},
-                            ]);
-
-                            return $model;
-                        });
-                });
+            $this->handleInlinePublishForm($resource, $model);
         }
 
-        return [
-            'data' => $this->getReturnData($resource, $model),
-        ];
+        return ['data' => $this->getReturnData($resource, $model)];
     }
 
     /**
      * Build an array with the correct return data for the inline publish forms.
      */
-    protected function getReturnData(Resource $resource, Model $record)
+    protected function getReturnData(Resource $resource, Model $record): array
     {
         return array_merge($record->toArray(), [
             'title' => $record->{$resource->titleField()},
@@ -258,5 +193,35 @@ class ResourceController extends CpController
                 'record' => $record->{$resource->routeKey()},
             ]),
         ]);
+    }
+
+    /**
+     * Handle saving data from the Inline Publish Form (the one that appears when you edit models in a stack).
+     */
+    protected function handleInlinePublishForm(Resource $resource, Model &$model): void
+    {
+        collect($resource->blueprint()->fields()->all())
+            ->filter(fn (Field $field) => $field->fieldtype() instanceof BelongsToFieldtype || $field->fieldtype() instanceof HasManyFieldtype)
+            ->each(function (Field $field) use (&$model, $resource) {
+                $relatedResource = Runway::findResource($field->get('resource'));
+
+                $column = $relatedResource->titleField();
+
+                $relationshipName = $resource->eagerLoadingRelations()->get($field->handle()) ?? $field->handle();
+
+                $model->{$field->handle()} = $model->{$relationshipName}()
+                    ->select($relatedResource->model()->qualifyColumn($relatedResource->primaryKey()), $column)
+                    ->get()
+                    ->each(function ($model) use ($relatedResource, $column) {
+                        $model->title = $model->{$column};
+
+                        $model->edit_url = cp_route('runway.edit', [
+                            'resource' => $relatedResource->handle(),
+                            'record' => $model->{$relatedResource->routeKey()},
+                        ]);
+
+                        return $model;
+                    });
+            });
     }
 }

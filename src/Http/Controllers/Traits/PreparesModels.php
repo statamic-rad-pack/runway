@@ -2,18 +2,56 @@
 
 namespace DoubleThreeDigital\Runway\Http\Controllers\Traits;
 
+use Carbon\CarbonInterface;
 use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
 use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
 use DoubleThreeDigital\Runway\Resource;
+use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Statamic\Fields\Field;
+use Statamic\Fieldtypes\Section;
 
 trait PreparesModels
 {
-    protected function prepareModelForSaving(Resource $resource, Model &$model, Request $request)
+    protected function prepareModelForPublishForm(Resource $resource, Model $model): array
+    {
+        $blueprint = $resource->blueprint();
+
+        return $blueprint->fields()->all()
+            ->mapWithKeys(function (Field $field) use ($model, $blueprint) {
+                $value = data_get($model, Str::replace('->', '.', $field->handle()));
+
+                // When $value is a Carbon instance, format it it with the format defined in the blueprint.
+                if ($value instanceof CarbonInterface) {
+                    $format = $field->get('format', 'Y-m-d H:i');
+
+                    $value = $value->format($format);
+                }
+
+                // When $value is a JSON string, we need to decode it.
+                if (Json::isJson($value)) {
+                    $value = json_decode((string) $value, true);
+                }
+
+                // HasMany fieldtype: when reordering is enabled, we need to ensure the models are returned in the correct order.
+                if ($field->fieldtype() instanceof HasManyFieldtype && $field->get('reorderable', false)) {
+                    $orderColumn = $field->get('order_column');
+
+                    $value = $model->{$field->handle()}()
+                        ->reorder($orderColumn, 'ASC')
+                        ->get();
+                }
+
+                return [$field->handle() => $value];
+            })
+            ->toArray();
+    }
+
+    protected function prepareModelForSaving(Resource $resource, Model &$model, Request $request): void
     {
         $blueprint = $resource->blueprint();
 
@@ -51,9 +89,7 @@ trait PreparesModels
 
     protected function shouldSaveField(Field $field): bool
     {
-        $config = $field->config();
-
-        if ($field->type() === 'section') {
+        if ($field->fieldtype() instanceof Section) {
             return false;
         }
 
@@ -61,7 +97,7 @@ trait PreparesModels
             return false;
         }
 
-        if (isset($config['save']) && $config['save'] === false) {
+        if ($field->get('save', true) === false) {
             return false;
         }
 
