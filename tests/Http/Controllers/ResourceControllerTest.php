@@ -415,7 +415,7 @@ class ResourceControllerTest extends TestCase
     {
         $post = Post::factory()->create([
             'values' => [
-                'alt_title' => "Im Toby Ziegler, and I work at the White House.",
+                'alt_title' => 'Im Toby Ziegler, and I work at the White House.',
             ],
         ]);
 
@@ -427,7 +427,7 @@ class ResourceControllerTest extends TestCase
             ->assertOk()
             ->assertSee($post->title)
             ->assertSee($post->body)
-            ->assertSee("Im Toby Ziegler, and I work at the White House.");
+            ->assertSee('Im Toby Ziegler, and I work at the White House.');
     }
 
     /** @test */
