@@ -8,20 +8,23 @@ jobs:
   pr-title:
     runs-on: ubuntu-latest
     steps:
-      # - name: Checkout code
-      #   uses: actions/checkout@v1
-
-      - uses: deepakputhraya/action-pr-title@master
+      - name: Validate PR title
+        uses: deepakputhraya/action-pr-title@master
         continue-on-error: true
         id: validate-pr-title
         with:
           regex: '^\[\d+\.x\]\s'
 
-      # Update the PR title if it doesn't match the regex
-      # PR Title format should be: `[TargetBranch] Existing PR title`
-      # Do it without using the peter-evans/create-pull-request action
-      - name: Update PR title
+      - name: Validate if PR targets a release branch
+        uses: actions-ecosystem/action-regex-match@v2
+        id: targets-release
         if: always() && (steps.validate-pr-title.outcome == 'failure')
+        with:
+          text: ${{ github.event.comment.body }}
+          regex: '^/label\s*(.*?)\s*$'
+
+      - name: Update PR title
+        if: always() && (steps.validate-pr-title.outcome == 'failure' || steps.targets-release.outputs.matches == 'true')
         run: |
           echo "Updating PR title"
           curl -X PATCH \
