@@ -17,7 +17,7 @@
         :is-creating="true"
         publish-container="base"
         :resource='@json($resource->toArray())'
-        create-another-url="{{ cp_route('runway.create', ['resourceHandle' => $resource->handle()]) }}"
-        listing-url="{{ cp_route('runway.index', ['resourceHandle' => $resource->handle()]) }}"
+        create-another-url="{{ cp_route('runway.create', ['resource' => $resource->handle()]) }}"
+        listing-url="{{ cp_route('runway.index', ['resource' => $resource->handle()]) }}"
     ></runway-publish-form>
 @endsection
