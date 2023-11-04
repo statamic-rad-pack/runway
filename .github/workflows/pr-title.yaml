@@ -8,6 +8,9 @@ jobs:
   pr-title:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+
       - uses: deepakputhraya/action-pr-title@master
         continue-on-error: true
         id: validate-pr-title
