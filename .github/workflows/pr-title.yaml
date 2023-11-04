@@ -8,8 +8,8 @@ jobs:
   pr-title:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v1
+      # - name: Checkout code
+      #   uses: actions/checkout@v1
 
       - uses: deepakputhraya/action-pr-title@master
         continue-on-error: true
@@ -17,12 +17,15 @@ jobs:
         with:
           regex: '^\[\d+\.x\]\s'
 
-      - name: Update the PR
-        uses: peter-evans/create-pull-request@v3
+      # Update the PR title if it doesn't match the regex
+      # PR Title format should be: `[TargetBranch] Existing PR title`
+      # Do it without using the peter-evans/create-pull-request action
+      - name: Update PR title
         if: always() && (steps.validate-pr-title.outcome == 'failure')
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Update PR title
-          title: "[${{ github.event.pull_request.head.ref }}] ${{ steps.pr-title.outputs.title }}"
-          branch: ${{ github.event.pull_request.head.ref }}
-          base: ${{ github.event.pull_request.base.ref }}
+        run: |
+          echo "Updating PR title"
+          curl -X PATCH \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }} \
+            -d '{"title": "[${{ github.base_ref }}] ${{ github.event.pull_request.title }}"}'
