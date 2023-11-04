@@ -5,7 +5,9 @@ namespace DoubleThreeDigital\Runway\Data;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Support\Collection;
 use Statamic\Data\AbstractAugmented;
+use Statamic\Fields\Field;
 use Statamic\Fields\Value;
+use Illuminate\Support\Str;
 
 class AugmentedModel extends AbstractAugmented
 {
@@ -14,6 +16,8 @@ class AugmentedModel extends AbstractAugmented
     protected $resource;
 
     protected $supplements = [];
+
+    protected $nestedFields = [];
 
     public function __construct($model)
     {
@@ -63,7 +67,15 @@ class AugmentedModel extends AbstractAugmented
 
     protected function blueprintFields(): Collection
     {
-        return $this->resource->blueprint()->fields()->all();
+        $fields = $this->resource->blueprint()->fields()->all();
+
+        $this->nestedFields = $fields
+            ->filter(fn (Field $field) => Str::contains($field->handle(), '->'))
+            ->map(fn (Field $field) => Str::before($field->handle(), '->'))
+            ->unique()
+            ->toArray();
+
+        return $fields;
     }
 
     protected function eloquentRelationships()
@@ -73,7 +85,11 @@ class AugmentedModel extends AbstractAugmented
 
     protected function getFromData($handle)
     {
-        return $this->supplements[$handle] ?? $this->data->$handle;
+        if (Str::contains($handle, '->')) {
+            $handle = str_replace('->', '.', $handle);
+        }
+
+        return $this->supplements[$handle] ?? data_get($this->data, $handle);
     }
 
     protected function wrapValue($value, $handle)
@@ -89,6 +105,21 @@ class AugmentedModel extends AbstractAugmented
                 optional($fields->get($relatedField))->fieldtype(),
                 $this->data
             );
+        }
+
+        if (in_array($handle, $this->nestedFields)) {
+            $value = collect($value)
+                ->map(function ($value, $key) use ($handle, $fields) {
+                    $field = $fields->get("{$handle}->{$key}");
+
+                    return new Value(
+                        $value,
+                        $handle,
+                        $field->fieldtype(),
+                        $this->data,
+                    );
+                })
+                ->toArray();
         }
 
         return new Value(

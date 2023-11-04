@@ -45,6 +45,7 @@ class AugmentedModelTest extends TestCase
         $post = $this->postFactory(1, [
             'values' => [
                 'alt_title' => 'Alternative Title...',
+                'alt_body' => 'This is a **great** post! You should *read* it.'
             ],
         ]);
 
@@ -52,8 +53,7 @@ class AugmentedModelTest extends TestCase
 
         $this->assertIsArray($augmented->get('values')->value());
 
-        $this->assertSame([
-            'alt_title' => 'Alternative Title...',
-        ], $augmented->get('values')->value());
+        $this->assertSame('Alternative Title...', $augmented->get('values')->value()['alt_title']->value());
+        $this->assertSame('<p>This is a <strong>great</strong> post! You should <em>read</em> it.</p>', trim($augmented->get('values')->value()['alt_body']->value()));
     }
 }
