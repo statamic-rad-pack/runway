@@ -10,6 +10,7 @@
     convertWarningsToExceptions="true"
     processIsolation="false"
     stopOnFailure="false"
+    beStrictAboutTestsThatDoNotTestAnything="false"
 >
     <testsuites>
         <testsuite name="Test Suite">
