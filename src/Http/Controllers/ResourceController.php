@@ -58,22 +58,16 @@ class ResourceController extends CpController
         $fields = $fields->preProcess();
 
         $viewData = [
-            'title' => __('Create :resource', [
-                'resource' => $resource->singular(),
-            ]),
+            'title' => __('Create :resource', ['resource' => $resource->singular()]),
             'action' => cp_route('runway.store', ['resource' => $resource->handle()]),
             'method' => 'POST',
-            'breadcrumbs' => new Breadcrumbs([
-                [
-                    'text' => $resource->plural(),
-                    'url' => cp_route('runway.index', [
-                        'resource' => $resource->handle(),
-                    ]),
-                ],
-            ]),
-            'resource' => $request->wantsJson()
-                ? $resource->toArray()
-                : $resource,
+            'breadcrumbs' => new Breadcrumbs([[
+                'text' => $resource->plural(),
+                'url' => cp_route('runway.index', [
+                    'resource' => $resource->handle(),
+                ]),
+            ]]),
+            'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
             'blueprint' => $blueprint->toPublishArray(),
             'values' => $fields->values(),
             'meta' => $fields->meta(),
@@ -212,29 +206,23 @@ class ResourceController extends CpController
         $fields = $blueprint->fields()->addValues($values)->preProcess();
 
         $viewData = [
-            'title' => __('Edit :resource', [
-                'resource' => $resource->singular(),
-            ]),
+            'title' => __('Edit :resource', ['resource' => $resource->singular()]),
             'action' => cp_route('runway.update', [
                 'resource' => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},
             ]),
             'method' => 'PATCH',
-            'breadcrumbs' => new Breadcrumbs([
-                [
-                    'text' => $resource->plural(),
-                    'url' => cp_route('runway.index', [
-                        'resource' => $resource->handle(),
-                    ]),
-                ],
-            ]),
+            'breadcrumbs' => new Breadcrumbs([[
+                'text' => $resource->plural(),
+                'url' => cp_route('runway.index', [
+                    'resource' => $resource->handle(),
+                ]),
+            ]]),
             'resource' => $resource,
             'blueprint' => $blueprint->toPublishArray(),
             'values' => $fields->values(),
             'meta' => $fields->meta(),
-            'permalink' => $resource->hasRouting()
-                ? $record->uri()
-                : null,
+            'permalink' => $resource->hasRouting() ? $record->uri() : null,
             'resourceHasRoutes' => $resource->hasRouting(),
             'currentRecord' => [
                 'id' => $record->getKey(),
@@ -348,22 +336,6 @@ class ResourceController extends CpController
                 'record' => $record->{$resource->routeKey()},
             ]),
         ]);
-    }
-
-    protected function getPrimaryColumn(Resource $resource): string
-    {
-        if (isset(User::current()->preferences()['runway'][$resource->handle()]['columns'])) {
-            return collect($resource->blueprint()->fields()->all())
-                ->filter(fn ($field) => in_array($field->handle(), User::current()->preferences()['runway'][$resource->handle()]['columns']))
-                ->reject(function ($field) {
-                    return $field->fieldtype()->indexComponent() === 'relationship'
-                        || $field->fieldtype()->indexComponent() === 'hasmany-related-item';
-                })
-                ->map(fn ($field) => $field->handle())
-                ->first();
-        }
-
-        return $resource->titleField();
     }
 
     protected function shouldSaveField(Field $field): bool
