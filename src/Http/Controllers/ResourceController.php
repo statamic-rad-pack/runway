@@ -22,7 +22,7 @@ use Statamic\Http\Controllers\CP\CpController;
 
 class ResourceController extends CpController
 {
-    use Traits\HasListingColumns;
+    use Traits\HasListingColumns, Traits\PreparesModels;
 
     public function index(IndexRequest $request, Resource $resource)
     {
@@ -91,64 +91,26 @@ class ResourceController extends CpController
             ->validator()
             ->validate();
 
-        $postCreatedHooks = [];
+        $model = $resource->model();
 
-        $record = $resource->model();
+        $postCreatedHooks = $resource->blueprint()->fields()->all()
+            ->filter(fn (Field $field) => $field->fieldtype() instanceof HasManyFieldtype)
+            ->map(fn (Field $field) => $field->fieldtype()->process($request->get($field->handle())))
+            ->values();
 
-        foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
-            $processedValue = $field->fieldtype()->process($request->get($fieldKey));
+        $this->prepareModelForSaving($resource, $model, $request);
 
-            if (! $this->shouldSaveField($field)) {
-                continue;
-            }
-
-            // Skip if the field exists in the model's $appends array and there's not a set mutator present for it on the model.
-            if (in_array($fieldKey, $record->getAppends(), true) && ! $record->hasSetMutator($fieldKey) && ! $record->hasAttributeSetMutator($fieldKey)) {
-                continue;
-            }
-
-            // Store the HasMany field's value in the $postCreatedHooks array so we
-            // can process it after we've finished creating this model.
-            if ($field->type() === 'has_many') {
-                if ($processedValue) {
-                    $postCreatedHooks[] = $processedValue;
-                }
-
-                continue;
-            }
-
-            // If it's a BelongsTo field & the $processedValue is an array, then we
-            // want the first item in the array.
-            if ($field->type() === 'belongs_to' && is_array($processedValue)) {
-                $processedValue = $processedValue[0];
-            }
-
-            // If the $processedValue is an array & no cast is set on the model then
-            // let's JSON encode it.
-            if (
-                is_array($processedValue)
-                && ! str_contains($fieldKey, '->')
-                && ! $record->hasCast($fieldKey, ['json', 'array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])
-            ) {
-                $processedValue = json_encode($processedValue, JSON_THROW_ON_ERROR);
-            }
-
-            $record->{$fieldKey} = $processedValue;
-        }
-
-        $record->save();
+        $model->save();
 
         // Runs anything in the $postCreatedHooks array. See HasManyFieldtype@process for an example
         // of where this is used.
-        foreach ($postCreatedHooks as $postCreatedHook) {
-            $postCreatedHook($resource, $record);
-        }
+        $postCreatedHooks->each(fn ($postCreatedHook) => $postCreatedHook($resource, $model));
 
         return [
-            'data' => $this->getReturnData($resource, $record),
+            'data' => $this->getReturnData($resource, $model),
             'redirect' => cp_route('runway.edit', [
                 'resource' => $resource->handle(),
-                'record' => $record->{$resource->routeKey()},
+                'record' => $model->{$resource->routeKey()},
             ]),
         ];
     }
@@ -240,53 +202,13 @@ class ResourceController extends CpController
 
     public function update(UpdateRequest $request, Resource $resource, $record)
     {
-        $resource
-            ->blueprint()
-            ->fields()
-            ->addValues($request->all())
-            ->validator()
-            ->validate();
+        $resource->blueprint()->fields()->addValues($request->all())->validator()->validate();
 
-        $record = $resource->model()
-            ->where($resource->model()->qualifyColumn($resource->routeKey()), $record)
-            ->first();
+        $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $record)->sole();
 
-        foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
-            $processedValue = $field->fieldtype()->process($request->get($fieldKey));
+        $this->prepareModelForSaving($resource, $model, $request);
 
-            if (! $this->shouldSaveField($field)) {
-                continue;
-            }
-
-            if ($field->type() === 'has_many') {
-                continue;
-            }
-
-            // Skip if the field exists in the model's $appends array and there's not a set mutator present for it on the model.
-            if (in_array($fieldKey, $record->getAppends(), true) && ! $record->hasSetMutator($fieldKey) && ! $record->hasAttributeSetMutator($fieldKey)) {
-                continue;
-            }
-
-            // If it's a BelongsTo field & the $processedValue is an array, then we
-            // want the first item in the array.
-            if ($field->type() === 'belongs_to' && is_array($processedValue)) {
-                $processedValue = $processedValue[0];
-            }
-
-            // If the $processedValue is an array & no cast is set on the model then
-            // let's JSON encode it.
-            if (
-                is_array($processedValue)
-                && ! str_contains($fieldKey, '->')
-                && ! $record->hasCast($fieldKey, ['json', 'array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])
-            ) {
-                $processedValue = json_encode($processedValue, JSON_THROW_ON_ERROR);
-            }
-
-            $record->{$fieldKey} = $processedValue;
-        }
-
-        $record->save();
+        $model->save();
 
         // In the case of the 'Relationship' fields in Table Mode, when a model is updated
         // in the stack, we also need to return it's relations.
@@ -296,14 +218,14 @@ class ResourceController extends CpController
                     return $field->type() === 'belongs_to'
                         || $field->type() === 'has_many';
                 })
-                ->each(function (Field $field) use (&$record, $resource) {
+                ->each(function (Field $field) use (&$model, $resource) {
                     $relatedResource = Runway::findResource($field->get('resource'));
 
                     $column = $relatedResource->titleField();
 
                     $relationshipName = $resource->eagerLoadingRelations()->get($field->handle()) ?? $field->handle();
 
-                    $record->{$field->handle()} = $record->{$relationshipName}()
+                    $model->{$field->handle()} = $model->{$relationshipName}()
                         ->select($relatedResource->model()->qualifyColumn($relatedResource->primaryKey()), $column)
                         ->get()
                         ->each(function ($model) use ($relatedResource, $column) {
@@ -320,7 +242,7 @@ class ResourceController extends CpController
         }
 
         return [
-            'data' => $this->getReturnData($resource, $record),
+            'data' => $this->getReturnData($resource, $model),
         ];
     }
 
@@ -336,24 +258,5 @@ class ResourceController extends CpController
                 'record' => $record->{$resource->routeKey()},
             ]),
         ]);
-    }
-
-    protected function shouldSaveField(Field $field): bool
-    {
-        $config = $field->config();
-
-        if ($field->type() === 'section') {
-            return false;
-        }
-
-        if ($field->visibility() === 'computed') {
-            return false;
-        }
-
-        if (isset($config['save']) && $config['save'] === false) {
-            return false;
-        }
-
-        return true;
     }
 }
