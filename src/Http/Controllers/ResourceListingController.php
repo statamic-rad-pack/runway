@@ -27,52 +27,27 @@ class ResourceListingController extends CpController
         $sortDirection = $request->input('order', $resource->orderByDirection());
 
         $query = $resource->model()
+            ->with($resource->eagerLoadingRelations()->values()->all())
             ->orderBy($sortField, $sortDirection);
 
-        if ($query->hasNamedScope('runwayListing')) {
-            $query->runwayListing();
-        }
-
-        $query->with($resource->eagerLoadingRelations()->values()->all());
+        $query->when($query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
+        $query->when($request->search, fn ($query) => $query->runwaySearch($request->search));
 
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
             'resource' => $resourceHandle,
-            'blueprints' => [
-                $blueprint,
-            ],
+            'blueprints' => [$blueprint],
         ]);
 
-        if ($searchQuery = $request->input('search')) {
-            $query->when(
-                $query->hasNamedScope('runwaySearch'),
-                function ($query) use ($searchQuery) {
-                    $query->runwaySearch($searchQuery);
-                },
-                function ($query) use ($searchQuery, $blueprint) {
-                    $blueprint->fields()->all()
-                        ->reject(function (Field $field) {
-                            return $field->type() === 'has_many'
-                                || $field->type() === 'hidden'
-                                || $field->type() === 'section'
-                                || $field->visibility() === 'computed';
-                        })
-                        ->each(function (Field $field) use ($query, $searchQuery) {
-                            $query->orWhere($field->handle(), 'LIKE', '%'.$searchQuery.'%');
-                        });
-                }
-            );
-        }
-
         $results = $query->paginate($request->input('perPage', config('statamic.cp.pagination_size')));
-
-        $columns = $this->buildColumns($resource, $blueprint);
 
         return (new ResourceCollection($results))
             ->setResourceHandle($resourceHandle)
             ->setColumnPreferenceKey('runway.'.$resourceHandle.'.columns')
-            ->setColumns($columns)
-            ->additional(['meta' => [
-                'activeFilterBadges' => $activeFilterBadges,
-            ]]);
+            ->setColumns($this->buildColumns($resource, $blueprint))
+            ->additional([
+                'meta' => [
+                    'activeFilterBadges' => $activeFilterBadges,
+                ],
+            ]);
     }
 }

@@ -86,32 +86,14 @@ class BaseFieldtype extends Relationship
         ];
     }
 
-    // Provides the dropdown options
     public function getIndexItems($request)
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        $query = $resource->model()
-            ->orderBy($resource->orderBy(), $resource->orderByDirection());
+        $query = $resource->model()->orderBy($resource->orderBy(), $resource->orderByDirection());
 
-        if ($query->hasNamedScope('runwayListing')) {
-            $query->runwayListing();
-        }
-
-        $query = $query
-            ->when($request->search, function ($query) use ($request, $resource) {
-                $searchQuery = $request->search;
-
-                $query->when(
-                    $query->hasNamedScope('runwaySearch'),
-                    fn ($query) => $query->runwaySearch($searchQuery),
-                    function ($query) use ($searchQuery, $resource) {
-                        $resource->blueprint()->fields()->all()
-                            ->reject(fn (Field $field) => $field->fieldtype() instanceof HasManyFieldtype || $field->fieldtype() instanceof Hidden)
-                            ->each(fn (Field $field) => $query->orWhere($field->handle(), 'LIKE', '%'.$searchQuery.'%'));
-                    }
-                );
-            });
+        $query->when($query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
+        $query->when($request->search, fn ($query) => $query->runwaySearch($request->search));
 
         $items = $request->boolean('paginate', true)
             ? $query->paginate()
@@ -142,7 +124,6 @@ class BaseFieldtype extends Relationship
             : $items->filter()->values();
     }
 
-    // This shows the values in the listing table
     public function preProcessIndex($data)
     {
         $resource = Runway::findResource($this->config('resource'));
@@ -193,7 +174,6 @@ class BaseFieldtype extends Relationship
         });
     }
 
-    // Augments the value for front-end use
     public function augment($values)
     {
         $resource = Runway::findResource($this->config('resource'));
@@ -310,7 +290,6 @@ class BaseFieldtype extends Relationship
         return $results->toArray();
     }
 
-    // Provides the columns used if you're in 'Stacks' mode
     protected function getColumns()
     {
         $resource = Runway::findResource($this->config('resource'));
@@ -334,7 +313,6 @@ class BaseFieldtype extends Relationship
             ->toArray();
     }
 
-    // Provides the initial state after loading the fieldtype on a saved entry/model
     protected function toItemArray($id)
     {
         $resource = Runway::findResource($this->config('resource'));
