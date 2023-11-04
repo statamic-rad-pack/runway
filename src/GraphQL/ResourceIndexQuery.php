@@ -39,7 +39,7 @@ class ResourceIndexQuery extends Query
     {
         $query = $this->resource->model()
             ->newQuery()
-            ->with($this->resource->eagerLoadingRelations()->values()->all());
+            ->with($this->resource->eloquentRelationships()->values()->all());
 
         $this->filterQuery($query, $args['filter'] ?? []);
         $this->sortQuery($query, $args['sort'] ?? []);

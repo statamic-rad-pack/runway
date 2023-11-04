@@ -207,7 +207,7 @@ class ResourceController extends CpController
 
                 $column = $relatedResource->titleField();
 
-                $relationshipName = $resource->eagerLoadingRelations()->get($field->handle()) ?? $field->handle();
+                $relationshipName = $resource->eloquentRelationships()->get($field->handle()) ?? $field->handle();
 
                 $model->{$field->handle()} = $model->{$relationshipName}()
                     ->select($relatedResource->model()->qualifyColumn($relatedResource->primaryKey()), $column)

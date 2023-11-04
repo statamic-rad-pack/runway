@@ -80,7 +80,7 @@ class AugmentedModel extends AbstractAugmented
 
     protected function eloquentRelationships()
     {
-        return $this->resource->eagerLoadingRelations();
+        return $this->resource->eloquentRelationships();
     }
 
     protected function getFromData($handle)
@@ -96,8 +96,8 @@ class AugmentedModel extends AbstractAugmented
     {
         $fields = $this->blueprintFields();
 
-        if ($this->resource->eagerLoadingRelations()->flip()->has($handle)) {
-            $relatedField = $this->resource->eagerLoadingRelations()->flip()->get($handle);
+        if ($this->resource->eloquentRelationships()->flip()->has($handle)) {
+            $relatedField = $this->resource->eloquentRelationships()->flip()->get($handle);
 
             return new Value(
                 $value,

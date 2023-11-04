@@ -69,7 +69,7 @@ class Models extends FieldtypeFilter
             // This is the resource of the Eloquent model that the filter is querying.
             $queryingResource = Runway::findResourceByModel($query->getModel());
 
-            $query->whereHas($queryingResource->eagerLoadingRelations()->get($this->fieldtype->field()->handle()), function (Builder $query) use ($relatedResource, $ids) {
+            $query->whereHas($queryingResource->eloquentRelationships()->get($this->fieldtype->field()->handle()), function (Builder $query) use ($relatedResource, $ids) {
                 $query->whereIn($relatedResource->primaryKey(), $ids);
             });
         } else {
