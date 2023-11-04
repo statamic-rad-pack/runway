@@ -4,13 +4,10 @@ namespace DoubleThreeDigital\Runway\Tests\Routing;
 
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
 
 class FrontendRoutingTest extends TestCase
 {
-    use WithFaker;
-
     /** @test */
     public function returns_resource_response_for_resource()
     {
@@ -33,7 +30,7 @@ class FrontendRoutingTest extends TestCase
     {
         $post = Post::factory()->create([
             'values' => [
-                'alt_title' => $this->faker->words(6, asText: true),
+                'alt_title' => 'Alternative Title...',
             ],
         ]);
 
@@ -42,7 +39,7 @@ class FrontendRoutingTest extends TestCase
         $this
             ->get($runwayUri->uri)
             ->assertOk()
-            ->assertSee($post->values['alt_title'])
+            ->assertSee('Alternative Title...')
             ->assertSee('TEMPLATE: default')
             ->assertSee('LAYOUT: layout');
     }

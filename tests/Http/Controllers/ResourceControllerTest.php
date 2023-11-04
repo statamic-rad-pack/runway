@@ -6,22 +6,19 @@ use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Statamic\Facades\Config;
 use Statamic\Facades\User;
 
 class ResourceControllerTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
-
     /** @test */
     public function get_model_index()
     {
         Post::factory()->count(2)->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->get(cp_route('runway.index', ['resourceHandle' => 'post']))
             ->assertOk()
             ->assertViewIs('runway::index')
@@ -36,7 +33,8 @@ class ResourceControllerTest extends TestCase
     {
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->get(cp_route('runway.create', ['resourceHandle' => 'post']))
             ->assertOk();
     }
@@ -50,7 +48,8 @@ class ResourceControllerTest extends TestCase
 
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->get(cp_route('runway.create', ['resourceHandle' => 'post']))
             ->assertRedirect();
     }
@@ -61,7 +60,8 @@ class ResourceControllerTest extends TestCase
         $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
@@ -88,7 +88,8 @@ class ResourceControllerTest extends TestCase
         $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
@@ -111,7 +112,8 @@ class ResourceControllerTest extends TestCase
         $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
@@ -138,7 +140,8 @@ class ResourceControllerTest extends TestCase
         $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
@@ -165,7 +168,8 @@ class ResourceControllerTest extends TestCase
         $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
@@ -192,7 +196,8 @@ class ResourceControllerTest extends TestCase
         $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
@@ -219,7 +224,8 @@ class ResourceControllerTest extends TestCase
         $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
@@ -247,7 +253,8 @@ class ResourceControllerTest extends TestCase
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))
             ->assertOk()
             ->assertSee($post->title)
@@ -259,7 +266,8 @@ class ResourceControllerTest extends TestCase
     {
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => 12345]))
             ->assertNotFound()
             ->assertSee('Page Not Found');
@@ -292,7 +300,8 @@ class ResourceControllerTest extends TestCase
 
         $this->assertEquals($post->getKey(), $record->getKey());
 
-        $response = $this->actingAs($user)
+        $response = $this
+            ->actingAs($user)
             ->get(cp_route('runway.edit', [
                 'resourceHandle' => 'post',
                 'record' => $post->id,
@@ -336,7 +345,8 @@ class ResourceControllerTest extends TestCase
 
         $this->assertEquals($post->getKey(), $record->getKey());
 
-        $response = $this->actingAs($user)
+        $response = $this
+            ->actingAs($user)
             ->get(cp_route('runway.edit', [
                 'resourceHandle' => 'post',
                 'record' => $post->id,
@@ -380,7 +390,8 @@ class ResourceControllerTest extends TestCase
 
         $this->assertEquals($post->getKey(), $record->getKey());
 
-        $response = $this->actingAs($user)
+        $response = $this
+            ->actingAs($user)
             ->get(cp_route('runway.edit', [
                 'resourceHandle' => 'post',
                 'record' => $post->id,
@@ -404,18 +415,19 @@ class ResourceControllerTest extends TestCase
     {
         $post = Post::factory()->create([
             'values' => [
-                'alt_title' => $this->faker->words(6, asText: true),
+                'alt_title' => "Im Toby Ziegler, and I work at the White House.",
             ],
         ]);
 
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))
             ->assertOk()
             ->assertSee($post->title)
             ->assertSee($post->body)
-            ->assertSee($post->values['alt_title']);
+            ->assertSee("Im Toby Ziegler, and I work at the White House.");
     }
 
     /** @test */
@@ -428,7 +440,8 @@ class ResourceControllerTest extends TestCase
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))
             ->assertOk()
             ->assertSee($post->title)
@@ -441,7 +454,8 @@ class ResourceControllerTest extends TestCase
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
@@ -467,7 +481,8 @@ class ResourceControllerTest extends TestCase
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
@@ -495,7 +510,8 @@ class ResourceControllerTest extends TestCase
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
@@ -515,7 +531,8 @@ class ResourceControllerTest extends TestCase
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
@@ -542,7 +559,8 @@ class ResourceControllerTest extends TestCase
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
@@ -569,7 +587,8 @@ class ResourceControllerTest extends TestCase
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
@@ -596,7 +615,8 @@ class ResourceControllerTest extends TestCase
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
+        $this
+            ->actingAs($user)
             ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',

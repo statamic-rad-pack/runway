@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\AugmentedModelTest;
+namespace DoubleThreeDigital\Runway\Tests\Data;
 
 use DoubleThreeDigital\Runway\Data\AugmentedModel;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;

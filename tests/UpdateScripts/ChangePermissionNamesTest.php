@@ -2,7 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Tests\UpdateScripts;
 
-use DoubleThreeDigital\Runway\Tests\Helpers\RunsUpdateScripts;
+use DoubleThreeDigital\Runway\Tests\UpdateScripts\RunsUpdateScripts;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use DoubleThreeDigital\Runway\UpdateScripts\ChangePermissionNames;
 use Illuminate\Support\Facades\File;

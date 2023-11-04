@@ -84,9 +84,9 @@ class BelongsToFieldtypeTest extends TestCase
         Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.order_by', 'name');
         Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.order_by_direction', 'desc');
 
-        $authorOne = Author::factory()->create(['name' => 'Scully']);
-        $authorTwo = Author::factory()->create(['name' => 'Jake Peralta']);
-        $authorThree = Author::factory()->create(['name' => 'Amy Santiago']);
+        Author::factory()->create(['name' => 'Scully']);
+        Author::factory()->create(['name' => 'Jake Peralta']);
+        Author::factory()->create(['name' => 'Amy Santiago']);
 
         $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest(['paginate' => false]));
 
