@@ -97,7 +97,7 @@ trait RunwayRoutes
                 $model->runwayUri()->create(['uri' => $uri]);
             }
 
-            app(Cacher::class)->invalidateUrl($uri,);
+            app(Cacher::class)->invalidateUrl($uri);
 
             app(Cacher::class)->invalidateUrls(
                 Arr::get(config('statamic.static_caching.invalidation.rules'), "runway.{$resource->handle()}.urls")
