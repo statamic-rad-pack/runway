@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway\Tests\Routing;
 
-use DoubleThreeDigital\Runway\Models\RunwayUri;
 use DoubleThreeDigital\Runway\Routing\RoutingModel;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Statamic\Facades\Data;
