@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
-use DoubleThreeDigital\Runway\Actions\DeleteModel;
 use DoubleThreeDigital\Runway\Query\Scopes\Filters\Fields\Models;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -12,10 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Statamic\CP\Column;
-use Statamic\Facades\Action;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
-use Statamic\Facades\User;
 use Statamic\Fieldtypes\Relationship;
 
 class BaseFieldtype extends Relationship
