@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway;
 
 use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
+use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
@@ -10,32 +11,9 @@ use Illuminate\Support\Str;
 use Statamic\Fields\Blueprint;
 use Statamic\Fields\Field;
 use Statamic\Statamic;
-use Statamic\Support\Traits\FluentlyGetsAndSets;
 
 class Resource
 {
-    use FluentlyGetsAndSets;
-
-    protected $cpIcon;
-
-    protected $hidden;
-
-    protected $route;
-
-    protected $template;
-
-    protected $layout;
-
-    protected $graphqlEnabled;
-
-    protected $readOnly;
-
-    protected $eagerLoadingRelations;
-
-    protected $orderBy;
-
-    protected $titleField;
-
     public function __construct(
         protected string $handle,
         protected Model $model,
@@ -43,7 +21,6 @@ class Resource
         protected Blueprint $blueprint,
         protected Collection $config
     ) {
-        $config->has('with') ? $this->eagerLoadingRelations($config->get('with')) : null;
     }
 
     public function handle(): string
@@ -140,49 +117,44 @@ class Resource
     }
 
     /**
-     * Discovers any Eloquent relationships from fieldtypes in the resource's blueprint
-     * OR those explicitly defined in the resource's config file.
+     * Automatically maps Eloquent relationships to their respective blueprint fields.
      */
-    public function eagerLoadingRelations($eagerLoadingRelations = null)
+    public function eloquentRelationships(): Collection
     {
-        return $this->fluentlyGetOrSet('eagerLoadingRelations')
-            ->getter(function ($eagerLoadingRelations) {
-                if (! $eagerLoadingRelations) {
-                    return $this->blueprint()->fields()->all()
-                        ->filter(function (Field $field) {
-                            return $field->fieldtype() instanceof BelongsToFieldtype
-                                || $field->fieldtype() instanceof \DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
-                        })
-                        ->mapWithKeys(function (Field $field) {
-                            $eloquentRelationship = $field->handle();
+        if ($eloquentRelationships = $this->config->get('relationships')) {
+            return collect($eloquentRelationships);
+        }
 
-                            // If the field has a `relationship_name` config key, use that instead.
-                            // Sometimes a column name will be different to the relationship name
-                            // (the method on the model) so our magic won't be able to figure out what's what.
-                            // Eg. standard_parent_id -> parent
-                            if ($field->get('relationship_name')) {
-                                $eloquentRelationship = $field->get('relationship_name');
-                            }
+        return $this->blueprint()->fields()->all()
+            ->filter(function (Field $field) {
+                return $field->fieldtype() instanceof BelongsToFieldtype
+                    || $field->fieldtype() instanceof HasManyFieldtype;
+            })
+            ->mapWithKeys(function (Field $field) {
+                $eloquentRelationship = $field->handle();
 
-                            // If field handle is `author_id`, strip off the `_id`
-                            if (str_contains($eloquentRelationship, '_id')) {
-                                $eloquentRelationship = Str::replaceLast('_id', '', $eloquentRelationship);
-                            }
-
-                            // If field handle contains an underscore, convert the name to camel case
-                            if (str_contains($eloquentRelationship, '_')) {
-                                $eloquentRelationship = Str::camel($eloquentRelationship);
-                            }
-
-                            return [$field->handle() => $eloquentRelationship];
-                        })
-                        ->merge(['runwayUri'])
-                        ->filter(fn ($eloquentRelationship) => method_exists($this->model(), $eloquentRelationship));
+                // If the field has a `relationship_name` config key, use that instead.
+                // Sometimes a column name will be different to the relationship name
+                // (the method on the model) so our magic won't be able to figure out what's what.
+                // Eg. standard_parent_id -> parent
+                if ($field->get('relationship_name')) {
+                    $eloquentRelationship = $field->get('relationship_name');
                 }
 
-                return collect($eagerLoadingRelations);
+                // If field handle is `author_id`, strip off the `_id`
+                if (str_contains($eloquentRelationship, '_id')) {
+                    $eloquentRelationship = Str::replaceLast('_id', '', $eloquentRelationship);
+                }
+
+                // If field handle contains an underscore, convert the name to camel case
+                if (str_contains($eloquentRelationship, '_')) {
+                    $eloquentRelationship = Str::camel($eloquentRelationship);
+                }
+
+                return [$field->handle() => $eloquentRelationship];
             })
-            ->args(func_get_args());
+            ->merge(['runwayUri'])
+            ->filter(fn ($eloquentRelationship) => method_exists($this->model(), $eloquentRelationship));
     }
 
     public function listableColumns(): Collection

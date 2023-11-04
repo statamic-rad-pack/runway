@@ -68,7 +68,7 @@ class ResourceCollection extends LaravelResourceCollection
                         // If we've eager loaded in relationships, just pass in the model
                         // instance. We can prevent extra queries this way.
                         if ($this->runwayResource->blueprint()->field($key)->fieldtype() instanceof BelongsToFieldtype) {
-                            $relationName = $this->runwayResource->eagerLoadingRelations()->get($key);
+                            $relationName = $this->runwayResource->eloquentRelationships()->get($key);
 
                             if ($record->relationLoaded($relationName)) {
                                 $value = $record->$relationName;

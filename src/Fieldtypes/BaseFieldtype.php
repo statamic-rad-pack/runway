@@ -214,9 +214,9 @@ class BaseFieldtype extends Relationship
             })
             ->map(function ($record) use ($resource) {
                 if (! $record instanceof Model) {
-                    $eagerLoadingRelations = collect($this->config('with') ?? [])->join(',');
+                    $eagerLoadingRelationships = collect($this->config('with') ?? [])->join(',');
 
-                    $record = Blink::once("Runway::{$this->config('resource')}::{$record}}::{$eagerLoadingRelations}", function () use ($resource, $record) {
+                    $record = Blink::once("Runway::{$this->config('resource')}::{$record}}::{$eagerLoadingRelationships}", function () use ($resource, $record) {
                         return $resource->model()
                             ->when($this->config('with'), function ($query) {
                                 $query->with(Arr::wrap($this->config('with')));

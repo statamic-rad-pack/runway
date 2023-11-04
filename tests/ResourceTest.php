@@ -9,19 +9,19 @@ use Statamic\Facades\Fieldset;
 class ResourceTest extends TestCase
 {
     /** @test */
-    public function can_get_eager_loading_relations_for_belongs_to_field()
+    public function can_get_eloquent_relationships_for_belongs_to_field()
     {
         Runway::discoverResources();
 
         $resource = Runway::findResource('post');
 
-        $eagerLoadingRelations = $resource->eagerLoadingRelations();
+        $eloquentRelationships = $resource->eloquentRelationships();
 
-        $this->assertContains('author', $eagerLoadingRelations->toArray());
+        $this->assertContains('author', $eloquentRelationships->toArray());
     }
 
     /** @test */
-    public function can_get_eager_loading_relations_for_has_many_field()
+    public function can_get_eloquent_relationships_for_has_many_field()
     {
         $fields = Config::get('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields');
 
@@ -41,36 +41,36 @@ class ResourceTest extends TestCase
 
         $resource = Runway::findResource('author');
 
-        $eagerLoadingRelations = $resource->eagerLoadingRelations();
+        $eloquentRelationships = $resource->eloquentRelationships();
 
-        $this->assertContains('posts', $eagerLoadingRelations->toArray());
+        $this->assertContains('posts', $eloquentRelationships->toArray());
     }
 
     /** @test */
-    public function can_get_eager_loading_relations_for_runway_uri_routing()
+    public function can_get_eloquent_relationships_for_runway_uri_routing()
     {
         Runway::discoverResources();
 
         $resource = Runway::findResource('post');
 
-        $eagerLoadingRelations = $resource->eagerLoadingRelations();
+        $eloquentRelationships = $resource->eloquentRelationships();
 
-        $this->assertContains('runwayUri', $eagerLoadingRelations->toArray());
+        $this->assertContains('runwayUri', $eloquentRelationships->toArray());
     }
 
     /** @test */
-    public function can_get_eager_loading_relations_as_defined_in_config()
+    public function can_get_eloquent_relationships_as_defined_in_config()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.with', ['author']);
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.relationships', ['author']);
 
         Runway::discoverResources();
 
         $resource = Runway::findResource('post');
 
-        $eagerLoadingRelations = $resource->eagerLoadingRelations();
+        $eloquentRelationships = $resource->eloquentRelationships();
 
-        $this->assertContains('author', $eagerLoadingRelations->toArray());
-        $this->assertNotContains('runwayUri', $eagerLoadingRelations->toArray());
+        $this->assertContains('author', $eloquentRelationships->toArray());
+        $this->assertNotContains('runwayUri', $eloquentRelationships->toArray());
     }
 
     /** @test */
