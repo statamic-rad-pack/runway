@@ -51,8 +51,8 @@ class ResourceListingControllerTest extends TestCase
     /** @test */
     public function listing_rows_are_ordered_as_per_config()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Post.order_by', 'id');
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Post.order_by_direction', 'desc');
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.order_by', 'id');
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.order_by_direction', 'desc');
 
         Runway::discoverResources();
 
@@ -105,7 +105,7 @@ class ResourceListingControllerTest extends TestCase
     /** @test */
     public function can_search_records_with_has_many_relationship()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.sections.main.fields', [
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields', [
             [
                 'handle' => 'name',
                 'field' => [

@@ -9,7 +9,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "DoubleThreeDigital\\Runway\\Tests\\": "tests"
+            "DoubleThreeDigital\\Runway\\Tests\\": "tests",
+            "DoubleThreeDigital\\Runway\\Tests\\Fixtures\\": "tests/__fixtures__/app"
         }
     },
     "extra": {

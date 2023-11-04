@@ -2,10 +2,9 @@
 
 namespace DoubleThreeDigital\Runway\Tests;
 
-use DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes;
 use DoubleThreeDigital\Runway\ServiceProvider;
-use DoubleThreeDigital\Runway\Traits\HasRunwayResource;
-use Illuminate\Database\Eloquent\Model;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -101,143 +100,7 @@ abstract class TestCase extends OrchestraTestCase
             __DIR__.'/__fixtures__/resources/views',
         ]);
 
-        $app['config']->set('runway', [
-            'resources' => [
-                Post::class => [
-                    'name' => 'Posts',
-                    'blueprint' => [
-                        'sections' => [
-                            'main' => [
-                                'fields' => [
-                                    [
-                                        'handle' => 'title',
-                                        'field' => [
-                                            'type' => 'text',
-                                        ],
-                                    ],
-                                    [
-                                        'handle' => 'slug',
-                                        'field' => [
-                                            'type' => 'slug',
-                                        ],
-                                    ],
-                                    [
-                                        'handle' => 'body',
-                                        'field' => [
-                                            'type' => 'textarea',
-                                        ],
-                                    ],
-                                    [
-                                        'handle' => 'values->alt_title',
-                                        'field' => [
-                                            'type' => 'text',
-                                        ],
-                                    ],
-                                    [
-                                        'handle' => 'values->alt_body',
-                                        'field' => [
-                                            'type' => 'markdown',
-                                        ],
-                                    ],
-                                    [
-                                        'handle' => 'excerpt',
-                                        'field' => [
-                                            'type' => 'textarea',
-                                            'read_only' => true,
-                                        ],
-                                    ],
-                                    [
-                                        'handle' => 'author_id',
-                                        'field' => [
-                                            'type' => 'belongs_to',
-                                            'resource' => 'author',
-                                            'max_items' => 1,
-                                            'mode' => 'default',
-                                        ],
-                                    ],
-                                    [
-                                        'handle' => 'age',
-                                        'field' => [
-                                            'type' => 'integer',
-                                            'visibility' => 'computed',
-                                        ],
-                                    ],
-                                    [
-                                        'handle' => 'start_date',
-                                        'field' => [
-                                            'type' => 'date',
-                                            'time_enabled' => true,
-                                            'validate' => [
-                                                'before:end_date',
-                                            ],
-                                        ],
-                                    ],
-                                    [
-                                        'handle' => 'end_date',
-                                        'field' => [
-                                            'type' => 'date',
-                                            'time_enabled' => true,
-                                        ],
-                                    ],
-                                    [
-                                        'handle' => 'dont_save',
-                                        'field' => [
-                                            'type' => 'text',
-                                            'save' => false,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                    'listing' => [
-                        'columns' => [
-                            'title',
-                        ],
-                        'sort' => [
-                            'column' => 'title',
-                            'direction' => 'desc',
-                        ],
-                    ],
-                    'route' => '/posts/{{ slug }}',
-                ],
-
-                Author::class => [
-                    'name' => 'Author',
-                    'blueprint' => [
-                        'sections' => [
-                            'main' => [
-                                'fields' => [
-                                    [
-                                        'handle' => 'name',
-                                        'field' => [
-                                            'type' => 'text',
-                                        ],
-                                    ],
-                                    // [
-                                    //     'handle' => 'posts',
-                                    //     'field' => [
-                                    //         'type' => 'has_many',
-                                    //         'resource' => 'post',
-                                    //         'mode' => 'select',
-                                    //     ],
-                                    // ],
-                                ],
-                            ],
-                        ],
-                    ],
-                    'listing' => [
-                        'columns' => [
-                            'name',
-                        ],
-                        'sort' => [
-                            'column' => 'name',
-                            'direction' => 'asc',
-                        ],
-                    ],
-                ],
-            ],
-        ]);
+        $app['config']->set('runway', require(__DIR__.'/__fixtures__/config/runway.php'));
     }
 
     public function postFactory(int $count = 1, array $attributes = [])
@@ -271,63 +134,5 @@ abstract class TestCase extends OrchestraTestCase
         return count($items) === 1
             ? $items[0]
             : $items;
-    }
-}
-
-class Post extends Model
-{
-    use HasRunwayResource, RunwayRoutes;
-
-    protected $fillable = [
-        'title', 'slug', 'body', 'values', 'author_id', 'sort_order',
-    ];
-
-    protected $appends = [
-        'excerpt',
-    ];
-
-    protected $casts = [
-        'values' => 'array',
-    ];
-
-    public function scopeFood($query)
-    {
-        $query->whereIn('title', ['Pasta', 'Apple', 'Burger']);
-    }
-
-    public function scopeFruit($query, $smth)
-    {
-        if ($smth === 'idoo') {
-            $query->whereIn('title', ['Apple']);
-        }
-    }
-
-    public function author()
-    {
-        return $this->belongsTo(Author::class);
-    }
-
-    public function getExcerptAttribute()
-    {
-        return 'This is an excerpt.';
-    }
-}
-
-class Author extends Model
-{
-    use HasRunwayResource;
-
-    protected $fillable = [
-        'name', 'start_date', 'end_date',
-    ];
-
-    public function posts()
-    {
-        return $this->hasMany(Post::class);
-    }
-
-    public function pivottedPosts()
-    {
-        return $this->belongsToMany(Post::class, 'post_author');
     }
 }

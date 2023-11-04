@@ -24,7 +24,7 @@ class HasManyFieldtypeTest extends TestCase
     {
         parent::setUp();
 
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.blueprint.sections.main.fields', [
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields', [
             [
                 'handle' => 'name',
                 'field' => [

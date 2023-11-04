@@ -4,7 +4,7 @@ namespace DoubleThreeDigital\Runway\Tests\Tags;
 
 use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tags\RunwayTag;
-use DoubleThreeDigital\Runway\Tests\Post;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Antlers;

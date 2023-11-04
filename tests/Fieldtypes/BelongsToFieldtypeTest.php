@@ -80,8 +80,8 @@ class BelongsToFieldtypeTest extends TestCase
     /** @test */
     public function can_get_index_items_in_order_specified_in_runway_config()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.order_by', 'name');
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Author.order_by_direction', 'desc');
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.order_by', 'name');
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.order_by_direction', 'desc');
 
         $authorOne = $this->authorFactory(1, [
             'name' => 'Scully',

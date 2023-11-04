@@ -3,7 +3,7 @@
 namespace DoubleThreeDigital\Runway\Tests\Http\Controllers;
 
 use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\Post;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Statamic\Facades\Config;
