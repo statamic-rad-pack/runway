@@ -27,19 +27,6 @@ class HasManyFieldtype extends BaseFieldtype
                 'type' => 'text',
                 'width' => 50,
             ],
-            'mode' => [
-                'display' => __('Mode'),
-                'instructions' => __('statamic::fieldtypes.relationship.config.mode'),
-                'type' => 'radio',
-                'default' => 'default',
-                'options' => [
-                    'default' => __('Stack Selector'),
-                    'select' => __('Select Dropdown'),
-                    'typeahead' => __('Typeahead Field'),
-                    'table' => __('Table'),
-                ],
-                'width' => 50,
-            ],
             'reorderable' => [
                 'display' => __('Reorderable?'),
                 'instructions' => __('Can the models be reordered?'),
