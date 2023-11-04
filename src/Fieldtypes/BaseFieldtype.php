@@ -236,6 +236,13 @@ class BaseFieldtype extends Relationship
         $values = Arr::wrap($values);
 
         $results = collect($values)
+            ->map(function ($item) use ($resource) {
+                if (is_array($item) && isset($item[$resource->primaryKey()])) {
+                    return $item[$resource->primaryKey()];
+                }
+
+                return $item;
+            })
             ->map(function ($record) use ($resource) {
                 if (! $record instanceof Model) {
                     $eagerLoadingRelations = collect($this->config('with') ?? [])->join(',');

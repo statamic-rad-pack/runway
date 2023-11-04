@@ -82,6 +82,8 @@ trait RunwayRoutes
                 return;
             }
 
+            dd('hey', $model->toAugmentedArray()['slug'], $model->slug, $model->title, $model->getAttribute('slug'));
+
             $uri = (new Parser())
                 ->parse($resource->route(), $model->toAugmentedArray())
                 ->__toString();
