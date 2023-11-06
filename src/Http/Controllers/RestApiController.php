@@ -20,11 +20,11 @@ class RestApiController extends ApiController
 
     protected $resourceHandle;
 
-    public function index($resource)
+    public function index($handle)
     {
         $this->abortIfDisabled();
 
-        $this->resourceHandle = Str::singular($resource);
+        $this->resourceHandle = Str::singular($handle);
 
         $resource = Runway::findResource($this->resourceHandle);
 
@@ -38,11 +38,11 @@ class RestApiController extends ApiController
         return ApiResource::collection($results);
     }
 
-    public function show($resource, $id)
+    public function show($handle, $id)
     {
         $this->abortIfDisabled();
 
-        $this->resourceHandle = Str::singular($resource);
+        $this->resourceHandle = Str::singular($handle);
 
         $resource = Runway::findResource($this->resourceHandle);
 
@@ -73,7 +73,7 @@ class RestApiController extends ApiController
             model: $model,
             name: $this->config['name'] ?? Str::title($this->resourceHandle),
             blueprint: $resource->blueprint(),
-            config: $this->config ?? [],
+            config: collect($this->config ?? []),
         );
     }
 }

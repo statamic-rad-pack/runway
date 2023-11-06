@@ -14,10 +14,12 @@ class ApiResource extends JsonResource
      */
     public function toArray($request)
     {
+        $fields = $this->resource->blueprint()->fields()->all()->map->handle()->all();
+        
         return array_merge([
             $this->resource->primaryKey() => $this->resource->model()->getKey(),
         ], $this->resource
-            ->toAugmentedCollection()
+            ->toAugmentedCollection($fields)
             ->withShallowNesting()
             ->toArray()
         );
