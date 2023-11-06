@@ -16,7 +16,7 @@ class RestApiController extends ApiController
 
     protected $resourceConfigKey = 'runway';
 
-    protected $routeResourceKey = 'resource';
+    protected $routeResourceKey = 'handle';
 
     protected $resourceHandle;
 
