@@ -81,6 +81,7 @@ class ServiceProvider extends AddonServiceProvider
         Statamic::booted(function () {
             Runway::discoverResources();
 
+            $this->registerRouteBindings();
             $this->registerPermissions();
             $this->registerPolicies();
             $this->registerNavigation();
@@ -94,6 +95,13 @@ class ServiceProvider extends AddonServiceProvider
                 $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
                     ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
             });
+        });
+    }
+
+    protected function registerRouteBindings()
+    {
+        Route::bind('resource', function ($value) {
+            return Runway::findResource($value);
         });
     }
 
@@ -132,7 +140,7 @@ class ServiceProvider extends AddonServiceProvider
                     $nav->create($resource->name())
                         ->section(__('Content'))
                         ->icon($resource->cpIcon())
-                        ->route('runway.index', ['resourceHandle' => $resource->handle()])
+                        ->route('runway.index', ['resource' => $resource->handle()])
                         ->can('view', $resource);
                 });
         });

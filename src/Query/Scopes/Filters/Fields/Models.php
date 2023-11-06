@@ -10,7 +10,7 @@ use Statamic\Support\Str;
 
 class Models extends FieldtypeFilter
 {
-    public function fieldItems()
+    public function fieldItems(): array
     {
         $resource = Runway::findResource($this->fieldtype->config('resource'));
 
@@ -43,7 +43,7 @@ class Models extends FieldtypeFilter
         ];
     }
 
-    public function apply($query, $handle, $values)
+    public function apply($query, $handle, $values): void
     {
         $field = $values['field'];
         $operator = $values['operator'];
@@ -69,7 +69,7 @@ class Models extends FieldtypeFilter
             // This is the resource of the Eloquent model that the filter is querying.
             $queryingResource = Runway::findResourceByModel($query->getModel());
 
-            $query->whereHas($queryingResource->eagerLoadingRelations()->get($this->fieldtype->field()->handle()), function (Builder $query) use ($relatedResource, $ids) {
+            $query->whereHas($queryingResource->eloquentRelationships()->get($this->fieldtype->field()->handle()), function (Builder $query) use ($relatedResource, $ids) {
                 $query->whereIn($relatedResource->primaryKey(), $ids);
             });
         } else {
@@ -77,7 +77,7 @@ class Models extends FieldtypeFilter
         }
     }
 
-    public function badge($values)
+    public function badge($values): string
     {
         $field = $this->fieldtype->field()->display();
         $selectedField = $values['field'];

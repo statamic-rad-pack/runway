@@ -3,25 +3,23 @@
 namespace DoubleThreeDigital\Runway\Tests\Http\Controllers;
 
 use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\Post;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Statamic\Facades\Config;
 use Statamic\Facades\User;
 
 class ResourceControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function get_model_index()
     {
+        Post::factory()->count(2)->create();
         $user = User::make()->makeSuper()->save();
 
-        $posts = $this->postFactory(2);
-
-        $this->actingAs($user)
-            ->get(cp_route('runway.index', ['resourceHandle' => 'post']))
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.index', ['resource' => 'post']))
             ->assertOk()
             ->assertViewIs('runway::index')
             ->assertSee([
@@ -35,8 +33,9 @@ class ResourceControllerTest extends TestCase
     {
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
-            ->get(cp_route('runway.create', ['resourceHandle' => 'post']))
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.create', ['resource' => 'post']))
             ->assertOk();
     }
 
@@ -49,20 +48,21 @@ class ResourceControllerTest extends TestCase
 
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
-            ->get(cp_route('runway.create', ['resourceHandle' => 'post']))
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.create', ['resource' => 'post']))
             ->assertRedirect();
     }
 
     /** @test */
     public function can_store_resource()
     {
+        $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $author = $this->authorFactory();
-
-        $this->actingAs($user)
-            ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
+        $this
+            ->actingAs($user)
+            ->post(cp_route('runway.store', ['resource' => 'post']), [
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
@@ -85,12 +85,12 @@ class ResourceControllerTest extends TestCase
 
         Runway::discoverResources();
 
+        $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $author = $this->authorFactory();
-
-        $this->actingAs($user)
-            ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
+        $this
+            ->actingAs($user)
+            ->post(cp_route('runway.store', ['resource' => 'post']), [
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
@@ -109,12 +109,12 @@ class ResourceControllerTest extends TestCase
      */
     public function can_store_resource_and_ensure_computed_field_isnt_saved_to_database()
     {
+        $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $author = $this->authorFactory();
-
-        $this->actingAs($user)
-            ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
+        $this
+            ->actingAs($user)
+            ->post(cp_route('runway.store', ['resource' => 'post']), [
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
@@ -137,12 +137,12 @@ class ResourceControllerTest extends TestCase
      */
     public function can_store_resource_and_ensure_field_isnt_saved_to_database()
     {
+        $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $author = $this->authorFactory();
-
-        $this->actingAs($user)
-            ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
+        $this
+            ->actingAs($user)
+            ->post(cp_route('runway.store', ['resource' => 'post']), [
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
@@ -165,12 +165,12 @@ class ResourceControllerTest extends TestCase
      */
     public function can_store_resource_and_ensure_appended_attribute_doesnt_attempt_to_get_saved()
     {
+        $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $author = $this->authorFactory();
-
-        $this->actingAs($user)
-            ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
+        $this
+            ->actingAs($user)
+            ->post(cp_route('runway.store', ['resource' => 'post']), [
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
@@ -193,12 +193,12 @@ class ResourceControllerTest extends TestCase
      */
     public function can_store_resource_with_nested_field()
     {
+        $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $author = $this->authorFactory();
-
-        $this->actingAs($user)
-            ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
+        $this
+            ->actingAs($user)
+            ->post(cp_route('runway.store', ['resource' => 'post']), [
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
@@ -221,12 +221,12 @@ class ResourceControllerTest extends TestCase
      */
     public function can_store_resource_and_ensure_date_comparison_validation_works()
     {
+        $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $author = $this->authorFactory();
-
-        $this->actingAs($user)
-            ->post(cp_route('runway.store', ['resourceHandle' => 'post']), [
+        $this
+            ->actingAs($user)
+            ->post(cp_route('runway.store', ['resource' => 'post']), [
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
@@ -250,12 +250,12 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_edit_resource()
     {
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $post = $this->postFactory();
-
-        $this->actingAs($user)
-            ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.edit', ['resource' => 'post', 'record' => $post->id]))
             ->assertOk()
             ->assertSee($post->title)
             ->assertSee($post->body);
@@ -266,8 +266,9 @@ class ResourceControllerTest extends TestCase
     {
         $user = User::make()->makeSuper()->save();
 
-        $this->actingAs($user)
-            ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => 12345]))
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.edit', ['resource' => 'post', 'record' => 12345]))
             ->assertNotFound()
             ->assertSee('Page Not Found');
     }
@@ -292,16 +293,17 @@ class ResourceControllerTest extends TestCase
         Runway::discoverResources();
 
         $user = User::make()->makeSuper()->save();
-        $post = $this->postFactory();
+        $post = Post::factory()->create();
 
         $resource = Runway::findResource('post');
         $record = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
 
         $this->assertEquals($post->getKey(), $record->getKey());
 
-        $response = $this->actingAs($user)
+        $response = $this
+            ->actingAs($user)
             ->get(cp_route('runway.edit', [
-                'resourceHandle' => 'post',
+                'resource' => 'post',
                 'record' => $post->id,
             ]))
             ->assertOk();
@@ -335,17 +337,18 @@ class ResourceControllerTest extends TestCase
 
         Runway::discoverResources();
 
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
-        $post = $this->postFactory();
 
         $resource = Runway::findResource('post');
         $record = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
 
         $this->assertEquals($post->getKey(), $record->getKey());
 
-        $response = $this->actingAs($user)
+        $response = $this
+            ->actingAs($user)
             ->get(cp_route('runway.edit', [
-                'resourceHandle' => 'post',
+                'resource' => 'post',
                 'record' => $post->id,
             ]))
             ->assertOk();
@@ -379,17 +382,18 @@ class ResourceControllerTest extends TestCase
 
         Runway::discoverResources();
 
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
-        $post = $this->postFactory();
 
         $resource = Runway::findResource('post');
         $record = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
 
         $this->assertEquals($post->getKey(), $record->getKey());
 
-        $response = $this->actingAs($user)
+        $response = $this
+            ->actingAs($user)
             ->get(cp_route('runway.edit', [
-                'resourceHandle' => 'post',
+                'resource' => 'post',
                 'record' => $post->id,
             ]))
             ->assertOk();
@@ -409,22 +413,21 @@ class ResourceControllerTest extends TestCase
      */
     public function can_edit_resource_with_nested_field()
     {
+        $post = Post::factory()->create([
+            'values' => [
+                'alt_title' => 'Im Toby Ziegler, and I work at the White House.',
+            ],
+        ]);
+
         $user = User::make()->makeSuper()->save();
 
-        $post = $this->postFactory(
-            attributes: [
-                'values' => [
-                    'alt_title' => $this->faker->words(6, asText: true),
-                ],
-            ],
-        );
-
-        $this->actingAs($user)
-            ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.edit', ['resource' => 'post', 'record' => $post->id]))
             ->assertOk()
             ->assertSee($post->title)
             ->assertSee($post->body)
-            ->assertSee($post->values['alt_title']);
+            ->assertSee('Im Toby Ziegler, and I work at the White House.');
     }
 
     /** @test */
@@ -434,12 +437,12 @@ class ResourceControllerTest extends TestCase
 
         Runway::discoverResources();
 
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $post = $this->postFactory();
-
-        $this->actingAs($user)
-            ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.edit', ['resource' => 'post', 'record' => $post->id]))
             ->assertOk()
             ->assertSee($post->title)
             ->assertSee($post->body);
@@ -448,12 +451,12 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_update_resource()
     {
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $post = $this->postFactory();
-
-        $this->actingAs($user)
-            ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
+        $this
+            ->actingAs($user)
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -466,7 +469,7 @@ class ResourceControllerTest extends TestCase
 
         $post->refresh();
 
-        $this->assertSame($post->title, 'Santa is coming home');
+        $this->assertEquals($post->title, 'Santa is coming home');
     }
 
     /**
@@ -475,12 +478,12 @@ class ResourceControllerTest extends TestCase
      */
     public function can_update_resource_when_being_updated_from_inline_publish_form()
     {
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $post = $this->postFactory();
-
-        $this->actingAs($user)
-            ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
+        $this
+            ->actingAs($user)
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -494,7 +497,7 @@ class ResourceControllerTest extends TestCase
 
         $post->refresh();
 
-        $this->assertSame($post->title, 'Santa is coming home');
+        $this->assertEquals($post->title, 'Santa is coming home');
     }
 
     /** @test */
@@ -504,12 +507,12 @@ class ResourceControllerTest extends TestCase
 
         Runway::discoverResources();
 
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $post = $this->postFactory();
-
-        $this->actingAs($user)
-            ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
+        $this
+            ->actingAs($user)
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -525,12 +528,12 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_update_resource_and_ensure_computed_field_isnt_saved_to_database()
     {
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $post = $this->postFactory();
-
-        $this->actingAs($user)
-            ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
+        $this
+            ->actingAs($user)
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -544,7 +547,7 @@ class ResourceControllerTest extends TestCase
 
         $post->refresh();
 
-        $this->assertSame($post->title, 'Santa is coming home');
+        $this->assertEquals($post->title, 'Santa is coming home');
     }
 
     /**
@@ -553,12 +556,12 @@ class ResourceControllerTest extends TestCase
      */
     public function can_update_resource_and_ensure__field_isnt_saved_to_database()
     {
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $post = $this->postFactory();
-
-        $this->actingAs($user)
-            ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
+        $this
+            ->actingAs($user)
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -572,7 +575,7 @@ class ResourceControllerTest extends TestCase
 
         $post->refresh();
 
-        $this->assertSame($post->title, 'Santa is coming home');
+        $this->assertEquals($post->title, 'Santa is coming home');
     }
 
     /**
@@ -581,12 +584,12 @@ class ResourceControllerTest extends TestCase
      */
     public function can_update_resource_and_ensure_appended_attribute_doesnt_attempt_to_get_saved()
     {
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $post = $this->postFactory();
-
-        $this->actingAs($user)
-            ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
+        $this
+            ->actingAs($user)
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -600,7 +603,7 @@ class ResourceControllerTest extends TestCase
 
         $post->refresh();
 
-        $this->assertSame($post->title, 'Santa is coming home');
+        $this->assertEquals($post->title, 'Santa is coming home');
     }
 
     /**
@@ -609,12 +612,12 @@ class ResourceControllerTest extends TestCase
      */
     public function can_update_resource_with_nested_field()
     {
+        $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
 
-        $post = $this->postFactory();
-
-        $this->actingAs($user)
-            ->patch(cp_route('runway.update', ['resourceHandle' => 'post', 'record' => $post->id]), [
+        $this
+            ->actingAs($user)
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'record' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -628,6 +631,6 @@ class ResourceControllerTest extends TestCase
 
         $post->refresh();
 
-        $this->assertSame($post->values['alt_title'], 'Claus is venturing out');
+        $this->assertEquals($post->values['alt_title'], 'Claus is venturing out');
     }
 }

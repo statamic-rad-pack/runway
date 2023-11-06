@@ -2,7 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Http\Controllers;
 
-use Carbon\CarbonInterface;
+use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
 use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
 use DoubleThreeDigital\Runway\Http\Requests\CreateRequest;
 use DoubleThreeDigital\Runway\Http\Requests\EditRequest;
@@ -11,27 +11,25 @@ use DoubleThreeDigital\Runway\Http\Requests\StoreRequest;
 use DoubleThreeDigital\Runway\Http\Requests\UpdateRequest;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Support\Json;
+use Illuminate\Database\Eloquent\Model;
 use Statamic\CP\Breadcrumbs;
 use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Facades\Scope;
-use Statamic\Facades\User;
 use Statamic\Fields\Field;
 use Statamic\Http\Controllers\CP\CpController;
 
 class ResourceController extends CpController
 {
-    use Traits\HasListingColumns;
+    use Traits\HasListingColumns, Traits\PreparesModels;
 
-    public function index(IndexRequest $request, $resourceHandle)
+    public function index(IndexRequest $request, Resource $resource)
     {
-        $resource = Runway::findResource($resourceHandle);
         $blueprint = $resource->blueprint();
 
         $listingConfig = [
             'preferencesPrefix' => "runway.{$resource->handle()}",
-            'requestUrl' => cp_route('runway.listing-api', ['resourceHandle' => $resource->handle()]),
-            'listingUrl' => cp_route('runway.index', ['resourceHandle' => $resource->handle()]),
+            'requestUrl' => cp_route('runway.listing-api', ['resource' => $resource->handle()]),
+            'listingUrl' => cp_route('runway.index', ['resource' => $resource->handle()]),
         ];
 
         $columns = $this->buildColumns($resource, $blueprint);
@@ -47,35 +45,27 @@ class ResourceController extends CpController
                 ->values(),
             'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
             'listingConfig' => $listingConfig,
-            'actionUrl' => cp_route('runway.actions.run', ['resourceHandle' => $resourceHandle]),
+            'actionUrl' => cp_route('runway.actions.run', ['resource' => $resource->handle()]),
         ]);
     }
 
-    public function create(CreateRequest $request, $resourceHandle)
+    public function create(CreateRequest $request, Resource $resource)
     {
-        $resource = Runway::findResource($resourceHandle);
-
         $blueprint = $resource->blueprint();
         $fields = $blueprint->fields();
         $fields = $fields->preProcess();
 
         $viewData = [
-            'title' => __('Create :resource', [
-                'resource' => $resource->singular(),
-            ]),
-            'action' => cp_route('runway.store', ['resourceHandle' => $resource->handle()]),
+            'title' => __('Create :resource', ['resource' => $resource->singular()]),
+            'action' => cp_route('runway.store', ['resource' => $resource->handle()]),
             'method' => 'POST',
-            'breadcrumbs' => new Breadcrumbs([
-                [
-                    'text' => $resource->plural(),
-                    'url' => cp_route('runway.index', [
-                        'resourceHandle' => $resource->handle(),
-                    ]),
-                ],
-            ]),
-            'resource' => $request->wantsJson()
-                ? $resource->toArray()
-                : $resource,
+            'breadcrumbs' => new Breadcrumbs([[
+                'text' => $resource->plural(),
+                'url' => cp_route('runway.index', [
+                    'resource' => $resource->handle(),
+                ]),
+            ]]),
+            'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
             'blueprint' => $blueprint->toPublishArray(),
             'values' => $fields->values(),
             'meta' => $fields->meta(),
@@ -90,82 +80,41 @@ class ResourceController extends CpController
         return view('runway::create', $viewData);
     }
 
-    public function store(StoreRequest $request, $resourceHandle)
+    public function store(StoreRequest $request, Resource $resource)
     {
-        Runway::findResource($resourceHandle)
+        $resource
             ->blueprint()
             ->fields()
             ->addValues($request->all())
             ->validator()
             ->validate();
 
-        $postCreatedHooks = [];
+        $model = $resource->model();
 
-        $resource = Runway::findResource($resourceHandle);
-        $record = $resource->model();
+        $postCreatedHooks = $resource->blueprint()->fields()->all()
+            ->filter(fn (Field $field) => $field->fieldtype() instanceof HasManyFieldtype)
+            ->map(fn (Field $field) => $field->fieldtype()->process($request->get($field->handle())))
+            ->values();
 
-        foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
-            $processedValue = $field->fieldtype()->process($request->get($fieldKey));
+        $this->prepareModelForSaving($resource, $model, $request);
 
-            if (! $this->shouldSaveField($field)) {
-                continue;
-            }
-
-            // Skip if the field exists in the model's $appends array and there's not a set mutator present for it on the model.
-            if (in_array($fieldKey, $record->getAppends(), true) && ! $record->hasSetMutator($fieldKey) && ! $record->hasAttributeSetMutator($fieldKey)) {
-                continue;
-            }
-
-            // Store the HasMany field's value in the $postCreatedHooks array so we
-            // can process it after we've finished creating this model.
-            if ($field->type() === 'has_many') {
-                if ($processedValue) {
-                    $postCreatedHooks[] = $processedValue;
-                }
-
-                continue;
-            }
-
-            // If it's a BelongsTo field & the $processedValue is an array, then we
-            // want the first item in the array.
-            if ($field->type() === 'belongs_to' && is_array($processedValue)) {
-                $processedValue = $processedValue[0];
-            }
-
-            // If the $processedValue is an array & no cast is set on the model then
-            // let's JSON encode it.
-            if (
-                is_array($processedValue)
-                && ! str_contains($fieldKey, '->')
-                && ! $record->hasCast($fieldKey, ['json', 'array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])
-            ) {
-                $processedValue = json_encode($processedValue, JSON_THROW_ON_ERROR);
-            }
-
-            $record->{$fieldKey} = $processedValue;
-        }
-
-        $record->save();
+        $model->save();
 
         // Runs anything in the $postCreatedHooks array. See HasManyFieldtype@process for an example
         // of where this is used.
-        foreach ($postCreatedHooks as $postCreatedHook) {
-            $postCreatedHook($resource, $record);
-        }
+        $postCreatedHooks->each(fn ($postCreatedHook) => $postCreatedHook($resource, $model));
 
         return [
-            'data' => $this->getReturnData($resource, $record),
+            'data' => $this->getReturnData($resource, $model),
             'redirect' => cp_route('runway.edit', [
-                'resourceHandle' => $resource->handle(),
-                'record' => $record->{$resource->routeKey()},
+                'resource' => $resource->handle(),
+                'record' => $model->{$resource->routeKey()},
             ]),
         ];
     }
 
-    public function edit(EditRequest $request, $resourceHandle, $record)
+    public function edit(EditRequest $request, Resource $resource, $record)
     {
-        $resource = Runway::findResource($resourceHandle);
-
         $record = $resource->model()
             ->where($resource->model()->qualifyColumn($resource->routeKey()), $record)
             ->first();
@@ -174,72 +123,29 @@ class ResourceController extends CpController
             throw new NotFoundHttpException();
         }
 
-        $values = [];
-        $blueprintFieldKeys = $resource->blueprint()->fields()->all()->keys()->toArray();
-
-        foreach ($blueprintFieldKeys as $fieldKey) {
-            $value = data_get($record, str_replace('->', '.', $fieldKey));
-
-            // When $value is a Carbon instance, format it with the format
-            // specified in the blueprint.
-            if ($value instanceof CarbonInterface) {
-                $format = $defaultFormat = 'Y-m-d H:i';
-
-                if ($field = $resource->blueprint()->field($fieldKey)) {
-                    $format = $field->get('format', $defaultFormat);
-                }
-
-                $value = $value->format($format);
-            }
-
-            // When $value is a JSON string, decode it.
-            if (Json::isJson($value)) {
-                $value = json_decode((string) $value, true);
-            }
-
-            // HasMany field: if reordering is enabled, ensure the models are returned in the right order.
-            if (
-                $resource->blueprint()->field($fieldKey)->fieldtype() instanceof HasManyFieldtype
-                && isset($resource->blueprint()->field($fieldKey)->config()['reorderable'])
-                && $resource->blueprint()->field($fieldKey)->config()['reorderable'] === true
-            ) {
-                $orderColumn = $resource->blueprint()->field($fieldKey)->config()['order_column'];
-
-                $value = $record->{$fieldKey}()
-                    ->reorder($orderColumn, 'ASC')
-                    ->get();
-            }
-
-            $values[$fieldKey] = $value;
-        }
+        $values = $this->prepareModelForPublishForm($resource, $record);
 
         $blueprint = $resource->blueprint();
         $fields = $blueprint->fields()->addValues($values)->preProcess();
 
         $viewData = [
-            'title' => __('Edit :resource', [
-                'resource' => $resource->singular(),
-            ]),
+            'title' => __('Edit :resource', ['resource' => $resource->singular()]),
             'action' => cp_route('runway.update', [
-                'resourceHandle' => $resource->handle(),
+                'resource' => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},
             ]),
             'method' => 'PATCH',
-            'breadcrumbs' => new Breadcrumbs([
-                [
-                    'text' => $resource->plural(),
-                    'url' => cp_route('runway.index', [
-                        'resourceHandle' => $resource->handle(),
-                    ]),
-                ],
-            ]),
+            'breadcrumbs' => new Breadcrumbs([[
+                'text' => $resource->plural(),
+                'url' => cp_route('runway.index', [
+                    'resource' => $resource->handle(),
+                ]),
+            ]]),
             'resource' => $resource,
             'blueprint' => $blueprint->toPublishArray(),
             'values' => $fields->values(),
             'meta' => $fields->meta(),
-            'permalink' => $resource->hasRouting()
-                ? $record->uri()
-                : null,
+            'permalink' => $resource->hasRouting() ? $record->uri() : null,
             'resourceHasRoutes' => $resource->hasRouting(),
             'currentRecord' => [
                 'id' => $record->getKey(),
@@ -255,140 +161,64 @@ class ResourceController extends CpController
         return view('runway::edit', $viewData);
     }
 
-    public function update(UpdateRequest $request, $resourceHandle, $record)
+    public function update(UpdateRequest $request, Resource $resource, $record)
     {
-        $resource = Runway::findResource($resourceHandle);
+        $resource->blueprint()->fields()->addValues($request->all())->validator()->validate();
 
-        Runway::findResource($resourceHandle)
-            ->blueprint()
-            ->fields()
-            ->addValues($request->all())
-            ->validator()
-            ->validate();
+        $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $record)->first();
 
-        $record = $resource->model()
-            ->where($resource->model()->qualifyColumn($resource->routeKey()), $record)
-            ->first();
+        $this->prepareModelForSaving($resource, $model, $request);
 
-        foreach ($resource->blueprint()->fields()->all() as $fieldKey => $field) {
-            $processedValue = $field->fieldtype()->process($request->get($fieldKey));
+        $model->save();
 
-            if (! $this->shouldSaveField($field)) {
-                continue;
-            }
-
-            if ($field->type() === 'has_many') {
-                continue;
-            }
-
-            // Skip if the field exists in the model's $appends array and there's not a set mutator present for it on the model.
-            if (in_array($fieldKey, $record->getAppends(), true) && ! $record->hasSetMutator($fieldKey) && ! $record->hasAttributeSetMutator($fieldKey)) {
-                continue;
-            }
-
-            // If it's a BelongsTo field & the $processedValue is an array, then we
-            // want the first item in the array.
-            if ($field->type() === 'belongs_to' && is_array($processedValue)) {
-                $processedValue = $processedValue[0];
-            }
-
-            // If the $processedValue is an array & no cast is set on the model then
-            // let's JSON encode it.
-            if (
-                is_array($processedValue)
-                && ! str_contains($fieldKey, '->')
-                && ! $record->hasCast($fieldKey, ['json', 'array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])
-            ) {
-                $processedValue = json_encode($processedValue, JSON_THROW_ON_ERROR);
-            }
-
-            $record->{$fieldKey} = $processedValue;
-        }
-
-        $record->save();
-
-        // In the case of the 'Relationship' fields in Table Mode, when a model is updated
-        // in the stack, we also need to return it's relations.
         if ($request->get('from_inline_publish_form')) {
-            collect($resource->blueprint()->fields()->all())
-                ->filter(function (Field $field) {
-                    return $field->type() === 'belongs_to'
-                        || $field->type() === 'has_many';
-                })
-                ->each(function (Field $field) use (&$record, $resource) {
-                    $relatedResource = Runway::findResource($field->get('resource'));
-
-                    $column = $relatedResource->titleField();
-
-                    $relationshipName = $resource->eagerLoadingRelations()->get($field->handle()) ?? $field->handle();
-
-                    $record->{$field->handle()} = $record->{$relationshipName}()
-                        ->select($relatedResource->model()->qualifyColumn($relatedResource->primaryKey()), $column)
-                        ->get()
-                        ->each(function ($model) use ($relatedResource, $column) {
-                            $model->title = $model->{$column};
-
-                            $model->edit_url = cp_route('runway.edit', [
-                                'resourceHandle' => $relatedResource->handle(),
-                                'record' => $model->{$relatedResource->routeKey()},
-                            ]);
-
-                            return $model;
-                        });
-                });
+            $this->handleInlinePublishForm($resource, $model);
         }
 
-        return [
-            'data' => $this->getReturnData($resource, $record),
-        ];
+        return ['data' => $this->getReturnData($resource, $model)];
     }
 
     /**
      * Build an array with the correct return data for the inline publish forms.
      */
-    protected function getReturnData($resource, $record)
+    protected function getReturnData(Resource $resource, Model $record): array
     {
         return array_merge($record->toArray(), [
             'title' => $record->{$resource->titleField()},
             'edit_url' => cp_route('runway.edit', [
-                'resourceHandle' => $resource->handle(),
+                'resource' => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},
             ]),
         ]);
     }
 
-    protected function getPrimaryColumn(Resource $resource): string
+    /**
+     * Handle saving data from the Inline Publish Form (the one that appears when you edit models in a stack).
+     */
+    protected function handleInlinePublishForm(Resource $resource, Model &$model): void
     {
-        if (isset(User::current()->preferences()['runway'][$resource->handle()]['columns'])) {
-            return collect($resource->blueprint()->fields()->all())
-                ->filter(fn ($field) => in_array($field->handle(), User::current()->preferences()['runway'][$resource->handle()]['columns']))
-                ->reject(function ($field) {
-                    return $field->fieldtype()->indexComponent() === 'relationship'
-                        || $field->fieldtype()->indexComponent() === 'hasmany-related-item';
-                })
-                ->map(fn ($field) => $field->handle())
-                ->first();
-        }
+        collect($resource->blueprint()->fields()->all())
+            ->filter(fn (Field $field) => $field->fieldtype() instanceof BelongsToFieldtype || $field->fieldtype() instanceof HasManyFieldtype)
+            ->each(function (Field $field) use (&$model, $resource) {
+                $relatedResource = Runway::findResource($field->get('resource'));
 
-        return $resource->titleField();
-    }
+                $column = $relatedResource->titleField();
 
-    protected function shouldSaveField(Field $field): bool
-    {
-        $config = $field->config();
+                $relationshipName = $resource->eloquentRelationships()->get($field->handle()) ?? $field->handle();
 
-        if ($field->type() === 'section') {
-            return false;
-        }
+                $model->{$field->handle()} = $model->{$relationshipName}()
+                    ->select($relatedResource->model()->qualifyColumn($relatedResource->primaryKey()), $column)
+                    ->get()
+                    ->each(function ($model) use ($relatedResource, $column) {
+                        $model->title = $model->{$column};
 
-        if ($field->visibility() === 'computed') {
-            return false;
-        }
+                        $model->edit_url = cp_route('runway.edit', [
+                            'resource' => $relatedResource->handle(),
+                            'record' => $model->{$relatedResource->routeKey()},
+                        ]);
 
-        if (isset($config['save']) && $config['save'] === false) {
-            return false;
-        }
-
-        return true;
+                        return $model;
+                    });
+            });
     }
 }

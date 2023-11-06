@@ -21,14 +21,14 @@ class ResourceCollection extends LaravelResourceCollection
 
     protected $columnPreferenceKey;
 
-    public function setColumnPreferenceKey($key)
+    public function setColumnPreferenceKey($key): self
     {
         $this->columnPreferenceKey = $key;
 
         return $this;
     }
 
-    public function setColumns($originalColumns)
+    public function setColumns($originalColumns): self
     {
         $columns = $this->runwayResource->blueprint()->columns()
             ->filter(fn ($column) => in_array($column->field, collect($originalColumns)->pluck('handle')->toArray()));
@@ -42,7 +42,7 @@ class ResourceCollection extends LaravelResourceCollection
         return $this;
     }
 
-    public function setResourceHandle($handle)
+    public function setResourceHandle($handle): self
     {
         $this->runwayResource = Runway::findResource($handle);
         $this->resourceHandle = $handle;
@@ -50,7 +50,7 @@ class ResourceCollection extends LaravelResourceCollection
         return $this;
     }
 
-    public function toArray($request)
+    public function toArray($request): array
     {
         $columns = $this->columns->pluck('field')->toArray();
         $handle = $this->resourceHandle;
@@ -68,7 +68,7 @@ class ResourceCollection extends LaravelResourceCollection
                         // If we've eager loaded in relationships, just pass in the model
                         // instance. We can prevent extra queries this way.
                         if ($this->runwayResource->blueprint()->field($key)->fieldtype() instanceof BelongsToFieldtype) {
-                            $relationName = $this->runwayResource->eagerLoadingRelations()->get($key);
+                            $relationName = $this->runwayResource->eloquentRelationships()->get($key);
 
                             if ($record->relationLoaded($relationName)) {
                                 $value = $record->$relationName;
@@ -94,7 +94,7 @@ class ResourceCollection extends LaravelResourceCollection
                 }
 
                 $row['id'] = $record->getKey();
-                $row['edit_url'] = cp_route('runway.edit', ['resourceHandle' => $handle, 'record' => $record->getRouteKey()]);
+                $row['edit_url'] = cp_route('runway.edit', ['resource' => $handle, 'record' => $record->getRouteKey()]);
                 $row['permalink'] = $this->runwayResource->hasRouting() ? $record->uri() : null;
                 $row['editable'] = User::current()->can('edit', $this->runwayResource);
                 $row['viewable'] = User::current()->can('view', $this->runwayResource);
@@ -102,9 +102,7 @@ class ResourceCollection extends LaravelResourceCollection
 
                 return $row;
             }),
-            'meta' => [
-                'columns' => $this->columns,
-            ],
+            'meta' => ['columns' => $this->columns],
         ];
     }
 }

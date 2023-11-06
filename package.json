@@ -10,9 +10,11 @@
         "cross-env": "^7.0.2",
         "marked": "^5.1.0",
         "qs": "^6.11.0",
+        "tree-helper": "^1.4.14",
         "underscore": "^1.13.6",
         "uniqid": "^5.2.0",
-        "vue": "^2.6.11"
+        "vue": "^2.6.11",
+        "vue-draggable-nested-tree": "^3.0.0-beta3"
     },
     "devDependencies": {
         "@vitejs/plugin-vue2": "^2.2.0",

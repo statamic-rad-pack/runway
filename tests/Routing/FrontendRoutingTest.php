@@ -2,7 +2,8 @@
 
 namespace DoubleThreeDigital\Runway\Tests\Routing;
 
-use DoubleThreeDigital\Runway\Tests\Post;
+use DoubleThreeDigital\Runway\Runway;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
 
@@ -11,7 +12,7 @@ class FrontendRoutingTest extends TestCase
     /** @test */
     public function returns_resource_response_for_resource()
     {
-        $post = $this->postFactory();
+        $post = Post::factory()->create();
         $runwayUri = $post->fresh()->runwayUri;
 
         $this
@@ -28,20 +29,18 @@ class FrontendRoutingTest extends TestCase
      */
     public function returns_resource_response_for_resource_with_nested_field()
     {
-        $post = $this->postFactory(
-            attributes: [
-                'values' => [
-                    'alt_title' => $this->faker->words(6, asText: true),
-                ],
+        $post = Post::factory()->create([
+            'values' => [
+                'alt_title' => 'Alternative Title...',
             ],
-        );
+        ]);
 
         $runwayUri = $post->fresh()->runwayUri;
 
         $this
             ->get($runwayUri->uri)
             ->assertOk()
-            ->assertSee($post->values['alt_title'])
+            ->assertSee('Alternative Title...')
             ->assertSee('TEMPLATE: default')
             ->assertSee('LAYOUT: layout');
     }
@@ -49,12 +48,11 @@ class FrontendRoutingTest extends TestCase
     /** @test */
     public function returns_resource_response_for_resource_with_custom_template()
     {
-        $this->markTestIncomplete();
-
-        // TODO: find way of mocking the template & rebooting Runway's resources
         Config::set('runway.resources.'.Post::class.'.template', 'custom');
 
-        $post = $this->postFactory();
+        Runway::discoverResources();
+
+        $post = Post::factory()->create();
         $runwayUri = $post->fresh()->runwayUri;
 
         $this
@@ -68,12 +66,11 @@ class FrontendRoutingTest extends TestCase
     /** @test */
     public function returns_resource_response_for_resource_with_custom_layout()
     {
-        $this->markTestIncomplete();
-
-        // TODO: find way of mocking the template & rebooting Runway's resources
         Config::set('runway.resources.'.Post::class.'.layout', 'blog-layout');
 
-        $post = $this->postFactory();
+        Runway::discoverResources();
+
+        $post = Post::factory()->create();
         $runwayUri = $post->fresh()->runwayUri;
 
         $this

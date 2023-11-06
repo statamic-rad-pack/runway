@@ -45,6 +45,7 @@ class Provider extends BaseProvider
                 $ids = $items->map(fn ($item) => Str::after($item, '::'));
 
                 return Runway::findResource($handle)->model()->find($ids);
-            })->mapInto(Searchable::class);
+            })
+            ->mapInto(Searchable::class);
     }
 }

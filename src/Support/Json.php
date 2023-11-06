@@ -4,7 +4,7 @@ namespace DoubleThreeDigital\Runway\Support;
 
 class Json
 {
-    public static function isJson($value)
+    public static function isJson($value): bool
     {
         if (is_array($value)) {
             return false;

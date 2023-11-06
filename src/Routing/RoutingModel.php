@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway\Routing;
 
-use DoubleThreeDigital\Runway\Data\AugmentedModel;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
@@ -19,7 +18,7 @@ class RoutingModel implements Augmentable, Responsable
         $this->supplements = collect();
     }
 
-    public function route()
+    public function route(): ?string
     {
         if (! $this->model->runwayUri) {
             return null;
@@ -28,19 +27,19 @@ class RoutingModel implements Augmentable, Responsable
         return $this->model->runwayUri->uri;
     }
 
-    public function routeData()
+    public function routeData(): array
     {
         return [
             'id' => $this->model->{$this->model->getKeyName()},
         ];
     }
 
-    public function uri()
+    public function uri(): ?string
     {
         return $this->model->routableUri();
     }
 
-    public function urlWithoutRedirect()
+    public function urlWithoutRedirect(): ?string
     {
         return $this->uri();
     }
@@ -79,8 +78,6 @@ class RoutingModel implements Augmentable, Responsable
 
     public function augmentedArrayData()
     {
-        $blueprint = Runway::findResourceByModel($this->model)->blueprint();
-
-        return AugmentedModel::augment($this->model, $blueprint);
+        return $this->model->toArray();
     }
 }

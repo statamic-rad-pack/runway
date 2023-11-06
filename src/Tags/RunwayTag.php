@@ -15,7 +15,7 @@ class RunwayTag extends Tags
 {
     protected static $handle = 'runway';
 
-    public function wildcard($resourceHandle = null)
+    public function wildcard($resourceHandle = null): array
     {
         try {
             $resource = Runway::findResource(
@@ -60,11 +60,11 @@ class RunwayTag extends Tags
             $key = explode(':', (string) $where)[0];
             $value = explode(':', (string) $where)[1];
 
-            if ($resource->eagerLoadingRelations()->has($key)) {
-                // eagerLoadingRelations() return a Collection of keys/values, the keys are the field names
+            if ($resource->eloquentRelationships()->has($key)) {
+                // eloquentRelationships() returns a Collection of keys/values, the keys are the field names
                 // & the values are the Eloquent relationship names. We need to get the relationship name
                 // for the whereHas query.
-                $relationshipName = $resource->eagerLoadingRelations()->get($key);
+                $relationshipName = $resource->eloquentRelationships()->get($key);
                 $relationshipResource = Runway::findResource($resource->blueprint()->field($key)->config()['resource']);
 
                 $query->whereHas($relationshipName, function ($query) use ($value, $relationshipResource) {
@@ -118,18 +118,18 @@ class RunwayTag extends Tags
         ];
     }
 
-    protected function augmentRecords($query, Resource $resource)
+    protected function augmentRecords($query, Resource $resource): array
     {
         return collect($query)
             ->map(function ($record, $key) use ($resource) {
-                return Blink::once("Runway::Tag::AugmentRecords::{$resource->handle()}::{$record->{$resource->primaryKey()}}", function () use ($resource, $record) {
-                    return $resource->augment($record);
+                return Blink::once("Runway::Tag::AugmentRecords::{$resource->handle()}::{$record->{$resource->primaryKey()}}", function () use ($record) {
+                    return $record->toAugmentedArray();
                 });
             })
             ->toArray();
     }
 
-    protected function getPaginationData($paginator)
+    protected function getPaginationData($paginator): array
     {
         return [
             'total_items' => $paginator->total(),

@@ -5,6 +5,7 @@ namespace DoubleThreeDigital\Runway\Routing\Traits;
 use DoubleThreeDigital\Runway\Models\RunwayUri;
 use DoubleThreeDigital\Runway\Routing\RoutingModel;
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
 use Statamic\Routing\Routable;
 use Statamic\StaticCaching\Cacher;
@@ -19,14 +20,19 @@ trait RunwayRoutes
         uri as routableUri;
     }
 
-    public function routingModel()
+    public function routingModel(): RoutingModel
     {
         $this->routingModel = new RoutingModel($this);
 
         return $this->routingModel;
     }
 
-    public function route()
+    public function slug(): string
+    {
+        return $this->getAttribute('slug');
+    }
+
+    public function route(): ?string
     {
         if (! $this->runwayUri) {
             return null;
@@ -40,7 +46,7 @@ trait RunwayRoutes
         return $this->routingModel()->routeData();
     }
 
-    public function uri()
+    public function uri(): ?string
     {
         return $this->routingModel()->uri();
     }
@@ -65,10 +71,7 @@ trait RunwayRoutes
         return $this->routingModel()->getRouteKey();
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
-     */
-    public function runwayUri()
+    public function runwayUri(): MorphOne
     {
         return $this->morphOne(RunwayUri::class, 'model');
     }
@@ -83,24 +86,18 @@ trait RunwayRoutes
             }
 
             $uri = (new Parser())
-                ->parse($resource->route(), $resource->augment($model))
+                ->parse($resource->route(), $model->toAugmentedArray())
                 ->__toString();
 
             $uri = Str::start($uri, '/');
 
             if ($model->runwayUri()->exists()) {
-                $model->runwayUri()->first()->update([
-                    'uri' => $uri,
-                ]);
+                $model->runwayUri()->first()->update(['uri' => $uri]);
             } else {
-                $model->runwayUri()->create([
-                    'uri' => $uri,
-                ]);
+                $model->runwayUri()->create(['uri' => $uri]);
             }
 
-            app(Cacher::class)->invalidateUrl(
-                $uri,
-            );
+            app(Cacher::class)->invalidateUrl($uri);
 
             app(Cacher::class)->invalidateUrls(
                 Arr::get(config('statamic.static_caching.invalidation.rules'), "runway.{$resource->handle()}.urls")

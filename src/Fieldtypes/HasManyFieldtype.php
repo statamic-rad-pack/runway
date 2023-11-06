@@ -27,19 +27,6 @@ class HasManyFieldtype extends BaseFieldtype
                 'type' => 'text',
                 'width' => 50,
             ],
-            'mode' => [
-                'display' => __('Mode'),
-                'instructions' => __('statamic::fieldtypes.relationship.config.mode'),
-                'type' => 'radio',
-                'default' => 'default',
-                'options' => [
-                    'default' => __('Stack Selector'),
-                    'select' => __('Select Dropdown'),
-                    'typeahead' => __('Typeahead Field'),
-                    'table' => __('Table'),
-                ],
-                'width' => 50,
-            ],
             'reorderable' => [
                 'display' => __('Reorderable?'),
                 'instructions' => __('Can the models be reordered?'),
@@ -67,7 +54,7 @@ class HasManyFieldtype extends BaseFieldtype
         $resource = Runway::findResource($this->config('resource'));
 
         // Determine whether or not this field is on a resource or a collection
-        $resourceHandle = request()->route('resourceHandle');
+        $resourceHandle = request()->route('resource');
 
         if (! $resourceHandle) {
             return $data;
@@ -82,13 +69,15 @@ class HasManyFieldtype extends BaseFieldtype
     public function process($data)
     {
         // Determine whether or not this field is on a resource or a collection
-        $resourceHandle = request()->route('resourceHandle') ?? Blink::get('RunwayRouteResource');
+        $resource = request()->route('resource');
 
-        if (! $resourceHandle) {
-            return $data;
+        if (Blink::get('RunwayRouteResource')) {
+            $resource = Runway::findResource(Blink::get('RunwayRouteResource'));
         }
 
-        $resource = Runway::findResource($resourceHandle);
+        if (! $resource) {
+            return $data;
+        }
 
         $record = $resource->model()->firstWhere(
             $resource->routeKey(),
@@ -183,7 +172,7 @@ class HasManyFieldtype extends BaseFieldtype
     {
         return array_merge(parent::preload(), [
             'actionUrl' => cp_route('runway.actions.run', [
-                'resourceHandle' => $this->config('resource'),
+                'resource' => $this->config('resource'),
             ]),
         ]);
     }

@@ -2,18 +2,17 @@
 
 namespace DoubleThreeDigital\Runway\Fieldtypes;
 
-use DoubleThreeDigital\Runway\Actions\DeleteModel;
 use DoubleThreeDigital\Runway\Query\Scopes\Filters\Fields\Models;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Statamic\CP\Column;
-use Statamic\Facades\Action;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
-use Statamic\Facades\User;
 use Statamic\Fieldtypes\Relationship;
 
 class BaseFieldtype extends Relationship
@@ -85,40 +84,14 @@ class BaseFieldtype extends Relationship
         ];
     }
 
-    // Provides the dropdown options
     public function getIndexItems($request)
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        $query = $resource->model()
-            ->orderBy($resource->orderBy(), $resource->orderByDirection());
+        $query = $resource->model()->orderBy($resource->orderBy(), $resource->orderByDirection());
 
-        if ($query->hasNamedScope('runwayListing')) {
-            $query->runwayListing();
-        }
-
-        $query = $query
-            ->when($request->search, function ($query) use ($request, $resource) {
-                $searchQuery = $request->search;
-
-                $query->when(
-                    $query->hasNamedScope('runwaySearch'),
-                    fn ($query) => $query->runwaySearch($searchQuery),
-                    function ($query) use ($searchQuery, $resource) {
-                        $resource
-                            ->blueprint()
-                            ->fields()
-                            ->items()
-                            ->reject(function (array $field) {
-                                return $field['field']['type'] === 'has_many'
-                                    || $field['field']['type'] === 'hidden';
-                            })
-                            ->each(function (array $field) use ($query, $searchQuery) {
-                                $query->orWhere($field['handle'], 'LIKE', '%'.$searchQuery.'%');
-                            });
-                    }
-                );
-            });
+        $query->when($query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
+        $query->when($request->search, fn ($query) => $query->runwaySearch($request->search));
 
         $items = $request->boolean('paginate', true)
             ? $query->paginate()
@@ -126,7 +99,7 @@ class BaseFieldtype extends Relationship
 
         $items
             ->transform(function ($record) use ($resource) {
-                return collect($resource->listableColumns())
+                return $resource->listableColumns()
                     ->mapWithKeys(function ($columnKey) use ($record) {
                         $value = $record->{$columnKey};
 
@@ -149,7 +122,6 @@ class BaseFieldtype extends Relationship
             : $items->filter()->values();
     }
 
-    // This shows the values in the listing table
     public function preProcessIndex($data)
     {
         $resource = Runway::findResource($this->config('resource'));
@@ -188,7 +160,7 @@ class BaseFieldtype extends Relationship
             }
 
             $url = cp_route('runway.edit', [
-                'resourceHandle' => $resource->handle(),
+                'resource' => $resource->handle(),
                 'record' => $record->{$resource->routeKey()},
             ]);
 
@@ -200,12 +172,39 @@ class BaseFieldtype extends Relationship
         });
     }
 
-    // Augments the value for front-end use
     public function augment($values)
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        $result = collect($values)
+        if ($values instanceof HasMany) {
+            $results = $values
+                ->get()
+                ->map->toAugmentedArray()
+                ->filter();
+
+            if ($this->config('max_items') === 1) {
+                return $results->first();
+            }
+
+            return $results;
+        }
+
+        if ($values instanceof BelongsTo) {
+            $results = $values
+                ->get()
+                ->map->toAugmentedArray()
+                ->filter();
+
+            if ($this->config('max_items') === 1) {
+                return $results->first();
+            }
+
+            return $results;
+        }
+
+        $values = Arr::wrap($values);
+
+        $results = collect($values)
             ->map(function ($item) use ($resource) {
                 if (is_array($item) && isset($item[$resource->primaryKey()])) {
                     return $item[$resource->primaryKey()];
@@ -213,6 +212,54 @@ class BaseFieldtype extends Relationship
 
                 return $item;
             })
+            ->map(function ($record) use ($resource) {
+                if (! $record instanceof Model) {
+                    $eagerLoadingRelationships = collect($this->config('with') ?? [])->join(',');
+
+                    $record = Blink::once("Runway::{$this->config('resource')}::{$record}}::{$eagerLoadingRelationships}", function () use ($resource, $record) {
+                        return $resource->model()
+                            ->when($this->config('with'), function ($query) {
+                                $query->with(Arr::wrap($this->config('with')));
+                            })
+                            ->firstWhere($resource->primaryKey(), $record);
+                    });
+                }
+
+                if (! $record) {
+                    return null;
+                }
+
+                return $record->toAugmentedArray();
+            })
+            ->filter();
+
+        if ($this->config('max_items') === 1) {
+            return $results->first();
+        }
+
+        return $results->toArray();
+    }
+
+    public function shallowAugment($values)
+    {
+        $resource = Runway::findResource($this->config('resource'));
+
+        if ($values instanceof HasMany) {
+            $results = $values
+                ->get()
+                ->map->toShallowAugmentedArray()
+                ->filter();
+
+            if ($this->config('max_items') === 1) {
+                return $results->first();
+            }
+
+            return $results;
+        }
+
+        $values = Arr::wrap($values);
+
+        $results = collect($values)
             ->map(function ($record) use ($resource) {
                 if (! $record instanceof Model) {
                     $eagerLoadingRelations = collect($this->config('with') ?? [])->join(',');
@@ -230,24 +277,23 @@ class BaseFieldtype extends Relationship
                     return null;
                 }
 
-                return $resource->augment($record);
+                return $record->toShallowAugmentedArray();
             })
             ->filter();
 
         if ($this->config('max_items') === 1) {
-            return $result->first();
+            return $results->first();
         }
 
-        return $result->toArray();
+        return $results->toArray();
     }
 
-    // Provides the columns used if you're in 'Stacks' mode
     protected function getColumns()
     {
         $resource = Runway::findResource($this->config('resource'));
         $blueprint = $resource->blueprint();
 
-        return collect($resource->listableColumns())
+        return $resource->listableColumns()
             ->map(function ($columnKey, $index) use ($blueprint) {
                 /** @var \Statamic\Fields\Field $field */
                 $blueprintField = $blueprint->field($columnKey);
@@ -265,7 +311,6 @@ class BaseFieldtype extends Relationship
             ->toArray();
     }
 
-    // Provides the initial state after loading the fieldtype on a saved entry/model
     protected function toItemArray($id)
     {
         $resource = Runway::findResource($this->config('resource'));
@@ -285,36 +330,9 @@ class BaseFieldtype extends Relationship
         }
 
         $editUrl = cp_route('runway.edit', [
-            'resourceHandle' => $resource->handle(),
+            'resource' => $resource->handle(),
             'record' => $record->{$resource->routeKey()},
         ]);
-
-        // When using Table mode, we want to return each item differently.
-        if ($this->config('mode') === 'table') {
-            return collect($resource->listableColumns())
-                ->mapWithKeys(function ($columnKey) use ($record, $resource) {
-                    $value = $record->{$columnKey};
-
-                    // When $value is an Eloquent Collection, we want to map over each item & process its values.
-                    if ($value instanceof EloquentCollection) {
-                        $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
-                    }
-
-                    // We need to put each column through preProcessIndex so it's formatted properly for the listing table.
-                    $value = $resource->blueprint()->field($columnKey)->setValue($value)->preProcessIndex()->value();
-
-                    return [$columnKey => $value];
-                })
-                ->merge([
-                    'id' => $record->{$resource->primaryKey()},
-                    'title' => $this->makeTitle($record, $resource),
-                    'edit_url' => $editUrl,
-                    'editable' => User::current()->can('edit', $resource),
-                    'viewable' => User::current()->can('view', $resource),
-                    'actions' => Action::for($record, ['resource' => $resource->handle()])->reject(fn ($action) => $action instanceof DeleteModel)->toArray(),
-                ])
-                ->toArray();
-        }
 
         return [
             'id' => $record->getKey(),
@@ -327,14 +345,12 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        return [
-            [
-                'title' => $resource->singular(),
-                'url' => cp_route('runway.create', [
-                    'resourceHandle' => $resource->handle(),
-                ]),
-            ],
-        ];
+        return [[
+            'title' => $resource->singular(),
+            'url' => cp_route('runway.create', [
+                'resource' => $resource->handle(),
+            ]),
+        ]];
     }
 
     protected function makeTitle($record, $resource): ?string
