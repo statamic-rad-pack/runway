@@ -6,6 +6,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ApiResource extends JsonResource
 {
+    public $blueprintFields = [];
+
     /**
      * Transform the resource into an array.
      *
@@ -14,14 +16,24 @@ class ApiResource extends JsonResource
      */
     public function toArray($request)
     {
-        $fields = $this->resource->blueprint()->fields()->all()->map->handle()->all();
-
         return array_merge([
-            $this->resource->primaryKey() => $this->resource->model()->getKey(),
+            $this->resource->getKeyName() => $this->resource->getKey(),
         ], $this->resource
-            ->toAugmentedCollection($fields)
+            ->toAugmentedCollection($this->blueprintFields ?? [])
             ->withShallowNesting()
             ->toArray()
         );
+    }
+
+    /**
+     * Set the fields that should be returned by this resource
+     *
+     * @return self
+     */
+    public function withBlueprintFields(array $fields)
+    {
+        $this->blueprintFields = $fields;
+
+        return $this;
     }
 }

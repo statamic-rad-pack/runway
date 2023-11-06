@@ -33,9 +33,15 @@ class RestApiController extends ApiController
         }
 
         $results = $this->filterSortAndPaginate($resource->model()->query());
-        $results->setCollection($results->getCollection()->map(fn ($model) => $this->makeResourceFromModel($resource, $model)));
 
-        return ApiResource::collection($results);
+        $results = ApiResource::collection($results);
+
+        $results->setCollection(
+            $results->getCollection()
+                ->transform(fn ($result) => $result->withBlueprintFields($this->getFieldsFromBlueprint($resource)))
+        );
+
+        return $results;
     }
 
     public function show($handle, $id)
@@ -54,7 +60,7 @@ class RestApiController extends ApiController
             throw new NotFoundHttpException;
         }
 
-        return ApiResource::make($this->makeResourceFromModel($resource, $model));
+        return ApiResource::make($model)->withBlueprintFields($this->getFieldsFromBlueprint($resource));
     }
 
     protected function allowedFilters()
@@ -62,18 +68,8 @@ class RestApiController extends ApiController
         return FilterAuthorizer::allowedForSubResources('api', $this->resourceConfigKey, Str::plural($this->resourceHandle));
     }
 
-    private function makeResourceFromModel($resource, $model)
+    private function getFieldsFromBlueprint(Resource $resource): array
     {
-        if (! $this->config) {
-            $this->config = collect(config('runway.resources'))->get(get_class($model));
-        }
-
-        return new Resource(
-            handle: $this->resourceHandle,
-            model: $model,
-            name: $this->config['name'] ?? Str::title($this->resourceHandle),
-            blueprint: $resource->blueprint(),
-            config: collect($this->config ?? []),
-        );
+        return $resource->blueprint()->fields()->all()->map->handle()->all();
     }
 }
