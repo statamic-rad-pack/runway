@@ -19,9 +19,7 @@ class ApiResource extends JsonResource
         return array_merge([
             $this->resource->getKeyName() => $this->resource->getKey(),
         ], $this->resource
-            ->toAugmentedCollection($this->blueprintFields ?? [])
-            ->withShallowNesting()
-            ->toArray()
+            ->toAugmentedArray($this->blueprintFields)
         );
     }
 
