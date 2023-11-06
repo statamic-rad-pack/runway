@@ -16,10 +16,17 @@ class ApiResource extends JsonResource
      */
     public function toArray($request)
     {
+        // this gets around augmented model wrapValue() returning handles 
+        // like meta->title instead of a nested array
+        // if that ever changes this could be removed
+        $augmentedArray = collect($this->resource->toAugmentedArray($this->blueprintFields))
+            ->mapWithKeys(fn ($item, $key) => [str_replace('->', '.', $key) => $item])
+            ->undot()
+            ->all();
+        
         return array_merge([
             $this->resource->getKeyName() => $this->resource->getKey(),
-        ], $this->resource
-            ->toAugmentedArray($this->blueprintFields)
+        ], $augmentedArray
         );
     }
 
