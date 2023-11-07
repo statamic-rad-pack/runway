@@ -100,7 +100,7 @@ abstract class TestCase extends OrchestraTestCase
         ]);
 
         $app['config']->set('runway', require(__DIR__.'/__fixtures__/config/runway.php'));
-        
+
         $app['config']->set('statamic.api.enabled', true);
         $app['config']->set('statamic.editions.pro', true);
     }
