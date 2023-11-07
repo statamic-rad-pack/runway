@@ -95,9 +95,11 @@ class ServiceProvider extends AddonServiceProvider
 
     protected function registerRouteBindings()
     {
-        Route::bind('resource', function ($value) {
-            return Runway::findResource($value);
-        });
+        if (Statamic::isCpRoute()) {
+            Route::bind('resource', function ($value) {
+                return Runway::findResource($value);
+            });
+        }
     }
 
     protected function registerPermissions()
