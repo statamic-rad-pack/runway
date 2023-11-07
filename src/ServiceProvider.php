@@ -97,7 +97,7 @@ class ServiceProvider extends AddonServiceProvider
     {
         Route::bind('resource', function ($value) {
             if (! Statamic::isCpRoute()) {
-                return $value;    
+                return $value;
             }
 
             return Runway::findResource($value);
