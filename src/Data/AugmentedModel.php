@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Statamic\Data\AbstractAugmented;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
+use Statamic\Statamic;
 
 class AugmentedModel extends AbstractAugmented
 {
@@ -58,6 +59,15 @@ class AugmentedModel extends AbstractAugmented
         return $this->resource->hasRouting()
             ? $this->data->uri()
             : null;
+    }
+
+    public function apiUrl()
+    {
+        if (! $id = $this->data->{$this->resource->primaryKey()}) {
+            return null;
+        }
+
+        return Statamic::apiRoute('runway.show', [$this->resource->handle(), $id]);
     }
 
     protected function modelAttributes(): Collection

@@ -92,6 +92,8 @@ abstract class TestCase extends OrchestraTestCase
             );
         }
 
+        $app['config']->set('statamic.api.enabled', true);
+        $app['config']->set('statamic.editions.pro', true);
         $app['config']->set('statamic.users.repository', 'file');
 
         $app['config']->set('statamic.stache.stores.users', [
