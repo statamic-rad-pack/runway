@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
 
 class ApiResource extends JsonResource
 {
@@ -25,6 +26,13 @@ class ApiResource extends JsonResource
             ->withRelations($with)
             ->withShallowNesting()
             ->toArray();
+
+        collect($augmentedArray)
+            ->filter(fn ($value, $key) => Str::contains($key, '->'))
+            ->each(function ($value, $key) use (&$augmentedArray) {
+                $augmentedArray[Str::before($key, '->')][Str::after($key, '->')] = $value;
+                unset($augmentedArray[$key]);
+            });
 
         return array_merge($augmentedArray, [
             $this->resource->getKeyName() => $this->resource->getKey(),
