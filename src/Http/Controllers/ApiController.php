@@ -16,15 +16,15 @@ class ApiController extends StatamicApiController
 
     protected $resourceConfigKey = 'runway';
 
-    protected $routeResourceKey = 'handle';
+    protected $routeResourceKey = 'resourceHandle';
 
     protected $resourceHandle;
 
-    public function index($handle)
+    public function index($resourceHandle)
     {
         $this->abortIfDisabled();
 
-        $this->resourceHandle = Str::singular($handle);
+        $this->resourceHandle = Str::singular($resourceHandle);
 
         $resource = Runway::findResource($this->resourceHandle);
 
@@ -37,18 +37,17 @@ class ApiController extends StatamicApiController
         $results = ApiResource::collection($results);
 
         $results->setCollection(
-            $results->getCollection()
-                ->transform(fn ($result) => $result->withBlueprintFields($this->getFieldsFromBlueprint($resource)))
+            $results->getCollection()->transform(fn ($result) => $result->withBlueprintFields($this->getFieldsFromBlueprint($resource)))
         );
 
         return $results;
     }
 
-    public function show($handle, $id)
+    public function show($resourceHandle, $record)
     {
         $this->abortIfDisabled();
 
-        $this->resourceHandle = Str::singular($handle);
+        $this->resourceHandle = Str::singular($resourceHandle);
 
         $resource = Runway::findResource($this->resourceHandle);
 
@@ -56,7 +55,7 @@ class ApiController extends StatamicApiController
             throw new NotFoundHttpException;
         }
 
-        if (! $model = $resource->model()->find($id)) {
+        if (! $model = $resource->model()->find($record)) {
             throw new NotFoundHttpException;
         }
 

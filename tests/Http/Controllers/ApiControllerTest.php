@@ -23,7 +23,7 @@ class ApiControllerTest extends TestCase
         $posts = Post::factory()->count(2)->create();
 
         $this
-            ->get(route('statamic.api.runway.index', ['handle' => 'posts']))
+            ->get(route('statamic.api.runway.index', ['resourceHandle' => 'posts']))
             ->assertOk()
             ->assertJsonStructure(['data', 'meta'])
             ->assertJsonPath('data.0.id', $posts[0]->id)
@@ -36,7 +36,7 @@ class ApiControllerTest extends TestCase
         Post::factory()->count(2)->create();
 
         $this
-            ->get(route('statamic.api.runway.index', ['handle' => 'posts2']))
+            ->get(route('statamic.api.runway.index', ['resourceHandle' => 'posts2']))
             ->assertNotFound();
     }
 
@@ -46,7 +46,7 @@ class ApiControllerTest extends TestCase
         $post = Post::factory()->create();
 
         $this
-            ->get(route('statamic.api.runway.show', ['handle' => 'posts', 'id' => $post->id]))
+            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'record' => $post->id]))
             ->assertOk()
             ->assertSee(['data'])
             ->assertJsonPath('data.id', $post->id)
@@ -57,7 +57,7 @@ class ApiControllerTest extends TestCase
     public function returns_not_found_on_a_model_that_does_not_exist()
     {
         $this
-            ->get(route('statamic.api.runway.show', ['handle' => 'posts', 'id' => 44]))
+            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'record' => 44]))
             ->assertNotFound();
     }
 
@@ -67,7 +67,7 @@ class ApiControllerTest extends TestCase
         Post::factory()->count(10)->create();
 
         $this
-            ->get(route('statamic.api.runway.index', ['handle' => 'posts', 'limit' => 5]))
+            ->get(route('statamic.api.runway.index', ['resourceHandle' => 'posts', 'limit' => 5]))
             ->assertOk()
             ->assertJsonStructure(['data', 'meta'])
             ->assertJsonPath('meta.current_page', 1)
@@ -75,7 +75,7 @@ class ApiControllerTest extends TestCase
             ->assertJsonPath('meta.total', 10);
 
         $this
-            ->get(route('statamic.api.runway.index', ['handle' => 'posts', 'limit' => 5, 'page' => 2]))
+            ->get(route('statamic.api.runway.index', ['resourceHandle' => 'posts', 'limit' => 5, 'page' => 2]))
             ->assertOk()
             ->assertJsonStructure(['data', 'meta'])
             ->assertJsonPath('meta.current_page', 2)
@@ -93,19 +93,19 @@ class ApiControllerTest extends TestCase
         $postC->update(['title' => 'Test Three']);
 
         $this
-            ->get(route('statamic.api.runway.index', ['handle' => 'posts']))
+            ->get(route('statamic.api.runway.index', ['resourceHandle' => 'posts']))
             ->assertOk()
             ->assertJsonStructure(['data', 'meta'])
             ->assertJsonPath('meta.total', 3);
 
         $this
-            ->get(route('statamic.api.runway.index', ['handle' => 'posts', 'filter[title:contains]' => 'one']))
+            ->get(route('statamic.api.runway.index', ['resourceHandle' => 'posts', 'filter[title:contains]' => 'one']))
             ->assertOk()
             ->assertJsonStructure(['data', 'meta'])
             ->assertJsonPath('meta.total', 1);
 
         $this
-            ->get(route('statamic.api.runway.index', ['handle' => 'posts', 'filter[title:contains]' => 'test']))
+            ->get(route('statamic.api.runway.index', ['resourceHandle' => 'posts', 'filter[title:contains]' => 'test']))
             ->assertOk()
             ->assertJsonStructure(['data', 'meta'])
             ->assertJsonPath('meta.total', 3);
@@ -121,7 +121,7 @@ class ApiControllerTest extends TestCase
         $postC->update(['title' => 'Test Three']);
 
         $this
-            ->get(route('statamic.api.runway.index', ['handle' => 'posts', 'filter[slug:contains]' => 'one']))
+            ->get(route('statamic.api.runway.index', ['resourceHandle' => 'posts', 'filter[slug:contains]' => 'one']))
             ->assertStatus(422);
     }
 }
