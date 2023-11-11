@@ -5,7 +5,6 @@ namespace DoubleThreeDigital\Runway\Tests\Http\Controllers;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Statamic\Facades\Config;
-use Statamic\Facades\User;
 
 class ApiControllerTest extends TestCase
 {
@@ -21,19 +20,14 @@ class ApiControllerTest extends TestCase
     /** @test */
     public function gets_a_resource_that_exists()
     {
-        Post::factory()->count(2)->create();
+        $posts = Post::factory()->count(2)->create();
 
-        $response = $this
+        $this
             ->get(route('statamic.api.runway.index', ['handle' => 'posts']))
             ->assertOk()
-            ->assertSee([
-                'data',
-                'meta',
-            ]);
-
-        $ids = collect($response->json()['data'])->pluck('id')->values()->all();
-
-        $this->assertSame($ids, Post::all()->pluck('id')->values()->all());
+            ->assertJsonStructure(['data', 'meta'])
+            ->assertJsonPath('data.0.id', $posts[0]->id)
+            ->assertJsonPath('data.1.id', $posts[1]->id);
     }
 
     /** @test */
@@ -41,7 +35,7 @@ class ApiControllerTest extends TestCase
     {
         Post::factory()->count(2)->create();
 
-        $response = $this
+        $this
             ->get(route('statamic.api.runway.index', ['handle' => 'posts2']))
             ->assertNotFound();
     }
@@ -49,23 +43,20 @@ class ApiControllerTest extends TestCase
     /** @test */
     public function gets_a_resource_model_that_exists()
     {
-        Post::factory()->count(2)->create();
+        $post = Post::factory()->create();
 
-        $response = $this
-            ->get(route('statamic.api.runway.show', ['handle' => 'posts', 'id' => 1]))
+        $this
+            ->get(route('statamic.api.runway.show', ['handle' => 'posts', 'id' => $post->id]))
             ->assertOk()
-            ->assertSee([
-                'data',
-            ]);
+            ->assertSee(['data'])
+            ->assertJsonPath('data.id', $post->id)
+            ->assertJsonPath('data.title', $post->title);
     }
 
     /** @test */
-    public function returns_not_found_on_a_model_that_doesnt_exist()
+    public function returns_not_found_on_a_model_that_does_not_exist()
     {
-        Post::factory()->count(2)->create();
-        $user = User::make()->makeSuper()->save();
-
-        $response = $this
+        $this
             ->get(route('statamic.api.runway.show', ['handle' => 'posts', 'id' => 44]))
             ->assertNotFound();
     }
@@ -75,89 +66,59 @@ class ApiControllerTest extends TestCase
     {
         Post::factory()->count(10)->create();
 
-        $response = $this
+        $this
             ->get(route('statamic.api.runway.index', ['handle' => 'posts', 'limit' => 5]))
             ->assertOk()
-            ->assertSee([
-                'data',
-                'meta',
-            ]);
+            ->assertJsonStructure(['data', 'meta'])
+            ->assertJsonPath('meta.current_page', 1)
+            ->assertJsonPath('meta.last_page', 2)
+            ->assertJsonPath('meta.total', 10);
 
-        $json = $response->json();
-
-        $this->assertSame($json['meta']['current_page'], 1);
-        $this->assertSame($json['meta']['last_page'], 2);
-        $this->assertSame($json['meta']['total'], 10);
-
-        $response = $this
+        $this
             ->get(route('statamic.api.runway.index', ['handle' => 'posts', 'limit' => 5, 'page' => 2]))
             ->assertOk()
-            ->assertSee([
-                'data',
-                'meta',
-            ]);
-
-        $json = $response->json();
-
-        $this->assertSame($json['meta']['current_page'], 2);
-        $this->assertSame($json['meta']['last_page'], 2);
-        $this->assertSame($json['meta']['total'], 10);
+            ->assertJsonStructure(['data', 'meta'])
+            ->assertJsonPath('meta.current_page', 2)
+            ->assertJsonPath('meta.last_page', 2)
+            ->assertJsonPath('meta.total', 10);
     }
 
     /** @test */
     public function filters_a_resource_list()
     {
-        Post::factory()->count(3)->create();
+        [$postA, $postB, $postC] = Post::factory()->count(3)->create();
 
-        Post::find(1)->fill(['title' => 'Test One'])->save();
-        Post::find(2)->fill(['title' => 'Test Two'])->save();
-        Post::find(3)->fill(['title' => 'Test Three'])->save();
+        $postA->update(['title' => 'Test One']);
+        $postB->update(['title' => 'Test Two']);
+        $postC->update(['title' => 'Test Three']);
 
-        $response = $this
+        $this
             ->get(route('statamic.api.runway.index', ['handle' => 'posts']))
             ->assertOk()
-            ->assertSee([
-                'data',
-                'meta',
-            ]);
+            ->assertJsonStructure(['data', 'meta'])
+            ->assertJsonPath('meta.total', 3);
 
-        $json = $response->json();
-
-        $this->assertSame($json['meta']['total'], 3);
-
-        $response = $this
+        $this
             ->get(route('statamic.api.runway.index', ['handle' => 'posts', 'filter[title:contains]' => 'one']))
             ->assertOk()
-            ->assertSee([
-                'data',
-                'meta',
-            ]);
+            ->assertJsonStructure(['data', 'meta'])
+            ->assertJsonPath('meta.total', 1);
 
-        $json = $response->json();
-
-        $this->assertSame($json['meta']['total'], 1);
-
-        $response = $this
+        $this
             ->get(route('statamic.api.runway.index', ['handle' => 'posts', 'filter[title:contains]' => 'test']))
             ->assertOk()
-            ->assertSee([
-                'data',
-                'meta',
-            ]);
-
-        $json = $response->json();
-
-        $this->assertSame($json['meta']['total'], 3);
+            ->assertJsonStructure(['data', 'meta'])
+            ->assertJsonPath('meta.total', 3);
     }
 
     /** @test */
     public function wont_filter_a_resource_list_on_a_forbidden_filter()
     {
-        Post::factory()->count(3)->create();
+        [$postA, $postB, $postC] = Post::factory()->count(3)->create();
 
-        Post::find(1)->fill(['title' => 'Test One'])->save();
-        Post::find(2)->fill(['title' => 'Test Two'])->save();
-        Post::find(3)->fill(['title' => 'Test Three'])->save();
+        $postA->update(['title' => 'Test One']);
+        $postB->update(['title' => 'Test Two']);
+        $postC->update(['title' => 'Test Three']);
 
         $this
             ->get(route('statamic.api.runway.index', ['handle' => 'posts', 'filter[slug:contains]' => 'one']))
