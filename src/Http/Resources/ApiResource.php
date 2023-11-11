@@ -2,6 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Http\Resources;
 
+use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ApiResource extends JsonResource
@@ -16,13 +17,17 @@ class ApiResource extends JsonResource
      */
     public function toArray($request)
     {
-        // this gets around augmented model wrapValue() returning handles
-        // like meta->title instead of a nested array
-        // if that ever changes this could be removed
-        $augmentedArray = collect($this->resource->toAugmentedArray($this->blueprintFields))
-            ->mapWithKeys(fn ($item, $key) => [str_replace('->', '.', $key) => $item])
-            ->undot()
-            ->all();
+        $resource = Runway::findResourceByModel($this->resource);
+
+        $with = $resource->blueprint()
+            ->fields()->all()
+            ->filter->isRelationship()->keys()->all();
+
+        $augmentedArray = $this->resource
+            ->toAugmentedCollection($this->blueprintFields ?? [])
+            ->withRelations($with)
+            ->withShallowNesting()
+            ->toArray();
 
         return array_merge($augmentedArray, [
             $this->resource->getKeyName() => $this->resource->getKey(),

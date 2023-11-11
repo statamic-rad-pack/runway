@@ -27,6 +27,11 @@ trait HasRunwayResource
         return new AugmentedModel($this);
     }
 
+    public function shallowAugmentedArrayKeys()
+    {
+        return [$this->runwayResource()->primaryKey(), $this->runwayResource()->titleField(), 'api_url'];
+    }
+
     public function runwayResource(): Resource
     {
         return Runway::findResourceByModel($this);
