@@ -1,0 +1,58 @@
+---
+title: REST API
+---
+
+Statamic comes with a read-only API that allows you to deliver content from Statamic to your frontend, external apps, SPA, or any other desired location. Content is delivered RESTfully as JSON data.
+
+Runway includes support for Statamic's Content API, which enables you to access your Eloquent models.
+
+If you prefer, Runway also supports [GraphQL](/graphql).
+
+## Enabling for resources
+
+If you haven't already done so, you'll need to enable Statamic's REST API. You can do this by adding the following line to your `.env` file:
+
+```
+STATAMIC_API_ENABLED=true
+```
+
+Alternatively, you can enable it for all environments in `config/statamic/api.php`:
+
+```php
+'enabled' => true,
+```
+
+Next, you'll need to enable the resources you want to make available. To do this, simply add a `runway` key to your `resources` array in `config/statamic/api.php`, and provide the handles of the resources for which you wish to enable the API:
+
+```php
+'resources' => [
+    'collections' => true,
+    // ...
+    'runway' => [
+        'product' => true,
+    ],
+],
+```
+
+## Endpoints
+
+Each resource will have two endpoints:
+
+* `/api/runway/{resourceHandle}` for retrieving models associated with a resource.
+* `/api/runway/{resourceHandle}/{id}` for retrieving a specific model.
+
+## Filtering
+
+To enable filtering for your resources, you'll need to opt in by defining a list of `allowed_filters` for each resource in your `config/statamic/api.php` configuration file:
+
+```php
+'runway' => [
+    'product' => [
+        'allowed_filters' => ['name', 'slug'],
+    ],
+],
+```
+
+## More Information
+
+For more information on Statamic's REST API functionality, please refer to the [Statamic Documentation](https://statamic.dev/rest-api#entries).
