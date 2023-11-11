@@ -54,6 +54,26 @@ class ApiControllerTest extends TestCase
     }
 
     /** @test */
+    public function gets_a_resource_model_with_nested_fields()
+    {
+        $post = Post::factory()->create([
+            'values' => [
+                'alt_title' => 'Alternative Title...',
+                'alt_body' => 'This is a **great** post! You should *read* it.',
+            ],
+        ]);
+
+        $this
+            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'record' => $post->id]))
+            ->assertOk()
+            ->assertSee(['data'])
+            ->assertJsonPath('data.id', $post->id)
+            ->assertJsonPath('data.values.alt_title', 'Alternative Title...')
+            ->assertJsonPath('data.values.alt_body', '<p>This is a <strong>great</strong> post! You should <em>read</em> it.</p>
+');
+    }
+
+    /** @test */
     public function returns_not_found_on_a_model_that_does_not_exist()
     {
         $this
