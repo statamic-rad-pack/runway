@@ -6,6 +6,7 @@ use DoubleThreeDigital\Runway\Http\Resources\ApiResource;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Facades\Statamic\API\FilterAuthorizer;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Http\Controllers\API\ApiController as StatamicApiController;
@@ -67,8 +68,8 @@ class ApiController extends StatamicApiController
         return FilterAuthorizer::allowedForSubResources('api', $this->resourceConfigKey, Str::plural($this->resourceHandle));
     }
 
-    private function getFieldsFromBlueprint(Resource $resource): array
+    private function getFieldsFromBlueprint(Resource $resource): Collection
     {
-        return $resource->blueprint()->fields()->all()->map->handle()->all();
+        return $resource->blueprint()->fields()->all();
     }
 }

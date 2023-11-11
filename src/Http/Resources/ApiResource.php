@@ -3,11 +3,12 @@
 namespace DoubleThreeDigital\Runway\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class ApiResource extends JsonResource
 {
-    public $blueprintFields = [];
+    public $blueprintFields;
 
     /**
      * Transform the resource into an array.
@@ -17,13 +18,9 @@ class ApiResource extends JsonResource
      */
     public function toArray($request)
     {
-        $with = $this->resource->runwayResource()->blueprint()
-            ->fields()->all()
-            ->filter->isRelationship()->keys()->all();
-
         $augmentedArray = $this->resource
-            ->toAugmentedCollection($this->blueprintFields ?? [])
-            ->withRelations($with)
+            ->toAugmentedCollection($this->blueprintFields->map->handle()->all() ?? [])
+            ->withRelations($this->blueprintFields->filter->isRelationship()->keys()->all())
             ->withShallowNesting()
             ->toArray();
 
@@ -44,7 +41,7 @@ class ApiResource extends JsonResource
      *
      * @return self
      */
-    public function withBlueprintFields(array $fields)
+    public function withBlueprintFields(Collection $fields)
     {
         $this->blueprintFields = $fields;
 
