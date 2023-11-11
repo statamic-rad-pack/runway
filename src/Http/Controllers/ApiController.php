@@ -8,9 +8,9 @@ use DoubleThreeDigital\Runway\Runway;
 use Facades\Statamic\API\FilterAuthorizer;
 use Illuminate\Support\Str;
 use Statamic\Exceptions\NotFoundHttpException;
-use Statamic\Http\Controllers\API\ApiController;
+use Statamic\Http\Controllers\API\ApiController as StatamicApiController;
 
-class RestApiController extends ApiController
+class ApiController extends StatamicApiController
 {
     private $config;
 

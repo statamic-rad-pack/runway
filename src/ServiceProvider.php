@@ -2,7 +2,7 @@
 
 namespace DoubleThreeDigital\Runway;
 
-use DoubleThreeDigital\Runway\Http\Controllers\RestApiController;
+use DoubleThreeDigital\Runway\Http\Controllers\ApiController;
 use DoubleThreeDigital\Runway\Policies\ResourcePolicy;
 use DoubleThreeDigital\Runway\Search\Provider as SearchProvider;
 use DoubleThreeDigital\Runway\Search\Searchable;
@@ -178,8 +178,8 @@ class ServiceProvider extends AddonServiceProvider
                     ->name('statamic.api.')
                     ->prefix(config('statamic.api.route'))
                     ->group(function () {
-                        Route::name('runway.index')->get('runway/{handle}', [RestApiController::class, 'index']);
-                        Route::name('runway.show')->get('runway/{handle}/{id}', [RestApiController::class, 'show']);
+                        Route::name('runway.index')->get('runway/{handle}', [ApiController::class, 'index']);
+                        Route::name('runway.show')->get('runway/{handle}/{id}', [ApiController::class, 'show']);
                     });
             });
         }
