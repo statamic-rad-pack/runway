@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway\Http\Resources;
 
-use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ApiResource extends JsonResource
@@ -17,9 +16,7 @@ class ApiResource extends JsonResource
      */
     public function toArray($request)
     {
-        $resource = Runway::findResourceByModel($this->resource);
-
-        $with = $resource->blueprint()
+        $with = $this->resource->runwayResource()->blueprint()
             ->fields()->all()
             ->filter->isRelationship()->keys()->all();
 
