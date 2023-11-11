@@ -24,10 +24,9 @@ class ApiResource extends JsonResource
             ->undot()
             ->all();
 
-        return array_merge([
+        return array_merge($augmentedArray, [
             $this->resource->getKeyName() => $this->resource->getKey(),
-        ], $augmentedArray
-        );
+        ]);
     }
 
     /**
