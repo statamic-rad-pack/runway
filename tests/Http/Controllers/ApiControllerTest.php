@@ -74,6 +74,20 @@ class ApiControllerTest extends TestCase
     }
 
     /** @test */
+    public function gets_a_resource_model_with_belongs_to_relationship()
+    {
+        $post = Post::factory()->create();
+
+        $this
+            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'record' => $post->id]))
+            ->assertOk()
+            ->assertSee(['data'])
+            ->assertJsonPath('data.id', $post->id)
+            ->assertJsonPath('data.author_id.id', $post->author->id)
+            ->assertJsonPath('data.author_id.name', $post->author->name);
+    }
+
+    /** @test */
     public function returns_not_found_on_a_model_that_does_not_exist()
     {
         $this
