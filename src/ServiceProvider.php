@@ -86,7 +86,7 @@ class ServiceProvider extends AddonServiceProvider
             $this->registerPolicies();
             $this->registerNavigation();
             $this->bootGraphQl();
-            $this->bootRestApi();
+            $this->bootApi();
 
             SearchProvider::register();
             $this->bootModelEventListeners();
@@ -166,7 +166,7 @@ class ServiceProvider extends AddonServiceProvider
             });
     }
 
-    protected function bootRestApi()
+    protected function bootApi()
     {
         if (config('statamic.api.enabled')) {
             Route::middleware([
