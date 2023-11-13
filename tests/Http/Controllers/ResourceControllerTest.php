@@ -460,11 +460,11 @@ class ResourceControllerTest extends TestCase
                 'fields' => [
                     [
                         'handle' => 'label',
-                        'field' => [ 'type' => 'text' ],
+                        'field' => ['type' => 'text'],
                     ],
                     [
                         'handle' => 'url',
-                        'field' => [ 'type' => 'text' ],
+                        'field' => ['type' => 'text'],
                     ],
                 ],
             ],
