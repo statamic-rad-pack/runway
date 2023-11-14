@@ -454,7 +454,7 @@ class ResourceControllerTest extends TestCase
         $fields = Config::get('runway.resources.'.Post::class.'.blueprint.sections.main.fields');
 
         $fields[] = [
-            'handle' => 'values->external_links',
+            'handle' => 'external_links->links',
             'field' => [
                 'type' => 'grid',
                 'fields' => [
@@ -475,9 +475,8 @@ class ResourceControllerTest extends TestCase
 
         $post = $this->postFactory(
             attributes: [
-                'values' => [
-                    'alt_title' => 'Claus is venturing out',
-                    'external_links' => [
+                'external_links' => [
+                    'links' => [
                         [
                             'label' => 'NORAD Santa Tracker',
                             'url' => 'noradsanta.org',
@@ -491,15 +490,14 @@ class ResourceControllerTest extends TestCase
             ],
         );
 
-        $post->mergeCasts(['values' => 'object']);
-
         $user = User::make()->makeSuper()->save();
+        $post->mergeCasts(['values' => 'object']);
 
         $this->actingAs($user)
             ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))
             ->assertOk()
-            ->assertSee($post->values->external_links[0]->label)
-            ->assertSee($post->values->external_links[1]->url);
+            ->assertSee($post->external_links->links[0]->label)
+            ->assertSee($post->external_links->links[1]->url);
     }
 
     /** @test */

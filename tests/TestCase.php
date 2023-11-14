@@ -273,7 +273,7 @@ class Post extends Model
     use HasRunwayResource, RunwayRoutes;
 
     protected $fillable = [
-        'title', 'slug', 'body', 'values', 'author_id', 'sort_order',
+        'title', 'slug', 'body', 'values', 'external_links', 'author_id', 'sort_order',
     ];
 
     protected $appends = [
@@ -282,6 +282,7 @@ class Post extends Model
 
     protected $casts = [
         'values' => 'array',
+        'external_links' => 'object',
     ];
 
     public function scopeFood($query)
