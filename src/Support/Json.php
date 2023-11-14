@@ -10,7 +10,6 @@ class Json
             return false;
         }
 
-        return is_array(json_decode($value, true))
-            || is_object(json_decode($value));
+        return is_array(json_decode($value, true));
     }
 }
