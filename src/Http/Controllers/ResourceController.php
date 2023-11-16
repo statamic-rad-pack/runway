@@ -174,6 +174,10 @@ class ResourceController extends CpController
             throw new NotFoundHttpException();
         }
 
+        $casts = collect($record->getCasts())->map(fn ($value) => $value === 'object' ? 'array' : $value)->all();
+
+        $record->mergeCasts($casts);
+
         $values = [];
         $blueprintFieldKeys = $resource->blueprint()->fields()->all()->keys()->toArray();
 

@@ -6,7 +6,7 @@ class Json
 {
     public static function isJson($value)
     {
-        if (is_array($value)) {
+        if (is_array($value) || is_object($value)) {
             return false;
         }
 
