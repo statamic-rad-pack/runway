@@ -43,6 +43,22 @@ return [
                                 ],
                             ],
                             [
+                                'handle' => 'external_links->links',
+                                'field' => [
+                                    'type' => 'grid',
+                                    'fields' => [
+                                        [
+                                            'handle' => 'label',
+                                            'field' => ['type' => 'text'],
+                                        ],
+                                        [
+                                            'handle' => 'url',
+                                            'field' => ['type' => 'text'],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            [
                                 'handle' => 'excerpt',
                                 'field' => [
                                     'type' => 'textarea',

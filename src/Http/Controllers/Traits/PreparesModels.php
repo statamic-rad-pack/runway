@@ -21,6 +21,13 @@ trait PreparesModels
     {
         $blueprint = $resource->blueprint();
 
+        // Re-casts any `object` casts to `array`.
+        $model->mergeCasts(
+            collect($model->getCasts())
+                ->map(fn ($value) => $value === 'object' ? 'array' : $value)
+                ->toArray()
+        );
+
         return $blueprint->fields()->all()
             ->mapWithKeys(function (Field $field) use ($model) {
                 $value = data_get($model, Str::replace('->', '.', $field->handle()));
