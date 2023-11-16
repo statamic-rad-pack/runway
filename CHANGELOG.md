@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v5.5.0 (2023-11-16)
+
+### What's new
+
+* Columns cast as `object` in the Eloquent model will be treated by Runway as an `array` #370
+
 ## v5.4.1 (2023-11-03)
 
 ### What's fixed
