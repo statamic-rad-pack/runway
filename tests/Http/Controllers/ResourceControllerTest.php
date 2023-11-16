@@ -448,6 +448,61 @@ class ResourceControllerTest extends TestCase
             ->assertSee($post->body);
     }
 
+    /**
+     * @test
+     * https://github.com/duncanmcclean/runway/pull/370
+     */
+    public function can_edit_resource_with_nested_field_cast_to_object_in_model()
+    {
+        $fields = Config::get('runway.resources.'.Post::class.'.blueprint.sections.main.fields');
+
+        $fields[] = [
+            'handle' => 'external_links->links',
+            'field' => [
+                'type' => 'grid',
+                'fields' => [
+                    [
+                        'handle' => 'label',
+                        'field' => ['type' => 'text'],
+                    ],
+                    [
+                        'handle' => 'url',
+                        'field' => ['type' => 'text'],
+                    ],
+                ],
+            ],
+        ];
+
+        Config::set('runway.resources.'.Post::class.'.blueprint.sections.main.fields', $fields);
+        Runway::discoverResources();
+
+        $post = $this->postFactory(
+            attributes: [
+                'external_links' => [
+                    'links' => [
+                        [
+                            'label' => 'NORAD Santa Tracker',
+                            'url' => 'noradsanta.org',
+                        ],
+                        [
+                            'label' => 'North Pole HQ',
+                            'url' => 'northpole.com',
+                        ],
+                    ],
+                ],
+            ],
+        );
+
+        $user = User::make()->makeSuper()->save();
+        $post->mergeCasts(['values' => 'object']);
+
+        $this->actingAs($user)
+            ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))
+            ->assertOk()
+            ->assertSee($post->external_links->links[0]->label)
+            ->assertSee($post->external_links->links[1]->url);
+    }
+
     /** @test */
     public function can_update_resource()
     {
