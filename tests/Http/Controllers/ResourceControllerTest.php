@@ -491,7 +491,6 @@ class ResourceControllerTest extends TestCase
         );
 
         $user = User::make()->makeSuper()->save();
-        $post->mergeCasts(['values' => 'object']);
 
         $this->actingAs($user)
             ->get(cp_route('runway.edit', ['resourceHandle' => 'post', 'record' => $post->id]))

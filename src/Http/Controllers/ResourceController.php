@@ -175,7 +175,6 @@ class ResourceController extends CpController
         }
 
         $casts = collect($record->getCasts())->map(fn ($value) => $value === 'object' ? 'array' : $value)->all();
-
         $record->mergeCasts($casts);
 
         $values = [];
