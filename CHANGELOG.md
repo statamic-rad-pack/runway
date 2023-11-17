@@ -6,7 +6,7 @@
 
 ### What's new
 
-* Columns cast as `object` in the Eloquent model will be treated by Runway as an `array` #370
+* Columns cast as `object` in the Eloquent model will be treated by Runway as an `array` #370 by @caseydwyer
 
 ## v5.4.1 (2023-11-03)
 
