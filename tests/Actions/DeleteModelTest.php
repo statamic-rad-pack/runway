@@ -43,7 +43,8 @@ class DeleteModelTest extends TestCase
     /** @test */
     public function is_not_visible_to_eloquent_model_without_a_runway_resource()
     {
-        $model = new class extends Model {
+        $model = new class extends Model
+        {
             protected $table = 'posts';
         };
 
