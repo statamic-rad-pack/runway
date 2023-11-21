@@ -15,6 +15,7 @@ use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
 use Statamic\Facades\Permission;
 use Statamic\Facades\Search;
+use Statamic\Facades\Blueprint;
 use Statamic\Http\Middleware\API\SwapExceptionHandler as SwapAPIExceptionHandler;
 use Statamic\Http\Middleware\RequireStatamicPro;
 use Statamic\Providers\AddonServiceProvider;
@@ -79,12 +80,14 @@ class ServiceProvider extends AddonServiceProvider
         ], 'runway-config');
 
         Statamic::booted(function () {
+
             Runway::discoverResources();
 
             $this->registerRouteBindings();
             $this->registerPermissions();
             $this->registerPolicies();
             $this->registerNavigation();
+            $this->registerBlueprints();
             $this->bootGraphQl();
             $this->bootApi();
 
@@ -148,6 +151,11 @@ class ServiceProvider extends AddonServiceProvider
                         ->can('view', $resource);
                 });
         });
+    }
+
+    protected function registerBlueprints()
+    {
+        Blueprint::addNamespace('runway', base_path('resources/blueprints/runway'));
     }
 
     protected function bootGraphQl()

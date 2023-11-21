@@ -26,34 +26,10 @@ class Runway
                     new \Exception(__('The HasRunwayResource trait is missing from the [:model] model.', ['model' => $model]))
                 );
 
-                throw_if(
-                    ! $config->has('blueprint'),
-                    new \Exception(__('The [:model] model is missing a blueprint.', ['model' => $model]))
-                );
-
-                if (is_string($config->get('blueprint'))) {
-                    try {
-                        $blueprint = Blueprint::find($config['blueprint']);
-                    } catch (\Exception $e) {
-                        // If we're running in a console & the blueprint doesn't exist, let's ignore the resource.
-                        // https://github.com/duncanmcclean/runway/pull/320
-                        if (app()->runningInConsole()) {
-                            return [$handle => null];
-                        }
-
-                        throw $e;
-                    }
-                }
-
-                if (is_array($config->get('blueprint'))) {
-                    $blueprint = Blueprint::make()->setHandle($handle)->setContents($config['blueprint']);
-                }
-
                 $resource = new Resource(
                     handle: $handle,
                     model: $model instanceof Model ? $model : new $model(),
                     name: $config['name'] ?? Str::title($handle),
-                    blueprint: $blueprint,
                     config: $config,
                 );
 

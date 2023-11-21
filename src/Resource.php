@@ -18,7 +18,6 @@ class Resource
         protected string $handle,
         protected Model $model,
         protected string $name,
-        protected Blueprint $blueprint,
         protected Collection $config
     ) {
     }
@@ -50,7 +49,13 @@ class Resource
 
     public function blueprint(): Blueprint
     {
-        return $this->blueprint;
+        $blueprint = Blueprint::find("runway::{$this->handle}");
+
+        if (! $blueprint) {
+            $blueprint = Blueprint::make($this->handle)->setNamespace('runway')->save();
+        }
+
+        return $blueprint;
     }
 
     public function config(): Collection
