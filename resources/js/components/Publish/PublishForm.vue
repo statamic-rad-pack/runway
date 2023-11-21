@@ -16,6 +16,7 @@
             <div v-if="!readOnly" class="hidden md:flex items-center">
                 <save-button-options
                     v-if="!readOnly"
+                    :show-options="!isInline"
                     :preferences-prefix="preferencesPrefix"
                 >
                     <button
