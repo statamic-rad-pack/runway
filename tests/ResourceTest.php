@@ -6,7 +6,6 @@ use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Fieldset;
-use Statamic\Fields\Blueprint as FieldsBlueprint;
 
 class ResourceTest extends TestCase
 {
@@ -120,6 +119,35 @@ class ResourceTest extends TestCase
         $plural = $resource->plural();
 
         $this->assertEquals($plural, 'Bibliotheken');
+    }
+
+    /** @test */
+    public function can_get_blueprint()
+    {
+        $resource = Runway::findResource('post');
+
+        $blueprint = $resource->blueprint();
+
+        $this->assertTrue($blueprint instanceof \Statamic\Fields\Blueprint);
+        $this->assertSame('runway', $blueprint->namespace());
+        $this->assertSame('post', $blueprint->handle());
+    }
+
+    /** @test */
+    public function can_create_blueprint_if_one_does_not_exist()
+    {
+        $resource = Runway::findResource('post');
+
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturnNull()->once();
+        Blueprint::shouldReceive('find')->with('runway.post')->andReturnNull()->once();
+        Blueprint::shouldReceive('make')->with('post')->andReturn((new \Statamic\Fields\Blueprint)->setHandle('post'))->once();
+        Blueprint::shouldReceive('save')->andReturnSelf()->once();
+
+        $blueprint = $resource->blueprint();
+
+        $this->assertTrue($blueprint instanceof \Statamic\Fields\Blueprint);
+        $this->assertSame('runway', $blueprint->namespace());
+        $this->assertSame('post', $blueprint->handle());
     }
 
     /** @test */
