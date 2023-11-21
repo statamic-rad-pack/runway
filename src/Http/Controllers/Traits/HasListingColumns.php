@@ -3,7 +3,9 @@
 namespace DoubleThreeDigital\Runway\Http\Controllers\Traits;
 
 use DoubleThreeDigital\Runway\Resource;
+use Illuminate\Support\Arr;
 use Statamic\Facades\User;
+use Statamic\Fields\Field;
 
 trait HasListingColumns
 {
@@ -23,14 +25,11 @@ trait HasListingColumns
 
     protected function getPrimaryColumn(Resource $resource): string
     {
-        if (isset(User::current()->preferences()['runway'][$resource->handle()]['columns'])) {
+        if (Arr::has(User::current()->preferences(), "runway.{$resource->handle()}.columns")) {
             return collect($resource->blueprint()->fields()->all())
-                ->filter(fn ($field) => in_array($field->handle(), User::current()->preferences()['runway'][$resource->handle()]['columns']))
-                ->reject(function ($field) {
-                    return $field->fieldtype()->indexComponent() === 'relationship'
-                        || $field->fieldtype()->indexComponent() === 'hasmany-related-item';
-                })
-                ->map(fn ($field) => $field->handle())
+                ->filter(fn (Field $field) => in_array(Arr::get(User::current()->preferences(), "runway.{$resource->handle()}.columns"), $field->handle()))
+                ->reject(fn (Field $field) => $field->fieldtype()->indexComponent() === 'relationship')
+                ->map->handle()
                 ->first();
         }
 

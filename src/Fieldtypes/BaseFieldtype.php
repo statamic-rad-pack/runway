@@ -206,8 +206,8 @@ class BaseFieldtype extends Relationship
 
         $results = collect($values)
             ->map(function ($item) use ($resource) {
-                if (is_array($item) && isset($item[$resource->primaryKey()])) {
-                    return $item[$resource->primaryKey()];
+                if (is_array($item) && Arr::has($item, $resource->primaryKey())) {
+                    return Arr::get($item, $resource->primaryKey());
                 }
 
                 return $item;

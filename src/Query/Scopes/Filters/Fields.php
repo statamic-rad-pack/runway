@@ -3,6 +3,7 @@
 namespace DoubleThreeDigital\Runway\Query\Scopes\Filters;
 
 use DoubleThreeDigital\Runway\Runway;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Statamic\Fields\Field;
 use Statamic\Query\Scopes\Filters\Fields as BaseFieldsFilter;
@@ -19,9 +20,7 @@ class Fields extends BaseFieldsFilter
     public function apply($query, $values): void
     {
         $this->getFields()
-            ->filter(function (Field $field, string $handle) use ($values) {
-                return isset($values[$handle]);
-            })
+            ->filter(fn (Field $field, string $handle) => Arr::has($values, $handle))
             ->each(function (Field $field, string $handle) use ($query, $values) {
                 $filter = $field->fieldtype()->filter();
                 $values = $filter->fields()->addValues($values[$handle])->process()->values();
