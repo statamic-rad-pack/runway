@@ -2,7 +2,6 @@
 
 namespace DoubleThreeDigital\Runway\Tests\Console\Commands;
 
-use DoubleThreeDigital\Runway\Models\RunwayUri;
 use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
