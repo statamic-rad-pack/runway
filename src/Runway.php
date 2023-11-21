@@ -16,9 +16,7 @@ class Runway
     {
         static::$resources = collect(config('runway.resources'))
             ->mapWithKeys(function ($config, $model) {
-                $blueprint = null;
                 $config = collect($config);
-
                 $handle = $config->get('handle', Str::lower(class_basename($model)));
 
                 throw_if(
