@@ -10,7 +10,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\User;
-use Statamic\Fields\Blueprint;
 
 class ResourceListingControllerTest extends TestCase
 {

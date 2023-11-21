@@ -172,7 +172,7 @@ class ResourceTest extends TestCase
                                 ['handle' => 'thumbnail', 'field' => ['type' => 'assets', 'listable' => false]],
                                 ['import' => 'seo'],
                             ],
-                        ]
+                        ],
                     ],
                 ],
             ],

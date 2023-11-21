@@ -4,10 +4,7 @@ namespace DoubleThreeDigital\Runway\UpdateScripts;
 
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Statamic\Facades\Blueprint;
-use Statamic\Facades\Yaml;
 use Statamic\Fields\Blueprint as FieldsBlueprint;
 use Statamic\UpdateScripts\UpdateScript;
 
