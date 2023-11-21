@@ -2,7 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Actions;
 
-use DoubleThreeDigital\Runway\Resource;
+use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Actions\Action;
@@ -18,9 +18,13 @@ class DeleteModel extends Action
 
     public function visibleTo($item)
     {
-        return $item instanceof Model
-            && ($resource = Runway::findResourceByModel($item)) instanceof Resource
-            && $resource->readOnly() !== true;
+        try {
+            $resource = Runway::findResourceByModel($item);
+        } catch (ResourceNotFound $e) {
+            return false;
+        }
+
+        return $item instanceof Model && $resource->readOnly() !== true;
     }
 
     public function visibleToBulk($items)
