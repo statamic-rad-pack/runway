@@ -132,13 +132,23 @@ class ResourceTest extends TestCase
             ],
         ])->save();
 
-        $blueprint = Blueprint::makeFromFields([
-            ['handle' => 'title', 'field' => ['type' => 'text', 'listable' => true]],
-            ['handle' => 'summary', 'field' => ['type' => 'textarea', 'listable' => true]],
-            ['handle' => 'body', 'field' => ['type' => 'markdown', 'listable' => 'hidden']],
-            ['handle' => 'thumbnail', 'field' => ['type' => 'assets', 'listable' => false]],
-            ['import' => 'seo'],
-        ])->setHandle('post')->setNamespace('runway');
+        $blueprint = Blueprint::make()->setContents([
+            'tabs' => [
+                'main' => [
+                    'sections' => [
+                        [
+                            'fields' => [
+                                ['handle' => 'title', 'field' => ['type' => 'text', 'listable' => true]],
+                                ['handle' => 'summary', 'field' => ['type' => 'textarea', 'listable' => true]],
+                                ['handle' => 'body', 'field' => ['type' => 'markdown', 'listable' => 'hidden']],
+                                ['handle' => 'thumbnail', 'field' => ['type' => 'assets', 'listable' => false]],
+                                ['import' => 'seo'],
+                            ],
+                        ]
+                    ],
+                ],
+            ],
+        ]);
 
         Blueprint::shouldReceive('find')->with('runway::post')->andReturn($blueprint);
 

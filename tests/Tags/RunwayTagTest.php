@@ -9,6 +9,7 @@ use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Antlers;
+use Statamic\Facades\Blueprint;
 use Statamic\Fields\Value;
 
 class RunwayTagTest extends TestCase
@@ -310,6 +311,9 @@ class RunwayTagTest extends TestCase
     /** @test */
     public function can_get_records_with_studly_case_resource_handle()
     {
+        $postBlueprint = Blueprint::find('runway::post');
+        Blueprint::shouldReceive('find')->with('runway::BlogPosts')->andReturn($postBlueprint);
+
         Config::set('runway.resources.'.Post::class.'.handle', 'BlogPosts');
 
         Runway::discoverResources();

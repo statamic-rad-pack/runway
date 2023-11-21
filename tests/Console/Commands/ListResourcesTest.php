@@ -16,10 +16,10 @@ class ListResourcesTest extends TestCase
         $this
             ->artisan('runway:resources')
             ->expectsTable(
-                ['Handle', 'Model', 'Blueprint', 'Route'],
+                ['Handle', 'Model', 'Route'],
                 [
-                    ['post', Post::class, 'post', '/posts/{{ slug }}'],
-                    ['author', Author::class, 'author', 'N/A'],
+                    ['post', Post::class, '/posts/{{ slug }}'],
+                    ['author', Author::class, 'N/A'],
                 ]
             );
     }
