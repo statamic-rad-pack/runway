@@ -10,8 +10,6 @@ use Statamic\Facades\GraphQL;
 
 class HasManyFieldtype extends BaseFieldtype
 {
-    protected $itemComponent = 'hasmany-related-item';
-
     protected function configFieldItems(): array
     {
         $config = [
