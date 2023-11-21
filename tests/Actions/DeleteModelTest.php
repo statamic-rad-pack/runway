@@ -110,6 +110,8 @@ class DeleteModelTest extends TestCase
         $authorize = (new DeleteModel())->authorize($user, Post::factory()->create());
 
         $this->assertTrue($authorize);
+
+        Role::find('editor')->delete();
     }
 
     /** @test */
