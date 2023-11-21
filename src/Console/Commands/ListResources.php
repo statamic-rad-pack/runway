@@ -53,7 +53,7 @@ class ListResources extends Command
                 $resource->model()::class,
                 optional($resource->blueprint())->namespace().optional($resource->blueprint())->handle(),
                 $resource->hasRouting() ? $resource->route() : 'N/A',
-            ])->toArray()
+            ])->values()->toArray()
         );
     }
 }
