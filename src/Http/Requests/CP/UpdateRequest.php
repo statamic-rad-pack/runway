@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Http\Requests;
+namespace DoubleThreeDigital\Runway\Http\Requests\CP;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Statamic\Facades\User;

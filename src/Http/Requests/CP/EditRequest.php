@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Http\Requests;
+namespace DoubleThreeDigital\Runway\Http\Requests\CP;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Statamic\Facades\User;
@@ -12,10 +12,5 @@ class EditRequest extends FormRequest
         $resource = $this->route('resource');
 
         return User::current()->can('edit', $resource);
-    }
-
-    public function rules()
-    {
-        return [];
     }
 }

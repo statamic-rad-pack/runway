@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Http\Controllers\Traits;
+namespace DoubleThreeDigital\Runway\Http\Controllers\CP\Traits;
 
 use DoubleThreeDigital\Runway\Resource;
 use Illuminate\Support\Arr;

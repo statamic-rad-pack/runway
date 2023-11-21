@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Http\Controllers;
+namespace DoubleThreeDigital\Runway\Http\Controllers\CP;
 
 use DoubleThreeDigital\Runway\Resource;
 use Illuminate\Http\Request;

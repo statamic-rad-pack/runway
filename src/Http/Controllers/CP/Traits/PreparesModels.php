@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Http\Controllers\Traits;
+namespace DoubleThreeDigital\Runway\Http\Controllers\CP\Traits;
 
 use Carbon\CarbonInterface;
 use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
@@ -8,7 +8,6 @@ use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;

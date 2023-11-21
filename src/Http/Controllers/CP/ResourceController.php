@@ -1,14 +1,14 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Http\Controllers;
+namespace DoubleThreeDigital\Runway\Http\Controllers\CP;
 
 use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
 use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
-use DoubleThreeDigital\Runway\Http\Requests\CreateRequest;
-use DoubleThreeDigital\Runway\Http\Requests\EditRequest;
-use DoubleThreeDigital\Runway\Http\Requests\IndexRequest;
-use DoubleThreeDigital\Runway\Http\Requests\StoreRequest;
-use DoubleThreeDigital\Runway\Http\Requests\UpdateRequest;
+use DoubleThreeDigital\Runway\Http\Requests\CP\CreateRequest;
+use DoubleThreeDigital\Runway\Http\Requests\CP\EditRequest;
+use DoubleThreeDigital\Runway\Http\Requests\CP\IndexRequest;
+use DoubleThreeDigital\Runway\Http\Requests\CP\StoreRequest;
+use DoubleThreeDigital\Runway\Http\Requests\CP\UpdateRequest;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Model;

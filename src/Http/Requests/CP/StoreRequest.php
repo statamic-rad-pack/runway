@@ -1,11 +1,11 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Http\Requests;
+namespace DoubleThreeDigital\Runway\Http\Requests\CP;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Statamic\Facades\User;
 
-class CreateRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     public function authorize()
     {
@@ -16,10 +16,5 @@ class CreateRequest extends FormRequest
         }
 
         return User::current()->can('create', $resource);
-    }
-
-    public function rules()
-    {
-        return [];
     }
 }

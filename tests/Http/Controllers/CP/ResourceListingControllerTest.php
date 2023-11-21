@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Http\Controllers;
+namespace DoubleThreeDigital\Runway\Tests\Http\Controllers\CP;
 
 use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
