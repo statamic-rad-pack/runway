@@ -6,6 +6,7 @@ use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
+use Statamic\Facades\Blueprint;
 use Statamic\Facades\Config;
 use Statamic\Facades\User;
 
@@ -276,21 +277,16 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_edit_resource_with_simple_date_field()
     {
-        $fields = Config::get('runway.resources.'.Post::class.'.blueprint.sections.main.fields');
+        $postBlueprint = Blueprint::find('runway::post');
 
-        $fields[] = [
-            'handle' => 'created_at',
-            'field' => [
-                'type' => 'date',
-                'mode' => 'single',
-                'time_enabled' => false,
-                'time_required' => false,
-            ],
-        ];
-
-        Config::set('runway.resources.'.Post::class.'.blueprint.sections.main.fields', $fields);
-
-        Runway::discoverResources();
+        Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->ensureField('created_at', [
+            'type' => 'date',
+            'mode' => 'single',
+            'time_enabled' => false,
+            'time_required' => false,
+        ]));
 
         $user = User::make()->makeSuper()->save();
         $post = Post::factory()->create();
@@ -320,22 +316,17 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_edit_resource_with_date_field_with_default_format()
     {
-        $fields = Config::get('runway.resources.'.Post::class.'.blueprint.sections.main.fields');
+        $postBlueprint = Blueprint::find('runway::post');
 
-        $fields[] = [
-            'handle' => 'created_at',
-            'field' => [
-                'type' => 'date',
-                'mode' => 'single',
-                'format' => 'Y-m-d',
-                'time_enabled' => false,
-                'time_required' => false,
-            ],
-        ];
-
-        Config::set('runway.resources.'.Post::class.'.blueprint.sections.main.fields', $fields);
-
-        Runway::discoverResources();
+        Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->ensureField('created_at', [
+            'type' => 'date',
+            'mode' => 'single',
+            'format' => 'Y-m-d',
+            'time_enabled' => false,
+            'time_required' => false,
+        ]));
 
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
@@ -365,22 +356,17 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_edit_resource_with_date_field_with_custom_format()
     {
-        $fields = Config::get('runway.resources.'.Post::class.'.blueprint.sections.main.fields');
+        $postBlueprint = Blueprint::find('runway::post');
 
-        $fields[] = [
-            'handle' => 'created_at',
-            'field' => [
-                'type' => 'date',
-                'mode' => 'single',
-                'format' => 'Y-m-d H:i',
-                'time_enabled' => true,
-                'time_required' => false,
-            ],
-        ];
-
-        Config::set('runway.resources.'.Post::class.'.blueprint.sections.main.fields', $fields);
-
-        Runway::discoverResources();
+        Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->ensureField('created_at', [
+            'type' => 'date',
+            'mode' => 'single',
+            'format' => 'Y-m-d H:i',
+            'time_enabled' => true,
+            'time_required' => false,
+        ]));
 
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
