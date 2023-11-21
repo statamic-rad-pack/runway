@@ -157,6 +157,8 @@ class ServiceProvider extends AddonServiceProvider
     protected function registerBlueprints()
     {
         Blueprint::addNamespace('runway', base_path('resources/blueprints/runway'));
+
+        Runway::allResources()->each(fn (Resource $resource) => $resource->blueprint());
     }
 
     protected function bootGraphQl()
