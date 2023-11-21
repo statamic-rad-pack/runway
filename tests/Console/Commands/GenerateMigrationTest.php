@@ -114,7 +114,9 @@ class GenerateMigrationTest extends TestCase
 
         Schema::shouldReceive('hasTable')
             ->with('foods')
-            ->andReturn(true);
+            ->andReturn(false);
+
+        Schema::shouldReceive('dropIfExists');
 
         $this
             ->artisan('runway:generate-migrations', [
