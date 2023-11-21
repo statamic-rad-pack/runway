@@ -3,18 +3,10 @@
 namespace DoubleThreeDigital\Runway\Tests\Console\Commands;
 
 use DoubleThreeDigital\Runway\Models\RunwayUri;
-use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
 use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
-use DoubleThreeDigital\Runway\Traits\HasRunwayResource;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Schema;
-use Spatie\TestTime\TestTime;
-use SplFileInfo;
 
 class RebuildUriCacheTest extends TestCase
 {
@@ -75,7 +67,7 @@ class RebuildUriCacheTest extends TestCase
                 'You are about to rebuild your entire URI cache. This may take part of your site down while running. Are you sure you want to continue?',
                 'yes'
             )
-            ->expectsOutput("Skipping Author, routing not configured.");
+            ->expectsOutput('Skipping Author, routing not configured.');
 
         $this->assertCount(0, RunwayUri::all());
     }
