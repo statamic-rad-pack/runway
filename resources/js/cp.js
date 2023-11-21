@@ -1,5 +1,4 @@
 import RelationshipFieldtype from './components/Fieldtypes/Relationship/RelationshipFieldtype.vue'
-import RelationshipTableMode from './components/Fieldtypes/Relationship/RelationshipTableMode.vue'
 import HasManyRelatedItem from './components/Fieldtypes/HasManyRelatedItem.vue'
 import PublishForm from './components/Publish/PublishForm.vue'
 import RunwayListing from './components/Listing/RunwayListing.vue'
@@ -8,7 +7,6 @@ Statamic.$components.register(
     'runway-relationship-fieldtype',
     RelationshipFieldtype
 )
-Statamic.$components.register('relationship-table-mode', RelationshipTableMode)
 Statamic.$components.register('hasmany-related-item', HasManyRelatedItem)
 Statamic.$components.register('runway-publish-form', PublishForm)
 Statamic.$components.register('runway-listing', RunwayListing)
