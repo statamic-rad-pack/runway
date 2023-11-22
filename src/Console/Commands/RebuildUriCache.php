@@ -2,8 +2,8 @@
 
 namespace DoubleThreeDigital\Runway\Console\Commands;
 
-use DoubleThreeDigital\Runway\Routing\RunwayUri;
 use DoubleThreeDigital\Runway\Resource;
+use DoubleThreeDigital\Runway\Routing\RunwayUri;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
