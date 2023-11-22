@@ -81,24 +81,20 @@ class ServiceProvider extends AddonServiceProvider
         Statamic::booted(function () {
             Runway::discoverResources();
 
-            $this->registerRouteBindings();
-            $this->registerPermissions();
-            $this->registerPolicies();
-            $this->registerNavigation();
-            $this->bootGraphQl();
-            $this->bootApi();
-
-            SearchProvider::register();
-            $this->bootModelEventListeners();
-
-            $this->when(Runway::usesRouting(), function () {
-                $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
-                    ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
-            });
+            $this
+                ->registerRouteBindings()
+                ->registerPermissions()
+                ->registerPolicies()
+                ->registerNavigation()
+                ->registerSearchProvider()
+                ->bootGraphQl()
+                ->bootApi()
+                ->bootModelEventListeners()
+                ->bootDataRepository();
         });
     }
 
-    protected function registerRouteBindings()
+    protected function registerRouteBindings(): self
     {
         Route::bind('resource', function ($value) {
             if (! Statamic::isCpRoute()) {
@@ -107,9 +103,11 @@ class ServiceProvider extends AddonServiceProvider
 
             return Runway::findResource($value);
         });
+
+        return $this;
     }
 
-    protected function registerPermissions()
+    protected function registerPermissions(): self
     {
         foreach (Runway::allResources() as $resource) {
             Permission::register("view {$resource->handle()}", function ($permission) use ($resource) {
@@ -128,14 +126,18 @@ class ServiceProvider extends AddonServiceProvider
                     ]);
             })->group('Runway');
         }
+
+        return $this;
     }
 
-    protected function registerPolicies()
+    protected function registerPolicies(): self
     {
         Gate::policy(Resource::class, ResourcePolicy::class);
+
+        return $this;
     }
 
-    protected function registerNavigation()
+    protected function registerNavigation(): self
     {
         Nav::extend(function ($nav) {
             Runway::allResources()
@@ -148,9 +150,11 @@ class ServiceProvider extends AddonServiceProvider
                         ->can('view', $resource);
                 });
         });
+
+        return $this;
     }
 
-    protected function bootGraphQl()
+    protected function bootGraphQl(): self
     {
         Runway::allResources()
             ->each(function (Resource $resource) {
@@ -168,9 +172,11 @@ class ServiceProvider extends AddonServiceProvider
                 GraphQL::addQuery("runway_graphql_queries_{$resource->handle()}_index");
                 GraphQL::addQuery("runway_graphql_queries_{$resource->handle()}_show");
             });
+
+        return $this;
     }
 
-    protected function bootApi()
+    protected function bootApi(): self
     {
         if (config('statamic.api.enabled')) {
             Route::middleware([
@@ -187,9 +193,18 @@ class ServiceProvider extends AddonServiceProvider
                     });
             });
         }
+
+        return $this;
     }
 
-    protected function bootModelEventListeners()
+    protected function registerSearchProvider(): self
+    {
+        SearchProvider::register();
+
+        return $this;
+    }
+
+    protected function bootModelEventListeners(): self
     {
         Runway::allResources()
             ->map(fn ($resource) => get_class($resource->model()))
@@ -197,9 +212,21 @@ class ServiceProvider extends AddonServiceProvider
                 Event::listen('eloquent.saved: '.$class, fn ($model) => Search::updateWithinIndexes(new Searchable($model)));
                 Event::listen('eloquent.deleted: '.$class, fn ($model) => Search::deleteFromIndexes(new Searchable($model)));
             });
+
+        return $this;
     }
 
-    protected function permissionLabel($permission, $resource)
+    protected function bootDataRepository(): self
+    {
+        if (Runway::usesRouting()) {
+            $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
+                ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
+        }
+
+        return $this;
+    }
+
+    protected function permissionLabel($permission, $resource): string
     {
         $translationKey = "runway.permissions.{$permission}";
 
