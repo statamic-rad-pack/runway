@@ -2,7 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Routing\Traits;
 
-use DoubleThreeDigital\Runway\Models\RunwayUri;
+use DoubleThreeDigital\Runway\Routing\RunwayUri;
 use DoubleThreeDigital\Runway\Routing\RoutingModel;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
