@@ -8,7 +8,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Console\RunsInPlease;
-use Statamic\Facades\Blueprint;
 
 class GenerateBlueprint extends Command
 {

@@ -6,8 +6,8 @@ use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Console\Command;
 use Statamic\Console\RunsInPlease;
-use Statamic\Fields\Blueprint as FieldsBlueprint;
 use Statamic\Facades\Blueprint;
+use Statamic\Fields\Blueprint as FieldsBlueprint;
 
 class MigrateBlueprints extends Command
 {
