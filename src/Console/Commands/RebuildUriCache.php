@@ -2,7 +2,7 @@
 
 namespace DoubleThreeDigital\Runway\Console\Commands;
 
-use DoubleThreeDigital\Runway\Models\RunwayUri;
+use DoubleThreeDigital\Runway\Routing\RunwayUri;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Console\Command;

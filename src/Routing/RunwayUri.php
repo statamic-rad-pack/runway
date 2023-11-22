@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Models;
+namespace DoubleThreeDigital\Runway\Routing;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
