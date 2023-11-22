@@ -233,13 +233,11 @@ class GenerateBlueprint extends Command
                 }
             });
 
-        Blueprint::make($resource->handle())
-            ->setContents([
-                'tabs' => [
-                    'main' => ['fields' => $mainSection],
-                    'sidebar' => ['fields' => $sidebarSection],
-                ],
-            ])
-            ->save();
+        $resource->blueprint()->setContents([
+            'tabs' => [
+                'main' => ['fields' => $mainSection],
+                'sidebar' => ['fields' => $sidebarSection],
+            ],
+        ])->save();
     }
 }
