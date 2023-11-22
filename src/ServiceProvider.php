@@ -33,6 +33,7 @@ class ServiceProvider extends AddonServiceProvider
         Console\Commands\GenerateBlueprint::class,
         Console\Commands\GenerateMigration::class,
         Console\Commands\ListResources::class,
+        Console\Commands\MigrateBlueprints::class,
         Console\Commands\RebuildUriCache::class,
     ];
 
