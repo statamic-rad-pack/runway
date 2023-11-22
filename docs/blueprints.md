@@ -4,28 +4,13 @@ title: 'Blueprints'
 
 As explained in the [Statamic Docs](https://statamic.dev/blueprints#content), Blueprints are a key component to the content modeling process. They let you define the fields that should be available in the Control Panel and the way your data is stored.
 
-### Creating & managing blueprints
+## Creating & managing blueprints
 
-Unfortunately, it's not yet possible to manage Runway blueprints in the Control Panel as there's no way for addons to "register" their own blueprints.
+Every resource will have it's own blueprint. Just like with collections, you can manage the blueprints in the Control Panel.
 
-In the meantime, you can create a blueprint for a collection, then move the outputted YAML file to the `resources/blueprints` directory.
+![Runway blueprints in the Control Panel](/img/runway/runway-blueprints-in-the-cp.png)
 
-:::note Note!
-Remember that the field handles in your blueprint should match up exactly with the column names in the database, otherwise bad things will happen.
-:::
-
-Now, to use the blueprint you just created, simply specify it's "namespace" (usually just its filename, minus the `.yaml` extension) as a `blueprint` key in your resources's config array:
-
-```php
-'resources' => [
-	\App\Models\Order::class => [
-	    'name' => 'Orders',
-		'blueprint' => 'order',
-	],
-],
-```
-
-If you want to store your resource's blueprint inside a directory, like `resources/blueprints/runway`, you'll need to specify the blueprint as `runway.blueprint_name`.
+When configuring fields, make sure that the field handles in your blueprint should match up *exactly* with the column names in the database, otherwise bad things will happen. You'll also want to ensure the database column type matches the fieldtype you're trying to use (see [Supported Fieldtypes](#supported-fieldtypes)).
 
 ## Supported Fieldtypes
 
@@ -76,15 +61,7 @@ Float|`float`|
 
 ## Nesting fields inside JSON columns
 
-To avoid creating a migration for every new field you add to a blueprint, fields can be stored within a JSON column. To do so, use the `->` symbol within the field handle:
-
-```yaml
-fields:
-  -
-    handle: 'values->excerpt'
-    field:
-      type: text
-```
+To avoid creating a migration for every new field you add to a blueprint, fields can be stored within JSON columns. Simply use `->` within the field handle, like `values->excerpt`.
 
 Your table will need to have a suitable column:
 
@@ -161,12 +138,6 @@ public function fullName(): Attribute
 }
 ```
 
-Then, in your user blueprint, you'd define `visibility: computed` in the field's config, like you would normally:
+Then, in your user blueprint, you'd set the field's visibility to "Computed":
 
-```yaml
--
-    handle: full_name
-    field:
-        type: text
-        visibility: computed
-```
+![Field's visibility set to computed](/img/runway/field-visibility-computed.png)
