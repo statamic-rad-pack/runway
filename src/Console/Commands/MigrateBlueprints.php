@@ -4,7 +4,6 @@ namespace DoubleThreeDigital\Runway\Console\Commands;
 
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\UpdateScripts\MigrateBlueprints as MigrateBlueprintsUpdateScript;
 use Illuminate\Console\Command;
 use Statamic\Console\RunsInPlease;
 use Statamic\Fields\Blueprint as FieldsBlueprint;
