@@ -1,5 +1,4 @@
 import RelationshipFieldtype from './components/Fieldtypes/Relationship/RelationshipFieldtype.vue'
-import HasManyRelatedItem from './components/Fieldtypes/HasManyRelatedItem.vue'
 import PublishForm from './components/Publish/PublishForm.vue'
 import RunwayListing from './components/Listing/RunwayListing.vue'
 

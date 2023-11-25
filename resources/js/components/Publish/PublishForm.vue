@@ -184,25 +184,27 @@ export default {
         if (this.publishContainer.includes('relate-fieldtype-inline')) {
             this.values['from_inline_publish_form'] = true
 
-            this.initialBlueprint.tabs.forEach((section) => {
-                section.fields.forEach((field) => {
-                    if (
-                        field.type === 'belongs_to' &&
-                        field.resource === window.Runway.currentResource
-                    ) {
-                        let alreadyExists = this.values[field.handle].includes(
-                            window.Runway.currentRecord.id
-                        )
-
-                        if (!alreadyExists) {
-                            this.values[field.handle].push(
+            this.initialBlueprint.tabs.forEach((tab) => {
+                tab.sections.forEach((section) => {
+                    section.fields.forEach((field) => {
+                        if (
+                            field.type === 'belongs_to' &&
+                            field.resource === window.Runway.currentResource
+                        ) {
+                            let alreadyExists = this.values[field.handle].includes(
                                 window.Runway.currentRecord.id
                             )
-                            this.meta[field.handle].data = [
-                                window.Runway.currentRecord,
-                            ]
+
+                            if (!alreadyExists) {
+                                this.values[field.handle].push(
+                                    window.Runway.currentRecord.id
+                                )
+                                this.meta[field.handle].data = [
+                                    window.Runway.currentRecord,
+                                ]
+                            }
                         }
-                    }
+                    })
                 })
             })
         }
