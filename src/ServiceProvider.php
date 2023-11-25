@@ -26,6 +26,7 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $actions = [
         Actions\DeleteModel::class,
+        Actions\DuplicateModel::class,
     ];
 
     protected $commands = [
