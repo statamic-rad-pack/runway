@@ -255,7 +255,7 @@ class ResourceControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->get(cp_route('runway.edit', ['resource' => 'post', 'record' => $post->id]))
+            ->get(cp_route('runway.edit', ['resource' => 'post', 'model' => $post->id]))
             ->assertOk()
             ->assertSee($post->title)
             ->assertSee($post->body);
@@ -268,7 +268,7 @@ class ResourceControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->get(cp_route('runway.edit', ['resource' => 'post', 'record' => 12345]))
+            ->get(cp_route('runway.edit', ['resource' => 'post', 'model' => 12345]))
             ->assertNotFound()
             ->assertSee('Page Not Found');
     }
@@ -296,15 +296,15 @@ class ResourceControllerTest extends TestCase
         $post = Post::factory()->create();
 
         $resource = Runway::findResource('post');
-        $record = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
+        $model = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
 
-        $this->assertEquals($post->getKey(), $record->getKey());
+        $this->assertEquals($post->getKey(), $model->getKey());
 
         $response = $this
             ->actingAs($user)
             ->get(cp_route('runway.edit', [
                 'resource' => 'post',
-                'record' => $post->id,
+                'model' => $post->id,
             ]))
             ->assertOk();
 
@@ -341,15 +341,15 @@ class ResourceControllerTest extends TestCase
         $user = User::make()->makeSuper()->save();
 
         $resource = Runway::findResource('post');
-        $record = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
+        $model = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
 
-        $this->assertEquals($post->getKey(), $record->getKey());
+        $this->assertEquals($post->getKey(), $model->getKey());
 
         $response = $this
             ->actingAs($user)
             ->get(cp_route('runway.edit', [
                 'resource' => 'post',
-                'record' => $post->id,
+                'model' => $post->id,
             ]))
             ->assertOk();
 
@@ -386,15 +386,15 @@ class ResourceControllerTest extends TestCase
         $user = User::make()->makeSuper()->save();
 
         $resource = Runway::findResource('post');
-        $record = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
+        $model = $resource->model()->where($resource->routeKey(), $post->getKey())->first();
 
-        $this->assertEquals($post->getKey(), $record->getKey());
+        $this->assertEquals($post->getKey(), $model->getKey());
 
         $response = $this
             ->actingAs($user)
             ->get(cp_route('runway.edit', [
                 'resource' => 'post',
-                'record' => $post->id,
+                'model' => $post->id,
             ]))
             ->assertOk();
 
@@ -423,7 +423,7 @@ class ResourceControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->get(cp_route('runway.edit', ['resource' => 'post', 'record' => $post->id]))
+            ->get(cp_route('runway.edit', ['resource' => 'post', 'model' => $post->id]))
             ->assertOk()
             ->assertSee($post->title)
             ->assertSee($post->body)
@@ -442,7 +442,7 @@ class ResourceControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->get(cp_route('runway.edit', ['resource' => 'post', 'record' => $post->id]))
+            ->get(cp_route('runway.edit', ['resource' => 'post', 'model' => $post->id]))
             ->assertOk()
             ->assertSee($post->title)
             ->assertSee($post->body);
@@ -466,7 +466,7 @@ class ResourceControllerTest extends TestCase
         $user = User::make()->makeSuper()->save();
 
         $this->actingAs($user)
-            ->get(cp_route('runway.edit', ['resource' => 'post', 'record' => $post->id]))
+            ->get(cp_route('runway.edit', ['resource' => 'post', 'model' => $post->id]))
             ->assertOk()
             ->assertSee($post->external_links->links[0]->label)
             ->assertSee($post->external_links->links[1]->url);
@@ -480,7 +480,7 @@ class ResourceControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->patch(cp_route('runway.update', ['resource' => 'post', 'record' => $post->id]), [
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -507,7 +507,7 @@ class ResourceControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->patch(cp_route('runway.update', ['resource' => 'post', 'record' => $post->id]), [
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -536,7 +536,7 @@ class ResourceControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->patch(cp_route('runway.update', ['resource' => 'post', 'record' => $post->id]), [
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -557,7 +557,7 @@ class ResourceControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->patch(cp_route('runway.update', ['resource' => 'post', 'record' => $post->id]), [
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -585,7 +585,7 @@ class ResourceControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->patch(cp_route('runway.update', ['resource' => 'post', 'record' => $post->id]), [
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -613,7 +613,7 @@ class ResourceControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->patch(cp_route('runway.update', ['resource' => 'post', 'record' => $post->id]), [
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -641,7 +641,7 @@ class ResourceControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->patch(cp_route('runway.update', ['resource' => 'post', 'record' => $post->id]), [
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,

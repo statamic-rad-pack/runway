@@ -151,7 +151,7 @@ class YourCustomAction extends Action
 
 ## Filters
 
-Runway provides a "Fields" filter to filter records in the Control Panel based on blueprint fields.
+Runway provides a "Fields" filter to filter models in the Control Panel based on blueprint fields.
 
 ![Control Panel Filters](/img/runway/cp-filters.png)
 

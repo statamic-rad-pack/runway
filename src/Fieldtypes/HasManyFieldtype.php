@@ -77,29 +77,29 @@ class HasManyFieldtype extends BaseFieldtype
             return $data;
         }
 
-        $record = $resource->model()->firstWhere(
+        $model = $resource->model()->firstWhere(
             $resource->routeKey(),
-            request()->route('record') ?? Blink::get('RunwayRouteRecord')
+            request()->route('record') ?? Blink::get('RunwayRouteModel')
         );
 
         // If we're adding HasMany relations on a model that doesn't exist yet,
         // return a closure that will be run post-save.
-        if (! $record) {
-            return function ($resource, $record) use ($data) {
+        if (! $model) {
+            return function ($resource, $model) use ($data) {
                 $relatedResource = Runway::findResource($this->config('resource'));
-                $relatedField = $record->{$this->field()->handle()}();
+                $relatedField = $model->{$this->field()->handle()}();
 
                 // Many to many relation
                 if ($relatedField instanceof BelongsToMany) {
-                    $record->{$this->field()->handle()}()->sync($data);
+                    $model->{$this->field()->handle()}()->sync($data);
                 } else {
                     // Add anything new
                     collect($data)
-                        ->each(function ($relatedId) use ($record, $relatedResource, $relatedField) {
-                            $model = $relatedResource->model()->find($relatedId);
+                        ->each(function ($relatedId) use ($model, $relatedResource, $relatedField) {
+                            $relatedModel = $relatedResource->model()->find($relatedId);
 
-                            $model->update([
-                                $relatedField->getForeignKeyName() => $record->{$relatedResource->primaryKey()},
+                            $relatedModel->update([
+                                $relatedField->getForeignKeyName() => $model->{$relatedResource->primaryKey()},
                             ]);
                         });
                 }
@@ -108,7 +108,7 @@ class HasManyFieldtype extends BaseFieldtype
 
         $deleted = [];
         $relatedResource = Runway::findResource($this->config('resource'));
-        $relatedField = $record->{$this->field()->handle()}();
+        $relatedField = $model->{$this->field()->handle()}();
 
         // Many to many relation
         if ($relatedField instanceof BelongsToMany) {
@@ -122,29 +122,29 @@ class HasManyFieldtype extends BaseFieldtype
                     ->toArray();
             }
 
-            $record->{$this->field()->handle()}()->sync($data);
+            $model->{$this->field()->handle()}()->sync($data);
 
             return null;
         }
 
         // Delete any deleted models
         collect($relatedField->get())
-            ->reject(fn ($model) => in_array($model->id, $data))
-            ->each(function ($model) use ($relatedResource, &$deleted) {
-                $deleted[] = $model->{$relatedResource->primaryKey()};
+            ->reject(fn ($relatedModel) => in_array($relatedModel->id, $data))
+            ->each(function ($relatedModel) use ($relatedResource, &$deleted) {
+                $deleted[] = $relatedModel->{$relatedResource->primaryKey()};
 
-                $model->delete();
+                $relatedModel->delete();
             });
 
         // Add anything new
         collect($data)
             ->reject(fn ($relatedId) => $relatedField->get()->pluck($relatedResource->primaryKey())->contains($relatedId))
             ->reject(fn ($relatedId) => in_array($relatedId, $deleted))
-            ->each(function ($relatedId) use ($record, $relatedResource, $relatedField) {
-                $model = $relatedResource->model()->find($relatedId);
+            ->each(function ($relatedId) use ($model, $relatedResource, $relatedField) {
+                $relatedModel = $relatedResource->model()->find($relatedId);
 
-                $model->update([
-                    $relatedField->getForeignKeyName() => $record->{$relatedResource->primaryKey()},
+                $relatedModel->update([
+                    $relatedField->getForeignKeyName() => $model->{$relatedResource->primaryKey()},
                 ]);
             });
 
@@ -152,12 +152,13 @@ class HasManyFieldtype extends BaseFieldtype
         if ($this->config('reorderable') && $orderColumn = $this->config('order_column')) {
             collect($data)
                 ->each(function ($relatedId, $index) use ($relatedResource, $orderColumn) {
-                    $model = $relatedResource->model()->find($relatedId);
-                    if ($model->{$orderColumn} === $index) {
+                    $relatedModel = $relatedResource->model()->find($relatedId);
+
+                    if ($relatedModel->{$orderColumn} === $index) {
                         return;
                     }
 
-                    $model->update([
+                    $relatedModel->update([
                         $orderColumn => $index,
                     ]);
                 });

@@ -272,7 +272,7 @@ export default {
         },
 
         /**
-         * When creating a new model via the HasMany fieldtype, pre-fill the belongs_to field to the current record.
+         * When creating a new model via the HasMany fieldtype, pre-fill the belongs_to field to the current model.
          */
         prefillBelongsToField() {
             this.values['from_inline_publish_form'] = true
@@ -284,11 +284,11 @@ export default {
                             return field.type === 'belongs_to' || field.resource === window.Runway.currentResource;
                         })
                         .forEach((field) => {
-                            let alreadyExists = this.values[field.handle].includes(window.Runway.currentRecord.id)
+                            let alreadyExists = this.values[field.handle].includes(window.Runway.currentModel.id)
 
                             if (!alreadyExists) {
-                                this.values[field.handle].push(window.Runway.currentRecord.id)
-                                this.meta[field.handle].data = [window.Runway.currentRecord]
+                                this.values[field.handle].push(window.Runway.currentModel.id)
+                                this.meta[field.handle].data = [window.Runway.currentModel]
                             }
                         })
                 })

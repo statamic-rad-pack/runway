@@ -108,22 +108,22 @@ class RunwayTag extends Tags
         }
 
         if (! $this->params->has('as')) {
-            return $this->augmentRecords($results, $resource);
+            return $this->augmentModels($results, $resource);
         }
 
         return [
-            $this->params->get('as') => $this->augmentRecords($results, $resource),
+            $this->params->get('as') => $this->augmentModels($results, $resource),
             'paginate' => isset($paginator) ? $this->getPaginationData($paginator) : null,
             'no_results' => collect($results)->isEmpty(),
         ];
     }
 
-    protected function augmentRecords($query, Resource $resource): array
+    protected function augmentModels($query, Resource $resource): array
     {
         return collect($query)
-            ->map(function ($record, $key) use ($resource) {
-                return Blink::once("Runway::Tag::AugmentRecords::{$resource->handle()}::{$record->{$resource->primaryKey()}}", function () use ($record) {
-                    return $record->toAugmentedArray();
+            ->map(function ($model, $key) use ($resource) {
+                return Blink::once("Runway::Tag::AugmentModels::{$resource->handle()}::{$model->{$resource->primaryKey()}}", function () use ($model) {
+                    return $model->toAugmentedArray();
                 });
             })
             ->toArray();

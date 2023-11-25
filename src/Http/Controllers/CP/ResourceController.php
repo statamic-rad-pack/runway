@@ -37,7 +37,7 @@ class ResourceController extends CpController
         return view('runway::index', [
             'title' => $resource->name(),
             'resource' => $resource,
-            'recordCount' => $resource->model()->count(),
+            'modelCount' => $resource->model()->count(),
             'primaryColumn' => $this->getPrimaryColumn($resource),
             'columns' => $resource->blueprint()->columns()
                 ->filter(fn ($column) => in_array($column->field, collect($columns)->pluck('handle')->toArray()))
@@ -108,22 +108,22 @@ class ResourceController extends CpController
             'data' => $this->getReturnData($resource, $model),
             'redirect' => cp_route('runway.edit', [
                 'resource' => $resource->handle(),
-                'record' => $model->{$resource->routeKey()},
+                'model' => $model->{$resource->routeKey()},
             ]),
         ];
     }
 
-    public function edit(EditRequest $request, Resource $resource, $record)
+    public function edit(EditRequest $request, Resource $resource, $model)
     {
-        $record = $resource->model()
-            ->where($resource->model()->qualifyColumn($resource->routeKey()), $record)
+        $model = $resource->model()
+            ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
             ->first();
 
-        if (! $record) {
+        if (! $model) {
             throw new NotFoundHttpException();
         }
 
-        $values = $this->prepareModelForPublishForm($resource, $record);
+        $values = $this->prepareModelForPublishForm($resource, $model);
 
         $blueprint = $resource->blueprint();
         $fields = $blueprint->fields()->addValues($values)->preProcess();
@@ -132,7 +132,7 @@ class ResourceController extends CpController
             'title' => __('Edit :resource', ['resource' => $resource->singular()]),
             'action' => cp_route('runway.update', [
                 'resource' => $resource->handle(),
-                'record' => $record->{$resource->routeKey()},
+                'model' => $model->{$resource->routeKey()},
             ]),
             'method' => 'PATCH',
             'breadcrumbs' => new Breadcrumbs([[
@@ -145,11 +145,11 @@ class ResourceController extends CpController
             'blueprint' => $blueprint->toPublishArray(),
             'values' => $fields->values(),
             'meta' => $fields->meta(),
-            'permalink' => $resource->hasRouting() ? $record->uri() : null,
+            'permalink' => $resource->hasRouting() ? $model->uri() : null,
             'resourceHasRoutes' => $resource->hasRouting(),
-            'currentRecord' => [
-                'id' => $record->getKey(),
-                'title' => $record->{$resource->titleField()},
+            'currentModel' => [
+                'id' => $model->getKey(),
+                'title' => $model->{$resource->titleField()},
                 'edit_url' => $request->url(),
             ],
         ];
@@ -161,11 +161,11 @@ class ResourceController extends CpController
         return view('runway::edit', $viewData);
     }
 
-    public function update(UpdateRequest $request, Resource $resource, $record)
+    public function update(UpdateRequest $request, Resource $resource, $model)
     {
         $resource->blueprint()->fields()->addValues($request->all())->validator()->validate();
 
-        $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $record)->first();
+        $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $model)->first();
 
         $this->prepareModelForSaving($resource, $model, $request);
 
@@ -181,13 +181,13 @@ class ResourceController extends CpController
     /**
      * Build an array with the correct return data for the inline publish forms.
      */
-    protected function getReturnData(Resource $resource, Model $record): array
+    protected function getReturnData(Resource $resource, Model $model): array
     {
-        return array_merge($record->toArray(), [
-            'title' => $record->{$resource->titleField()},
+        return array_merge($model->toArray(), [
+            'title' => $model->{$resource->titleField()},
             'edit_url' => cp_route('runway.edit', [
                 'resource' => $resource->handle(),
-                'record' => $record->{$resource->routeKey()},
+                'model' => $model->{$resource->routeKey()},
             ]),
         ]);
     }
@@ -214,7 +214,7 @@ class ResourceController extends CpController
 
                         $model->edit_url = cp_route('runway.edit', [
                             'resource' => $relatedResource->handle(),
-                            'record' => $model->{$relatedResource->routeKey()},
+                            'model' => $model->{$relatedResource->routeKey()},
                         ]);
 
                         return $model;

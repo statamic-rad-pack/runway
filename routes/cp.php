@@ -14,6 +14,6 @@ Route::name('runway.')->prefix('runway')->group(function () {
 
     Route::get('{resource}/create', [ResourceController::class, 'create'])->name('create');
     Route::post('{resource}/create', [ResourceController::class, 'store'])->name('store');
-    Route::get('{resource}/{record}', [ResourceController::class, 'edit'])->name('edit');
-    Route::patch('{resource}/{record}', [ResourceController::class, 'update'])->name('update');
+    Route::get('{resource}/{model}', [ResourceController::class, 'edit'])->name('edit');
+    Route::patch('{resource}/{model}', [ResourceController::class, 'update'])->name('update');
 });
