@@ -54,7 +54,7 @@ class DuplicateModel extends Action
             $duplicateModel = $item->replicate();
 
             if ($resource->titleField()) {
-                $duplicateModel->{$resource->titleField()} = $duplicateModel->{$resource->titleField()} . ' (Duplicate)';
+                $duplicateModel->{$resource->titleField()} = $duplicateModel->{$resource->titleField()}.' (Duplicate)';
             }
 
             $duplicateModel->save();
