@@ -17,7 +17,7 @@ class SearchableTest extends TestCase
 
         $searchable = new Searchable($post);
 
-        $this->assertSame(Runway::findResource('post'), $searchable->resource());
+        $this->assertEquals(Runway::findResource('post'), $searchable->resource());
     }
 
     /** @test */
@@ -27,10 +27,10 @@ class SearchableTest extends TestCase
 
         $searchable = new Searchable($post);
 
-        $this->assertSame($post->title, $searchable->getQueryableValue('title'));
-        $this->assertSame($post->slug, $searchable->getQueryableValue('slug'));
-        $this->assertSame($post->id, $searchable->getQueryableValue('id'));
-        $this->assertSame('default', $searchable->getQueryableValue('site'));
+        $this->assertEquals($post->title, $searchable->getQueryableValue('title'));
+        $this->assertEquals($post->slug, $searchable->getQueryableValue('slug'));
+        $this->assertEquals($post->id, $searchable->getQueryableValue('id'));
+        $this->assertEquals('default', $searchable->getQueryableValue('site'));
     }
 
     /** @test */
@@ -40,9 +40,9 @@ class SearchableTest extends TestCase
 
         $searchable = new Searchable($post);
 
-        $this->assertSame($post->title, $searchable->getSearchValue('title'));
-        $this->assertSame($post->slug, $searchable->getSearchValue('slug'));
-        $this->assertSame($post->id, $searchable->getSearchValue('id'));
+        $this->assertEquals($post->title, $searchable->getSearchValue('title'));
+        $this->assertEquals($post->slug, $searchable->getSearchValue('slug'));
+        $this->assertEquals($post->id, $searchable->getSearchValue('id'));
     }
 
     /** @test */
@@ -52,7 +52,7 @@ class SearchableTest extends TestCase
 
         $searchable = new Searchable($post);
 
-        $this->assertSame("runway::post::{$post->id}", $searchable->getSearchReference());
+        $this->assertEquals("runway::post::{$post->id}", $searchable->getSearchReference());
     }
 
     /** @test */
@@ -64,9 +64,9 @@ class SearchableTest extends TestCase
 
         $result = $searchable->toSearchResult();
 
-        $this->assertSame($searchable, $result->getSearchable());
-        $this->assertSame("runway::post::{$post->id}", $result->getReference());
-        $this->assertSame('runway:post', $result->getType());
+        $this->assertEquals($searchable, $result->getSearchable());
+        $this->assertEquals("runway::post::{$post->id}", $result->getReference());
+        $this->assertEquals('runway:post', $result->getType());
     }
 
     /** @test */
@@ -76,7 +76,7 @@ class SearchableTest extends TestCase
 
         $searchable = new Searchable($post);
 
-        $this->assertSame($post->title, $searchable->getCpSearchResultTitle());
+        $this->assertEquals($post->title, $searchable->getCpSearchResultTitle());
     }
 
     /** @test */
@@ -96,7 +96,7 @@ class SearchableTest extends TestCase
 
         $searchable = new Searchable($post);
 
-        $this->assertSame('Posts', $searchable->getCpSearchResultBadge());
+        $this->assertEquals('Posts', $searchable->getCpSearchResultBadge());
     }
 
     /** @test */
