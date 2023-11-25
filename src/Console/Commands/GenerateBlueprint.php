@@ -128,10 +128,6 @@ class GenerateBlueprint extends Command
         $this->info('Generating blueprints...');
         $this->line('');
 
-        if (! class_exists('Doctrine\DBAL\Exception')) {
-            return $this->line('❌ Failed. Please install `doctrine/dbal` and try again. `composer require doctrine/dbal`');
-        }
-
         $resources = [];
 
         if ($resourceHandle = $this->argument('resource')) {
