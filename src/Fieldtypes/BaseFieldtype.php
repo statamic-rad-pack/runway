@@ -98,10 +98,10 @@ class BaseFieldtype extends Relationship
             : $query->get();
 
         $items
-            ->transform(function ($record) use ($resource) {
+            ->transform(function ($model) use ($resource) {
                 return $resource->listableColumns()
-                    ->mapWithKeys(function ($columnKey) use ($record) {
-                        $value = $record->{$columnKey};
+                    ->mapWithKeys(function ($columnKey) use ($model) {
+                        $value = $model->{$columnKey};
 
                         // When $value is an Eloquent Collection, we want to map over each item & process its values.
                         if ($value instanceof EloquentCollection) {
@@ -111,8 +111,8 @@ class BaseFieldtype extends Relationship
                         return [$columnKey => $value];
                     })
                     ->merge([
-                        'id' => $record->{$resource->primaryKey()},
-                        'title' => $this->makeTitle($record, $resource),
+                        'id' => $model->{$resource->primaryKey()},
+                        'title' => $this->makeTitle($model, $resource),
                     ])
                     ->toArray();
             });
@@ -150,23 +150,23 @@ class BaseFieldtype extends Relationship
                     $item = $item->first()->{$resource->primaryKey()} ?? null;
                 }
 
-                $record = $resource->model()->firstWhere($resource->primaryKey(), $item);
+                $model = $resource->model()->firstWhere($resource->primaryKey(), $item);
             } else {
-                $record = $item;
+                $model = $item;
             }
 
-            if (! $record) {
+            if (! $model) {
                 return null;
             }
 
             $url = cp_route('runway.edit', [
                 'resource' => $resource->handle(),
-                'record' => $record->{$resource->routeKey()},
+                'model' => $model->{$resource->routeKey()},
             ]);
 
             return [
-                'id' => $record->{$resource->primaryKey()},
-                'title' => $fieldtype->preProcessIndex($record->{$column}),
+                'id' => $model->{$resource->primaryKey()},
+                'title' => $fieldtype->preProcessIndex($model->{$column}),
                 'edit_url' => $url,
             ];
         });
@@ -212,24 +212,24 @@ class BaseFieldtype extends Relationship
 
                 return $item;
             })
-            ->map(function ($record) use ($resource) {
-                if (! $record instanceof Model) {
+            ->map(function ($model) use ($resource) {
+                if (! $model instanceof Model) {
                     $eagerLoadingRelationships = collect($this->config('with') ?? [])->join(',');
 
-                    $record = Blink::once("Runway::{$this->config('resource')}::{$record}}::{$eagerLoadingRelationships}", function () use ($resource, $record) {
+                    $model = Blink::once("Runway::{$this->config('resource')}::{$model}}::{$eagerLoadingRelationships}", function () use ($resource, $model) {
                         return $resource->model()
                             ->when($this->config('with'), function ($query) {
                                 $query->with(Arr::wrap($this->config('with')));
                             })
-                            ->firstWhere($resource->primaryKey(), $record);
+                            ->firstWhere($resource->primaryKey(), $model);
                     });
                 }
 
-                if (! $record) {
+                if (! $model) {
                     return null;
                 }
 
-                return $record->toAugmentedArray();
+                return $model->toAugmentedArray();
             })
             ->filter();
 
@@ -260,24 +260,24 @@ class BaseFieldtype extends Relationship
         $values = Arr::wrap($values);
 
         $results = collect($values)
-            ->map(function ($record) use ($resource) {
-                if (! $record instanceof Model) {
+            ->map(function ($model) use ($resource) {
+                if (! $model instanceof Model) {
                     $eagerLoadingRelations = collect($this->config('with') ?? [])->join(',');
 
-                    $record = Blink::once("Runway::{$this->config('resource')}::{$record}}::{$eagerLoadingRelations}", function () use ($resource, $record) {
+                    $model = Blink::once("Runway::{$this->config('resource')}::{$model}}::{$eagerLoadingRelations}", function () use ($resource, $model) {
                         return $resource->model()
                             ->when($this->config('with'), function ($query) {
                                 $query->with(Arr::wrap($this->config('with')));
                             })
-                            ->firstWhere($resource->primaryKey(), $record);
+                            ->firstWhere($resource->primaryKey(), $model);
                     });
                 }
 
-                if (! $record) {
+                if (! $model) {
                     return null;
                 }
 
-                return $record->toShallowAugmentedArray();
+                return $model->toShallowAugmentedArray();
             })
             ->filter();
 
@@ -316,12 +316,12 @@ class BaseFieldtype extends Relationship
         $resource = Runway::findResource($this->config('resource'));
 
         if (! $id instanceof Model) {
-            $record = $resource->model()->firstWhere($resource->primaryKey(), $id);
+            $model = $resource->model()->firstWhere($resource->primaryKey(), $id);
         } else {
-            $record = $id;
+            $model = $id;
         }
 
-        if (! $record) {
+        if (! $model) {
             return [
                 'id' => $id,
                 'title' => $id,
@@ -331,12 +331,12 @@ class BaseFieldtype extends Relationship
 
         $editUrl = cp_route('runway.edit', [
             'resource' => $resource->handle(),
-            'record' => $record->{$resource->routeKey()},
+            'model' => $model->{$resource->routeKey()},
         ]);
 
         return [
-            'id' => $record->getKey(),
-            'title' => $this->makeTitle($record, $resource),
+            'id' => $model->getKey(),
+            'title' => $this->makeTitle($model, $resource),
             'edit_url' => $editUrl,
         ];
     }
@@ -353,15 +353,15 @@ class BaseFieldtype extends Relationship
         ]];
     }
 
-    protected function makeTitle($record, $resource): ?string
+    protected function makeTitle($model, $resource): ?string
     {
         if (! $titleFormat = $this->config('title_format')) {
             $firstListableColumn = $resource->titleField();
 
-            return $record->{$firstListableColumn};
+            return $model->{$firstListableColumn};
         }
 
-        return Parse::template($titleFormat, $record);
+        return Parse::template($titleFormat, $model);
     }
 
     public function filter()

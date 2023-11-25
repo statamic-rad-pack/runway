@@ -205,7 +205,7 @@ class HasManyFieldtypeTest extends TestCase
         // Usually these bits would be fetched from the request. However, as we can't mock
         // the request, we're using Blink.
         Blink::put('RunwayRouteResource', 'author');
-        Blink::put('RunwayRouteRecord', $author->id);
+        Blink::put('RunwayRouteModel', $author->id);
 
         $this->fieldtype->process(collect($posts)->pluck('id')->toArray());
 
@@ -231,7 +231,7 @@ class HasManyFieldtypeTest extends TestCase
         // Usually these bits would be fetched from the request. However, as we can't mock
         // the request, we're using Blink.
         Blink::put('RunwayRouteResource', 'author');
-        Blink::put('RunwayRouteRecord', $author->id);
+        Blink::put('RunwayRouteModel', $author->id);
 
         $this->fieldtypeUsingPivotTable->process([
             $posts[0]->id,
@@ -270,7 +270,7 @@ class HasManyFieldtypeTest extends TestCase
         // Usually these bits would be fetched from the request. However, as we can't mock
         // the request, we're using Blink.
         Blink::put('RunwayRouteResource', 'author');
-        Blink::put('RunwayRouteRecord', $author->id);
+        Blink::put('RunwayRouteModel', $author->id);
 
         $this->fieldtype->process([
             $posts[1]->id,
@@ -317,7 +317,7 @@ class HasManyFieldtypeTest extends TestCase
         // Usually these bits would be fetched from the request. However, as we can't mock
         // the request, we're using Blink.
         Blink::put('RunwayRouteResource', 'author');
-        Blink::put('RunwayRouteRecord', $author->id);
+        Blink::put('RunwayRouteModel', $author->id);
 
         $this->fieldtypeUsingPivotTable->process([
             $posts[1]->id,

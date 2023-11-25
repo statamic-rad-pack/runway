@@ -56,8 +56,8 @@ class ResourceCollection extends LaravelResourceCollection
         $handle = $this->resourceHandle;
 
         return [
-            'data' => $this->collection->map(function ($record) use ($columns, $handle) {
-                $row = $record->toArray();
+            'data' => $this->collection->map(function ($model) use ($columns, $handle) {
+                $row = $model->toArray();
 
                 foreach ($row as $key => $value) {
                     if (! in_array($key, $columns)) {
@@ -70,16 +70,16 @@ class ResourceCollection extends LaravelResourceCollection
                         if ($this->runwayResource->blueprint()->field($key)->fieldtype() instanceof BelongsToFieldtype) {
                             $relationName = $this->runwayResource->eloquentRelationships()->get($key);
 
-                            if ($record->relationLoaded($relationName)) {
-                                $value = $record->$relationName;
+                            if ($model->relationLoaded($relationName)) {
+                                $value = $model->$relationName;
                             }
                         }
 
                         if ($this->runwayResource->blueprint()->field($key)->fieldtype() instanceof HasManyFieldtype) {
                             $relationName = $key;
 
-                            if ($record->relationLoaded($relationName)) {
-                                $value = $record->$relationName;
+                            if ($model->relationLoaded($relationName)) {
+                                $value = $model->$relationName;
                             }
                         }
 
@@ -90,15 +90,15 @@ class ResourceCollection extends LaravelResourceCollection
                 foreach ($this->runwayResource->blueprint()->fields()->except(array_keys($row))->all() as $fieldHandle => $field) {
                     $key = str_replace('->', '.', $fieldHandle);
 
-                    $row[$fieldHandle] = $field->setValue(data_get($record, $key))->preProcessIndex()->value();
+                    $row[$fieldHandle] = $field->setValue(data_get($model, $key))->preProcessIndex()->value();
                 }
 
-                $row['id'] = $record->getKey();
-                $row['edit_url'] = cp_route('runway.edit', ['resource' => $handle, 'record' => $record->getRouteKey()]);
-                $row['permalink'] = $this->runwayResource->hasRouting() ? $record->uri() : null;
+                $row['id'] = $model->getKey();
+                $row['edit_url'] = cp_route('runway.edit', ['resource' => $handle, 'model' => $model->getRouteKey()]);
+                $row['permalink'] = $this->runwayResource->hasRouting() ? $model->uri() : null;
                 $row['editable'] = User::current()->can('edit', $this->runwayResource);
                 $row['viewable'] = User::current()->can('view', $this->runwayResource);
-                $row['actions'] = Action::for($record, ['resource' => $this->runwayResource->handle()]);
+                $row['actions'] = Action::for($model, ['resource' => $this->runwayResource->handle()]);
 
                 return $row;
             }),

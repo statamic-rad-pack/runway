@@ -25,4 +25,4 @@ public function scopeRunwayListing($query)
 
 ## Localisations
 
-Sorry, Runway doesn't support creating localisations of records as we've built Runway to be as unopinionated as possible, which introducing this feature would go against.
+Sorry, Runway doesn't support creating localisations of models as we've built Runway to be as unopinionated as possible, which introducing this feature would go against.

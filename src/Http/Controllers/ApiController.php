@@ -44,7 +44,7 @@ class ApiController extends StatamicApiController
         return $results;
     }
 
-    public function show($resourceHandle, $record)
+    public function show($resourceHandle, $model)
     {
         $this->abortIfDisabled();
 
@@ -56,7 +56,7 @@ class ApiController extends StatamicApiController
             throw new NotFoundHttpException;
         }
 
-        if (! $model = $resource->model()->find($record)) {
+        if (! $model = $resource->model()->find($model)) {
             throw new NotFoundHttpException;
         }
 

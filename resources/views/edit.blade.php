@@ -25,7 +25,7 @@
 
     <script>
         window.Runway = {
-            currentRecord: @json($currentRecord),
+            currentModel: @json($currentModel),
             currentResource: "{{ $resource->handle() }}",
         }
     </script>

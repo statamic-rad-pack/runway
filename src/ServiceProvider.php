@@ -190,7 +190,7 @@ class ServiceProvider extends AddonServiceProvider
                     ->prefix(config('statamic.api.route'))
                     ->group(function () {
                         Route::name('runway.index')->get('runway/{resourceHandle}', [ApiController::class, 'index']);
-                        Route::name('runway.show')->get('runway/{resourceHandle}/{record}', [ApiController::class, 'show']);
+                        Route::name('runway.show')->get('runway/{resourceHandle}/{model}', [ApiController::class, 'show']);
                     });
             });
         }
