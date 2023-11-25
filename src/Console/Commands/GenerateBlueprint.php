@@ -135,10 +135,9 @@ class GenerateBlueprint extends Command
         }
 
         if (count($resources) === 0) {
-            Runway::allResources()
-                ->each(function ($resource) use (&$resources) {
-                    $resources[] = $resource;
-                });
+            Runway::allResources()->each(function ($resource) use (&$resources) {
+                $resources[] = $resource;
+            });
         }
 
         foreach ($resources as $resource) {
