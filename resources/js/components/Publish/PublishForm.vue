@@ -180,33 +180,8 @@ export default {
     },
 
     created() {
-        // If we're creating a resource through the 'Create' on a HasMany field somewhere, fill any fields...
         if (this.publishContainer.includes('relate-fieldtype-inline')) {
-            this.values['from_inline_publish_form'] = true
-
-            this.initialBlueprint.tabs.forEach((tab) => {
-                tab.sections.forEach((section) => {
-                    section.fields.forEach((field) => {
-                        if (
-                            field.type === 'belongs_to' &&
-                            field.resource === window.Runway.currentResource
-                        ) {
-                            let alreadyExists = this.values[field.handle].includes(
-                                window.Runway.currentRecord.id
-                            )
-
-                            if (!alreadyExists) {
-                                this.values[field.handle].push(
-                                    window.Runway.currentRecord.id
-                                )
-                                this.meta[field.handle].data = [
-                                    window.Runway.currentRecord,
-                                ]
-                            }
-                        }
-                    })
-                })
-            })
+            this.prefillBelongsToField()
         }
     },
 
@@ -294,6 +269,30 @@ export default {
                     user: Statamic.user.id,
                 }
             )
+        },
+
+        /**
+         * When creating a new model via the HasMany fieldtype, pre-fill the belongs_to field to the current record.
+         */
+        prefillBelongsToField() {
+            this.values['from_inline_publish_form'] = true
+
+            this.initialBlueprint.tabs.forEach((tab) => {
+                tab.sections.forEach((section) => {
+                    section.fields
+                        .filter((field) => {
+                            return field.type === 'belongs_to' || field.resource === window.Runway.currentResource;
+                        })
+                        .forEach((field) => {
+                            let alreadyExists = this.values[field.handle].includes(window.Runway.currentRecord.id)
+
+                            if (!alreadyExists) {
+                                this.values[field.handle].push(window.Runway.currentRecord.id)
+                                this.meta[field.handle].data = [window.Runway.currentRecord]
+                            }
+                        })
+                })
+            })
         },
     },
 
