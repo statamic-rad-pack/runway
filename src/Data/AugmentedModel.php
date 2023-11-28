@@ -6,6 +6,7 @@ use Carbon\CarbonInterface;
 use DoubleThreeDigital\Runway\Runway;
 use DoubleThreeDigital\Runway\Support\Json;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Statamic\Data\AbstractAugmented;
 use Statamic\Fields\Blueprint;
 
@@ -15,15 +16,16 @@ class AugmentedModel extends AbstractAugmented
 
     protected $resource;
 
-    protected $supplements = [];
+    protected $supplements;
 
     public function __construct($model)
     {
         $this->data = $model;
         $this->resource = Runway::findResourceByModel($model);
+        $this->supplements = collect();
     }
 
-    public function supplement(array $data)
+    public function supplement(Collection $data)
     {
         $this->supplements = $data;
 
@@ -116,6 +118,6 @@ class AugmentedModel extends AbstractAugmented
 
     protected function getFromData($handle)
     {
-        return $this->supplements[$handle] ?? $this->data->$handle;
+        return $this->supplements->get($handle) ?? $this->data->$handle;
     }
 }
