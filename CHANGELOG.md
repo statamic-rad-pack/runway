@@ -6,7 +6,7 @@
 
 ### What's fixed
 
-* Fixed error when search index returned Runway results #376 #377
+* Fixed error when search index returned Runway results #376 #377 by @duncanmcclean
 
 ## v5.5.0 (2023-11-16)
 
