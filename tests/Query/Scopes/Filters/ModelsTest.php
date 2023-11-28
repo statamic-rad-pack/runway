@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Query\Scope\Filters;
+namespace DoubleThreeDigital\Runway\Tests\Query\Scopes\Filters;
 
 use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
 use DoubleThreeDigital\Runway\Query\Scopes\Filters\Fields\Models;
