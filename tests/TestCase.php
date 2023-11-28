@@ -7,7 +7,6 @@ use DoubleThreeDigital\Runway\ServiceProvider;
 use DoubleThreeDigital\Runway\Traits\HasRunwayResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Encryption\Encrypter;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
@@ -19,7 +18,7 @@ use Statamic\Statamic;
 
 abstract class TestCase extends OrchestraTestCase
 {
-    use DatabaseMigrations, RefreshDatabase, WithFaker;
+    use RefreshDatabase, WithFaker;
 
     protected $shouldFakeVersion = true;
 
