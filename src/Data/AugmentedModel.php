@@ -16,7 +16,7 @@ class AugmentedModel extends AbstractAugmented
 
     protected $resource;
 
-    protected $supplements = [];
+    protected $supplements;
 
     protected $nestedFields = [];
 
@@ -24,9 +24,10 @@ class AugmentedModel extends AbstractAugmented
     {
         $this->data = $model;
         $this->resource = Runway::findResourceByModel($model);
+        $this->supplements = collect();
     }
 
-    public function supplement(array $data)
+    public function supplement(Collection $data)
     {
         $this->supplements = $data;
 
@@ -99,7 +100,7 @@ class AugmentedModel extends AbstractAugmented
             $handle = str_replace('->', '.', $handle);
         }
 
-        return $this->supplements[$handle] ?? data_get($this->data, $handle);
+        return $this->supplements->get($handle) ?? data_get($this->data, $handle);
     }
 
     protected function wrapValue($value, $handle)

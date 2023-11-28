@@ -27,6 +27,7 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
     {
         $this->model = $model;
         $this->resource = Runway::findResourceByModel($model);
+        $this->supplements = collect();
     }
 
     public function resource(): Resource
