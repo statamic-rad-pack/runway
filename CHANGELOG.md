@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v5.5.1 (2023-11-28)
+
+### What's fixed
+
+* Fixed error when search index returned Runway results #376 #377
+
 ## v5.5.0 (2023-11-16)
 
 ### What's new
