@@ -126,7 +126,7 @@ class ResourceController extends CpController
         $values = $this->prepareModelForPublishForm($resource, $model);
 
         $blueprint = $resource->blueprint();
-        $fields = $blueprint->fields()->addValues($values)->preProcess();
+        $fields = $blueprint->fields()->setParent($model)->addValues($values)->preProcess();
 
         $viewData = [
             'title' => __('Edit :resource', ['resource' => $resource->singular()]),
@@ -163,7 +163,7 @@ class ResourceController extends CpController
 
     public function update(UpdateRequest $request, Resource $resource, $model)
     {
-        $resource->blueprint()->fields()->addValues($request->all())->validator()->validate();
+        $resource->blueprint()->fields()->setParent($model)->addValues($request->all())->validator()->validate();
 
         $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $model)->first();
 
