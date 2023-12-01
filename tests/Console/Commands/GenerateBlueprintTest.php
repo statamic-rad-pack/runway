@@ -71,8 +71,8 @@ class GenerateBlueprintTest extends TestCase
 
         Blueprint::shouldReceive('find')->with('')->andReturnNull();
 
-        Blueprint::shouldReceive('make')
-            ->with('post')
+        Blueprint::shouldReceive('find')
+            ->with('runway::post')
             ->andReturn(new FieldsBlueprint('post'))
             ->shouldReceive('setContents')
             ->with([
@@ -130,8 +130,8 @@ class GenerateBlueprintTest extends TestCase
 
         Blueprint::shouldReceive('find')->with('')->andReturnNull();
 
-        Blueprint::shouldReceive('make')
-            ->with('post')
+        Blueprint::shouldReceive('find')
+            ->with('runway::post')
             ->andReturn(new FieldsBlueprint('post'))
             ->shouldReceive('setContents')
             ->with([
