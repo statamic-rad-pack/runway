@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v5.5.2 (2023-12-01)
+
+### What's fixed
+
+* Fixed the "parent" not being passed through to fields on publish form pages #379 #381 by @duncanmcclean
+
 ## v5.5.1 (2023-11-28)
 
 ### What's fixed
