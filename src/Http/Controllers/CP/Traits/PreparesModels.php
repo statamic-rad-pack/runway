@@ -61,7 +61,7 @@ trait PreparesModels
     {
         $blueprint = $resource->blueprint();
 
-        $blueprint->fields()->all()
+        $blueprint->fields()->setParent($model)->all()
             ->filter(fn (Field $field) => $this->shouldSaveField($field))
             ->each(function (Field $field) use (&$model, $request) {
                 $processedValue = $field->fieldtype()->process($request->get($field->handle()));
