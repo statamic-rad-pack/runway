@@ -5,6 +5,7 @@ namespace DoubleThreeDigital\Runway\Console\Commands;
 use DoubleThreeDigital\Runway\Resource;
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Blueprint;
 use Statamic\Fields\Blueprint as FieldsBlueprint;
@@ -49,6 +50,10 @@ class MigrateBlueprints extends Command
                 $originalBlueprint = $this->resolveOriginalBlueprint($resource);
 
                 $resource->blueprint()->setContents($originalBlueprint->contents())->save();
+
+                if (File::exists($originalBlueprint->path())) {
+                    File::delete($originalBlueprint->path());
+                }
             });
     }
 
