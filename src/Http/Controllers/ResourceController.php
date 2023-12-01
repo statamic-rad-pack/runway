@@ -217,7 +217,7 @@ class ResourceController extends CpController
         }
 
         $blueprint = $resource->blueprint();
-        $fields = $blueprint->fields()->addValues($values)->preProcess();
+        $fields = $blueprint->fields()->setParent($record)->addValues($values)->preProcess();
 
         $viewData = [
             'title' => __('Edit :resource', [
@@ -265,6 +265,7 @@ class ResourceController extends CpController
         Runway::findResource($resourceHandle)
             ->blueprint()
             ->fields()
+            ->setParent($record)
             ->addValues($request->all())
             ->validator()
             ->validate();
