@@ -103,7 +103,7 @@ php please runway:generate-migrations
 
 If you've already got an Eloquent model setup, Runway can help you turn it into a blueprint!
 
-Before you can generate, you'll need to install the [`doctrine/dbal`](https://github.com/doctrine/dbal) package as it'll be used by Runway to analyse your database columns. You'll also need to have migrated your database already.
+Before you can generate blueprints, you'll need to have migtated your database already.
 
 As well as having your model setup, you will also need to add the resource(s) to your `config/runway.php` config.
 

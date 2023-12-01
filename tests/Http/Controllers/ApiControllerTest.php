@@ -46,7 +46,7 @@ class ApiControllerTest extends TestCase
         $post = Post::factory()->create();
 
         $this
-            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'record' => $post->id]))
+            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => $post->id]))
             ->assertOk()
             ->assertSee(['data'])
             ->assertJsonPath('data.id', $post->id)
@@ -64,7 +64,7 @@ class ApiControllerTest extends TestCase
         ]);
 
         $this
-            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'record' => $post->id]))
+            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => $post->id]))
             ->assertOk()
             ->assertSee(['data'])
             ->assertJsonPath('data.id', $post->id)
@@ -79,7 +79,7 @@ class ApiControllerTest extends TestCase
         $post = Post::factory()->create();
 
         $this
-            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'record' => $post->id]))
+            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => $post->id]))
             ->assertOk()
             ->assertSee(['data'])
             ->assertJsonPath('data.id', $post->id)
@@ -91,7 +91,7 @@ class ApiControllerTest extends TestCase
     public function returns_not_found_on_a_model_that_does_not_exist()
     {
         $this
-            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'record' => 44]))
+            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => 44]))
             ->assertNotFound();
     }
 

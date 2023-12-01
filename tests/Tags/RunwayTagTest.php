@@ -32,7 +32,7 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
-    public function can_get_records_with_no_parameters()
+    public function can_get_models_with_no_parameters()
     {
         $posts = Post::factory()->count(5)->create();
 
@@ -49,7 +49,7 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
-    public function can_get_records_with_select_parameter()
+    public function can_get_models_with_select_parameter()
     {
         $posts = Post::factory()->count(5)->create();
 
@@ -83,7 +83,7 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
-    public function can_get_records_with_scope_parameter()
+    public function can_get_models_with_scope_parameter()
     {
         $posts = Post::factory()->count(5)->create();
 
@@ -104,7 +104,7 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
-    public function can_get_records_with_scope_parameter_and_scope_arguments()
+    public function can_get_models_with_scope_parameter_and_scope_arguments()
     {
         $posts = Post::factory()->count(5)->create();
 
@@ -127,7 +127,7 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
-    public function can_get_records_with_scope_parameter_and_scope_arguments_and_multiple_scopes()
+    public function can_get_models_with_scope_parameter_and_scope_arguments_and_multiple_scopes()
     {
         $posts = Post::factory()->count(5)->create();
 
@@ -150,7 +150,7 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
-    public function can_get_records_with_where_parameter()
+    public function can_get_models_with_where_parameter()
     {
         $posts = Post::factory()->count(5)->create();
 
@@ -167,7 +167,7 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
-    public function can_get_records_with_where_parameter_when_condition_is_on_relationship_field()
+    public function can_get_models_with_where_parameter_when_condition_is_on_relationship_field()
     {
         $posts = Post::factory()->count(5)->create();
         $author = Author::factory()->create();
@@ -189,7 +189,7 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
-    public function can_get_records_with_with_parameter()
+    public function can_get_models_with_with_parameter()
     {
         $posts = Post::factory()->count(5)->create();
 
@@ -209,7 +209,7 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
-    public function can_get_records_with_sort_parameter()
+    public function can_get_models_with_sort_parameter()
     {
         $posts = Post::factory()->count(2)->create();
 
@@ -229,7 +229,7 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
-    public function can_get_records_with_scoping()
+    public function can_get_models_with_scoping()
     {
         $posts = Post::factory()->count(2)->create();
 
@@ -249,7 +249,7 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
-    public function can_get_records_with_limit_parameter()
+    public function can_get_models_with_limit_parameter()
     {
         $posts = Post::factory()->count(5)->create();
 
@@ -268,7 +268,7 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
-    public function can_get_records_with_scoping_and_pagination()
+    public function can_get_models_with_scoping_and_pagination()
     {
         $posts = Post::factory()->count(5)->create();
 
@@ -291,7 +291,7 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
-    public function can_get_records_and_non_blueprint_columns_are_returned()
+    public function can_get_models_and_non_blueprint_columns_are_returned()
     {
         $posts = Post::factory()->count(2)->create();
 
@@ -309,7 +309,7 @@ class RunwayTagTest extends TestCase
     }
 
     /** @test */
-    public function can_get_records_with_studly_case_resource_handle()
+    public function can_get_models_with_studly_case_resource_handle()
     {
         $postBlueprint = Blueprint::find('runway::post');
         Blueprint::shouldReceive('find')->with('runway::BlogPosts')->andReturn($postBlueprint);

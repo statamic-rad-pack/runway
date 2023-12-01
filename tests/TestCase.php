@@ -4,7 +4,6 @@ namespace DoubleThreeDigital\Runway\Tests;
 
 use DoubleThreeDigital\Runway\ServiceProvider;
 use Illuminate\Encryption\Encrypter;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Rebing\GraphQL\GraphQLServiceProvider;
@@ -16,7 +15,7 @@ use Statamic\Statamic;
 
 abstract class TestCase extends OrchestraTestCase
 {
-    use DatabaseMigrations, RefreshDatabase;
+    use RefreshDatabase;
 
     protected $shouldFakeVersion = true;
 

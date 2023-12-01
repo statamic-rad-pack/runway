@@ -71,13 +71,13 @@ class RoutingModel implements Augmentable, Responsable
         return $this->model->getAttributeValue($this->model->getRouteKeyName());
     }
 
-    public function __get($key)
-    {
-        return $this->model->{$key};
-    }
-
     public function augmentedArrayData()
     {
         return $this->model->toArray();
+    }
+
+    public function __get($key)
+    {
+        return $this->model->{$key};
     }
 }
