@@ -184,7 +184,7 @@ Sometimes you may want to change the order that your models are returned in the 
 
 ### Title field
 
-When Runway displays models inside inside the Control Panel (eg. in relationship fields, in search), it'll default to showing the first listable field it can find, based on your blueprint.
+When Runway displays models inside the Control Panel (eg. in relationship fields, in search), it'll default to showing the first listable field it can find, based on your blueprint.
 
 If you'd like to specify a different field, you may do so by setting the `title_field` option on your resource.
 
@@ -193,6 +193,34 @@ If you'd like to specify a different field, you may do so by setting the `title_
 	\App\Models\Order::class => [
 	    'name' => 'Orders',
 		'title_field' => 'name',
+	],
+],
+```
+
+### Statamic Widgets
+
+Runway can also display [Statamic widgets](https://statamic.dev/reference/widgets) on your resources index page, you are free to use first party widget comes with statamic and can also [create your own widget](https://statamic.dev/extending/widgets) to show for example stats for orders.
+
+You can add configuration for `widgets` element on your resource.
+
+```php
+'resources' => [
+	\App\Models\Order::class => [
+	    'name' => 'Orders',
+	    
+	    // define all widgets for order resource
+		'widgets' => [
+                [
+                    'type' => 'earning',
+                    'width' => 50
+                ],
+                [
+                    'type' => 'collection',
+                    'collection' => 'pages',
+                    'width' => 50
+                ],
+            ],
+        ],
 	],
 ],
 ```
