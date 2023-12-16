@@ -268,6 +268,9 @@ class ResourceController extends CpController
             ->setParent($record)
             ->addValues($request->all())
             ->validator()
+            ->withReplacements([
+                $resource->primaryKey() => $record,
+            ])
             ->validate();
 
         $record = $resource->model()
