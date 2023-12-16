@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## v5.5.3 (2023-12-16)
+
+### What's fixed
+- Fixed `unique` validation rule #388 by @duncanmcclean
 
 ## v5.5.2 (2023-12-01)
 
