@@ -31,6 +31,33 @@ class ResourceControllerTest extends TestCase
     }
 
     /** @test */
+    public function get_model_index_widgets()
+    {
+        Config::set('runway.resources.'.Post::class.'.widgets', [
+            [
+                'type' => 'collection',
+                'collection' => 'pages',
+                'width' => 50
+            ],
+        ]);
+
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+
+        $posts = $this->postFactory(2);
+
+        $this->actingAs($user)
+            ->get(cp_route('runway.index', ['resourceHandle' => 'post']))
+            ->assertOk()
+            ->assertViewIs('runway::index')
+            ->assertSee([
+                'widgets',
+                'columns',
+            ]);
+    }
+
+    /** @test */
     public function can_create_resource()
     {
         $user = User::make()->makeSuper()->save();

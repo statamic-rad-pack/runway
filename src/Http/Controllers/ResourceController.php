@@ -18,12 +18,13 @@ use Statamic\Facades\Scope;
 use Statamic\Facades\User;
 use Statamic\Fields\Field;
 use Statamic\Http\Controllers\CP\CpController;
+use Statamic\Widgets\Loader;
 
 class ResourceController extends CpController
 {
     use Traits\HasListingColumns;
 
-    public function index(IndexRequest $request, $resourceHandle)
+    public function index(IndexRequest $request, $resourceHandle, Loader $loader)
     {
         $resource = Runway::findResource($resourceHandle);
         $blueprint = $resource->blueprint();
@@ -48,6 +49,7 @@ class ResourceController extends CpController
             'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
             'listingConfig' => $listingConfig,
             'actionUrl' => cp_route('runway.actions.run', ['resourceHandle' => $resourceHandle]),
+            'widgets' => $this->getDisplayableWidgets($resource, $loader),
         ]);
     }
 
@@ -394,5 +396,26 @@ class ResourceController extends CpController
         }
 
         return true;
+    }
+
+    private function getDisplayableWidgets($resource, $loader)
+    {
+        $widgets = $resource->config()->get('widgets', []);
+
+        return collect($widgets)
+            ->map(function ($config) {
+                return is_string($config) ? ['type' => $config] : $config;
+            })
+            ->map(function ($config) use ($loader) {
+                return [
+                    'widget' => $widget = $loader->load(array_get($config, 'type'), $config),
+                    'classes' => $widget->config('classes'),
+                    'width' => $widget->config('width', 100),
+                    'html' => (string) $widget->html(),
+                ];
+            })
+            ->reject(function ($widget) {
+                return empty($widget['html']);
+            });
     }
 }

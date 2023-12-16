@@ -15,6 +15,14 @@ return [
         // \App\Models\Order::class => [
         //     'name' => 'Orders',
 
+        // 'widgets' => [
+        //    [
+        //        'type' => 'collection',
+        //        'collection' => 'pages',
+        //        'width' => 50
+        //    ],
+        // ],
+
         //     'blueprint' => [
         //         'tabs' => [
         //             'main' => [
