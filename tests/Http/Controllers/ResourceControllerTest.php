@@ -37,7 +37,7 @@ class ResourceControllerTest extends TestCase
             [
                 'type' => 'collection',
                 'collection' => 'pages',
-                'width' => 50
+                'width' => 50,
             ],
         ]);
 
