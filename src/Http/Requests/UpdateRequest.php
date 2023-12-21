@@ -16,6 +16,8 @@ class UpdateRequest extends FormRequest
             return false;
         }
 
-        return User::current()->can('edit', $resource);
+        $model = $resource->model()::find($this->record);
+
+        return User::current()->can('edit', [$resource, $model]);
     }
 }
