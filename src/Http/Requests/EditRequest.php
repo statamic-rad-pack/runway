@@ -12,7 +12,9 @@ class EditRequest extends FormRequest
     {
         $resource = Runway::findResource($this->resourceHandle);
 
-        return User::current()->can('edit', $resource);
+        $model = $resource->model()::find($this->record);
+
+        return User::current()->can('edit', [$resource, $model]);
     }
 
     public function rules()
