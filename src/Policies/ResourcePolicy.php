@@ -13,7 +13,7 @@ class ResourcePolicy
             ->hasPermission("view {$resource->handle()}");
     }
 
-    public function create($user, Resource $resource, $model = null)
+    public function create($user, Resource $resource)
     {
         return User::fromUser($user)
             ->hasPermission("create {$resource->handle()}");
