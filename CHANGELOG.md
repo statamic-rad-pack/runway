@@ -1,5 +1,12 @@
 # Changelog
 
+## v5.6.0 (2023-12-23)
+
+### What's improved
+* Eloquent model is now passed to the `ResourcePolicy` #386 by @edalzell
+
+
+
 ## v5.5.3 (2023-12-16)
 
 ### What's fixed
