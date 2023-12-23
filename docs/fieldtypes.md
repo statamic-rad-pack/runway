@@ -124,6 +124,10 @@ You may enable Table Mode by adjusting the `mode` configuration option:
         display: Categories
 ```
 
+### BelongsToMany
+
+You can use the HasMany fieldtype to handle `belongsToMany` relationships. Simply add a HasMany fieldtype to both sides of the relationship and you'll be golden!
+
 ## Title Format
 
 The `title_format` configuration option allows you to specify a title format to be used when related models are displayed in the Control Panel.
@@ -142,10 +146,6 @@ You can even use Antlers when specifying a `title_format`.
         display: Categories
         title_format: 'Category ID {{ id }}: {{ name }}' // [tl! add]
 ```
-
-### BelongsToMany
-
-You can use the HasMany fieldtype to handle `belongsToMany` relationships. Simply add a HasMany fieldtype to both sides of the relationship and you'll be golden!
 
 ## Eager Loading
 
