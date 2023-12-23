@@ -143,6 +143,10 @@ You can even use Antlers when specifying a `title_format`.
         title_format: 'Category ID {{ id }}: {{ name }}' // [tl! add]
 ```
 
+### BelongsToMany
+
+You can use the HasMany fieldtype to handle `belongsToMany` relationships. Simply add a HasMany fieldtype to both sides of the relationship and you'll be golden!
+
 ## Eager Loading
 
 If you wish, you can configure additional relationships to be eager loaded with the field:
