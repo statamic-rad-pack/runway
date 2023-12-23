@@ -3,7 +3,7 @@
 namespace DoubleThreeDigital\Runway\Tests\Policies;
 
 use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\Post;
+use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
 use DoubleThreeDigital\Runway\Tests\TestCase;
 use Statamic\Facades\Role;
 use Statamic\Facades\User;
