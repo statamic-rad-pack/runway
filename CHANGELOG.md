@@ -1,12 +1,34 @@
 # Changelog
 
-## Unreleased
+## v5.6.0 (2023-12-23)
+
+### What's improved
+* Eloquent model is now passed to the `ResourcePolicy` #386 by @edalzell
+
+
+
+## v5.5.3 (2023-12-16)
+
+### What's fixed
+- Fixed `unique` validation rule #388 by @duncanmcclean
+
+## v5.5.2 (2023-12-01)
+
+### What's fixed
+
+* Fixed the "parent" not being passed through to fields on publish form pages #379 #381 by @duncanmcclean
+
+## v5.5.1 (2023-11-28)
+
+### What's fixed
+
+* Fixed error when search index returned Runway results #376 #377 by @duncanmcclean
 
 ## v5.5.0 (2023-11-16)
 
 ### What's new
 
-* Columns cast as `object` in the Eloquent model will be treated by Runway as an `array` #370
+* Columns cast as `object` in the Eloquent model will be treated by Runway as an `array` #370 by @caseydwyer
 
 ## v5.4.1 (2023-11-03)
 

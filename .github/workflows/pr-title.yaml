@@ -8,19 +8,6 @@ jobs:
   pr-title:
     runs-on: ubuntu-latest
     steps:
-      - name: Validate PR title
-        uses: deepakputhraya/action-pr-title@master
-        continue-on-error: true
-        id: validate-pr-title
+      - uses: deepakputhraya/action-pr-title@master
         with:
           regex: '^\[\d+\.x\]\s'
-
-      # - name: Update PR title
-      #   if: always() && (steps.validate-pr-title.outcome == 'failure')
-      #   run: |
-      #     echo "Updating PR title"
-      #     curl -X PATCH \
-      #       -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-      #       -H "Accept: application/vnd.github.v3+json" \
-      #       https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }} \
-      #       -d '{"title": "[${{ github.base_ref }}] ${{ github.event.pull_request.title }}"}'

@@ -101,6 +101,10 @@ If you're using a pivot table for the relationship, the order column must exist 
         order_column: sort_order  // [tl! add]
 ```
 
+### BelongsToMany
+
+You can use the HasMany fieldtype to handle `belongsToMany` relationships. Simply add a HasMany fieldtype to both sides of the relationship and you'll be golden!
+
 ## Title Format
 
 The `title_format` configuration option allows you to specify a title format to be used when related models are displayed in the Control Panel.
