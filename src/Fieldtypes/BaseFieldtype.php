@@ -309,8 +309,8 @@ class BaseFieldtype extends Relationship
                     'id' => $record->{$resource->primaryKey()},
                     'title' => $this->makeTitle($record, $resource),
                     'edit_url' => $editUrl,
-                    'editable' => User::current()->can('edit', $resource),
-                    'viewable' => User::current()->can('view', $resource),
+                    'editable' => User::current()->can('edit', [$resource, $record]),
+                    'viewable' => User::current()->can('view', [$resource, $record]),
                     'actions' => Action::for($record, ['resource' => $resource->handle()])->reject(fn ($action) => $action instanceof DeleteModel)->toArray(),
                 ])
                 ->toArray();
