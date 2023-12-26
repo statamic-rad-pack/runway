@@ -27,8 +27,6 @@ class BaseFieldtype extends Relationship
 
     protected $formComponent = 'runway-publish-form';
 
-    protected $component = 'runway-relationship';
-
     protected $formComponentProps = [
         'initialBlueprint' => 'blueprint',
         'initialValues' => 'values',
