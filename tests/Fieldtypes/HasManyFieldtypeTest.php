@@ -1,12 +1,12 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Fieldtypes;
+namespace StatamicRadPack\Runway\Tests\Fieldtypes;
 
-use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
-use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
+use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\TestCase;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
@@ -27,7 +27,7 @@ class HasManyFieldtypeTest extends TestCase
     {
         parent::setUp();
 
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields', [
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields', [
             [
                 'handle' => 'name',
                 'field' => [
@@ -119,8 +119,8 @@ class HasManyFieldtypeTest extends TestCase
     /** @test */
     public function can_get_index_items_in_order_specified_in_runway_config()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.order_by', 'title');
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.order_by_direction', 'asc');
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.order_by', 'title');
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.order_by_direction', 'asc');
 
         Runway::discoverResources();
 

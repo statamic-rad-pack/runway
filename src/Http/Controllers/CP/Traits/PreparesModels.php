@@ -1,12 +1,12 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Http\Controllers\CP\Traits;
+namespace StatamicRadPack\Runway\Http\Controllers\CP\Traits;
 
 use Carbon\CarbonInterface;
-use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
-use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Support\Json;
+use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
+use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
+use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Support\Json;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;

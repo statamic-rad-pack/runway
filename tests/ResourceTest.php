@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests;
+namespace StatamicRadPack\Runway\Tests;
 
-use DoubleThreeDigital\Runway\Runway;
+use StatamicRadPack\Runway\Runway;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Fieldset;
 
@@ -23,7 +23,7 @@ class ResourceTest extends TestCase
     /** @test */
     public function can_get_eloquent_relationships_for_has_many_field()
     {
-        $fields = Config::get('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields');
+        $fields = Config::get('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields');
 
         $fields[] = [
             'handle' => 'posts',
@@ -35,7 +35,7 @@ class ResourceTest extends TestCase
             ],
         ];
 
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields', $fields);
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields', $fields);
 
         Runway::discoverResources();
 
@@ -61,7 +61,7 @@ class ResourceTest extends TestCase
     /** @test */
     public function can_get_eloquent_relationships_as_defined_in_config()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.relationships', ['author']);
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.relationships', ['author']);
 
         Runway::discoverResources();
 
@@ -88,7 +88,7 @@ class ResourceTest extends TestCase
     /** @test */
     public function can_get_configured_singular()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.singular', 'Bibliothek');
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.singular', 'Bibliothek');
 
         Runway::discoverResources();
 
@@ -114,7 +114,7 @@ class ResourceTest extends TestCase
     /** @test */
     public function can_get_configured_plural()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.plural', 'Bibliotheken');
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.plural', 'Bibliotheken');
 
         Runway::discoverResources();
 
@@ -135,7 +135,7 @@ class ResourceTest extends TestCase
             ],
         ])->save();
 
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.blueprint', [
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.blueprint', [
             'sections' => [
                 'main' => [
                     'fields' => [

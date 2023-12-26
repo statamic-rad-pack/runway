@@ -1,10 +1,10 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Routing;
+namespace StatamicRadPack\Runway\Tests\Routing;
 
-use DoubleThreeDigital\Runway\Routing\RoutingModel;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use StatamicRadPack\Runway\Routing\RoutingModel;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\TestCase;
 use Statamic\Facades\Data;
 
 class ResourceRoutingRepositoryTest extends TestCase

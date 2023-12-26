@@ -1,10 +1,10 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Http\Controllers;
+namespace StatamicRadPack\Runway\Http\Controllers;
 
-use DoubleThreeDigital\Runway\Http\Resources\ApiResource;
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
+use StatamicRadPack\Runway\Http\Resources\ApiResource;
+use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Runway;
 use Facades\Statamic\API\FilterAuthorizer;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;

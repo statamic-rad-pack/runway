@@ -1,12 +1,12 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Query\Scopes\Filters;
+namespace StatamicRadPack\Runway\Tests\Query\Scopes\Filters;
 
-use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
-use DoubleThreeDigital\Runway\Query\Scopes\Filters\Fields\Models;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
+use StatamicRadPack\Runway\Query\Scopes\Filters\Fields\Models;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\TestCase;
 use Statamic\Fields\Field;
 
 class ModelsTest extends TestCase

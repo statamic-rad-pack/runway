@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Actions;
+namespace StatamicRadPack\Runway\Actions;
 
-use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
-use DoubleThreeDigital\Runway\Runway;
+use StatamicRadPack\Runway\Exceptions\ResourceNotFound;
+use StatamicRadPack\Runway\Runway;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Actions\Action;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Data;
+namespace StatamicRadPack\Runway\Data;
 
-use DoubleThreeDigital\Runway\Runway;
+use StatamicRadPack\Runway\Runway;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Statamic\Data\AbstractAugmented;

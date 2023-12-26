@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Http\Controllers;
+namespace StatamicRadPack\Runway\Tests\Http\Controllers;
 
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\TestCase;
 use Statamic\Facades\Config;
 
 class ApiControllerTest extends TestCase

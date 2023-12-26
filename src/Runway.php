@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway;
+namespace StatamicRadPack\Runway;
 
-use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
+use StatamicRadPack\Runway\Exceptions\ResourceNotFound;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;

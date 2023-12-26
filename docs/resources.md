@@ -48,7 +48,7 @@ Second, you need to add the `HasRunwayResource` trait to your Eloquent model.
 ```php
 // app/Models/Order.php
 
-use DoubleThreeDigital\Runway\Traits\HasRunwayResource; // [tl! add]
+use StatamicRadPack\Runway\Traits\HasRunwayResource; // [tl! add]
 
 class Order extends Model
 {

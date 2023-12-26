@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Search;
+namespace StatamicRadPack\Runway\Search;
 
-use DoubleThreeDigital\Runway\Runway;
+use StatamicRadPack\Runway\Runway;
 use Illuminate\Support\Collection;
 use Statamic\Search\Searchables\Provider as BaseProvider;
 use Statamic\Support\Str;

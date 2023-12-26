@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Data;
+namespace StatamicRadPack\Runway\Data;
 
 use Statamic\Contracts\Data\Augmented;
 

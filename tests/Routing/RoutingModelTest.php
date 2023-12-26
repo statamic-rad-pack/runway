@@ -1,11 +1,11 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Routing;
+namespace StatamicRadPack\Runway\Tests\Routing;
 
-use DoubleThreeDigital\Runway\Routing\RoutingModel;
-use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use StatamicRadPack\Runway\Routing\RoutingModel;
+use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
@@ -86,7 +86,7 @@ class RoutingModelTest extends TestCase
     /** @test */
     public function can_get_template()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.template', 'posts.show');
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.template', 'posts.show');
         Runway::discoverResources();
 
         $post = Post::factory()->createQuietly();
@@ -100,7 +100,7 @@ class RoutingModelTest extends TestCase
     /** @test */
     public function can_get_layout()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.layout', 'layouts.post');
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.layout', 'layouts.post');
         Runway::discoverResources();
 
         $post = Post::factory()->createQuietly();

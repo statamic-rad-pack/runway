@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Fixtures\Database\Factories;
+namespace StatamicRadPack\Runway\Tests\Fixtures\Database\Factories;
 
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PostFactory extends Factory

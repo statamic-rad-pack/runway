@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\UpdateScripts;
+namespace StatamicRadPack\Runway\Tests\UpdateScripts;
 
-use DoubleThreeDigital\Runway\Tests\TestCase;
-use DoubleThreeDigital\Runway\UpdateScripts\ChangePermissionNames;
+use StatamicRadPack\Runway\Tests\TestCase;
+use StatamicRadPack\Runway\UpdateScripts\ChangePermissionNames;
 use Illuminate\Support\Facades\File;
 
 class ChangePermissionNamesTest extends TestCase

@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\UpdateScripts;
+namespace StatamicRadPack\Runway\UpdateScripts;
 
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
+use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Runway;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Statamic\Facades\Yaml;

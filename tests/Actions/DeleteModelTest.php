@@ -1,11 +1,11 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Actions;
+namespace StatamicRadPack\Runway\Tests\Actions;
 
-use DoubleThreeDigital\Runway\Actions\DeleteModel;
-use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use StatamicRadPack\Runway\Actions\DeleteModel;
+use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Collection;
@@ -32,7 +32,7 @@ class DeleteModelTest extends TestCase
     /** @test */
     public function is_not_visible_to_eloquent_model_when_resource_is_read_only()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.read_only', true);
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.read_only', true);
         Runway::discoverResources();
 
         $visibleTo = (new DeleteModel())->visibleTo(Post::factory()->create());

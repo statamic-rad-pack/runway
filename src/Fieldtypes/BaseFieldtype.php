@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Fieldtypes;
+namespace StatamicRadPack\Runway\Fieldtypes;
 
-use DoubleThreeDigital\Runway\Query\Scopes\Filters\Fields\Models;
-use DoubleThreeDigital\Runway\Runway;
+use StatamicRadPack\Runway\Query\Scopes\Filters\Fields\Models;
+use StatamicRadPack\Runway\Runway;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Routing;
+namespace StatamicRadPack\Runway\Routing;
 
-use DoubleThreeDigital\Runway\Runway;
+use StatamicRadPack\Runway\Runway;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Contracts\Data\Augmentable;

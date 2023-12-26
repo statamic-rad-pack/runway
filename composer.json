@@ -1,17 +1,17 @@
 {
-    "name": "doublethreedigital/runway",
+    "name": "statamic-rad-pack/runway",
     "description": "Use Eloquent in Statamic like never before.",
     "license": "proprietary",
     "autoload": {
         "psr-4": {
-            "DoubleThreeDigital\\Runway\\": "src"
+            "StatamicRadPack\\Runway\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "DoubleThreeDigital\\Runway\\Tests\\": "tests",
-            "DoubleThreeDigital\\Runway\\Tests\\Fixtures\\": "tests/__fixtures__/app",
-            "DoubleThreeDigital\\Runway\\Tests\\Fixtures\\Database\\Factories\\": "tests/__fixtures__/database/factories"
+            "StatamicRadPack\\Runway\\Tests\\": "tests",
+            "StatamicRadPack\\Runway\\Tests\\Fixtures\\": "tests/__fixtures__/app",
+            "StatamicRadPack\\Runway\\Tests\\Fixtures\\Database\\Factories\\": "tests/__fixtures__/database/factories"
         }
     },
     "extra": {
@@ -21,7 +21,7 @@
         },
         "laravel": {
             "providers": [
-                "DoubleThreeDigital\\Runway\\ServiceProvider"
+                "StatamicRadPack\\Runway\\ServiceProvider"
             ]
         },
         "download-dist": {

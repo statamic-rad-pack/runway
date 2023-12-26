@@ -1,8 +1,8 @@
 <?php
 
-use DoubleThreeDigital\Runway\Http\Controllers\CP\ResourceActionController;
-use DoubleThreeDigital\Runway\Http\Controllers\CP\ResourceController;
-use DoubleThreeDigital\Runway\Http\Controllers\CP\ResourceListingController;
+use StatamicRadPack\Runway\Http\Controllers\CP\ResourceActionController;
+use StatamicRadPack\Runway\Http\Controllers\CP\ResourceController;
+use StatamicRadPack\Runway\Http\Controllers\CP\ResourceListingController;
 use Illuminate\Support\Facades\Route;
 
 Route::name('runway.')->prefix('runway')->group(function () {

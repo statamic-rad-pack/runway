@@ -1,10 +1,10 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Search;
+namespace StatamicRadPack\Runway\Search;
 
-use DoubleThreeDigital\Runway\Data\AugmentedModel;
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
+use StatamicRadPack\Runway\Data\AugmentedModel;
+use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Runway;
 use Statamic\Contracts\Data\Augmentable;
 use Statamic\Contracts\Data\Augmented;
 use Statamic\Contracts\Query\ContainsQueryableValues;

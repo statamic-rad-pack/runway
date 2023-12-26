@@ -1,11 +1,11 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Console\Commands;
+namespace StatamicRadPack\Runway\Tests\Console\Commands;
 
-use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
 
 class ListResourcesTest extends TestCase

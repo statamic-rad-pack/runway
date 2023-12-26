@@ -1,10 +1,10 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Console\Commands;
+namespace StatamicRadPack\Runway\Tests\Console\Commands;
 
-use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\TestCase;
-use DoubleThreeDigital\Runway\Traits\HasRunwayResource;
+use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Tests\TestCase;
+use StatamicRadPack\Runway\Traits\HasRunwayResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;

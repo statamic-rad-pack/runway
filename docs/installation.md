@@ -13,7 +13,7 @@ title: 'Installation'
 First, you need to install Runway as a Composer dependency:
 
 ```
-composer require doublethreedigital/runway
+composer require statamic-rad-pack/runway
 ```
 
 Next, publish the configuration file:

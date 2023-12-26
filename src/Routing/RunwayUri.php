@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Routing;
+namespace StatamicRadPack\Runway\Routing;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;

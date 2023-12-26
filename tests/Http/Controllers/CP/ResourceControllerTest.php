@@ -1,11 +1,11 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Http\Controllers\CP;
+namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
 
-use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\TestCase;
 use Statamic\Facades\Config;
 use Statamic\Facades\User;
 

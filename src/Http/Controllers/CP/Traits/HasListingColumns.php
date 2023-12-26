@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Http\Controllers\CP\Traits;
+namespace StatamicRadPack\Runway\Http\Controllers\CP\Traits;
 
-use DoubleThreeDigital\Runway\Resource;
+use StatamicRadPack\Runway\Resource;
 use Illuminate\Support\Arr;
 use Statamic\Facades\User;
 use Statamic\Fields\Field;

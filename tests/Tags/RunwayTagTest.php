@@ -1,12 +1,12 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Tags;
+namespace StatamicRadPack\Runway\Tests\Tags;
 
-use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tags\RunwayTag;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Tags\RunwayTag;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Antlers;
 use Statamic\Fields\Value;

@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Query\Scopes\Filters\Fields;
+namespace StatamicRadPack\Runway\Query\Scopes\Filters\Fields;
 
-use DoubleThreeDigital\Runway\Runway;
+use StatamicRadPack\Runway\Runway;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Statamic\Query\Scopes\Filters\Fields\FieldtypeFilter;
 use Statamic\Support\Arr;

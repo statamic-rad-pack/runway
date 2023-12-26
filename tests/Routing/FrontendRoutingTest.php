@@ -1,10 +1,10 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Routing;
+namespace StatamicRadPack\Runway\Tests\Routing;
 
-use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
 
 class FrontendRoutingTest extends TestCase

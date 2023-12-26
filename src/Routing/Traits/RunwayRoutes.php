@@ -1,10 +1,10 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Routing\Traits;
+namespace StatamicRadPack\Runway\Routing\Traits;
 
-use DoubleThreeDigital\Runway\Routing\RoutingModel;
-use DoubleThreeDigital\Runway\Routing\RunwayUri;
-use DoubleThreeDigital\Runway\Runway;
+use StatamicRadPack\Runway\Routing\RoutingModel;
+use StatamicRadPack\Runway\Routing\RunwayUri;
+use StatamicRadPack\Runway\Runway;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
 use Statamic\Routing\Routable;

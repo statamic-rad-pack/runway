@@ -1,8 +1,8 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Fieldtypes;
+namespace StatamicRadPack\Runway\Fieldtypes;
 
-use DoubleThreeDigital\Runway\Runway;
+use StatamicRadPack\Runway\Runway;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Statamic\Facades\Blink;
