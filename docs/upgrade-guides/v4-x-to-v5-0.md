@@ -1,0 +1,59 @@
+---
+title: 'Upgrade Guide: v4.x to v5.0'
+---
+
+## Overview
+
+:::warning Warning
+Please don't upgrade multiple versions at once (eg. from v3 to v5). Please upgrade one step at a time.
+:::
+
+To get started with the upgrade process, follow the below steps:
+
+**1.** In your `composer.json` file, update the `doublethreedigital/runway` version constraint:
+
+```json
+"doublethreedigital/runway": "^5.0"
+```
+
+**2.** Then run:
+
+```
+composer update doublethreedigital/runway --with-dependencies
+```
+
+**3.** You may also want to clear your route & view caches:
+
+```
+php artisan route:clear
+php artisan view:clear
+```
+
+**4.** Update complete!
+
+**Please test locally before deploying to production!**
+
+## Changes
+
+### High: Add `HasRunwayResource` trait to Eloquent models
+
+You will need to add a new `HasRunwayResource` trait to all Eloquent models configured in the Runway config:
+
+```php
+// app/Models/Order.php
+
+use StatamicRadPack\Runway\Traits\HasRunwayResource;
+
+class Order extends Model
+{
+    use HasRunwayResource;
+}
+```
+
+## Previous upgrade guides
+
+-   [v3.x to v4.0](/upgrade-guides/v3-x-to-v4-0)
+
+---
+
+[You may also view a diff of changes between v4.x and v5.0](https://github.com/duncanmcclean/runway/compare/4.x...5.x)
