@@ -34,6 +34,10 @@ class AugmentedModelTest extends TestCase
         $this->assertEquals('2020-01-01 13:46:12', $augmented->get('created_at')->value()->format('Y-m-d H:i:s'));
         $this->assertEquals('/posts/my-first-post', $augmented->get('url')->value());
 
+        $this->assertIsArray($augmented->get('author')->value());
+        $this->assertEquals($author->id, $augmented->get('author')->value()['id']->value());
+        $this->assertEquals('John Doe', $augmented->get('author')->value()['name']->value());
+
         $this->assertIsArray($augmented->get('author_id')->value());
         $this->assertEquals($author->id, $augmented->get('author_id')->value()['id']->value());
         $this->assertEquals('John Doe', $augmented->get('author_id')->value()['name']->value());
