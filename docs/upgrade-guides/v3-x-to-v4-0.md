@@ -1,0 +1,53 @@
+---
+title: 'Upgrade Guide: v3.x to v4.0'
+---
+
+## Overview
+
+:::warning Warning
+Please don't upgrade multiple versions at once (eg. from v2 to v4). Please upgrade one step at a time.
+:::
+
+To get started with the upgrade process, follow the below steps:
+
+**1.** In your `composer.json` file, update the `doublethreedigital/runway` version constraint:
+
+```json
+"doublethreedigital/runway": "^5.0"
+```
+
+**2.** Then run:
+
+```
+composer update doublethreedigital/runway --with-dependencies
+```
+
+**3.** You may also want to clear your route & view caches:
+
+```
+php artisan route:clear
+php artisan view:clear
+```
+
+**4.** Update complete!
+
+**Please test locally before deploying to production!**
+
+## Changes
+
+### High: Permission keys have changed
+
+Permission keys have changed. If you have a user role with custom permissions set, you will need to make some changes:
+
+If you're using the **files** user repository, the permission keys in the `resources/users/roles.yaml` file should have been automatically with the new permission names.
+
+If you're using **any other** user repository, you will need to update the permission keys manually. Examples of the changes are shown below:
+
+-   `View Products` -> `view product`
+-   `Edit Products` -> `edit product`
+-   `Create new Product` -> `create product`
+-   `Delete Product` -> `delete product`
+
+---
+
+[You may also view a diff of changes between v3.x and v4.0](https://github.com/duncanmcclean/runway/compare/3.x...4.x)

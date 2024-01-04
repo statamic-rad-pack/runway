@@ -39,7 +39,7 @@ class DeleteModel extends Action
     {
         $resource = Runway::findResourceByModel($item);
 
-        return $user->can('delete', $resource);
+        return $user->can('delete', [$resource, $item]);
     }
 
     public function buttonText()
