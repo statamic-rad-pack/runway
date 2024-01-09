@@ -1,5 +1,12 @@
 # Changelog
 
+## v5.6.1 (2024-01-09)
+
+### What's fixed
+* Fix "Listable: Hidden" fields not showing in column picker #392 by @caseydwyer
+
+
+
 ## v5.6.0 (2023-12-23)
 
 ### What's improved
