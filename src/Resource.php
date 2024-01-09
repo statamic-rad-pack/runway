@@ -217,7 +217,19 @@ class Resource
     {
         return $this
             ->fluentlyGetOrSet('titleField')
-            ->getter(fn ($field) => $field ?? $this->listableColumns()[0])
+            ->getter(function ($field) {
+                if (! $field) {
+                    return collect($this->listableColumns())
+                        ->reject(function ($handle) {
+                            $field = $this->blueprint()->field($handle);
+
+                            return $field->get('listable') && $field->get('listable') === 'hidden';
+                        })
+                        ->first();
+                }
+
+                return $field;
+            })
             ->args(func_get_args());
     }
 

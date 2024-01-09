@@ -159,4 +159,29 @@ class ResourceTest extends TestCase
             'values->listable_shown_field',
         ], $listableColumns);
     }
+
+    /** @test */
+    public function can_get_title_field()
+    {
+        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Post.blueprint.sections.main.fields', [
+            [
+                'handle' => 'values->listable_hidden_field',
+                'field' => ['type' => 'text', 'listable' => 'hidden'],
+            ],
+            [
+                'handle' => 'values->listable_shown_field',
+                'field' => ['type' => 'text', 'listable' => true],
+            ],
+            [
+                'handle' => 'values->not_listable_field',
+                'field' => ['type' => 'text', 'listable' => false],
+            ],
+        ]);
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $this->assertEquals('values->listable_shown_field', $resource->titleField());
+    }
 }
