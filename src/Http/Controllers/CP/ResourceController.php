@@ -57,7 +57,6 @@ class ResourceController extends CpController
 
         $viewData = [
             'title' => __('Create :resource', ['resource' => $resource->singular()]),
-            'action' => cp_route('runway.store', ['resource' => $resource->handle()]),
             'method' => 'POST',
             'breadcrumbs' => new Breadcrumbs([[
                 'text' => $resource->plural(),
@@ -65,6 +64,9 @@ class ResourceController extends CpController
                     'resource' => $resource->handle(),
                 ]),
             ]]),
+            'actions' => [
+                'save' => cp_route('runway.store', ['resource' => $resource->handle()]),
+            ],
             'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
             'blueprint' => $blueprint->toPublishArray(),
             'values' => $fields->values(),
