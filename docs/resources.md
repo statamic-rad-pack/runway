@@ -56,38 +56,7 @@ class Order extends Model
 }
 ```
 
-Finally, you need to create a blueprint for your resource, there's [documentation on that below](#resource-blueprints). 🔽
-
-## Resource Blueprints
-
-Blueprints are a key component to the content modeling process. They let you define the fields that should be available in the Control Panel and the way your data is stored.
-
-### Creating a resource blueprint
-
-Unfortunately, it's not yet possible to manage Runway blueprints in the Control Panel as there's no way for addons to "register" their own blueprints.
-
-In the meantime, you can create a blueprint for a collection, then move the outputted YAML file to the `resources/blueprints` directory.
-
-:::note Note!
-Remember that the field handles in your blueprint should match up exactly with the column names in the database, otherwise bad things will happen.
-:::
-
-Now, to use the blueprint you just created, simply specify it's "namespace" (usually just its filename, minus the `.yaml` extension) as a `blueprint` key in your resources's config array:
-
-```php
-'resources' => [
-	\App\Models\Order::class => [
-	    'name' => 'Orders',
-		'blueprint' => 'order',
-	],
-],
-```
-
-If you want to store your resource's blueprint inside a directory, like `resources/blueprints/runway`, you'll need to specify the blueprint as `runway.blueprint_name`.
-
-### More information
-
-For more information about using Blueprints in Runway, please review the [Blueprints](/blueprints) page.
+Finally, you can start adding fields to your resource's blueprint. To learn more about using Blueprints in Runway, please review the [Blueprints](/blueprints) page.
 
 ## Configuring resources
 
