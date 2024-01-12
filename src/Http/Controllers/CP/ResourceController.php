@@ -130,10 +130,6 @@ class ResourceController extends CpController
 
         $viewData = [
             'title' => __('Edit :resource', ['resource' => $resource->singular()]),
-            'action' => cp_route('runway.update', [
-                'resource' => $resource->handle(),
-                'model' => $model->{$resource->routeKey()},
-            ]),
             'method' => 'PATCH',
             'breadcrumbs' => new Breadcrumbs([[
                 'text' => $resource->plural(),
@@ -143,6 +139,7 @@ class ResourceController extends CpController
             ]]),
             'resource' => $resource,
             'actions' => [
+                'save' => cp_route('runway.update', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
                 'editBlueprint' => cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]),
             ],
             'blueprint' => $blueprint->toPublishArray(),

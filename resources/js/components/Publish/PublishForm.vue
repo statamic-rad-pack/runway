@@ -120,7 +120,6 @@ export default {
         initialValues: Object,
         initialMeta: Object,
         initialTitle: String,
-        action: String,
         method: String,
         resourceHasRoutes: Boolean,
         permalink: String,
@@ -200,7 +199,7 @@ export default {
 
             this.$axios({
                 method: this.method,
-                url: this.action,
+                url: this.actions.save,
                 data: this.values,
             })
                 .then((response) => {
