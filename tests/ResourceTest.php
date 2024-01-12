@@ -189,4 +189,32 @@ class ResourceTest extends TestCase
             'seo_description',
         ], $resource->listableColumns()->toArray());
     }
+
+    /** @test */
+    public function can_get_title_field()
+    {
+        $blueprint = Blueprint::make()->setContents([
+            'tabs' => [
+                'main' => [
+                    'sections' => [
+                        [
+                            'fields' => [
+                                ['handle' => 'values->listable_hidden_field', 'field' => ['type' => 'text', 'listable' => 'hidden']],
+                                ['handle' => 'values->listable_shown_field', 'field' => ['type' => 'text', 'listable' => true]],
+                                ['handle' => 'values->not_listable_field', 'field' => ['type' => 'text', 'listable' => false]],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($blueprint);
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $this->assertEquals('values->listable_shown_field', $resource->titleField());
+    }
 }
