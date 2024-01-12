@@ -7,6 +7,7 @@
 @section('content')
     <runway-publish-form
         :breadcrumbs="{{ $breadcrumbs->toJson() }}"
+        :initial-actions="{{ json_encode($actions) }}"
         :initial-blueprint='@json($blueprint)'
         :initial-meta='@json($meta)'
         :initial-values='@json($values)'
@@ -21,6 +22,7 @@
         :resource='@json($resource->toArray())'
         create-another-url="{{ cp_route('runway.create', ['resource' => $resource->handle()]) }}"
         listing-url="{{ cp_route('runway.index', ['resource' => $resource->handle()]) }}"
+        :can-edit-blueprint="{{ Auth::user()->can('configure fields') ? 'true' : 'false' }}"
     ></runway-publish-form>
 
     <script>

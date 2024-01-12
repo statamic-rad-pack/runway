@@ -13,6 +13,14 @@
                 </div>
             </h1>
 
+            <dropdown-list class="mr-4" v-if="canEditBlueprint">
+                <dropdown-item :text="__('Edit Blueprint')" :redirect="actions.editBlueprint" />
+            </dropdown-list>
+
+            <div class="pt-px text-2xs text-gray-600 flex mr-4" v-if="readOnly">
+                <svg-icon name="light/lock" class="w-4 mr-1 -mt-1" /> {{ __('Read Only') }}
+            </div>
+
             <div v-if="!readOnly" class="hidden md:flex items-center">
                 <save-button-options
                     v-if="!readOnly"
@@ -107,6 +115,7 @@ export default {
 
     props: {
         breadcrumbs: Array,
+        initialActions: Object,
         initialBlueprint: Object,
         initialValues: Object,
         initialMeta: Object,
@@ -131,10 +140,12 @@ export default {
         },
         createAnotherUrl: String,
         listingUrl: String,
+        canEditBlueprint: Boolean,
     },
 
     data() {
         return {
+            actions: this.initialActions,
             blueprint: this.initialBlueprint,
             values: this.initialValues,
             meta: this.initialMeta,

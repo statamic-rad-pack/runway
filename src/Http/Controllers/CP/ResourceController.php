@@ -142,6 +142,9 @@ class ResourceController extends CpController
                 ]),
             ]]),
             'resource' => $resource,
+            'actions' => [
+                'editBlueprint' => cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]),
+            ],
             'blueprint' => $blueprint->toPublishArray(),
             'values' => $fields->values(),
             'meta' => $fields->meta(),
