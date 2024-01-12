@@ -3,7 +3,7 @@
 ## v6.0.0 (2024-01-12)
 
 ### Read First 👀
-Be sure to read the [Upgrade Guide](https://runway.duncanmcclean.com/upgrade-guides/v5-x-to-v6-0) first as manual changes may be necessary. You can also read the [Launch Discussion](https://github.com/statamic-rad-pack/runway/discussions/396) to learn about many of the changes in depth. **TODO**
+Be sure to read the [Upgrade Guide](https://runway.duncanmcclean.com/upgrade-guides/v5-x-to-v6-0) first as manual changes may be necessary. You can also read the [Launch Discussion](https://github.com/statamic-rad-pack/runway/discussions/396) to learn about many of the changes in depth.
 
 ### What's new
 * Runway is now part of the [Rad Pack](https://github.com/statamic-rad-pack) 🚀 #394 by @duncanmcclean
