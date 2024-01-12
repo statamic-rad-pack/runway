@@ -15,7 +15,6 @@ use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
 use Statamic\Facades\Permission;
 use Statamic\Facades\Search;
-use Statamic\Http\Middleware\API\SwapExceptionHandler as SwapAPIExceptionHandler;
 use Statamic\Http\Middleware\RequireStatamicPro;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
@@ -181,7 +180,6 @@ class ServiceProvider extends AddonServiceProvider
     {
         if (config('statamic.api.enabled')) {
             Route::middleware([
-                SwapApiExceptionHandler::class,
                 RequireStatamicPro::class,
                 Cache::class,
             ])->group(function () {
