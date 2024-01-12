@@ -185,6 +185,7 @@ class ResourceTest extends TestCase
         $this->assertEquals([
             'title',
             'summary',
+            'body',
             'seo_title',
             'seo_description',
         ], $resource->listableColumns()->toArray());
