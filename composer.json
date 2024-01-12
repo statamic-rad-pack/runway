@@ -1,31 +1,39 @@
 {
-    "name": "doublethreedigital/runway",
-    "description": "Use Eloquent in Statamic like never before.",
-    "license": "proprietary",
+    "name": "statamic-rad-pack/runway",
+    "description": "Eloquently manage your database models in Statamic.",
+    "license": "mit",
+    "authors": [
+        {
+            "name": "Duncan McClean",
+            "email": "duncan@doublethree.digital",
+            "homepage": "https://duncanmcclean.com",
+            "role": "Developer"
+        }
+    ],
     "autoload": {
         "psr-4": {
-            "DoubleThreeDigital\\Runway\\": "src"
+            "StatamicRadPack\\Runway\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "DoubleThreeDigital\\Runway\\Tests\\": "tests",
-            "DoubleThreeDigital\\Runway\\Tests\\Fixtures\\": "tests/__fixtures__/app",
-            "DoubleThreeDigital\\Runway\\Tests\\Fixtures\\Database\\Factories\\": "tests/__fixtures__/database/factories"
+            "StatamicRadPack\\Runway\\Tests\\": "tests",
+            "StatamicRadPack\\Runway\\Tests\\Fixtures\\": "tests/__fixtures__/app",
+            "StatamicRadPack\\Runway\\Tests\\Fixtures\\Database\\Factories\\": "tests/__fixtures__/database/factories"
         }
     },
     "extra": {
         "statamic": {
             "name": "Runway",
-            "description": "Use Eloquent in Statamic like never before."
+            "description": "Eloquently manage your database models in Statamic."
         },
         "laravel": {
             "providers": [
-                "DoubleThreeDigital\\Runway\\ServiceProvider"
+                "StatamicRadPack\\Runway\\ServiceProvider"
             ]
         },
         "download-dist": {
-            "url": "https://github.com/duncanmcclean/runway/releases/download/{$version}/dist.tar.gz",
+            "url": "https://github.com/statamic-rad-pack/runway/releases/download/{$version}/dist.tar.gz",
             "path": "dist"
         }
     },

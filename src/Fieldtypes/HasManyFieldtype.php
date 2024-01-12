@@ -1,12 +1,12 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Fieldtypes;
+namespace StatamicRadPack\Runway\Fieldtypes;
 
-use DoubleThreeDigital\Runway\Runway;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Statamic\Facades\Blink;
 use Statamic\Facades\GraphQL;
+use StatamicRadPack\Runway\Runway;
 
 class HasManyFieldtype extends BaseFieldtype
 {

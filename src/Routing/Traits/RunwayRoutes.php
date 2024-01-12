@@ -1,16 +1,16 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Routing\Traits;
+namespace StatamicRadPack\Runway\Routing\Traits;
 
-use DoubleThreeDigital\Runway\Routing\RoutingModel;
-use DoubleThreeDigital\Runway\Routing\RunwayUri;
-use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
 use Statamic\Routing\Routable;
 use Statamic\StaticCaching\Cacher;
 use Statamic\Support\Arr;
 use Statamic\View\Antlers\Parser;
+use StatamicRadPack\Runway\Routing\RoutingModel;
+use StatamicRadPack\Runway\Routing\RunwayUri;
+use StatamicRadPack\Runway\Runway;
 
 trait RunwayRoutes
 {

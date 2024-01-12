@@ -1,12 +1,12 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Search;
+namespace StatamicRadPack\Runway\Tests\Search;
 
-use DoubleThreeDigital\Runway\Data\AugmentedModel;
-use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Search\Searchable;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use StatamicRadPack\Runway\Data\AugmentedModel;
+use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Search\Searchable;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\TestCase;
 
 class SearchableTest extends TestCase
 {

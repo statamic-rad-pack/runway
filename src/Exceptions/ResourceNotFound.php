@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Exceptions;
+namespace StatamicRadPack\Runway\Exceptions;
 
 class ResourceNotFound extends \Exception
 {

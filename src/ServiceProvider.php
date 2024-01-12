@@ -1,11 +1,7 @@
 <?php
 
-namespace DoubleThreeDigital\Runway;
+namespace StatamicRadPack\Runway;
 
-use DoubleThreeDigital\Runway\Http\Controllers\ApiController;
-use DoubleThreeDigital\Runway\Policies\ResourcePolicy;
-use DoubleThreeDigital\Runway\Search\Provider as SearchProvider;
-use DoubleThreeDigital\Runway\Search\Searchable;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +15,10 @@ use Statamic\Facades\Search;
 use Statamic\Http\Middleware\RequireStatamicPro;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
+use StatamicRadPack\Runway\Http\Controllers\ApiController;
+use StatamicRadPack\Runway\Policies\ResourcePolicy;
+use StatamicRadPack\Runway\Search\Provider as SearchProvider;
+use StatamicRadPack\Runway\Search\Searchable;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -172,16 +172,16 @@ class ServiceProvider extends AddonServiceProvider
     {
         Runway::allResources()
             ->each(function (Resource $resource) {
-                $this->app->bind("runway_graphql_types_{$resource->handle()}", fn () => new \DoubleThreeDigital\Runway\GraphQL\ResourceType($resource));
+                $this->app->bind("runway_graphql_types_{$resource->handle()}", fn () => new \StatamicRadPack\Runway\GraphQL\ResourceType($resource));
 
                 GraphQL::addType("runway_graphql_types_{$resource->handle()}");
             })
             ->filter
             ->graphqlEnabled()
             ->each(function (Resource $resource) {
-                $this->app->bind("runway_graphql_queries_{$resource->handle()}_index", fn () => new \DoubleThreeDigital\Runway\GraphQL\ResourceIndexQuery($resource));
+                $this->app->bind("runway_graphql_queries_{$resource->handle()}_index", fn () => new \StatamicRadPack\Runway\GraphQL\ResourceIndexQuery($resource));
 
-                $this->app->bind("runway_graphql_queries_{$resource->handle()}_show", fn () => new \DoubleThreeDigital\Runway\GraphQL\ResourceShowQuery($resource));
+                $this->app->bind("runway_graphql_queries_{$resource->handle()}_show", fn () => new \StatamicRadPack\Runway\GraphQL\ResourceShowQuery($resource));
 
                 GraphQL::addQuery("runway_graphql_queries_{$resource->handle()}_index");
                 GraphQL::addQuery("runway_graphql_queries_{$resource->handle()}_show");

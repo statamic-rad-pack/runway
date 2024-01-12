@@ -1,11 +1,11 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Routing;
+namespace StatamicRadPack\Runway\Tests\Routing;
 
-use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
+use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\TestCase;
 
 class FrontendRoutingTest extends TestCase
 {
@@ -25,7 +25,7 @@ class FrontendRoutingTest extends TestCase
 
     /**
      * @test
-     * https://github.com/duncanmcclean/runway/pull/302
+     * https://github.com/statamic-rad-pack/runway/pull/302
      */
     public function returns_resource_response_for_resource_with_nested_field()
     {

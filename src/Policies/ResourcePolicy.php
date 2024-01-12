@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Policies;
+namespace StatamicRadPack\Runway\Policies;
 
-use DoubleThreeDigital\Runway\Resource;
 use Statamic\Facades\User;
+use StatamicRadPack\Runway\Resource;
 
 class ResourcePolicy
 {

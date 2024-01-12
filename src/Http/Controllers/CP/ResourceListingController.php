@@ -1,13 +1,13 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Http\Controllers\CP;
+namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
-use DoubleThreeDigital\Runway\Http\Resources\ResourceCollection;
-use DoubleThreeDigital\Runway\Resource;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
 use Statamic\Query\Scopes\Filters\Concerns\QueriesFilters;
+use StatamicRadPack\Runway\Http\Resources\ResourceCollection;
+use StatamicRadPack\Runway\Resource;
 
 class ResourceListingController extends CpController
 {

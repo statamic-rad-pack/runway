@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Support;
+namespace StatamicRadPack\Runway\Tests\Support;
 
-use DoubleThreeDigital\Runway\Support\Json;
-use DoubleThreeDigital\Runway\Tests\TestCase;
+use StatamicRadPack\Runway\Support\Json;
+use StatamicRadPack\Runway\Tests\TestCase;
 
 class JsonTest extends TestCase
 {

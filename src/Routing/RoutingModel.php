@@ -1,13 +1,13 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Routing;
+namespace StatamicRadPack\Runway\Routing;
 
-use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Contracts\Data\Augmentable;
 use Statamic\Data\ContainsSupplementalData;
 use Statamic\Data\HasAugmentedData;
+use StatamicRadPack\Runway\Runway;
 
 class RoutingModel implements Augmentable, Responsable
 {

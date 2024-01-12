@@ -69,7 +69,7 @@ You may also provide multiple scopes, if that's something you need...
 Just like with the collection tag, you may filter your results like so:
 
 ```antlers
-{{ runway:post where="author_id:duncan" }}
+{{ runway:post where="author_name:duncan" }}
 	<h2>{{ title }}</h2>
 	<p>{{ intro_text }}</p>
 {{ /runway:post }}

@@ -1,9 +1,7 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Fieldtypes;
+namespace StatamicRadPack\Runway\Fieldtypes;
 
-use DoubleThreeDigital\Runway\Query\Scopes\Filters\Fields\Models;
-use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +12,8 @@ use Statamic\CP\Column;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
 use Statamic\Fieldtypes\Relationship;
+use StatamicRadPack\Runway\Query\Scopes\Filters\Fields\Models;
+use StatamicRadPack\Runway\Runway;
 
 class BaseFieldtype extends Relationship
 {

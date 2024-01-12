@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Fieldtypes;
+namespace StatamicRadPack\Runway\Fieldtypes;
 
-use DoubleThreeDigital\Runway\Runway;
 use Statamic\Facades\GraphQL;
+use StatamicRadPack\Runway\Runway;
 
 class BelongsToFieldtype extends BaseFieldtype
 {

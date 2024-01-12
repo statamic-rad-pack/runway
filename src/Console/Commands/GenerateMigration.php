@@ -1,9 +1,7 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Console\Commands;
+namespace StatamicRadPack\Runway\Console\Commands;
 
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
@@ -11,6 +9,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Console\RunsInPlease;
 use Statamic\Fields\Field;
+use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Runway;
 use Symfony\Component\Process\Process;
 
 class GenerateMigration extends Command

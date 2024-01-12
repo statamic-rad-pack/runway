@@ -98,7 +98,7 @@ If you need to, you can change how resource actions are authorized by extending 
 
 namespace App\Policies;
 
-use DoubleThreeDigital\Runway\Policies\ResourcePolicy as RunwayResourcePolicy;
+use StatamicRadPack\Runway\Policies\ResourcePolicy as RunwayResourcePolicy;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ResourcePolicy extends RunwayResourcePolicy
@@ -123,7 +123,7 @@ class ResourcePolicy extends RunwayResourcePolicy
 namespace App\Providers;
 
 use App\Policies\ResourcePolicy;
-use DoubleThreeDigital\Runway\Policies\ResourcePolicy as RunwayResourcePolicy;
+use StatamicRadPack\Runway\Policies\ResourcePolicy as RunwayResourcePolicy;
 
 public function boot()
 {

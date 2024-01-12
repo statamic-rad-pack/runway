@@ -1,10 +1,7 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Search;
+namespace StatamicRadPack\Runway\Search;
 
-use DoubleThreeDigital\Runway\Data\AugmentedModel;
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
 use Statamic\Contracts\Data\Augmentable;
 use Statamic\Contracts\Data\Augmented;
 use Statamic\Contracts\Query\ContainsQueryableValues;
@@ -14,6 +11,9 @@ use Statamic\Data\ContainsSupplementalData;
 use Statamic\Data\HasAugmentedInstance;
 use Statamic\Facades\Site;
 use Statamic\Search\Result as ResultInstance;
+use StatamicRadPack\Runway\Data\AugmentedModel;
+use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Runway;
 
 class Searchable implements Augmentable, ContainsQueryableValues, Contract
 {
