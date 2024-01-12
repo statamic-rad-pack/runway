@@ -3,12 +3,12 @@
 ## v6.0.1 (2024-01-12)
 
 ### What's improved
-* The default `runway.php` config file no longer includes a blueprint
+* The default `runway.php` config file no longer includes a blueprint by @duncanmcclean
 
 ### What's fixed
 * Fixed styling of "Visit URL" button by @duncanmcclean
-* Fixed some issues with listing columns & preferences
-* Fixed `doctribe/dbal` dependency
+* Fixed some issues with listing columns & preferences by @duncanmcclean
+* Fixed `doctrine/dbal` dependency by @duncanmcclean
 
 
 
