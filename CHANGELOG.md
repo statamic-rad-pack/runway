@@ -1,5 +1,27 @@
 # Changelog
 
+## v6.0.0 (2024-01-12)
+
+### Read First 👀
+Be sure to read the [Upgrade Guide](https://runway.duncanmcclean.com/upgrade-guides/v5-x-to-v6-0) first as manual changes may be necessary. You can also read the [Launch Discussion](https://github.com/statamic-rad-pack/runway/discussions/396) to learn about many of the changes in depth. **TODO**
+
+### What's new
+* Runway is now part of the [Rad Pack](https://github.com/statamic-rad-pack) 🚀 #394 by @duncanmcclean
+* You can now edit blueprints in the Control Panel #373 by @duncanmcclean
+* Added "Duplicate" action to listing tables #374 by @duncanmcclean
+* Runway now includes support for Statamic's REST API feature #356 by @ryanmitchell
+
+### What's improved
+* Runway will now refer to "models" instead of "records" #375 by @duncanmcclean
+* Runway should now have better support for fieldsets #362
+* Augmentation is now done *properly* #354 by @duncanmcclean
+* Lots of refactoring & added tests to make things nicer going forward!
+
+### What's changed
+* The "Table" mode in the Has Many fieldtype has been removed. #360 by @duncanmcclean
+
+
+
 ## v5.6.1 (2024-01-09)
 
 ### What's fixed
