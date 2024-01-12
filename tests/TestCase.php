@@ -55,8 +55,8 @@ abstract class TestCase extends OrchestraTestCase
         parent::getEnvironmentSetUp($app);
 
         $app->make(Manifest::class)->manifest = [
-            'doublethreedigital/runway' => [
-                'id' => 'doublethreedigital/runway',
+            'statamic-rad-pack/runway' => [
+                'id' => 'statamic-rad-pack/runway',
                 'namespace' => 'StatamicRadPack\\Runway',
             ],
         ];
