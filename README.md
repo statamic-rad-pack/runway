@@ -74,6 +74,20 @@ If you're a GraphQL fan, you're now able to fetch your models via GraphQL. Runwa
 }
 ```
 
+### REST API
+
+If you don't like GraphQL and would prefer plain old REST, you can do that too. Runway easily integrates with Statamic's REST API.
+
+```php
+'resources' => [
+    'collections' => true,
+    // ...
+    'runway' => [
+        'product' => true,
+    ],
+],
+```
+
 ## Support
 
 If you find a bug, have some question or have a feature request, please open a [GitHub Issue or Discussion](https://github.com/duncanmcclean/runway/issues/new/choose).
