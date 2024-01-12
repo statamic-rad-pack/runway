@@ -69,7 +69,7 @@ class Resource
             return file_get_contents(__DIR__.'/../resources/svg/database.svg');
         }
 
-        return $this->config->has('cp_icon');
+        return $this->config->get('cp_icon');
     }
 
     public function hidden(): bool
