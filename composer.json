@@ -39,7 +39,7 @@
     },
     "require": {
         "php": "^8.1",
-        "doctrine/dbal": "^4.0@RC",
+        "doctrine/dbal": "^3.7",
         "pixelfear/composer-dist-plugin": "^0.1.5",
         "statamic/cms": "^4.44"
     },
