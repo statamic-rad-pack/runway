@@ -106,7 +106,7 @@ class ResourceControllerTest extends TestCase
 
     /**
      * @test
-     * https://github.com/duncanmcclean/runway/pull/223
+     * https://github.com/statamic-rad-pack/runway/pull/223
      */
     public function can_store_resource_and_ensure_computed_field_isnt_saved_to_database()
     {
@@ -134,7 +134,7 @@ class ResourceControllerTest extends TestCase
 
     /**
      * @test
-     * https://github.com/duncanmcclean/runway/issues/331
+     * https://github.com/statamic-rad-pack/runway/issues/331
      */
     public function can_store_resource_and_ensure_field_isnt_saved_to_database()
     {
@@ -162,7 +162,7 @@ class ResourceControllerTest extends TestCase
 
     /**
      * @test
-     * https://github.com/duncanmcclean/runway/pull/247
+     * https://github.com/statamic-rad-pack/runway/pull/247
      */
     public function can_store_resource_and_ensure_appended_attribute_doesnt_attempt_to_get_saved()
     {
@@ -190,7 +190,7 @@ class ResourceControllerTest extends TestCase
 
     /**
      * @test
-     * https://github.com/duncanmcclean/runway/pull/302
+     * https://github.com/statamic-rad-pack/runway/pull/302
      */
     public function can_store_resource_with_nested_field()
     {
@@ -218,7 +218,7 @@ class ResourceControllerTest extends TestCase
 
     /**
      * @test
-     * https://github.com/duncanmcclean/runway/issues/321
+     * https://github.com/statamic-rad-pack/runway/issues/321
      */
     public function can_store_resource_and_ensure_date_comparison_validation_works()
     {
@@ -395,7 +395,7 @@ class ResourceControllerTest extends TestCase
 
     /**
      * @test
-     * https://github.com/duncanmcclean/runway/pull/302
+     * https://github.com/statamic-rad-pack/runway/pull/302
      */
     public function can_edit_resource_with_nested_field()
     {
@@ -436,7 +436,7 @@ class ResourceControllerTest extends TestCase
 
     /**
      * @test
-     * https://github.com/duncanmcclean/runway/pull/370
+     * https://github.com/statamic-rad-pack/runway/pull/370
      */
     public function can_edit_resource_with_nested_field_cast_to_object_in_model()
     {
@@ -484,7 +484,7 @@ class ResourceControllerTest extends TestCase
 
     /**
      * @test
-     * https://github.com/duncanmcclean/runway/issues/187
+     * https://github.com/statamic-rad-pack/runway/issues/187
      */
     public function can_update_resource_when_being_updated_from_inline_publish_form()
     {
@@ -562,7 +562,7 @@ class ResourceControllerTest extends TestCase
 
     /**
      *  @test
-     * https://github.com/duncanmcclean/runway/issues/331
+     * https://github.com/statamic-rad-pack/runway/issues/331
      */
     public function can_update_resource_and_ensure__field_isnt_saved_to_database()
     {
@@ -590,7 +590,7 @@ class ResourceControllerTest extends TestCase
 
     /**
      * @test
-     * https://github.com/duncanmcclean/runway/pull/247
+     * https://github.com/statamic-rad-pack/runway/pull/247
      */
     public function can_update_resource_and_ensure_appended_attribute_doesnt_attempt_to_get_saved()
     {
@@ -618,7 +618,7 @@ class ResourceControllerTest extends TestCase
 
     /**
      * @test
-     * https://github.com/duncanmcclean/runway/pull/302
+     * https://github.com/statamic-rad-pack/runway/pull/302
      */
     public function can_update_resource_with_nested_field()
     {

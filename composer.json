@@ -1,7 +1,7 @@
 {
     "name": "statamic-rad-pack/runway",
     "description": "Eloquently manage your database models in Statamic.",
-    "license": "proprietary",
+    "license": "mit",
     "authors": [
         {
             "name": "Duncan McClean",

@@ -25,7 +25,7 @@ class FrontendRoutingTest extends TestCase
 
     /**
      * @test
-     * https://github.com/duncanmcclean/runway/pull/302
+     * https://github.com/statamic-rad-pack/runway/pull/302
      */
     public function returns_resource_response_for_resource_with_nested_field()
     {

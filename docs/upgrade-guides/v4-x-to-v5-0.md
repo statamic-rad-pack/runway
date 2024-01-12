@@ -56,4 +56,4 @@ class Order extends Model
 
 ---
 
-[You may also view a diff of changes between v4.x and v5.0](https://github.com/duncanmcclean/runway/compare/4.x...5.x)
+[You may also view a diff of changes between v4.x and v5.0](https://github.com/statamic-rad-pack/runway/compare/4.x...5.x)
