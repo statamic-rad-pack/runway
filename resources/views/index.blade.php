@@ -6,6 +6,12 @@
     <div class="flex items-center justify-between mb-6">
         <h1 class="flex-1">{{ $title }}</h1>
 
+        @can('configure fields')
+            <dropdown-list class="mr-2">
+                <dropdown-item :text="__('Edit Blueprints')" redirect="{{ cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]) }}"></dropdown-item>
+            </dropdown-list>
+        @endcan
+
         @if(! $resource->readOnly())
             @can('create', $resource)
                 <a
