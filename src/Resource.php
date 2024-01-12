@@ -118,7 +118,17 @@ class Resource
 
     public function titleField()
     {
-        return $this->config->get('title_field', $this->listableColumns()->first());
+        if ($titleField = $this->config()->get('title_field')) {
+            return $titleField;
+        }
+
+        return $this->listableColumns()
+            ->reject(function ($handle) {
+                $field = $this->blueprint()->field($handle);
+
+                return $field->get('listable') && $field->get('listable') === 'hidden';
+            })
+            ->first();
     }
 
     /**
@@ -165,7 +175,7 @@ class Resource
     public function listableColumns(): Collection
     {
         return $this->blueprint()->fields()->all()
-            ->filter(fn (Field $field) => $field->isVisibleOnListing())
+            ->filter(fn (Field $field) => $field->isListable())
             ->map->handle()
             ->values();
     }
