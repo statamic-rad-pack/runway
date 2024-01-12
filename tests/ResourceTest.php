@@ -216,6 +216,6 @@ class ResourceTest extends TestCase
 
         $resource = Runway::findResource('post');
 
-        $this->assertEquals('values->listable_shown_field', $resource->titleField());
+        $this->assertEquals('values->listable_hidden_field', $resource->titleField());
     }
 }

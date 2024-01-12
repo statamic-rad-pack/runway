@@ -126,7 +126,8 @@ class Resource
             ->reject(function ($handle) {
                 $field = $this->blueprint()->field($handle);
 
-                return $field->get('listable') && $field->get('listable') === 'hidden';
+                return $field->fieldtype() instanceof BelongsToFieldtype
+                    || $field->fieldtype() instanceof HasManyFieldtype;
             })
             ->first();
     }
