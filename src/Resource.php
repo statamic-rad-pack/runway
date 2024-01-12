@@ -126,8 +126,7 @@ class Resource
             ->reject(function ($handle) {
                 $field = $this->blueprint()->field($handle);
 
-                return $field->fieldtype() instanceof BelongsToFieldtype
-                    || $field->fieldtype() instanceof HasManyFieldtype;
+                return $field->fieldtype()->indexComponent() === 'relationship' || $field->type() === 'section';
             })
             ->first();
     }

@@ -27,8 +27,12 @@ trait HasListingColumns
     {
         if (Arr::has(User::current()->preferences(), "runway.{$resource->handle()}.columns")) {
             return collect($resource->blueprint()->fields()->all())
-                ->filter(fn (Field $field) => in_array(Arr::get(User::current()->preferences(), "runway.{$resource->handle()}.columns"), $field->handle()))
-                ->reject(fn (Field $field) => $field->fieldtype()->indexComponent() === 'relationship')
+                ->filter(function (Field $field) use ($resource) {
+                    return in_array($field->handle(), Arr::get(User::current()->preferences(), "runway.{$resource->handle()}.columns"));
+                })
+                ->reject(function (Field $field) {
+                    return $field->fieldtype()->indexComponent() === 'relationship' || $field->type() === 'section';
+                })
                 ->map->handle()
                 ->first();
         }
