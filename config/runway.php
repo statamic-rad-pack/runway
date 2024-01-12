@@ -14,22 +14,6 @@ return [
     'resources' => [
         // \App\Models\Order::class => [
         //     'name' => 'Orders',
-
-        //     'blueprint' => [
-        //         'tabs' => [
-        //             'main' => [
-        //                 'fields' => [
-        //                     [
-        //                         'handle' => 'price',
-        //                         'field' => [
-        //                             'type' => 'number',
-        //                             'validate' => 'required',
-        //                         ],
-        //                     ],
-        //                 ],
-        //             ],
-        //         ],
-        //     ],
         // ],
     ],
 
