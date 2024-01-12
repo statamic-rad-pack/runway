@@ -33,7 +33,7 @@
         "php": "^8.1",
         "doctrine/dbal": "^4.0@RC",
         "pixelfear/composer-dist-plugin": "^0.1.5",
-        "statamic/cms": "^4.0"
+        "statamic/cms": "^4.44"
     },
     "require-dev": {
         "nunomaduro/collision": "^6.1",

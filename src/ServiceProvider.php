@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Traits\Conditionable;
 use Statamic\API\Middleware\Cache;
+use Statamic\Facades\Blueprint;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
 use Statamic\Facades\Permission;
@@ -32,6 +33,7 @@ class ServiceProvider extends AddonServiceProvider
         Console\Commands\GenerateBlueprint::class,
         Console\Commands\GenerateMigration::class,
         Console\Commands\ListResources::class,
+        Console\Commands\MigrateBlueprints::class,
         Console\Commands\RebuildUriCache::class,
     ];
 
@@ -54,6 +56,7 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $updateScripts = [
         UpdateScripts\ChangePermissionNames::class,
+        UpdateScripts\MigrateBlueprints::class,
     ];
 
     protected $vite = [
@@ -79,6 +82,7 @@ class ServiceProvider extends AddonServiceProvider
         ], 'runway-config');
 
         Statamic::booted(function () {
+
             Runway::discoverResources();
 
             $this
@@ -86,6 +90,7 @@ class ServiceProvider extends AddonServiceProvider
                 ->registerPermissions()
                 ->registerPolicies()
                 ->registerNavigation()
+                ->registerBlueprints()
                 ->registerSearchProvider()
                 ->bootGraphQl()
                 ->bootApi()
@@ -150,6 +155,15 @@ class ServiceProvider extends AddonServiceProvider
                         ->can('view', $resource);
                 });
         });
+
+        return $this;
+    }
+
+    protected function registerBlueprints(): self
+    {
+        Blueprint::addNamespace('runway', base_path('resources/blueprints/runway'));
+
+        Runway::allResources()->each(fn (Resource $resource) => $resource->blueprint());
 
         return $this;
     }

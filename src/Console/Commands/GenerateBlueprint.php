@@ -8,7 +8,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Console\RunsInPlease;
-use Statamic\Facades\Blueprint;
 
 class GenerateBlueprint extends Command
 {
@@ -228,13 +227,11 @@ class GenerateBlueprint extends Command
                 }
             });
 
-        Blueprint::make($resource->handle())
-            ->setContents([
-                'tabs' => [
-                    'main' => ['fields' => $mainSection],
-                    'sidebar' => ['fields' => $sidebarSection],
-                ],
-            ])
-            ->save();
+        $resource->blueprint()->setContents([
+            'tabs' => [
+                'main' => ['fields' => $mainSection],
+                'sidebar' => ['fields' => $sidebarSection],
+            ],
+        ])->save();
     }
 }

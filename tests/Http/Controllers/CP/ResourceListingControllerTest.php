@@ -107,25 +107,6 @@ class ResourceListingControllerTest extends TestCase
     /** @test */
     public function can_search_records_with_has_many_relationship()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields', [
-            [
-                'handle' => 'name',
-                'field' => [
-                    'type' => 'text',
-                ],
-            ],
-            [
-                'handle' => 'posts',
-                'field' => [
-                    'type' => 'has_many',
-                    'resource' => 'post',
-                    'mode' => 'select',
-                ],
-            ],
-        ]);
-
-        Runway::discoverResources();
-
         $user = User::make()->makeSuper()->save();
         $author = Author::factory()->withPosts()->create(['name' => 'Colin The Caterpillar']);
 

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Rebing\GraphQL\GraphQLServiceProvider;
 use Statamic\Extend\Manifest;
+use Statamic\Facades\Blueprint;
 use Statamic\Providers\StatamicServiceProvider;
 use Statamic\Stache\Stores\UsersStore;
 use Statamic\Statamic;
@@ -101,5 +102,9 @@ abstract class TestCase extends OrchestraTestCase
         ]);
 
         $app['config']->set('runway', require (__DIR__.'/__fixtures__/config/runway.php'));
+
+        Statamic::booted(function () {
+            Blueprint::setDirectory(__DIR__.'/__fixtures__/resources/blueprints');
+        });
     }
 }

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Spatie\TestTime\TestTime;
 use SplFileInfo;
+use Statamic\Facades\Blueprint;
 
 class GenerateMigrationTest extends TestCase
 {
@@ -23,10 +24,12 @@ class GenerateMigrationTest extends TestCase
 
         Config::set('runway', [
             'resources' => [
-                Food::class => [''],
-                Drink::class => [''],
+                Food::class => ['handle' => 'food'],
+                Drink::class => ['handle' => 'drink'],
             ],
         ]);
+
+        Runway::discoverResources();
 
         collect(File::glob(database_path('migrations/*')))->each(function ($path) {
             File::delete($path);
@@ -47,38 +50,23 @@ class GenerateMigrationTest extends TestCase
     {
         TestTime::freeze();
 
-        Config::set('runway', [
-            'resources' => [
-                Food::class => [
-                    'name' => 'Food',
-                    'blueprint' => [
-                        'tabs' => [
-                            'main' => [
-                                'fields' => [
-                                    ['handle' => 'name', 'field' => ['type' => 'text', 'validate' => 'required']],
-                                    ['handle' => 'metadata->calories', 'field' => ['type' => 'integer', 'validate' => 'required']],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                Drink::class => [
-                    'name' => 'Drink',
-                    'blueprint' => [
-                        'tabs' => [
-                            'main' => [
-                                'fields' => [
-                                    ['handle' => 'name', 'field' => ['type' => 'text', 'validate' => 'required']],
-                                    ['handle' => 'metadata->calories', 'field' => ['type' => 'integer', 'validate' => 'required']],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
+        $postBlueprint = Blueprint::find('runway::post');
+        $authorBlueprint = Blueprint::find('runway::author');
+
+        $foodBlueprint = Blueprint::makeFromFields([
+            'name' => ['type' => 'text', 'validate' => 'required'],
+            'metadata->calories' => ['type' => 'integer', 'validate' => 'required'],
         ]);
 
-        Runway::discoverResources();
+        $drinkBlueprint = Blueprint::makeFromFields([
+            'name' => ['type' => 'text', 'validate' => 'required'],
+            'metadata->calories' => ['type' => 'integer', 'validate' => 'required'],
+        ]);
+
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn($authorBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::food')->andReturn($foodBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::drink')->andReturn($drinkBlueprint);
 
         $this
             ->artisan('runway:generate-migrations')
@@ -112,25 +100,23 @@ class GenerateMigrationTest extends TestCase
     {
         TestTime::freeze();
 
-        Config::set('runway', [
-            'resources' => [
-                Food::class => [
-                    'name' => 'Food',
-                    'blueprint' => [
-                        'tabs' => [
-                            'main' => [
-                                'fields' => [
-                                    ['handle' => 'name', 'field' => ['type' => 'text', 'validate' => 'required']],
-                                    ['handle' => 'metadata->calories', 'field' => ['type' => 'integer', 'validate' => 'required']],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
+        $postBlueprint = Blueprint::find('runway::post');
+        $authorBlueprint = Blueprint::find('runway::author');
+
+        $foodBlueprint = Blueprint::makeFromFields([
+            'name' => ['type' => 'text', 'validate' => 'required'],
+            'metadata->calories' => ['type' => 'integer', 'validate' => 'required'],
         ]);
 
-        Runway::discoverResources();
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn($authorBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::food')->andReturn($foodBlueprint);
+
+        Schema::shouldReceive('hasTable')
+            ->with('foods')
+            ->andReturn(false);
+
+        Schema::shouldReceive('dropIfExists');
 
         $this
             ->artisan('runway:generate-migrations', [
@@ -155,25 +141,17 @@ class GenerateMigrationTest extends TestCase
     {
         TestTime::freeze();
 
-        Config::set('runway', [
-            'resources' => [
-                Food::class => [
-                    'name' => 'Food',
-                    'blueprint' => [
-                        'tabs' => [
-                            'main' => [
-                                'fields' => [
-                                    ['handle' => 'name', 'field' => ['type' => 'text', 'validate' => 'required']],
-                                    ['handle' => 'metadata->calories', 'field' => ['type' => 'integer', 'validate' => 'required']],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
+        $postBlueprint = Blueprint::find('runway::post');
+        $authorBlueprint = Blueprint::find('runway::author');
+
+        $foodBlueprint = Blueprint::makeFromFields([
+            'name' => ['type' => 'text', 'validate' => 'required'],
+            'metadata->calories' => ['type' => 'integer', 'validate' => 'required'],
         ]);
 
-        Runway::discoverResources();
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn($authorBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::food')->andReturn($foodBlueprint);
 
         Schema::shouldReceive('hasTable')
             ->with('foods')
@@ -197,25 +175,17 @@ class GenerateMigrationTest extends TestCase
     {
         TestTime::freeze();
 
-        Config::set('runway', [
-            'resources' => [
-                Food::class => [
-                    'name' => 'Food',
-                    'blueprint' => [
-                        'tabs' => [
-                            'main' => [
-                                'fields' => [
-                                    ['handle' => 'name', 'field' => ['type' => 'text', 'validate' => 'required']],
-                                    ['handle' => 'metadata->calories', 'field' => ['type' => 'integer', 'validate' => 'required']],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
+        $postBlueprint = Blueprint::find('runway::post');
+        $authorBlueprint = Blueprint::find('runway::author');
+
+        $foodBlueprint = Blueprint::makeFromFields([
+            'name' => ['type' => 'text', 'validate' => 'required'],
+            'metadata->calories' => ['type' => 'integer', 'validate' => 'required'],
         ]);
 
-        Runway::discoverResources();
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn($authorBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::food')->andReturn($foodBlueprint);
 
         $this->assertFalse(Schema::hasTable('foods'));
 
@@ -236,59 +206,21 @@ class GenerateMigrationTest extends TestCase
     {
         TestTime::freeze();
 
-        Config::set('runway', [
-            'resources' => [
-                Food::class => [
-                    'name' => 'Food',
-                    'blueprint' => [
-                        'tabs' => [
-                            'main' => [
-                                'fields' => [
-                                    [
-                                        'handle' => 'ramond_the_array',
-                                        'field' => [
-                                            'type' => 'array',
-                                        ],
-                                    ],
-                                    [
-                                        'handle' => 'the_big_red_button',
-                                        'field' => [
-                                            'type' => 'button_group',
-                                        ],
-                                    ],
-                                    [
-                                        'handle' => 'floating_away',
-                                        'field' => [
-                                            'type' => 'float',
-                                        ],
-                                    ],
-                                    [
-                                        'handle' => 'int_the_ant',
-                                        'field' => [
-                                            'type' => 'integer',
-                                        ],
-                                    ],
-                                    [
-                                        'handle' => 'toggle_me_smth',
-                                        'field' => [
-                                            'type' => 'toggle',
-                                        ],
-                                    ],
-                                    [
-                                        'handle' => 'author_id',
-                                        'field' => [
-                                            'type' => 'belongs_to',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
+        $postBlueprint = Blueprint::find('runway::post');
+        $authorBlueprint = Blueprint::find('runway::author');
+
+        $foodBlueprint = Blueprint::makeFromFields([
+            'ramond_the_array' => ['type' => 'array'],
+            'the_big_red_button' => ['type' => 'button_group'],
+            'floating_away' => ['type' => 'float'],
+            'int_the_ant' => ['type' => 'integer'],
+            'toggle_me_smth' => ['type' => 'toggle'],
+            'author_id' => ['type' => 'belongs_to'],
         ]);
 
-        Runway::discoverResources();
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn($authorBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::food')->andReturn($foodBlueprint);
 
         $this
             ->artisan('runway:generate-migrations', [
@@ -318,34 +250,26 @@ class GenerateMigrationTest extends TestCase
     {
         TestTime::freeze();
 
-        Config::set('runway', [
-            'resources' => [
-                Food::class => [
-                    'name' => 'Food',
-                    'blueprint' => [
-                        'tabs' => [
-                            'main' => [
-                                'fields' => [
-                                    ['handle' => 'assets', 'field' => ['type' => 'assets']],
-                                    ['handle' => 'collections', 'field' => ['type' => 'collections']],
-                                    ['handle' => 'entries', 'field' => ['type' => 'entries']],
-                                    ['handle' => 'terms', 'field' => ['type' => 'terms']],
-                                    ['handle' => 'users', 'field' => ['type' => 'users']],
+        $postBlueprint = Blueprint::find('runway::post');
+        $authorBlueprint = Blueprint::find('runway::author');
 
-                                    ['handle' => 'asset', 'field' => ['type' => 'assets', 'max_items' => 1]],
-                                    ['handle' => 'collection', 'field' => ['type' => 'collections', 'max_items' => 1]],
-                                    ['handle' => 'entry', 'field' => ['type' => 'entries', 'max_items' => 1]],
-                                    ['handle' => 'term', 'field' => ['type' => 'terms', 'max_items' => 1]],
-                                    ['handle' => 'user', 'field' => ['type' => 'users', 'max_items' => 1]],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
+        $foodBlueprint = Blueprint::makeFromFields([
+            'assets' => ['type' => 'assets'],
+            'collections' => ['type' => 'collections'],
+            'entries' => ['type' => 'entries'],
+            'terms' => ['type' => 'terms'],
+            'users' => ['type' => 'users'],
+
+            'asset' => ['type' => 'assets', 'max_items' => 1],
+            'collection' => ['type' => 'collections', 'max_items' => 1],
+            'entry' => ['type' => 'entries', 'max_items' => 1],
+            'term' => ['type' => 'terms', 'max_items' => 1],
+            'user' => ['type' => 'users', 'max_items' => 1],
         ]);
 
-        Runway::discoverResources();
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn($authorBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::food')->andReturn($foodBlueprint);
 
         $this
             ->artisan('runway:generate-migrations', [
@@ -380,25 +304,17 @@ class GenerateMigrationTest extends TestCase
     {
         TestTime::freeze();
 
-        Config::set('runway', [
-            'resources' => [
-                Food::class => [
-                    'name' => 'Food',
-                    'blueprint' => [
-                        'tabs' => [
-                            'main' => [
-                                'fields' => [
-                                    ['handle' => 'text', 'field' => ['type' => 'text']],
-                                    ['handle' => 'entries', 'field' => ['type' => 'entries']],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
+        $postBlueprint = Blueprint::find('runway::post');
+        $authorBlueprint = Blueprint::find('runway::author');
+
+        $foodBlueprint = Blueprint::makeFromFields([
+            'text' => ['type' => 'text'],
+            'entries' => ['type' => 'entries'],
         ]);
 
-        Runway::discoverResources();
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn($authorBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::food')->andReturn($foodBlueprint);
 
         $this
             ->artisan('runway:generate-migrations', [
@@ -423,25 +339,17 @@ class GenerateMigrationTest extends TestCase
     {
         TestTime::freeze();
 
-        Config::set('runway', [
-            'resources' => [
-                Food::class => [
-                    'name' => 'Food',
-                    'blueprint' => [
-                        'tabs' => [
-                            'main' => [
-                                'fields' => [
-                                    ['handle' => 'text', 'field' => ['type' => 'text', 'validate' => 'required']],
-                                    ['handle' => 'entries', 'field' => ['type' => 'entries', 'validate' => 'required']],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
+        $postBlueprint = Blueprint::find('runway::post');
+        $authorBlueprint = Blueprint::find('runway::author');
+
+        $foodBlueprint = Blueprint::makeFromFields([
+            'text' => ['type' => 'text', 'validate' => 'required'],
+            'entries' => ['type' => 'entries', 'validate' => 'required'],
         ]);
 
-        Runway::discoverResources();
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn($authorBlueprint);
+        Blueprint::shouldReceive('find')->with('runway::food')->andReturn($foodBlueprint);
 
         $this
             ->artisan('runway:generate-migrations', [

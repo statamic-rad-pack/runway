@@ -12,6 +12,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Blink;
+use Statamic\Facades\Blueprint;
 use Statamic\Fields\Field;
 use Statamic\Http\Requests\FilteredRequest;
 
@@ -27,7 +28,9 @@ class HasManyFieldtypeTest extends TestCase
     {
         parent::setUp();
 
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields', [
+        $postBlueprint = Blueprint::find('runway::post');
+
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->ensureFieldsInTab([
             [
                 'handle' => 'name',
                 'field' => [
@@ -50,7 +53,7 @@ class HasManyFieldtypeTest extends TestCase
                     'mode' => 'select',
                 ],
             ],
-        ]);
+        ], 'main'));
 
         $this->fieldtype = tap(new HasManyFieldtype())
             ->setField(new Field('posts', [

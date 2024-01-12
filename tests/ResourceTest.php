@@ -4,6 +4,7 @@ namespace DoubleThreeDigital\Runway\Tests;
 
 use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Support\Facades\Config;
+use Statamic\Facades\Blueprint;
 use Statamic\Facades\Fieldset;
 
 class ResourceTest extends TestCase
@@ -23,21 +24,16 @@ class ResourceTest extends TestCase
     /** @test */
     public function can_get_eloquent_relationships_for_has_many_field()
     {
-        $fields = Config::get('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields');
+        $blueprint = Blueprint::find('runway::author');
 
-        $fields[] = [
-            'handle' => 'posts',
-            'field' => [
+        Blueprint::shouldReceive('find')
+            ->with('runway::author')
+            ->andReturn($blueprint->ensureField('posts', [
                 'type' => 'has_many',
                 'resource' => 'post',
                 'max_items' => 1,
                 'mode' => 'default',
-            ],
-        ];
-
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.blueprint.sections.main.fields', $fields);
-
-        Runway::discoverResources();
+            ]));
 
         $resource = Runway::findResource('author');
 
@@ -126,6 +122,35 @@ class ResourceTest extends TestCase
     }
 
     /** @test */
+    public function can_get_blueprint()
+    {
+        $resource = Runway::findResource('post');
+
+        $blueprint = $resource->blueprint();
+
+        $this->assertTrue($blueprint instanceof \Statamic\Fields\Blueprint);
+        $this->assertSame('runway', $blueprint->namespace());
+        $this->assertSame('post', $blueprint->handle());
+    }
+
+    /** @test */
+    public function can_create_blueprint_if_one_does_not_exist()
+    {
+        $resource = Runway::findResource('post');
+
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturnNull()->once();
+        Blueprint::shouldReceive('find')->with('runway.post')->andReturnNull()->once();
+        Blueprint::shouldReceive('make')->with('post')->andReturn((new \Statamic\Fields\Blueprint)->setHandle('post'))->once();
+        Blueprint::shouldReceive('save')->andReturnSelf()->once();
+
+        $blueprint = $resource->blueprint();
+
+        $this->assertTrue($blueprint instanceof \Statamic\Fields\Blueprint);
+        $this->assertSame('runway', $blueprint->namespace());
+        $this->assertSame('post', $blueprint->handle());
+    }
+
+    /** @test */
     public function can_get_listable_columns()
     {
         Fieldset::make('seo')->setContents([
@@ -135,21 +160,27 @@ class ResourceTest extends TestCase
             ],
         ])->save();
 
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.blueprint', [
-            'sections' => [
+        $blueprint = Blueprint::make()->setContents([
+            'tabs' => [
                 'main' => [
-                    'fields' => [
-                        ['handle' => 'title', 'field' => ['type' => 'text', 'listable' => true]],
-                        ['handle' => 'summary', 'field' => ['type' => 'textarea', 'listable' => true]],
-                        ['handle' => 'body', 'field' => ['type' => 'markdown', 'listable' => 'hidden']],
-                        ['handle' => 'thumbnail', 'field' => ['type' => 'assets', 'listable' => false]],
-                        ['import' => 'seo'],
+                    'sections' => [
+                        [
+                            'fields' => [
+                                ['handle' => 'title', 'field' => ['type' => 'text', 'listable' => true]],
+                                ['handle' => 'summary', 'field' => ['type' => 'textarea', 'listable' => true]],
+                                ['handle' => 'body', 'field' => ['type' => 'markdown', 'listable' => 'hidden']],
+                                ['handle' => 'thumbnail', 'field' => ['type' => 'assets', 'listable' => false]],
+                                ['import' => 'seo'],
+                            ],
+                        ],
                     ],
                 ],
             ],
         ]);
 
-        $resource = Runway::discoverResources()->findResource('post');
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($blueprint);
+
+        $resource = Runway::findResource('post');
 
         $this->assertEquals([
             'title',

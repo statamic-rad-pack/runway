@@ -47,11 +47,10 @@ class ListResources extends Command
         }
 
         $this->table(
-            ['Handle', 'Model', 'Blueprint', 'Route'],
+            ['Handle', 'Model', 'Route'],
             Runway::allResources()->map(fn (Resource $resource) => [
                 $resource->handle(),
                 $resource->model()::class,
-                optional($resource->blueprint())->namespace().optional($resource->blueprint())->handle(),
                 $resource->hasRouting() ? $resource->route() : 'N/A',
             ])->values()->toArray()
         );
