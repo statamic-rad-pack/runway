@@ -1,12 +1,12 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Policies;
+namespace StatamicRadPack\Runway\Tests\Policies;
 
-use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
 use Statamic\Facades\Role;
 use Statamic\Facades\User;
+use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\TestCase;
 
 class ResourcePolicyTest extends TestCase
 {

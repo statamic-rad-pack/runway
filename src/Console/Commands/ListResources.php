@@ -1,11 +1,11 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Console\Commands;
+namespace StatamicRadPack\Runway\Console\Commands;
 
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Console\Command;
 use Statamic\Console\RunsInPlease;
+use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Runway;
 
 class ListResources extends Command
 {

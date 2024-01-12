@@ -1,13 +1,13 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Console\Commands;
+namespace StatamicRadPack\Runway\Tests\Console\Commands;
 
-use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Statamic\Facades\Blueprint;
 use Statamic\Fields\Blueprint as FieldsBlueprint;
+use StatamicRadPack\Runway\Tests\TestCase;
 
 class GenerateBlueprintTest extends TestCase
 {

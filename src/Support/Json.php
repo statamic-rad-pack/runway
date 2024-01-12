@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Support;
+namespace StatamicRadPack\Runway\Support;
 
 class Json
 {

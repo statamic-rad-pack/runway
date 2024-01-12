@@ -1,12 +1,12 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Query\Scopes\Filters;
+namespace StatamicRadPack\Runway\Query\Scopes\Filters;
 
-use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Statamic\Fields\Field;
 use Statamic\Query\Scopes\Filters\Fields as BaseFieldsFilter;
+use StatamicRadPack\Runway\Runway;
 
 class Fields extends BaseFieldsFilter
 {

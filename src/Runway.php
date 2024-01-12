@@ -1,11 +1,11 @@
 <?php
 
-namespace DoubleThreeDigital\Runway;
+namespace StatamicRadPack\Runway;
 
-use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use StatamicRadPack\Runway\Exceptions\ResourceNotFound;
 
 class Runway
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\UpdateScripts;
+namespace StatamicRadPack\Runway\UpdateScripts;
 
 use Illuminate\Support\Facades\Artisan;
 use Statamic\UpdateScripts\UpdateScript;

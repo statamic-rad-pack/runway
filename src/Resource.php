@@ -1,9 +1,7 @@
 <?php
 
-namespace DoubleThreeDigital\Runway;
+namespace StatamicRadPack\Runway;
 
-use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
-use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
@@ -11,6 +9,8 @@ use Illuminate\Support\Str;
 use Statamic\Fields\Blueprint;
 use Statamic\Fields\Field;
 use Statamic\Statamic;
+use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
+use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 
 class Resource
 {
@@ -173,7 +173,7 @@ class Resource
     public function hasRouting(): bool
     {
         return ! is_null($this->route())
-            && in_array(\DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes::class, class_uses($this->model()));
+            && in_array(\StatamicRadPack\Runway\Routing\Traits\RunwayRoutes::class, class_uses($this->model()));
     }
 
     public function primaryKey(): string

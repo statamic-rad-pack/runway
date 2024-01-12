@@ -1,8 +1,7 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests;
+namespace StatamicRadPack\Runway\Tests;
 
-use DoubleThreeDigital\Runway\ServiceProvider;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
@@ -12,6 +11,7 @@ use Statamic\Facades\Blueprint;
 use Statamic\Providers\StatamicServiceProvider;
 use Statamic\Stache\Stores\UsersStore;
 use Statamic\Statamic;
+use StatamicRadPack\Runway\ServiceProvider;
 
 abstract class TestCase extends OrchestraTestCase
 {
@@ -57,7 +57,7 @@ abstract class TestCase extends OrchestraTestCase
         $app->make(Manifest::class)->manifest = [
             'doublethreedigital/runway' => [
                 'id' => 'doublethreedigital/runway',
-                'namespace' => 'DoubleThreeDigital\\Runway',
+                'namespace' => 'StatamicRadPack\\Runway',
             ],
         ];
     }

@@ -1,12 +1,7 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Traits;
+namespace StatamicRadPack\Runway\Traits;
 
-use DoubleThreeDigital\Runway\Data\AugmentedModel;
-use DoubleThreeDigital\Runway\Data\HasAugmentedInstance;
-use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Statamic\Contracts\Data\Augmented;
 use Statamic\Fields\Field;
@@ -14,6 +9,11 @@ use Statamic\Fieldtypes\Hidden;
 use Statamic\Fieldtypes\Section;
 use Statamic\GraphQL\ResolvesValues;
 use Statamic\Support\Traits\FluentlyGetsAndSets;
+use StatamicRadPack\Runway\Data\AugmentedModel;
+use StatamicRadPack\Runway\Data\HasAugmentedInstance;
+use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
+use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Runway;
 
 trait HasRunwayResource
 {

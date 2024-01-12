@@ -1,14 +1,14 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Console\Commands;
+namespace StatamicRadPack\Runway\Console\Commands;
 
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Routing\RunwayUri;
-use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Statamic\Console\RunsInPlease;
 use Statamic\View\Antlers\Parser;
+use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Routing\RunwayUri;
+use StatamicRadPack\Runway\Runway;
 
 class RebuildUriCache extends Command
 {

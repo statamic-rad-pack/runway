@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\UpdateScripts;
+namespace StatamicRadPack\Runway\Tests\UpdateScripts;
 
 trait RunsUpdateScripts
 {

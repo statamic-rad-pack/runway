@@ -1,14 +1,14 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Console\Commands;
+namespace StatamicRadPack\Runway\Console\Commands;
 
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Blueprint;
 use Statamic\Fields\Blueprint as FieldsBlueprint;
+use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Runway;
 
 class MigrateBlueprints extends Command
 {

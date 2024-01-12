@@ -1,12 +1,12 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Console\Commands;
+namespace StatamicRadPack\Runway\Tests\Console\Commands;
 
-use DoubleThreeDigital\Runway\Routing\RunwayUri;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
+use StatamicRadPack\Runway\Routing\RunwayUri;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\TestCase;
 
 class RebuildUriCacheTest extends TestCase
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Actions;
+namespace StatamicRadPack\Runway\Actions;
 
-use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
-use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Actions\Action;
+use StatamicRadPack\Runway\Exceptions\ResourceNotFound;
+use StatamicRadPack\Runway\Runway;
 
 class DeleteModel extends Action
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Http\Controllers\CP;
+namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
-use DoubleThreeDigital\Runway\Resource;
 use Illuminate\Http\Request;
 use Statamic\Http\Controllers\CP\ActionController;
+use StatamicRadPack\Runway\Resource;
 
 class ResourceActionController extends ActionController
 {

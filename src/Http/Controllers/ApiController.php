@@ -1,15 +1,15 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Http\Controllers;
+namespace StatamicRadPack\Runway\Http\Controllers;
 
-use DoubleThreeDigital\Runway\Http\Resources\ApiResource;
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
 use Facades\Statamic\API\FilterAuthorizer;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Http\Controllers\API\ApiController as StatamicApiController;
+use StatamicRadPack\Runway\Http\Resources\ApiResource;
+use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Runway;
 
 class ApiController extends StatamicApiController
 {

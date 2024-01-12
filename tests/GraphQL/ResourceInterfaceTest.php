@@ -1,9 +1,9 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\GraphQL;
+namespace StatamicRadPack\Runway\Tests\GraphQL;
 
-use DoubleThreeDigital\Runway\Tests\TestCase;
 use Rebing\GraphQL\Support\Facades\GraphQL;
+use StatamicRadPack\Runway\Tests\TestCase;
 
 class ResourceInterfaceTest extends TestCase
 {

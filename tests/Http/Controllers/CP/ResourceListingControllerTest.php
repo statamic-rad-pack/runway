@@ -1,15 +1,15 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Http\Controllers\CP;
+namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
 
-use DoubleThreeDigital\Runway\Runway;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post;
-use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\User;
+use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\TestCase;
 
 class ResourceListingControllerTest extends TestCase
 {
@@ -53,8 +53,8 @@ class ResourceListingControllerTest extends TestCase
     /** @test */
     public function listing_rows_are_ordered_as_per_config()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.order_by', 'id');
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Post.order_by_direction', 'desc');
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.order_by', 'id');
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.order_by_direction', 'desc');
 
         Runway::discoverResources();
 

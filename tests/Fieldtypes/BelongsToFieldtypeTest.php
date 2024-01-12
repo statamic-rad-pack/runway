@@ -1,16 +1,16 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tests\Fieldtypes;
+namespace StatamicRadPack\Runway\Tests\Fieldtypes;
 
-use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
-use DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author;
-use DoubleThreeDigital\Runway\Tests\TestCase;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Statamic\Fields\Field;
 use Statamic\Http\Requests\FilteredRequest;
+use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
+use StatamicRadPack\Runway\Tests\TestCase;
 
 class BelongsToFieldtypeTest extends TestCase
 {
@@ -81,8 +81,8 @@ class BelongsToFieldtypeTest extends TestCase
     /** @test */
     public function can_get_index_items_in_order_specified_in_runway_config()
     {
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.order_by', 'name');
-        Config::set('runway.resources.DoubleThreeDigital\Runway\Tests\Fixtures\Models\Author.order_by_direction', 'desc');
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.order_by', 'name');
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.order_by_direction', 'desc');
 
         Author::factory()->create(['name' => 'Scully']);
         Author::factory()->create(['name' => 'Jake Peralta']);

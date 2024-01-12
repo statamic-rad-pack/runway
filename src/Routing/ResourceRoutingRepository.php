@@ -1,6 +1,6 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Routing;
+namespace StatamicRadPack\Runway\Routing;
 
 class ResourceRoutingRepository
 {

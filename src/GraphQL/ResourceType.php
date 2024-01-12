@@ -1,15 +1,15 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\GraphQL;
+namespace StatamicRadPack\Runway\GraphQL;
 
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Rebing\GraphQL\Support\Type;
 use Statamic\Facades\GraphQL;
+use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Runway;
 
 class ResourceType extends Type
 {

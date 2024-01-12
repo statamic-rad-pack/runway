@@ -1,22 +1,22 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Http\Controllers\CP;
+namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
-use DoubleThreeDigital\Runway\Fieldtypes\BelongsToFieldtype;
-use DoubleThreeDigital\Runway\Fieldtypes\HasManyFieldtype;
-use DoubleThreeDigital\Runway\Http\Requests\CP\CreateRequest;
-use DoubleThreeDigital\Runway\Http\Requests\CP\EditRequest;
-use DoubleThreeDigital\Runway\Http\Requests\CP\IndexRequest;
-use DoubleThreeDigital\Runway\Http\Requests\CP\StoreRequest;
-use DoubleThreeDigital\Runway\Http\Requests\CP\UpdateRequest;
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\CP\Breadcrumbs;
 use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Facades\Scope;
 use Statamic\Fields\Field;
 use Statamic\Http\Controllers\CP\CpController;
+use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
+use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
+use StatamicRadPack\Runway\Http\Requests\CP\CreateRequest;
+use StatamicRadPack\Runway\Http\Requests\CP\EditRequest;
+use StatamicRadPack\Runway\Http\Requests\CP\IndexRequest;
+use StatamicRadPack\Runway\Http\Requests\CP\StoreRequest;
+use StatamicRadPack\Runway\Http\Requests\CP\UpdateRequest;
+use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Runway;
 
 class ResourceController extends CpController
 {

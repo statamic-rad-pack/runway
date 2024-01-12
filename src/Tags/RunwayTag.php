@@ -1,15 +1,15 @@
 <?php
 
-namespace DoubleThreeDigital\Runway\Tags;
+namespace StatamicRadPack\Runway\Tags;
 
-use DoubleThreeDigital\Runway\Exceptions\ResourceNotFound;
-use DoubleThreeDigital\Runway\Resource;
-use DoubleThreeDigital\Runway\Runway;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Statamic\Extensions\Pagination\LengthAwarePaginator;
 use Statamic\Facades\Blink;
 use Statamic\Tags\Tags;
+use StatamicRadPack\Runway\Exceptions\ResourceNotFound;
+use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Runway;
 
 class RunwayTag extends Tags
 {
