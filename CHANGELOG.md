@@ -1,5 +1,12 @@
 # Changelog
 
+## v5.6.2 (2024-01-14)
+
+### What's improved
+* The model ID is now passed to the publish form so it exists in Vuex #401
+
+
+
 ## v5.6.1 (2024-01-09)
 
 ### What's fixed
