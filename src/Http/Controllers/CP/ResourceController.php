@@ -145,7 +145,7 @@ class ResourceController extends CpController
                 'editBlueprint' => cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]),
             ],
             'blueprint' => $blueprint->toPublishArray(),
-            'values' => $fields->values(),
+            'values' => $fields->values()->merge(['id' => $model->getKey()]),
             'meta' => $fields->meta(),
             'permalink' => $resource->hasRouting() ? $model->uri() : null,
             'resourceHasRoutes' => $resource->hasRouting(),
