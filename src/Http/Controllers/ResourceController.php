@@ -238,7 +238,7 @@ class ResourceController extends CpController
             ]),
             'resource' => $resource,
             'blueprint' => $blueprint->toPublishArray(),
-            'values' => $fields->values(),
+            'values' => $fields->values()->merge(['id' => $record->getKey()]),
             'meta' => $fields->meta(),
             'permalink' => $resource->hasRouting()
                 ? $record->uri()
