@@ -1,5 +1,18 @@
 # Changelog
 
+## v6.0.2 (2024-01-15)
+
+### What's new
+* Added "Edit Blueprint" link to index & edit pages #400 by @duncanmcclean
+
+### What's improved
+* The model ID is now passed to the publish form so it exists in Vuex #401 by @duncanmcclean
+
+### What's fixed
+* Fixed an issue with CP nav icons not displaying #399 by @caseydwyer
+
+
+
 ## v6.0.1 (2024-01-12)
 
 ### What's improved
