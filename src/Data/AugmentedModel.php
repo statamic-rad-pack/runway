@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Data;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Statamic\Data\AbstractAugmented;
@@ -131,6 +132,10 @@ class AugmentedModel extends AbstractAugmented
                     );
                 })
                 ->toArray();
+        }
+
+        if ($value instanceof Attribute) {
+            $value = ($value->get)();
         }
 
         return new Value(
