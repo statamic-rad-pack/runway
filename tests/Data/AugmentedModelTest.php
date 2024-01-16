@@ -60,4 +60,14 @@ class AugmentedModelTest extends TestCase
         $this->assertEquals('Alternative Title...', $augmented->get('values')->value()['alt_title']->value());
         $this->assertEquals('<p>This is a <strong>great</strong> post! You should <em>read</em> it.</p>', trim($augmented->get('values')->value()['alt_body']->value()));
     }
+
+    /** @test */
+    public function it_gets_value_from_model_accessor()
+    {
+        $post = Post::factory()->create();
+
+        $augmented = new AugmentedModel($post);
+
+        $this->assertEquals('This is an excerpt.', $augmented->get('excerpt')->value());
+    }
 }

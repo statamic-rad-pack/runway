@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Tests\Fixtures\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use StatamicRadPack\Runway\Routing\Traits\RunwayRoutes;
@@ -42,9 +43,13 @@ class Post extends Model
         return $this->belongsTo(Author::class);
     }
 
-    public function getExcerptAttribute()
+    public function excerpt(): Attribute
     {
-        return 'This is an excerpt.';
+        return Attribute::make(
+            get: function () {
+                return 'This is an excerpt.';
+            }
+        );
     }
 
     protected static function newFactory()
