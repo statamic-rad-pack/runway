@@ -1,5 +1,11 @@
 # Changelog
 
+## v6.0.3 (2024-01-16)
+
+### What's fixed
+* Fixed model accessors not being augmented #405 by @duncanmcclean
+
+
 ## v6.0.2 (2024-01-15)
 
 ### What's new
