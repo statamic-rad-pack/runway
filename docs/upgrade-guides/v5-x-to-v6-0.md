@@ -20,6 +20,9 @@ composer require statamic-rad-pack/runway:^6.0
 **2.** Next, you'll need to update references to Runway's traits in your Eloquent models.
 
 ```php
+<?php
+
+use Illuminate\Database\Eloquent\Model;
 use DoubleThreeDigital\Runway\Traits\HasRunwayResource; // [tl! remove]
 use StatamicRadPack\Runway\Traits\HasRunwayResource; // [tl! remove]
 use DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes; // [tl! add]
