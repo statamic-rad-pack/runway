@@ -14,10 +14,24 @@ To get started with the upgrade process, follow the below steps:
 
 ```sh
 composer remove doublethreedigital/runway
-composer require statamic-rad-pack/runway
+composer require statamic-rad-pack/runway:^6.0
 ```
 
-**2.** After this step, clear your route & view caches to make sure everything is fresh:
+**2.** Next, you'll need to update references to Runway's traits in your Eloquent models.
+
+```php
+use DoubleThreeDigital\Runway\Traits\HasRunwayResource; // [tl! remove]
+use StatamicRadPack\Runway\Traits\HasRunwayResource; // [tl! remove]
+use DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes; // [tl! add]
+use StatamicRadPack\Runway\Routing\Traits\RunwayRoutes; // [tl! add]
+
+class Order extends Model
+{
+    use HasRunwayResource, RunwayRoutes;
+}
+```
+
+**3.** After this step, clear your route & view caches to make sure everything is fresh:
 
 ```
 php artisan route:clear
@@ -71,7 +85,7 @@ If you were using the Table mode on any of your Has Many fields, you should swit
 ### Low: Changes to overriding eager loaded relationships.
 If you were previously overriding the "eager loaded relationships" in your resource's config array, you should change the key from `with` to `relationships`:
 
-```
+```php
 \App\Models\Product::class => [
     // ...
 
