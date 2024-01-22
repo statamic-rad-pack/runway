@@ -32,7 +32,7 @@ class BaseFieldtype extends Relationship
         'initialValues' => 'values',
         'initialMeta' => 'meta',
         'initialTitle' => 'title',
-        'action' => 'action',
+        'initialActions' => 'actions',
         'method' => 'method',
         'resourceHasRoutes' => 'resourceHasRoutes',
         'permalink' => 'permalink',
