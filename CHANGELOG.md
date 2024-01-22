@@ -1,9 +1,17 @@
 # Changelog
 
+## v6.0.4 (2024-01-22)
+
+### What's fixed
+* Fixed saving models via relationship fieldtypes #407 by @duncanmcclean
+
+
+
 ## v6.0.3 (2024-01-16)
 
 ### What's fixed
 * Fixed model accessors not being augmented #405 by @duncanmcclean
+
 
 
 ## v6.0.2 (2024-01-15)
