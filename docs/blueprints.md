@@ -141,3 +141,9 @@ public function fullName(): Attribute
 Then, in your user blueprint, you'd set the field's visibility to "Computed":
 
 ![Field's visibility set to computed](/img/runway/field-visibility-computed.png)
+
+:::note Note!
+Please note in runway, the accessor must be defined as a `public function`.
+In the [Laravel Docs](https://laravel.com/docs/10.x/eloquent-mutators#accessors-and-mutators), accessors are defined as a `protected function`.
+This will result in a `BadMethodCallException` if you call protected computed field.
+:::
