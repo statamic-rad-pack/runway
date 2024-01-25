@@ -79,7 +79,7 @@ class HasManyFieldtype extends BaseFieldtype
 
         $model = $resource->model()->firstWhere(
             $resource->routeKey(),
-            request()->route('record') ?? Blink::get('RunwayRouteModel')
+            request()->route('model') ?? Blink::get('RunwayRouteModel')
         );
 
         // If we're adding HasMany relations on a model that doesn't exist yet,
