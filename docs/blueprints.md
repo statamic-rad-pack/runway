@@ -141,3 +141,7 @@ public function fullName(): Attribute
 Then, in your user blueprint, you'd set the field's visibility to "Computed":
 
 ![Field's visibility set to computed](/img/runway/field-visibility-computed.png)
+
+:::note Note!
+It's worth noting, Runway requires any accessors to be `public` functions, otherwise the attributes won't be augmentable.
+:::

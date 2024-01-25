@@ -49,10 +49,10 @@ return [
 In addition to front-end routing, you may also use Runway's tag to loop through your models and display the results. The tag supports filtering, using Eloquent scopes and sorting.
 
 ```antlers
-{{ runway:products }}
+{{ runway:product }}
     <h2>{{ name }}</h2>
     <p>Price: {{ price }}</p>
-{{ /runway:products }}
+{{ /runway:product }}
 ```
 
 -   [Review documentation](https://runway.duncanmcclean.com/templating)
