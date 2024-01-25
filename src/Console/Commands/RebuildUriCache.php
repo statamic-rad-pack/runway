@@ -57,6 +57,7 @@ class RebuildUriCache extends Command
 
         Runway::allResources()
             ->each(function (Resource $resource) {
+                $this->newLine(2);
                 $this->info("Building {$resource->name()} URIs");
 
                 if (! $resource->hasRouting()) {
@@ -65,9 +66,7 @@ class RebuildUriCache extends Command
                     return;
                 }
 
-                $resource->model()->all()->each(function ($model) use ($resource) {
-                    $this->line("{$resource->name()}: {$model->{$resource->primaryKey()}}");
-
+                $this->withProgressBar($resource->model()->all(), function ($model) use ($resource) {
                     $uri = (new Parser())
                         ->parse($resource->route(), $model->toAugmentedArray())
                         ->__toString();
