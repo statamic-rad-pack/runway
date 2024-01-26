@@ -24,8 +24,8 @@ composer require statamic-rad-pack/runway:^6.0
 
 use Illuminate\Database\Eloquent\Model;
 use DoubleThreeDigital\Runway\Traits\HasRunwayResource; // [tl! remove]
-use StatamicRadPack\Runway\Traits\HasRunwayResource; // [tl! remove]
-use DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes; // [tl! add]
+use StatamicRadPack\Runway\Traits\HasRunwayResource; // [tl! add]
+use DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes; // [tl! remove]
 use StatamicRadPack\Runway\Routing\Traits\RunwayRoutes; // [tl! add]
 
 class Order extends Model
