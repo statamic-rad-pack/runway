@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Statamic\CP\Column;
@@ -174,7 +175,7 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        if ($values instanceof HasMany) {
+        if (($values instanceof HasMany)||($values instanceof MorphToMany)) {
             $results = $values
                 ->get()
                 ->map->toAugmentedArray()
