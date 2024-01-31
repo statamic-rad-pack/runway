@@ -243,7 +243,6 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        if (($values instanceof HasMany) || ($values instanceof MorphToMany))  {
             $results = $values
                 ->get()
                 ->map->toShallowAugmentedArray()
