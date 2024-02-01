@@ -1,5 +1,17 @@
 # Changelog
 
+## v6.0.5 (2024-02-01)
+
+### What's improved
+* Added a progress bar to the `runway:rebuild-uris` command #414 by @duncanmcclean
+* Improved the way relationships are eager loaded #418 by @duncanmcclean
+
+### What's fixed
+* Fixed `MorphToMany` relationships not being augmented #416 by @mefenlon
+* Fixed an issue saving the Has Many fieldtype #413 by @duncanmcclean
+
+
+
 ## v6.0.4 (2024-01-22)
 
 ### What's fixed
