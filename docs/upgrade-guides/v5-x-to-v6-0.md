@@ -85,21 +85,6 @@ If you were using the Table mode on any of your Has Many fields, you should swit
 * `mode: table`
 * `'mode' => 'table'`
 
-### Low: Changes to overriding eager loaded relationships.
-If you were previously overriding the "eager loaded relationships" in your resource's config array, you should change the key from `with` to `relationships`:
-
-```php
-\App\Models\Product::class => [
-    // ...
-
-    // Previously...
-    'with' => ['tags', 'manufacturer'],
-
-    // Now...
-    'relationships' => ['tags', 'manufacturer'],
-],
-```
-
 ## Previous upgrade guides
 
 -   [v3.x to v4.0](/upgrade-guides/v3-x-to-v4-0)
