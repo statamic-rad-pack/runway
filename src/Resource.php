@@ -132,14 +132,10 @@ class Resource
     }
 
     /**
-     * Automatically maps Eloquent relationships to their respective blueprint fields.
+     * Maps Eloquent relationships to their respective blueprint fields.
      */
     public function eloquentRelationships(): Collection
     {
-        if ($eloquentRelationships = $this->config->get('relationships')) {
-            return collect($eloquentRelationships);
-        }
-
         return $this->blueprint()->fields()->all()
             ->filter(function (Field $field) {
                 return $field->fieldtype() instanceof BelongsToFieldtype
@@ -170,6 +166,18 @@ class Resource
             })
             ->merge(['runwayUri'])
             ->filter(fn ($eloquentRelationship) => method_exists($this->model(), $eloquentRelationship));
+    }
+
+    /**
+     * Defines the relationships which should be eager loaded when querying the model.
+     */
+    public function eagerLoadingRelationships(): array
+    {
+        if ($eagerLoadingRelationships = $this->config->get('with')) {
+            return $eagerLoadingRelationships;
+        }
+
+        return $this->eloquentRelationships()->values()->toArray();
     }
 
     public function listableColumns(): Collection
