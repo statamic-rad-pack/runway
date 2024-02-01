@@ -55,18 +55,36 @@ class ResourceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_eloquent_relationships_as_defined_in_config()
+    public function can_get_eager_loading_relationships()
     {
-        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.relationships', ['author']);
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $eagerLoadingRelationships = $resource->eagerLoadingRelationships();
+
+        $this->assertEquals([
+            'author',
+            'runwayUri',
+        ], $eagerLoadingRelationships);
+    }
+
+    /** @test */
+    public function can_get_eager_loading_relationships_from_config()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.with', [
+            'author',
+        ]);
 
         Runway::discoverResources();
 
         $resource = Runway::findResource('post');
 
-        $eloquentRelationships = $resource->eloquentRelationships();
+        $eagerLoadingRelationships = $resource->eagerLoadingRelationships();
 
-        $this->assertContains('author', $eloquentRelationships->toArray());
-        $this->assertNotContains('runwayUri', $eloquentRelationships->toArray());
+        $this->assertEquals([
+            'author',
+        ], $eagerLoadingRelationships);
     }
 
     /** @test */
