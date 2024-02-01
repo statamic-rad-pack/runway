@@ -168,6 +168,21 @@ If you'd like to specify a different field, you may do so by setting the `title_
 ],
 ```
 
+### Eager Loading
+
+To help with performance, Runway will automatically ["eager load"](https://laravel.com/docs/master/eloquent-relationships#eager-loading) any Eloquent relationships it knows about based on the fields you've defined in your blueprint.
+
+However, if you wish, you can override the relationships that get eager loaded by providing the `with` option on your resource:
+
+```php
+'resources' => [
+	\App\Models\Order::class => [
+	    'name' => 'Orders',
+		'with' => ['lineItems', 'customer'],
+	],
+],
+```
+
 ## Actions
 
 In much the same way with entries, you can create custom Actions which will be usable in the listing tables provided by Runway.
