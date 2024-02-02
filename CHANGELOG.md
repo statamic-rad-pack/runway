@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.0.6 (2024-02-02)
+
+### What's fixed
+* Fixed `MorphMany` relationships not being augmented #419 by @mefenlon
+
+
+
 ## v6.0.5 (2024-02-01)
 
 ### What's improved
