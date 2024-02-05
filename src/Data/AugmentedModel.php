@@ -77,7 +77,7 @@ class AugmentedModel extends AbstractAugmented
     {
         return collect($this->data->getAttributes());
     }
-    
+
     protected function modelAppends(): Collection
     {
         return collect($this->data->getAppends());
