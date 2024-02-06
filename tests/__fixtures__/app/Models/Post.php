@@ -18,6 +18,7 @@ class Post extends Model
     ];
 
     protected $appends = [
+        'appended_value',
         'excerpt',
     ];
 
@@ -50,6 +51,11 @@ class Post extends Model
                 return 'This is an excerpt.';
             }
         );
+    }
+    
+    public function getAppendedValueAttribute()
+    {
+        return 'This is an appended value.';
     }
 
     protected static function newFactory()

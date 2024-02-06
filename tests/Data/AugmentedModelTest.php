@@ -70,4 +70,14 @@ class AugmentedModelTest extends TestCase
 
         $this->assertEquals('This is an excerpt.', $augmented->get('excerpt')->value());
     }
+    
+    /** @test */
+    public function it_adds_appends_values()
+    {
+        $post = Post::factory()->create();
+
+        $augmented = new AugmentedModel($post);
+        
+        $this->assertEquals('This is an appended value.', $augmented->get('appended_value')->value());
+    }
 }
