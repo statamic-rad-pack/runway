@@ -77,7 +77,7 @@ class AugmentedModelTest extends TestCase
         $post = Post::factory()->create();
 
         $augmented = new AugmentedModel($post);
-        
+
         $this->assertEquals('This is an appended value.', $augmented->get('appended_value')->value());
     }
 }

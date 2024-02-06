@@ -52,7 +52,7 @@ class Post extends Model
             }
         );
     }
-    
+
     public function getAppendedValueAttribute()
     {
         return 'This is an appended value.';
