@@ -70,7 +70,7 @@ class AugmentedModelTest extends TestCase
 
         $this->assertEquals('This is an excerpt.', $augmented->get('excerpt')->value());
     }
-    
+
     /** @test */
     public function it_adds_appends_values()
     {
