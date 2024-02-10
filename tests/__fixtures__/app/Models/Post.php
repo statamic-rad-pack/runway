@@ -18,6 +18,7 @@ class Post extends Model
     ];
 
     protected $appends = [
+        'appended_value',
         'excerpt',
     ];
 
@@ -48,6 +49,15 @@ class Post extends Model
         return Attribute::make(
             get: function () {
                 return 'This is an excerpt.';
+            }
+        );
+    }
+
+    public function appendedValue(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return 'This is an appended value.';
             }
         );
     }
