@@ -72,7 +72,7 @@ class AugmentedModelTest extends TestCase
     }
 
     /** @test */
-    public function it_adds_appends_values()
+    public function it_gets_value_from_appended_attribute()
     {
         $post = Post::factory()->create();
 
