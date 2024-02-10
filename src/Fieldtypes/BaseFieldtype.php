@@ -4,10 +4,7 @@ namespace StatamicRadPack\Runway\Fieldtypes;
 
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Statamic\CP\Column;
@@ -176,20 +173,7 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        if ($values instanceof HasMany || $values instanceof MorphToMany || $values instanceof MorphMany) {
-            $results = $values
-                ->get()
-                ->map->toAugmentedArray()
-                ->filter();
-
-            if ($this->config('max_items') === 1) {
-                return $results->first();
-            }
-
-            return $results;
-        }
-
-        if ($values instanceof BelongsTo) {
+        if ($values instanceof Relation) {
             $results = $values
                 ->get()
                 ->map->toAugmentedArray()
@@ -244,7 +228,7 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        if ($values instanceof HasMany || $values instanceof MorphToMany || $values instanceof MorphMany) {
+        if ($values instanceof Relation) {
             $results = $values
                 ->get()
                 ->map->toShallowAugmentedArray()
