@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway;
 
+use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
@@ -106,7 +107,7 @@ class Resource
         return $this->config->get('read_only', false);
     }
 
-    public function orderBy(): string
+    public function orderBy(): string|Expression
     {
         return $this->config->get('order_by', $this->primaryKey());
     }
