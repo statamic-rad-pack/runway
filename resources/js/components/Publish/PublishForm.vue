@@ -288,7 +288,7 @@ export default {
                 tab.sections.forEach((section) => {
                     section.fields
                         .filter((field) => {
-                            return field.type === 'belongs_to' || field.resource === window.Runway.currentResource;
+                            return field.type === 'belongs_to' && field.resource === window.Runway.currentResource;
                         })
                         .forEach((field) => {
                             let alreadyExists = this.values[field.handle].includes(window.Runway.currentModel.id)
