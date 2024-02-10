@@ -39,7 +39,7 @@ class AugmentedModel extends AbstractAugmented
     {
         return collect()
             ->merge($this->modelAttributes()->keys())
-            ->merge($this->modelAppends()->values())
+            ->merge($this->appendedAttributes()->values())
             ->merge($this->blueprintFields()->keys())
             ->merge($this->eloquentRelationships()->values())
             ->merge($this->commonKeys())
@@ -78,7 +78,7 @@ class AugmentedModel extends AbstractAugmented
         return collect($this->data->getAttributes());
     }
 
-    protected function modelAppends(): Collection
+    protected function appendedAttributes(): Collection
     {
         return collect($this->data->getAppends());
     }
