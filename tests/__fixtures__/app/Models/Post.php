@@ -53,9 +53,13 @@ class Post extends Model
         );
     }
 
-    public function getAppendedValueAttribute()
+    public function appendedValue(): Attribute
     {
-        return 'This is an appended value.';
+        return Attribute::make(
+            get: function () {
+                return 'This is an appended value.';
+            }
+        );
     }
 
     protected static function newFactory()
