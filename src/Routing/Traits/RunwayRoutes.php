@@ -4,10 +4,10 @@ namespace StatamicRadPack\Runway\Routing\Traits;
 
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
-use Statamic\Routing\Routable;
 use Statamic\StaticCaching\Cacher;
 use Statamic\Support\Arr;
 use Statamic\View\Antlers\Parser;
+use StatamicRadPack\Runway\Routing\Routable;
 use StatamicRadPack\Runway\Routing\RoutingModel;
 use StatamicRadPack\Runway\Routing\RunwayUri;
 use StatamicRadPack\Runway\Runway;
@@ -25,11 +25,6 @@ trait RunwayRoutes
         $this->routingModel = new RoutingModel($this);
 
         return $this->routingModel;
-    }
-
-    public function slug(): string
-    {
-        return $this->getAttribute('slug');
     }
 
     public function route(): ?string
