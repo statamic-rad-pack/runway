@@ -11,7 +11,7 @@ use Statamic\Support\Str;
  * just without the `slug` method & property which conflict with Eloquent
  * attributes of the same name.
  *
- * See: https://github.com/statamic-rad-pack/runway/issues/420
+ * See: https://github.com/statamic-rad-pack/runway/pull/429
  */
 trait Routable
 {
