@@ -1,5 +1,18 @@
 # Changelog
 
+## v6.1.0 (2024-02-11)
+
+### What's new
+* Appended attributes are now included in augmentation #423 by @ryanmitchell
+* Added `.editorconfig` and installed Laravel Pint #424 by @ryanmitchell
+
+### What's fixed
+* Fixed infinite loop getting/setting `slug` on Eloquent models with `RunwayRoutes` trait #429 by @duncanmcclean
+* Fixed relationship fields being pre-filled when they shouldn't be #428 by @duncanmcclean
+* Fixed augmentation for `BelongsToMany` relationships #425 by @mefenlon
+
+
+
 ## v6.0.6 (2024-02-02)
 
 ### What's fixed
