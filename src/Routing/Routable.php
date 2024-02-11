@@ -2,7 +2,6 @@
 
 namespace StatamicRadPack\Runway\Routing;
 
-use Closure;
 use Statamic\Contracts\Routing\UrlBuilder;
 use Statamic\Facades\URL;
 use Statamic\Support\Str;
