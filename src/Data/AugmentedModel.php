@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Statamic\Data\AbstractAugmented;
+use Statamic\Facades\Blink;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
 use Statamic\Statamic;
@@ -98,7 +99,20 @@ class AugmentedModel extends AbstractAugmented
 
     protected function eloquentRelationships()
     {
-        return $this->resource->eloquentRelationships();
+        return $this->resource->eloquentRelationships()->reject(fn ($relationship) => $relationship === 'runwayUri');
+    }
+
+    public function get($handle): Value
+    {
+        // When the $handle is an Eloquent relationship, ensure we pass the models to
+        // augmentation, rather than the Relationship instance.
+        if ($this->resource->eloquentRelationships()->flip()->has($handle)) {
+            return Blink::once("Runway::AugmentedModel_Relationship::{$this->data->{$this->resource->primaryKey()}}::{$handle}", function () use ($handle) {
+                return $this->wrapValue($this->getFromData($handle), $handle);
+            });
+        }
+
+        return parent::get($handle);
     }
 
     protected function getFromData($handle)

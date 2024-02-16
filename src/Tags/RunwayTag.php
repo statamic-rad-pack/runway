@@ -27,7 +27,12 @@ class RunwayTag extends Tags
             );
         }
 
-        $query = $resource->model()->query();
+        $query = $resource->model()->query()
+            ->when(
+                $this->params->get('with'),
+                fn ($query) => $query->with(explode('|', (string) $this->params->get('with'))),
+                fn ($query) => $query->with($resource->eagerLoadingRelationships())
+            );
 
         if ($select = $this->params->get('select')) {
             $query->select(explode(',', (string) $select));
@@ -73,10 +78,6 @@ class RunwayTag extends Tags
             } else {
                 $query->where($key, $value);
             }
-        }
-
-        if ($with = $this->params->get('with')) {
-            $query->with(explode('|', (string) $with));
         }
 
         if ($this->params->has('sort') && ! empty($this->params->get('sort'))) {
