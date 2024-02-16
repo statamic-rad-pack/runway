@@ -85,8 +85,6 @@ class ResourceListingControllerTest extends TestCase
     /** @test */
     public function listing_rows_are_ordered_from_runway_listing_scope()
     {
-        Runway::discoverResources();
-
         $user = User::make()->makeSuper()->save();
         $posts = Post::factory()->count(2)->create();
 
@@ -115,8 +113,6 @@ class ResourceListingControllerTest extends TestCase
     /** @test */
     public function listing_rows_arent_ordered_from_runway_listing_scope_when_user_defines_an_order()
     {
-        Runway::discoverResources();
-
         $user = User::make()->makeSuper()->save();
         $posts = Post::factory()->count(2)->create();
 
