@@ -1,5 +1,13 @@
 # Changelog
 
+## v6.2.0 (2024-02-16)
+
+### What's improved
+* The `runwayListing` scope can now specify the default `orderBy` of queries #434 by @ryanmitchell
+* Improved augmentation of relationships #430 #435 by @duncanmcclean
+
+
+
 ## v6.1.0 (2024-02-11)
 
 ### What's new
