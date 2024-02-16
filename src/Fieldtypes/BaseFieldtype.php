@@ -4,7 +4,6 @@ namespace StatamicRadPack\Runway\Fieldtypes;
 
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Statamic\CP\Column;
@@ -12,6 +11,7 @@ use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
 use Statamic\Fieldtypes\Relationship;
 use StatamicRadPack\Runway\Query\Scopes\Filters\Fields\Models;
+use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
 
 class BaseFieldtype extends Relationship
@@ -183,103 +183,55 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        if ($values instanceof Relation) {
-            $results = $values
-                ->get()
-                ->map->toAugmentedArray()
-                ->filter();
-
-            if ($this->config('max_items') === 1) {
-                return $results->first();
-            }
-
-            return $results;
-        }
-
-        $values = Arr::wrap($values);
-
-        $results = collect($values)
-            ->map(function ($item) use ($resource) {
-                if (is_array($item) && Arr::has($item, $resource->primaryKey())) {
-                    return Arr::get($item, $resource->primaryKey());
-                }
-
-                return $item;
-            })
+        $results = $this->getAugmentableModels($resource, $values)
             ->map(function ($model) use ($resource) {
-                if (! $model instanceof Model) {
-                    $eagerLoadingRelationships = collect($this->config('with') ?? [])->join(',');
+                return Blink::once("Runway::FieldtypeAugment::{$resource->handle()}_{$model->{$resource->primaryKey()}}", function () use ($model) {
+                    return $model->toAugmentedArray();
+                });
+            });
 
-                    $model = Blink::once("Runway::{$this->config('resource')}::{$model}}::{$eagerLoadingRelationships}", function () use ($resource, $model) {
-                        return $resource->model()
-                            ->when($this->config('with'), function ($query) {
-                                $query->with(Arr::wrap($this->config('with')));
-                            })
-                            ->firstWhere($resource->primaryKey(), $model);
-                    });
-                }
-
-                if (! $model) {
-                    return null;
-                }
-
-                return $model->toAugmentedArray();
-            })
-            ->filter();
-
-        if ($this->config('max_items') === 1) {
-            return $results->first();
-        }
-
-        return $results->toArray();
+        return $this->config('max_items') === 1
+            ? $results->first()
+            : $results->toArray();
     }
 
     public function shallowAugment($values)
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        if ($values instanceof Relation) {
-            $results = $values
-                ->get()
-                ->map->toShallowAugmentedArray()
-                ->filter();
+        $results = $this->getAugmentableModels($resource, $values)
+            ->map(function ($model) use ($resource) {
+                return Blink::once("Runway::FieldtypeShallowAugment::{$resource->handle()}_{$model->{$resource->primaryKey()}}", function () use ($model) {
+                    return $model->toShallowAugmentedArray();
+                });
+            });
 
-            if ($this->config('max_items') === 1) {
-                return $results->first();
-            }
+        return $this->config('max_items') === 1
+            ? $results->first()
+            : $results->toArray();
+    }
 
-            return $results;
-        }
-
-        $values = Arr::wrap($values);
-
-        $results = collect($values)
+    protected function getAugmentableModels(Resource $resource, $values): Collection
+    {
+        return collect($values)
             ->map(function ($model) use ($resource) {
                 if (! $model instanceof Model) {
-                    $eagerLoadingRelations = collect($this->config('with') ?? [])->join(',');
+                    $eagerLoadingRelationships = collect($this->config('with') ?? [])->join(',');
 
-                    $model = Blink::once("Runway::{$this->config('resource')}::{$model}}::{$eagerLoadingRelations}", function () use ($resource, $model) {
+                    return Blink::once("Runway::Model::{$this->config('resource')}_{$model}}::{$eagerLoadingRelationships}", function () use ($resource, $model) {
                         return $resource->model()
-                            ->when($this->config('with'), function ($query) {
-                                $query->with(Arr::wrap($this->config('with')));
-                            })
+                            ->when(
+                                $this->config('with'),
+                                fn ($query) => $query->with(Arr::wrap($this->config('with'))),
+                                fn ($query) => $query->with($resource->eagerLoadingRelationships())
+                            )
                             ->firstWhere($resource->primaryKey(), $model);
                     });
                 }
 
-                if (! $model) {
-                    return null;
-                }
-
-                return $model->toShallowAugmentedArray();
+                return $model;
             })
             ->filter();
-
-        if ($this->config('max_items') === 1) {
-            return $results->first();
-        }
-
-        return $results->toArray();
     }
 
     protected function getColumns()
