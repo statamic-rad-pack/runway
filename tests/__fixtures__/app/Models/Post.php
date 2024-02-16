@@ -5,6 +5,7 @@ namespace StatamicRadPack\Runway\Tests\Fixtures\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Statamic\Facades\Blink;
 use StatamicRadPack\Runway\Routing\Traits\RunwayRoutes;
 use StatamicRadPack\Runway\Tests\Fixtures\Database\Factories\PostFactory;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
@@ -36,6 +37,13 @@ class Post extends Model
     {
         if ($smth === 'idoo') {
             $query->whereIn('title', ['Apple']);
+        }
+    }
+
+    public function scopeRunwayListing($query)
+    {
+        if ($params = Blink::get('RunwayListingScopeOrderBy')) {
+            $query->orderBy($params[0], $params[1]);
         }
     }
 

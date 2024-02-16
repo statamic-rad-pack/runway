@@ -85,10 +85,20 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        $query = $resource->model()->orderBy($resource->orderBy(), $resource->orderByDirection());
+        $query = $resource->model()->newQuery();
 
         $query->when($query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
         $query->when($request->search, fn ($query) => $query->runwaySearch($request->search));
+
+        $query->when($query->getQuery()->orders, function ($query) use ($request, $resource) {
+            if ($orderBy = $request->input('sort')) {
+                // The stack selector always uses `title` as the default sort column, but
+                // the "title field" for the model might be a different column so we need to convert it.
+                $sortColumn = $orderBy === 'title' ? $resource->titleField() : $orderBy;
+
+                $query->reorder($sortColumn, $request->input('order'));
+            }
+        }, fn ($query) => $query->orderBy($resource->orderBy(), $resource->orderByDirection()));
 
         $items = $request->boolean('paginate', true)
             ? $query->paginate()

@@ -6,6 +6,7 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Statamic\Facades\Blink;
 use Statamic\Fields\Field;
 use Statamic\Http\Requests\FilteredRequest;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
@@ -97,6 +98,46 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItems->all()[0]['title'], 'Scully');
         $this->assertEquals($getIndexItems->all()[1]['title'], 'Jake Peralta');
         $this->assertEquals($getIndexItems->all()[2]['title'], 'Amy Santiago');
+    }
+
+    /** @test */
+    public function can_get_index_items_in_order_from_runway_listing_scope()
+    {
+        Author::factory()->create(['name' => 'Scully']);
+        Author::factory()->create(['name' => 'Jake Peralta']);
+        Author::factory()->create(['name' => 'Amy Santiago']);
+
+        Blink::put('RunwayListingScopeOrderBy', ['name', 'desc']);
+
+        $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest(['paginate' => false]));
+
+        $this->assertIsObject($getIndexItems);
+        $this->assertTrue($getIndexItems instanceof Collection);
+        $this->assertEquals($getIndexItems->count(), 3);
+
+        $this->assertEquals($getIndexItems->all()[0]['title'], 'Scully');
+        $this->assertEquals($getIndexItems->all()[1]['title'], 'Jake Peralta');
+        $this->assertEquals($getIndexItems->all()[2]['title'], 'Amy Santiago');
+    }
+
+    /** @test */
+    public function can_get_index_items_in_order_from_runway_listing_scope_when_user_defines_an_order()
+    {
+        Author::factory()->create(['name' => 'Scully']);
+        Author::factory()->create(['name' => 'Jake Peralta']);
+        Author::factory()->create(['name' => 'Amy Santiago']);
+
+        Blink::put('RunwayListingScopeOrderBy', ['name', 'desc']);
+
+        $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest(['paginate' => false, 'sort' => 'name', 'order' => 'asc']));
+
+        $this->assertIsObject($getIndexItems);
+        $this->assertTrue($getIndexItems instanceof Collection);
+        $this->assertEquals($getIndexItems->count(), 3);
+
+        $this->assertEquals($getIndexItems->all()[0]['title'], 'Amy Santiago');
+        $this->assertEquals($getIndexItems->all()[1]['title'], 'Jake Peralta');
+        $this->assertEquals($getIndexItems->all()[2]['title'], 'Scully');
     }
 
     /** @test */
