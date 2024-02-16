@@ -85,10 +85,12 @@ class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        $query = $resource->model()->orderBy($resource->orderBy(), $resource->orderByDirection());
+        $query = $resource->model()->newQuery();
 
         $query->when($query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
         $query->when($request->search, fn ($query) => $query->runwaySearch($request->search));
+
+        $query->unless($query->getQuery()->orders, fn ($query) => $query->orderBy($resource->orderBy(), $resource->orderByDirection()));
 
         $items = $request->boolean('paginate', true)
             ? $query->paginate()
