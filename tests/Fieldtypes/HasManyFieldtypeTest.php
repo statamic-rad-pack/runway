@@ -143,6 +143,46 @@ class HasManyFieldtypeTest extends TestCase
     }
 
     /** @test */
+    public function can_get_index_items_in_order_from_runway_listing_scope()
+    {
+        Post::factory()->create(['title' => 'Arnold A']);
+        Post::factory()->create(['title' => 'Richard B']);
+        Post::factory()->create(['title' => 'Graham C']);
+
+        Blink::put('runway_listing_scope_order_by', ['title', 'asc']);
+
+        $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest(['paginate' => false]));
+
+        $this->assertIsObject($getIndexItems);
+        $this->assertTrue($getIndexItems instanceof Collection);
+        $this->assertEquals($getIndexItems->count(), 3);
+
+        $this->assertEquals($getIndexItems->all()[0]['title'], 'Arnold A');
+        $this->assertEquals($getIndexItems->all()[1]['title'], 'Graham C');
+        $this->assertEquals($getIndexItems->all()[2]['title'], 'Richard B');
+    }
+
+    /** @test */
+    public function can_get_index_items_in_order_from_runway_listing_scope_when_user_defines_an_order()
+    {
+        Post::factory()->create(['title' => 'Arnold A']);
+        Post::factory()->create(['title' => 'Richard B']);
+        Post::factory()->create(['title' => 'Graham C']);
+
+        Blink::put('runway_listing_scope_order_by', ['title', 'asc']);
+
+        $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest(['paginate' => false, 'sort' => 'title', 'order' => 'desc']));
+
+        $this->assertIsObject($getIndexItems);
+        $this->assertTrue($getIndexItems instanceof Collection);
+        $this->assertEquals($getIndexItems->count(), 3);
+
+        $this->assertEquals($getIndexItems->all()[0]['title'], 'Richard B');
+        $this->assertEquals($getIndexItems->all()[1]['title'], 'Graham C');
+        $this->assertEquals($getIndexItems->all()[2]['title'], 'Arnold A');
+    }
+
+    /** @test */
     public function can_get_index_items_and_search()
     {
         $author = Author::factory()->create();
