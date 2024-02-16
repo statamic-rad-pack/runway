@@ -25,11 +25,16 @@ class ResourceListingController extends CpController
         $sortDirection = $request->input('order', $resource->orderByDirection());
 
         $query = $resource->model()
-            ->with($resource->eagerLoadingRelationships())
-            ->orderBy($sortField, $sortDirection);
+            ->with($resource->eagerLoadingRelationships());
 
         $query->when($query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
         $query->when($request->search, fn ($query) => $query->runwaySearch($request->search));
+
+        $query->when($query->getQuery()->orders, function ($query) use ($request, $sortField, $sortDirection) {
+            if ($request->input('sort')) {
+                $query->reorder($sortField, $sortDirection);
+            }
+        }, fn ($query) => $query->orderBy($sortField, $sortDirection));
 
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
             'resource' => $resource->handle(),
