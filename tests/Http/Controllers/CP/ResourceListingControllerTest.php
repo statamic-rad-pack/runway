@@ -5,6 +5,7 @@ namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
+use Statamic\Facades\Blink;
 use Statamic\Facades\User;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
@@ -76,6 +77,66 @@ class ResourceListingControllerTest extends TestCase
                         'title' => $posts[0]->title,
                         'edit_url' => "http://localhost/cp/runway/post/{$posts[0]->id}",
                         'id' => $posts[0]->id,
+                    ],
+                ],
+            ]);
+    }
+
+    /** @test */
+    public function listing_rows_are_ordered_from_runway_listing_scope()
+    {
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+        $posts = Post::factory()->count(2)->create();
+
+        Blink::put('runway_listing_scope_order_by', ['id', 'desc']);
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.listing-api', ['resource' => 'post']))
+            ->assertOk()
+            ->assertJson([
+                'data' => [
+                    [
+                        'title' => $posts[1]->title,
+                        'edit_url' => "http://localhost/cp/runway/post/{$posts[1]->id}",
+                        'id' => $posts[1]->id,
+                    ],
+                    [
+                        'title' => $posts[0]->title,
+                        'edit_url' => "http://localhost/cp/runway/post/{$posts[0]->id}",
+                        'id' => $posts[0]->id,
+                    ],
+                ],
+            ]);
+    }
+
+    /** @test */
+    public function listing_rows_arent_ordered_from_runway_listing_scope_when_user_defines_an_order()
+    {
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+        $posts = Post::factory()->count(2)->create();
+
+        Blink::put('runway_listing_scope_order_by', ['id', 'desc']);
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.listing-api', ['resource' => 'post', 'sort' => 'id', 'order' => 'asc']))
+            ->assertOk()
+            ->assertJson([
+                'data' => [
+                    [
+                        'title' => $posts[0]->title,
+                        'edit_url' => "http://localhost/cp/runway/post/{$posts[0]->id}",
+                        'id' => $posts[0]->id,
+                    ],
+                    [
+                        'title' => $posts[1]->title,
+                        'edit_url' => "http://localhost/cp/runway/post/{$posts[1]->id}",
+                        'id' => $posts[1]->id,
                     ],
                 ],
             ]);
