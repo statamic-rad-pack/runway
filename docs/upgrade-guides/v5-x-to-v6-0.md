@@ -34,14 +34,20 @@ class Order extends Model
 }
 ```
 
-**3.** After this step, clear your route & view caches to make sure everything is fresh:
+**3.** Next, run this command to move your Runway blueprints so they're [editable in the Control Panel](#content-high-blueprints-work-differently):
+
+```
+php please runway:migrate-blueprints
+```
+
+**4.** After this step, clear your route & view caches to make sure everything is fresh:
 
 ```
 php artisan route:clear
 php artisan view:clear
 ```
 
-**4.** **You've now updated to Runway v6!** Please review the changes in this guide and make any necessary changes to your site.
+**5.** **You've now updated to Runway v6!** Please review the changes in this guide and make any necessary changes to your site.
 
 **Please test locally before deploying to production!**
 
@@ -51,13 +57,7 @@ php artisan view:clear
 
 As part of this, blueprints will now live as YAML files in the `resources/blueprints/vendor/runway` directory.
 
-During the upgrade process, Runway *should* copy your existing blueprints into this new location. If it did not, run this command:
-
-```
-php please runway:migrate-blueprints
-```
-
-After your blueprints have been copied, you may remove the `blueprint` key from your resource configs in `config/runway.php` and delete any old blueprint files.
+During the update process, you will have moved your blueprints to their new location. You can now remove the `blueprint` key from your resource configs in `config/runway.php` and delete any old blueprint files.
 
 ### Medium: Augmentation
 The way augmentations works behind the scenes has changed in Runway v6 to bring it inline with how Statamic Core does augmentation.
