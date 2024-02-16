@@ -88,7 +88,7 @@ class ResourceListingControllerTest extends TestCase
         $user = User::make()->makeSuper()->save();
         $posts = Post::factory()->count(2)->create();
 
-        Blink::put('runway_listing_scope_order_by', ['id', 'desc']);
+        Blink::put('RunwayListingScopeOrderBy', ['id', 'desc']);
 
         $this
             ->actingAs($user)
@@ -116,7 +116,7 @@ class ResourceListingControllerTest extends TestCase
         $user = User::make()->makeSuper()->save();
         $posts = Post::factory()->count(2)->create();
 
-        Blink::put('runway_listing_scope_order_by', ['id', 'desc']);
+        Blink::put('RunwayListingScopeOrderBy', ['id', 'desc']);
 
         $this
             ->actingAs($user)

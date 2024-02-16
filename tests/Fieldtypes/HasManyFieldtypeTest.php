@@ -149,7 +149,7 @@ class HasManyFieldtypeTest extends TestCase
         Post::factory()->create(['title' => 'Richard B']);
         Post::factory()->create(['title' => 'Graham C']);
 
-        Blink::put('runway_listing_scope_order_by', ['title', 'asc']);
+        Blink::put('RunwayListingScopeOrderBy', ['title', 'asc']);
 
         $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest(['paginate' => false]));
 
@@ -169,7 +169,7 @@ class HasManyFieldtypeTest extends TestCase
         Post::factory()->create(['title' => 'Richard B']);
         Post::factory()->create(['title' => 'Graham C']);
 
-        Blink::put('runway_listing_scope_order_by', ['title', 'asc']);
+        Blink::put('RunwayListingScopeOrderBy', ['title', 'asc']);
 
         $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest(['paginate' => false, 'sort' => 'title', 'order' => 'desc']));
 

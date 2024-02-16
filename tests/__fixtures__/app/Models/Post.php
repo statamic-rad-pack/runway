@@ -42,7 +42,7 @@ class Post extends Model
 
     public function scopeRunwayListing($query)
     {
-        if ($params = Blink::get('runway_listing_scope_order_by')) {
+        if ($params = Blink::get('RunwayListingScopeOrderBy')) {
             $query->orderBy($params[0], $params[1]);
         }
     }

@@ -107,7 +107,7 @@ class BelongsToFieldtypeTest extends TestCase
         Author::factory()->create(['name' => 'Jake Peralta']);
         Author::factory()->create(['name' => 'Amy Santiago']);
 
-        Blink::put('runway_listing_scope_order_by', ['name', 'desc']);
+        Blink::put('RunwayListingScopeOrderBy', ['name', 'desc']);
 
         $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest(['paginate' => false]));
 
@@ -127,7 +127,7 @@ class BelongsToFieldtypeTest extends TestCase
         Author::factory()->create(['name' => 'Jake Peralta']);
         Author::factory()->create(['name' => 'Amy Santiago']);
 
-        Blink::put('runway_listing_scope_order_by', ['name', 'desc']);
+        Blink::put('RunwayListingScopeOrderBy', ['name', 'desc']);
 
         $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest(['paginate' => false, 'sort' => 'name', 'order' => 'asc']));
 
