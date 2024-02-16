@@ -106,7 +106,7 @@ class Resource
         return $this->config->get('read_only', false);
     }
 
-    public function orderBy(): string
+    public function orderBy()
     {
         return $this->config->get('order_by', $this->primaryKey());
     }
