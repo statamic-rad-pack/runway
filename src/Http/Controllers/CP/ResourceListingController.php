@@ -30,7 +30,7 @@ class ResourceListingController extends CpController
             if ($request->input('sort')) {
                 $query->reorder($request->input('sort'), $request->input('order'));
             }
-        }, fn ($query) => $query->orderBy($resource->orderBy(), $resource->orderByDirection()));
+        }, fn ($query) => $query->orderBy($request->input('sort', $resource->orderBy()), $request->input('order', $resource->orderByDirection())));
 
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
             'resource' => $resource->handle(),
