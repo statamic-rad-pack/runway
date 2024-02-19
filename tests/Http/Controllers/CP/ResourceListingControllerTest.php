@@ -139,6 +139,32 @@ class ResourceListingControllerTest extends TestCase
     }
 
     /** @test */
+    public function listing_rows_are_ordered_when_user_defines_an_order_and_no_runway_listing_scope_order_exists()
+    {
+        $user = User::make()->makeSuper()->save();
+        $posts = Post::factory()->count(2)->create();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.listing-api', ['resource' => 'post', 'sort' => 'id', 'order' => 'desc']))
+            ->assertOk()
+            ->assertJson([
+                'data' => [
+                    [
+                        'title' => $posts[1]->title,
+                        'edit_url' => "http://localhost/cp/runway/post/{$posts[1]->id}",
+                        'id' => $posts[1]->id,
+                    ],
+                    [
+                        'title' => $posts[0]->title,
+                        'edit_url' => "http://localhost/cp/runway/post/{$posts[0]->id}",
+                        'id' => $posts[0]->id,
+                    ],
+                ],
+            ]);
+    }
+
+    /** @test */
     public function can_search()
     {
         $user = User::make()->makeSuper()->save();
