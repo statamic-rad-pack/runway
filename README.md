@@ -93,21 +93,3 @@ If you don't like GraphQL and would prefer plain old REST, you can do that too. 
 If you find a bug, have some question or have a feature request, please open a [GitHub Issue or Discussion](https://github.com/duncanmcclean/runway/issues/new/choose).
 
 > Please note: only the latest version of this addon is supported. Any bug reports regarding an old version will be closed.
-
-<!-- statamic:hide -->
-
-## Contributing
-
-Contributions are welcome, and are accepted via pull requests. You should follow this process when contributing:
-
-1. Fork the repository
-2. Make your code change
-3. Open a pull request, detailing the changes you've made.
-
-If your pull request is a Work in Progress, please mark your pull request as a draft.
-
-## Security
-
-If you've found a bug regarding security please email security@doublethree.digital instead of using the issue tracker.
-
-<!-- /statamic:hide -->
