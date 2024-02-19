@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.2.1 (2024-02-19)
+
+### What's fixed
+* Fixed sort order handling when user has defined sort and no `orderBy` has been set  #438 by @ryanmitchell
+
+
+
 ## v6.2.0 (2024-02-16)
 
 ### What's improved
