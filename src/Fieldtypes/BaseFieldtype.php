@@ -213,7 +213,7 @@ class BaseFieldtype extends Relationship
 
     protected function getAugmentableModels(Resource $resource, $values): Collection
     {
-        return collect($values)
+        return collect(Arr::wrap($values))
             ->map(function ($model) use ($resource) {
                 if (! $model instanceof Model) {
                     $eagerLoadingRelationships = collect($this->config('with') ?? [])->join(',');
