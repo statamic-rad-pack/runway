@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.2.2 (2024-02-22)
+
+### What's fixed
+* Fixed an issue when augmenting models #440 by @duncanmcclean
+
+
+
 ## v6.2.1 (2024-02-19)
 
 ### What's fixed
