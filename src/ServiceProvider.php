@@ -114,23 +114,25 @@ class ServiceProvider extends AddonServiceProvider
 
     protected function registerPermissions(): self
     {
-        foreach (Runway::allResources() as $resource) {
-            Permission::register("view {$resource->handle()}", function ($permission) use ($resource) {
-                $permission
-                    ->label($this->permissionLabel('view', $resource))
-                    ->children([
-                        Permission::make("edit {$resource->handle()}")
-                            ->label($this->permissionLabel('edit', $resource))
-                            ->children([
-                                Permission::make("create {$resource->handle()}")
-                                    ->label($this->permissionLabel('create', $resource)),
+        Permission::group('runway', 'Runway', function () {
+            foreach (Runway::allResources() as $resource) {
+                Permission::register("view {$resource->handle()}", function ($permission) use ($resource) {
+                    $permission
+                        ->label($this->permissionLabel('view', $resource))
+                        ->children([
+                            Permission::make("edit {$resource->handle()}")
+                                ->label($this->permissionLabel('edit', $resource))
+                                ->children([
+                                    Permission::make("create {$resource->handle()}")
+                                        ->label($this->permissionLabel('create', $resource)),
 
-                                Permission::make("delete {$resource->handle()}")
-                                    ->label($this->permissionLabel('delete', $resource)),
-                            ]),
-                    ]);
-            })->group('Runway');
-        }
+                                    Permission::make("delete {$resource->handle()}")
+                                        ->label($this->permissionLabel('delete', $resource)),
+                                ]),
+                        ]);
+                });
+            }
+        });
 
         return $this;
     }
