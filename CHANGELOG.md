@@ -1,5 +1,15 @@
 # Changelog
 
+## v6.3.0 (2024-02-26)
+
+### What's improved
+* Permissions are no longer grouped under `Miscellaneous` #443 by @caseydwyer
+
+### What's fixed
+* Fixed an issue when wrapping values for augmentation #445 by @duncanmcclean
+
+
+
 ## v6.2.2 (2024-02-22)
 
 ### What's fixed
