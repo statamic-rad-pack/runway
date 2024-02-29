@@ -5,12 +5,15 @@ namespace StatamicRadPack\Runway\Http\Resources;
 use Illuminate\Http\Resources\Json\ResourceCollection as LaravelResourceCollection;
 use Statamic\Facades\Action;
 use Statamic\Facades\User;
+use Statamic\Http\Resources\CP\Concerns\HasRequestedColumns;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 use StatamicRadPack\Runway\Runway;
 
 class ResourceCollection extends LaravelResourceCollection
 {
+    use HasRequestedColumns;
+
     public $collects;
 
     public $columns;
@@ -28,10 +31,9 @@ class ResourceCollection extends LaravelResourceCollection
         return $this;
     }
 
-    public function setColumns($originalColumns): self
+    public function setColumns(): self
     {
-        $columns = $this->runwayResource->blueprint()->columns()
-            ->filter(fn ($column) => in_array($column->field, collect($originalColumns)->pluck('handle')->toArray()));
+        $columns = $this->runwayResource->blueprint()->columns();
 
         if ($key = $this->columnPreferenceKey) {
             $columns->setPreferred($key);
@@ -52,17 +54,19 @@ class ResourceCollection extends LaravelResourceCollection
 
     public function toArray($request): array
     {
-        $columns = $this->columns->pluck('field')->toArray();
+        $this->setColumns();
         $blueprint = $this->runwayResource->blueprint();
         $handle = $this->resourceHandle;
 
         return [
-            'data' => $this->collection->map(function ($model) use ($blueprint, $columns, $handle) {
+            'data' => $this->collection->map(function ($model) use ($blueprint, $handle) {
                 $row = $model->toArray();
 
                 foreach ($row as $key => $value) {
-                    if (! in_array($key, $columns)) {
+                    if (! $this->requestedColumns()->contains('field', $key)) {
                         unset($row[$key]);
+
+                        continue;
                     }
 
                     if ($field = $blueprint->field($key)) {
@@ -103,7 +107,15 @@ class ResourceCollection extends LaravelResourceCollection
 
                 return $row;
             }),
-            'meta' => ['columns' => $this->columns],
+        ];
+    }
+
+    public function with($request)
+    {
+        return [
+            'meta' => [
+                'columns' => $this->visibleColumns(),
+            ],
         ];
     }
 }

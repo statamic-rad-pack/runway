@@ -42,7 +42,6 @@ class ResourceListingController extends CpController
         return (new ResourceCollection($results))
             ->setResourceHandle($resource->handle())
             ->setColumnPreferenceKey("runway.{$resource->handle()}.columns")
-            ->setColumns($this->buildColumns($resource, $blueprint))
             ->additional([
                 'meta' => [
                     'activeFilterBadges' => $activeFilterBadges,
