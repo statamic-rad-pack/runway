@@ -60,12 +60,13 @@ class ResourceCollection extends LaravelResourceCollection
         $handle = $this->resourceHandle;
 
         return [
-            'data' => $this->collection->map(function ($model) use ($columns, $handle) {
+            'data' => $this->collection->map(function ($model) use ($handle) {
                 $row = $model->toArray();
 
                 foreach ($row as $key => $value) {
                     if (! $this->requestedColumns()->contains('field', $key)) {
                         unset($row[$key]);
+
                         continue;
                     }
 
