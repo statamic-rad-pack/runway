@@ -5,6 +5,7 @@ namespace StatamicRadPack\Runway\Http\Resources;
 use Illuminate\Http\Resources\Json\ResourceCollection as LaravelResourceCollection;
 use Statamic\Facades\Action;
 use Statamic\Facades\User;
+use Statamic\Fields\Blueprint;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 use StatamicRadPack\Runway\Runway;
@@ -52,11 +53,14 @@ class ResourceCollection extends LaravelResourceCollection
 
     public function toArray($request): array
     {
+        /** @var Blueprint */
         $columns = $this->columns->pluck('field')->toArray();
+        $blueprint = $this->runwayResource->blueprint();
+        $fields = $blueprint->fields();
         $handle = $this->resourceHandle;
 
         return [
-            'data' => $this->collection->map(function ($model) use ($columns, $handle) {
+            'data' => $this->collection->map(function ($model) use ($blueprint, $columns, $handle, $fields) {
                 $row = $model->toArray();
 
                 foreach ($row as $key => $value) {
@@ -64,10 +68,10 @@ class ResourceCollection extends LaravelResourceCollection
                         unset($row[$key]);
                     }
 
-                    if ($this->runwayResource->blueprint()->hasField($key)) {
+                    if ($field = $blueprint->field($key)) {
                         // If we've eager loaded in relationships, just pass in the model
                         // instance. We can prevent extra queries this way.
-                        if ($this->runwayResource->blueprint()->field($key)->fieldtype() instanceof BelongsToFieldtype) {
+                        if ($field->fieldtype() instanceof BelongsToFieldtype) {
                             $relationName = $this->runwayResource->eloquentRelationships()->get($key);
 
                             if ($model->relationLoaded($relationName)) {
@@ -75,7 +79,7 @@ class ResourceCollection extends LaravelResourceCollection
                             }
                         }
 
-                        if ($this->runwayResource->blueprint()->field($key)->fieldtype() instanceof HasManyFieldtype) {
+                        if ($field->fieldtype() instanceof HasManyFieldtype) {
                             $relationName = $key;
 
                             if ($model->relationLoaded($relationName)) {
@@ -87,7 +91,7 @@ class ResourceCollection extends LaravelResourceCollection
                     }
                 }
 
-                foreach ($this->runwayResource->blueprint()->fields()->except(array_keys($row))->all() as $fieldHandle => $field) {
+                foreach ($fields as $fieldHandle => $field) {
                     $key = str_replace('->', '.', $fieldHandle);
 
                     $row[$fieldHandle] = $field->setValue(data_get($model, $key))->preProcessIndex()->value();
