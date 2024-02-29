@@ -6,7 +6,7 @@ use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
 use Statamic\Query\Scopes\Filters\Concerns\QueriesFilters;
-use StatamicRadPack\Runway\Http\Resources\ResourceCollection;
+use StatamicRadPack\Runway\Http\Resources\CP\Models;
 use StatamicRadPack\Runway\Resource;
 
 class ResourceListingController extends CpController
@@ -39,7 +39,7 @@ class ResourceListingController extends CpController
 
         $results = $query->paginate($request->input('perPage', config('statamic.cp.pagination_size')));
 
-        return (new ResourceCollection($results))
+        return (new Models($results))
             ->runwayResource($resource)
             ->blueprint($resource->blueprint())
             ->setColumnPreferenceKey("runway.{$resource->handle()}.columns")
