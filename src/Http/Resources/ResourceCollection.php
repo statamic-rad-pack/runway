@@ -88,7 +88,7 @@ class ResourceCollection extends LaravelResourceCollection
                             }
                         }
 
-                        $row[$key] = $this->runwayResource->blueprint()->field($key)->setValue($value)->preProcessIndex()->value();
+                        $row[$key] = $blueprint->field($key)->setValue($value)->preProcessIndex()->value();
                     }
                 }
 
