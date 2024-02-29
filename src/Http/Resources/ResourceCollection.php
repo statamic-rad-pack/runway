@@ -91,7 +91,7 @@ class ResourceCollection extends LaravelResourceCollection
                     }
                 }
 
-                foreach ($fields as $fieldHandle => $field) {
+                foreach ($fields->except(array_keys($row))->all() as $fieldHandle => $field) {
                     $key = str_replace('->', '.', $fieldHandle);
 
                     $row[$fieldHandle] = $field->setValue(data_get($model, $key))->preProcessIndex()->value();
