@@ -40,7 +40,8 @@ class ResourceListingController extends CpController
         $results = $query->paginate($request->input('perPage', config('statamic.cp.pagination_size')));
 
         return (new ResourceCollection($results))
-            ->setResourceHandle($resource->handle())
+            ->runwayResource($resource)
+            ->blueprint($resource->blueprint())
             ->setColumnPreferenceKey("runway.{$resource->handle()}.columns")
             ->additional([
                 'meta' => [

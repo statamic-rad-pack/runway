@@ -8,6 +8,7 @@ use Statamic\Facades\User;
 use Statamic\Http\Resources\CP\Concerns\HasRequestedColumns;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
+use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
 
 class ResourceCollection extends LaravelResourceCollection
@@ -15,14 +16,24 @@ class ResourceCollection extends LaravelResourceCollection
     use HasRequestedColumns;
 
     public $collects;
-
-    public $columns;
-
-    protected $resourceHandle;
-
     protected $runwayResource;
-
+    protected $blueprint;
+    protected $columns;
     protected $columnPreferenceKey;
+
+    public function runwayResource(Resource $resource): self
+    {
+        $this->runwayResource = $resource;
+
+        return $this;
+    }
+
+    public function blueprint($blueprint)
+    {
+        $this->blueprint = $blueprint;
+
+        return $this;
+    }
 
     public function setColumnPreferenceKey($key): self
     {
@@ -44,23 +55,12 @@ class ResourceCollection extends LaravelResourceCollection
         return $this;
     }
 
-    public function setResourceHandle($handle): self
-    {
-        $this->runwayResource = Runway::findResource($handle);
-        $this->resourceHandle = $handle;
-
-        return $this;
-    }
-
     public function toArray($request): array
     {
         $this->setColumns();
-        $columns = $this->columns->pluck('field')->toArray();
-
-        $handle = $this->resourceHandle;
 
         return [
-            'data' => $this->collection->map(function ($model) use ($columns, $handle) {
+            'data' => $this->collection->map(function ($model) {
                 $row = $model->toArray();
 
                 foreach ($row as $key => $value) {
@@ -69,10 +69,10 @@ class ResourceCollection extends LaravelResourceCollection
                         continue;
                     }
 
-                    if ($this->runwayResource->blueprint()->hasField($key)) {
+                    if ($this->blueprint->hasField($key)) {
                         // If we've eager loaded in relationships, just pass in the model
                         // instance. We can prevent extra queries this way.
-                        if ($this->runwayResource->blueprint()->field($key)->fieldtype() instanceof BelongsToFieldtype) {
+                        if ($this->blueprint->field($key)->fieldtype() instanceof BelongsToFieldtype) {
                             $relationName = $this->runwayResource->eloquentRelationships()->get($key);
 
                             if ($model->relationLoaded($relationName)) {
@@ -80,7 +80,7 @@ class ResourceCollection extends LaravelResourceCollection
                             }
                         }
 
-                        if ($this->runwayResource->blueprint()->field($key)->fieldtype() instanceof HasManyFieldtype) {
+                        if ($this->blueprint->field($key)->fieldtype() instanceof HasManyFieldtype) {
                             $relationName = $key;
 
                             if ($model->relationLoaded($relationName)) {
@@ -88,18 +88,18 @@ class ResourceCollection extends LaravelResourceCollection
                             }
                         }
 
-                        $row[$key] = $this->runwayResource->blueprint()->field($key)->setValue($value)->preProcessIndex()->value();
+                        $row[$key] = $this->blueprint->field($key)->setValue($value)->preProcessIndex()->value();
                     }
                 }
 
-                foreach ($this->runwayResource->blueprint()->fields()->except(array_keys($row))->all() as $fieldHandle => $field) {
+                foreach ($this->blueprint->fields()->except(array_keys($row))->all() as $fieldHandle => $field) {
                     $key = str_replace('->', '.', $fieldHandle);
 
                     $row[$fieldHandle] = $field->setValue(data_get($model, $key))->preProcessIndex()->value();
                 }
 
                 $row['id'] = $model->getKey();
-                $row['edit_url'] = cp_route('runway.edit', ['resource' => $handle, 'model' => $model->getRouteKey()]);
+                $row['edit_url'] = cp_route('runway.edit', ['resource' => $this->runwayResource->handle(), 'model' => $model->getRouteKey()]);
                 $row['permalink'] = $this->runwayResource->hasRouting() ? $model->uri() : null;
                 $row['editable'] = User::current()->can('edit', [$this->runwayResource, $model]);
                 $row['viewable'] = User::current()->can('view', [$this->runwayResource, $model]);
