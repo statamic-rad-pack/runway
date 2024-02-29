@@ -3,13 +3,8 @@
 namespace StatamicRadPack\Runway\Http\Resources\CP;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Statamic\Facades\Action;
-use Statamic\Facades\User;
 use Statamic\Http\Resources\CP\Concerns\HasRequestedColumns;
-use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
-use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 use StatamicRadPack\Runway\Resource;
-use StatamicRadPack\Runway\Runway;
 
 class Models extends ResourceCollection
 {
