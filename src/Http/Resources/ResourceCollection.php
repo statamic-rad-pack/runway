@@ -5,12 +5,15 @@ namespace StatamicRadPack\Runway\Http\Resources;
 use Illuminate\Http\Resources\Json\ResourceCollection as LaravelResourceCollection;
 use Statamic\Facades\Action;
 use Statamic\Facades\User;
+use Statamic\Http\Resources\CP\Concerns\HasRequestedColumns;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 use StatamicRadPack\Runway\Runway;
 
 class ResourceCollection extends LaravelResourceCollection
 {
+    use HasRequestedColumns;
+
     public $collects;
 
     public $columns;
@@ -28,10 +31,9 @@ class ResourceCollection extends LaravelResourceCollection
         return $this;
     }
 
-    public function setColumns($originalColumns): self
+    public function setColumns(): self
     {
-        $columns = $this->runwayResource->blueprint()->columns()
-            ->filter(fn ($column) => in_array($column->field, collect($originalColumns)->pluck('handle')->toArray()));
+        $columns = $this->runwayResource->blueprint()->columns();
 
         if ($key = $this->columnPreferenceKey) {
             $columns->setPreferred($key);
@@ -52,7 +54,9 @@ class ResourceCollection extends LaravelResourceCollection
 
     public function toArray($request): array
     {
+        $this->setColumns();
         $columns = $this->columns->pluck('field')->toArray();
+
         $handle = $this->resourceHandle;
 
         return [
@@ -60,8 +64,9 @@ class ResourceCollection extends LaravelResourceCollection
                 $row = $model->toArray();
 
                 foreach ($row as $key => $value) {
-                    if (! in_array($key, $columns)) {
+                    if (! $this->requestedColumns()->contains('field', $key)) {
                         unset($row[$key]);
+                        continue;
                     }
 
                     if ($this->runwayResource->blueprint()->hasField($key)) {
@@ -102,7 +107,15 @@ class ResourceCollection extends LaravelResourceCollection
 
                 return $row;
             }),
-            'meta' => ['columns' => $this->columns],
+        ];
+    }
+
+    public function with($request)
+    {
+        return [
+            'meta' => [
+                'columns' => $this->visibleColumns(),
+            ],
         ];
     }
 }
