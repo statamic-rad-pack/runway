@@ -77,6 +77,6 @@ class ListedModel extends JsonResource
                 ->value();
 
             return [$key => $value];
-        })->dd();
+        });
     }
 }
