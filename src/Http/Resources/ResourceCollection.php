@@ -5,7 +5,6 @@ namespace StatamicRadPack\Runway\Http\Resources;
 use Illuminate\Http\Resources\Json\ResourceCollection as LaravelResourceCollection;
 use Statamic\Facades\Action;
 use Statamic\Facades\User;
-use Statamic\Fields\Blueprint;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 use StatamicRadPack\Runway\Runway;
@@ -53,14 +52,12 @@ class ResourceCollection extends LaravelResourceCollection
 
     public function toArray($request): array
     {
-        /** @var Blueprint */
         $columns = $this->columns->pluck('field')->toArray();
         $blueprint = $this->runwayResource->blueprint();
-        $fields = $blueprint->fields();
         $handle = $this->resourceHandle;
 
         return [
-            'data' => $this->collection->map(function ($model) use ($blueprint, $columns, $handle, $fields) {
+            'data' => $this->collection->map(function ($model) use ($blueprint, $columns, $handle) {
                 $row = $model->toArray();
 
                 foreach ($row as $key => $value) {
@@ -91,7 +88,7 @@ class ResourceCollection extends LaravelResourceCollection
                     }
                 }
 
-                foreach ($fields->except(array_keys($row))->all() as $fieldHandle => $field) {
+                foreach ($blueprint->fields()->except(array_keys($row))->all() as $fieldHandle => $field) {
                     $key = str_replace('->', '.', $fieldHandle);
 
                     $row[$fieldHandle] = $field->setValue(data_get($model, $key))->preProcessIndex()->value();
