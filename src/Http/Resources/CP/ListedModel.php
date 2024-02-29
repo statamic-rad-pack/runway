@@ -6,7 +6,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Statamic\Facades\Action;
 use Statamic\Facades\User;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
-use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 
 class ListedModel extends JsonResource
 {
