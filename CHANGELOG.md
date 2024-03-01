@@ -1,5 +1,15 @@
 # Changelog
 
+## v6.4.0 (2024-03-01)
+
+### What's improved
+* Refactored how the Control Panel listing data is loaded #451 by @duncanmcclean
+
+### What's fixed
+* Fixed flaky tests #452 by @duncanmcclean
+
+
+
 ## v6.3.0 (2024-02-26)
 
 ### What's improved
