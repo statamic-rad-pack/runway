@@ -141,6 +141,10 @@ class BaseFieldtype extends Relationship
             $data = [$data];
         }
 
+        if ($data instanceof Model) {
+            $data = Arr::wrap($data);
+        }
+
         return collect($data)->map(function ($item) use ($resource) {
             $column = $resource->titleField();
 
