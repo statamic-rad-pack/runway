@@ -41,7 +41,6 @@ class ListedModel extends JsonResource
     {
         $model = $this->resource;
 
-        // TODO: ensure relationships load properly
         return [
             'id' => $model->getKey(),
             'edit_url' => cp_route('runway.edit', ['resource' => $this->runwayResource->handle(), 'model' => $model->getRouteKey()]),
