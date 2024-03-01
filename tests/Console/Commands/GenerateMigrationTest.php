@@ -74,7 +74,7 @@ class GenerateMigrationTest extends TestCase
             ->execute();
 
         $this->assertFileExists(
-            $expectedFoodsMigrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_foods_table.php'
+            $expectedFoodsMigrationPath = database_path().'/migrations/'.now()->format('Y_m_d_His').'_create_foods_table.php'
         );
 
         $this->assertStringContainsString('return new class extends Migration', File::get($expectedFoodsMigrationPath));
@@ -83,7 +83,7 @@ class GenerateMigrationTest extends TestCase
         $this->assertStringContainsString('$table->json(\'metadata\')', File::get($expectedFoodsMigrationPath));
 
         $this->assertFileExists(
-            $expectedDrinksMigrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_drinks_table.php'
+            $expectedDrinksMigrationPath = database_path().'/migrations/'.now()->format('Y_m_d_His').'_create_drinks_table.php'
         );
 
         $this->assertStringContainsString('return new class extends Migration', File::get($expectedDrinksMigrationPath));
@@ -126,7 +126,7 @@ class GenerateMigrationTest extends TestCase
             ->execute();
 
         $this->assertFileExists(
-            $expectedMigrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_foods_table.php'
+            $expectedMigrationPath = database_path().'/migrations/'.now()->format('Y_m_d_His').'_create_foods_table.php'
         );
 
         $this->assertStringContainsString('return new class extends Migration', File::get($expectedMigrationPath));
@@ -167,7 +167,7 @@ class GenerateMigrationTest extends TestCase
             ->expectsOutput('Table [foods] already exists. Runway is not smart enough yet to update existing migrations. Sorry!')
             ->execute();
 
-        $this->assertFileDoesNotExist(database_path().'/migrations/'.date('Y_m_d_His').'_create_foods_table.php');
+        $this->assertFileDoesNotExist(database_path().'/migrations/'.now()->fromat('Y_m_d_His').'_create_foods_table.php');
     }
 
     /** @test */
@@ -196,7 +196,7 @@ class GenerateMigrationTest extends TestCase
             ->expectsQuestion('Should we run your migrations?', 'yes')
             ->execute();
 
-        $this->assertFileExists(database_path().'/migrations/'.date('Y_m_d_His').'_create_foods_table.php');
+        $this->assertFileExists(database_path().'/migrations/'.now()->fromat('Y_m_d_His').'_create_foods_table.php');
 
         $this->assertTrue(Schema::hasTable('foods'));
     }
@@ -230,7 +230,7 @@ class GenerateMigrationTest extends TestCase
             ->execute();
 
         $this->assertFileExists(
-            $expectedMigrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_foods_table.php'
+            $expectedMigrationPath = database_path().'/migrations/'.now()->fromat('Y_m_d_His').'_create_foods_table.php'
         );
 
         $this->assertStringContainsString('return new class extends Migration', File::get($expectedMigrationPath));
@@ -279,7 +279,7 @@ class GenerateMigrationTest extends TestCase
             ->execute();
 
         $this->assertFileExists(
-            $expectedMigrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_foods_table.php'
+            $expectedMigrationPath = database_path().'/migrations/'.now()->fromat('Y_m_d_His').'_create_foods_table.php'
         );
 
         $this->assertStringContainsString('return new class extends Migration', File::get($expectedMigrationPath));
@@ -324,7 +324,7 @@ class GenerateMigrationTest extends TestCase
             ->execute();
 
         $this->assertFileExists(
-            $expectedMigrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_foods_table.php'
+            $expectedMigrationPath = database_path().'/migrations/'.now()->fromat('Y_m_d_His').'_create_foods_table.php'
         );
 
         $this->assertStringContainsString('return new class extends Migration', File::get($expectedMigrationPath));
@@ -359,7 +359,7 @@ class GenerateMigrationTest extends TestCase
             ->execute();
 
         $this->assertFileExists(
-            $expectedMigrationPath = database_path().'/migrations/'.date('Y_m_d_His').'_create_foods_table.php'
+            $expectedMigrationPath = database_path().'/migrations/'.now()->fromat('Y_m_d_His').'_create_foods_table.php'
         );
 
         $this->assertStringContainsString('return new class extends Migration', File::get($expectedMigrationPath));
