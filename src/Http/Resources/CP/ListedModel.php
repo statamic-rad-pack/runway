@@ -58,11 +58,14 @@ class ListedModel extends JsonResource
             $key = $column->field;
             $field = $this->blueprint->field($key);
 
-            // TODO: Add comments here...
+            // When it's a Belongs To field, the field handle won't be the relationship name.
+            // We need to resolve it to the relationship name to get the value from the model.
             if ($field && $field->fieldtype() instanceof BelongsToFieldtype) {
                 $relationName = $this->runwayResource->eloquentRelationships()->get($key);
                 $value = $this->resource->$relationName;
-            } elseif (str_contains($key, '->')) {
+            }
+            // When it's a nested field, get the value from the model using the data_get method.
+            elseif (str_contains($key, '->')) {
                 $value = data_get($this->resource, str_replace('->', '.', $key));
             } else {
                 $value = $extra[$key] ?? $this->resource->{$key};
