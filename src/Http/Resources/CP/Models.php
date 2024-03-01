@@ -3,6 +3,8 @@
 namespace StatamicRadPack\Runway\Http\Resources\CP;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Collection;
+use Statamic\Fields\Blueprint;
 use Statamic\Http\Resources\CP\Concerns\HasRequestedColumns;
 use StatamicRadPack\Runway\Resource;
 
@@ -23,14 +25,14 @@ class Models extends ResourceCollection
         return $this;
     }
 
-    public function blueprint($blueprint)
+    public function blueprint(Blueprint $blueprint): self
     {
         $this->blueprint = $blueprint;
 
         return $this;
     }
 
-    public function setColumnPreferenceKey($key): self
+    public function setColumnPreferenceKey(string $key): self
     {
         $this->columnPreferenceKey = $key;
 
@@ -50,7 +52,7 @@ class Models extends ResourceCollection
         return $this;
     }
 
-    public function toArray($request)
+    public function toArray($request): Collection
     {
         $this->setColumns();
 
@@ -62,7 +64,7 @@ class Models extends ResourceCollection
         });
     }
 
-    public function with($request)
+    public function with($request): array
     {
         return [
             'meta' => [

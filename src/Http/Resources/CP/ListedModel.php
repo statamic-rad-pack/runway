@@ -3,9 +3,12 @@
 namespace StatamicRadPack\Runway\Http\Resources\CP;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 use Statamic\Facades\Action;
 use Statamic\Facades\User;
+use Statamic\Fields\Blueprint;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
+use StatamicRadPack\Runway\Resource;
 
 class ListedModel extends JsonResource
 {
@@ -13,28 +16,28 @@ class ListedModel extends JsonResource
     protected $runwayResource;
     protected $columns;
 
-    public function blueprint($blueprint)
+    public function blueprint(Blueprint $blueprint): self
     {
         $this->blueprint = $blueprint;
 
         return $this;
     }
 
-    public function runwayResource($runwayResource)
+    public function runwayResource(Resource $runwayResource): self
     {
         $this->runwayResource = $runwayResource;
 
         return $this;
     }
 
-    public function columns($columns)
+    public function columns($columns): self
     {
         $this->columns = $columns;
 
         return $this;
     }
 
-    public function toArray($request)
+    public function toArray($request): array
     {
         $model = $this->resource;
 
@@ -50,7 +53,7 @@ class ListedModel extends JsonResource
         ];
     }
 
-    protected function values($extra = [])
+    protected function values($extra = []): Collection
     {
         return $this->columns->mapWithKeys(function ($column) use ($extra) {
             $key = $column->field;
