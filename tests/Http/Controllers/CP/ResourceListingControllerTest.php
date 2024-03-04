@@ -188,7 +188,7 @@ class ResourceListingControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_search_records_with_has_many_relationship()
+    public function can_search_models_with_has_many_relationship()
     {
         $user = User::make()->makeSuper()->save();
         $author = Author::factory()->withPosts()->create(['name' => 'Colin The Caterpillar']);
