@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.4.1 (2024-03-04)
+
+### What's fixed
+* Fixed route model binding issue on CP routes #453 by @edalzell
+
+
+
 ## v6.4.0 (2024-03-01)
 
 ### What's improved
