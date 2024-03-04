@@ -4,9 +4,9 @@ title: 'Installation'
 
 ## System Requirements
 
--   PHP 7.4 & higher
--   Statamic 3.2 & higher
--   Laravel 8 & higher
+-   PHP 8.1 & above
+-   Statamic v4
+-   Laravel 10 & above
 
 ## Installing via Composer
 
