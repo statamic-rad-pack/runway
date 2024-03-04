@@ -11,7 +11,7 @@ class EditRequest extends FormRequest
     {
         $resource = $this->route('resource');
 
-        $model = $resource->model()::find($this->record);
+        $model = $resource->model()::find($this->model);
 
         return User::current()->can('edit', [$resource, $model]);
     }
