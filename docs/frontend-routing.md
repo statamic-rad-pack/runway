@@ -28,6 +28,20 @@ class Product extends Model
     use RunwayRoutes;
 ```
 
+## Scoping Front-end Routing URI Generation
+
+If you don't want to generate a uri for everything, you may add a scope (`runwayRoutes`) to limit the returned results.
+
+```php
+class YourModel extends Model
+{
+	public function scopeRunwayRoutes($query)
+	{
+		return $query->where('something', true);
+	}
+}
+```
+
 Last but not least, run `php please runway:rebuild-uris`. This command will essentially loop through all of your models, compile the Antlers URIs, and save it to the database for reference later.
 
 ## Customising the template/layout used
