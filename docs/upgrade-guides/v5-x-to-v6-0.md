@@ -60,9 +60,15 @@ As part of this, blueprints will now live as YAML files in the `resources/bluepr
 During the update process, you will have moved your blueprints to their new location. You can now remove the `blueprint` key from your resource configs in `config/runway.php` and delete any old blueprint files.
 
 ### Medium: Augmentation
-The way augmentations works behind the scenes has changed in Runway v6 to bring it inline with how Statamic Core does augmentation.
+Runway v6 changes the way augmentation works behind the scenes, to bring it more inline with how Statamic itself handles augmentation.
 
-You'll only need to take action if you're manually calling Runway's augmentation methods. If you are, you'll need to refactor them to call the `toAugmentedArray` method on your Eloquent model:
+#### Relationships
+Previously, all Eloquent relationships from your model were available in your Antlers templates, even without associated Has Many or Belongs To fields.
+
+However, with v6, only relationships with Has Many or Belongs To fields in the blueprint will be output by augmentation.
+
+#### Changes to the methods used to augment models
+If you are manually calling Runway's augmentation methods, you should refactor them to instead call the `toAugmentedArray` method on your Eloquent model:
 
 ```php
 // Previously....
@@ -73,7 +79,7 @@ AugmentedModel::augment($model, $resource->blueprint());
 $model->toAugmentedArray();
 ```
 
-The output of `->toAugmentedArray()` will be slightly different to what was returned previously, with all fields now returning `Value` objects.
+Every field will now return `Value` objects, rather than just the augmented value.
 
 ### Medium: Has Many  Fieldtype - Table Mode removed
 Runway previously included a special "Table" mode for the Has Many fieldtype. However, the Table mode has been removed to help reduce complexity of Runway's fieldtypes.
