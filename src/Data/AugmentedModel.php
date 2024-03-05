@@ -147,7 +147,7 @@ class AugmentedModel extends AbstractAugmented
                     return new Value(
                         $value,
                         $handle,
-                        $field->fieldtype(),
+                        $field?->fieldtype(),
                         $this->data,
                     );
                 })
