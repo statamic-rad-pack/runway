@@ -1,5 +1,15 @@
 # Changelog
 
+## v6.5.0 (2024-03-08)
+
+### What's new
+* Added `runwayRoutes` scope to scope models indexed by `runway:rebuild-uris` command #454 by @mefenlon
+
+### What's fixed
+* Fixed an issue when augmenting nested fields by @duncanmcclean
+
+
+
 ## v6.4.1 (2024-03-04)
 
 ### What's fixed
