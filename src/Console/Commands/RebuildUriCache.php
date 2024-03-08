@@ -45,12 +45,14 @@ class RebuildUriCache extends Command
      */
     public function handle()
     {
-        $confirm = $this->confirm(
-            'You are about to rebuild your entire URI cache. This may take part of your site down while running. Are you sure you want to continue?'
-        );
+        if (!$this->option('no-interaction')) {
+            $confirm = $this->confirm(
+                'You are about to rebuild your entire URI cache. This may take part of your site down while running. Are you sure you want to continue?'
+            );
 
-        if (! $confirm) {
-            return;
+            if (! $confirm) {
+                return;
+            }
         }
 
         RunwayUri::all()->each->delete();
