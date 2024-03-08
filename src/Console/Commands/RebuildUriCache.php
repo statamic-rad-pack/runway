@@ -66,7 +66,10 @@ class RebuildUriCache extends Command
                     return;
                 }
 
-                $this->withProgressBar($resource->model()->all(), function ($model) use ($resource) {
+                $query = $resource->model()->newQuery();
+                $query->when($query->hasNamedScope('runwayRoutes'), fn ($query) => $query->runwayRoutes());
+
+                $this->withProgressBar($query->get(), function ($model) use ($resource) {
                     $uri = (new Parser())
                         ->parse($resource->route(), $model->toAugmentedArray())
                         ->__toString();
