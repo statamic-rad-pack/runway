@@ -19,7 +19,8 @@ class RebuildUriCache extends Command
      *
      * @var string
      */
-    protected $signature = 'runway:rebuild-uris';
+    protected $signature = 'runway:rebuild-uris
+            { --force : Disable user prompt for confirmation. }';
 
     /**
      * The console command description.
@@ -45,7 +46,7 @@ class RebuildUriCache extends Command
      */
     public function handle()
     {
-        if (!$this->option('no-interaction')) {
+        if (! $this->option('force')) {
             $confirm = $this->confirm(
                 'You are about to rebuild your entire URI cache. This may take part of your site down while running. Are you sure you want to continue?'
             );
