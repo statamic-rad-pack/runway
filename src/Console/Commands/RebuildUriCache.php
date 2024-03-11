@@ -20,7 +20,7 @@ class RebuildUriCache extends Command
      * @var string
      */
     protected $signature = 'runway:rebuild-uris
-            { --force : Disable user prompt for confirmation. }';
+        { --force : Force rebuilding of the URI cache. }';
 
     /**
      * The console command description.
