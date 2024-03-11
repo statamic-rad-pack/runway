@@ -19,7 +19,8 @@ class RebuildUriCache extends Command
      *
      * @var string
      */
-    protected $signature = 'runway:rebuild-uris';
+    protected $signature = 'runway:rebuild-uris
+        { --force : Force rebuilding of the URI cache. }';
 
     /**
      * The console command description.
@@ -45,12 +46,14 @@ class RebuildUriCache extends Command
      */
     public function handle()
     {
-        $confirm = $this->confirm(
-            'You are about to rebuild your entire URI cache. This may take part of your site down while running. Are you sure you want to continue?'
-        );
+        if (! $this->option('force')) {
+            $confirm = $this->confirm(
+                'You are about to rebuild your entire URI cache. This may take part of your site down while running. Are you sure you want to continue?'
+            );
 
-        if (! $confirm) {
-            return;
+            if (! $confirm) {
+                return;
+            }
         }
 
         RunwayUri::all()->each->delete();
