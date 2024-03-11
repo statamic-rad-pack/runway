@@ -46,6 +46,10 @@ class ResourceType extends Type
                 $model = $resource->model()->firstWhere($resource->primaryKey(), $model);
             }
 
+            if (isset($model->{$info->fieldName.'_id'})) {
+                return $model->resolveGqlValue($info->fieldName.'_id');
+            }
+
             return $model->resolveGqlValue($info->fieldName);
         };
     }
