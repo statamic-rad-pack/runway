@@ -1,5 +1,12 @@
 # Changelog
 
+### v6.6.0 (2024-03-11)
+
+### What's new
+* Added `--force` parameter to the `runway:rebuild-uris` command to prevent user confirmation #455 by @mefenlon
+
+
+
 ## v6.5.0 (2024-03-08)
 
 ### What's new
