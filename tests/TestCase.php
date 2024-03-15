@@ -25,8 +25,8 @@ abstract class TestCase extends OrchestraTestCase
 
         $this->withoutVite();
 
-        $this->runLaravelMigrations();
         $this->loadMigrationsFrom(__DIR__.'/__fixtures__/database/migrations');
+        $this->runLaravelMigrations();
 
         if ($this->shouldFakeVersion) {
             \Facades\Statamic\Version::shouldReceive('get')->andReturn('4.0.0-testing');

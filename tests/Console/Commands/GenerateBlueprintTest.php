@@ -25,7 +25,7 @@ class GenerateBlueprintTest extends TestCase
     /** @test */
     public function can_generate_blueprint()
     {
-        Schema::shouldReceive('dropIfExists')->times(4);
+        Schema::shouldReceive('dropIfExists')->times(3);
 
         Schema::shouldReceive('getConnection')
             ->andReturnSelf()
@@ -108,7 +108,7 @@ class GenerateBlueprintTest extends TestCase
     /** @test */
     public function can_generate_resource_with_column_that_can_not_be_matched_to_a_fieldtype()
     {
-        Schema::shouldReceive('dropIfExists')->times(4);
+        Schema::shouldReceive('dropIfExists')->times(3);
 
         Schema::shouldReceive('getConnection')
             ->andReturnSelf()
