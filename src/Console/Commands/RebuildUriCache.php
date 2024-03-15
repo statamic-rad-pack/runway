@@ -5,7 +5,7 @@ namespace StatamicRadPack\Runway\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Statamic\Console\RunsInPlease;
-use Statamic\View\Antlers\Parser;
+use Statamic\Facades\Antlers;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Routing\RunwayUri;
 use StatamicRadPack\Runway\Runway;
@@ -73,7 +73,7 @@ class RebuildUriCache extends Command
                 $query->when($query->hasNamedScope('runwayRoutes'), fn ($query) => $query->runwayRoutes());
 
                 $this->withProgressBar($query->get(), function ($model) use ($resource) {
-                    $uri = (new Parser())
+                    $uri = Antlers::parser()
                         ->parse($resource->route(), $model->toAugmentedArray())
                         ->__toString();
 

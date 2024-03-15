@@ -35,7 +35,21 @@ php artisan view:clear
 
 ## Changes
 
-TODO
+### High: Support for Statamic 4 has been dropped
+
+Runway v7 has dropped support for Statamic 4. In order to update Runway, you will need to [upgrade to Statamic 5](https://statamic.dev/upgrade-guide/4-0-to-5-0).
+
+By keeping up-to-date with major Statamic versions, it removes the risk of any compatibility issues between Statamic 4 and 5.
+
+### High: Support for Laravel 10 has been dropped
+
+Runway v7 has dropped support for Laravel 10. In order to update Runway, you will need to [upgrade to Laravel 11](https://laravel.com/docs/11.x/upgrade).
+
+If you wish, you can automate the upgrade process using [Laravel Shift](https://laravelshift.com/upgrade-laravel-10-to-laravel-11).
+
+### Medium: Support for PHP 8.1 has been dropped
+
+Runway v7 has dropped support for PHP 8.1. In order to update Runway, you should update the version of PHP you're using, both locally and on production. The latest version of PHP is 8.3.
 
 ## Previous upgrade guides
 
