@@ -1,5 +1,15 @@
 # Changelog
 
+## v6.6.1 (2024-03-15)
+
+### What's improved
+* Updated to PHPUnit 10 #464 by @duncanmcclean
+
+### What's fixed
+* Fixed `runway:generate-blueprint` command generating fields with incorrect fieldtype #462 by @duncanmcclean
+* Fixed failing tests #463 by @duncanmcclean
+
+
 ### v6.6.0 (2024-03-11)
 
 ### What's new
