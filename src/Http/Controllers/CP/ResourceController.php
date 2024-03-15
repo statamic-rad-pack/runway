@@ -32,15 +32,13 @@ class ResourceController extends CpController
             'listingUrl' => cp_route('runway.index', ['resource' => $resource->handle()]),
         ];
 
-        $columns = $this->buildColumns($resource, $blueprint);
-
         return view('runway::index', [
             'title' => $resource->name(),
             'resource' => $resource,
             'modelCount' => $resource->model()->count(),
             'primaryColumn' => $this->getPrimaryColumn($resource),
             'columns' => $resource->blueprint()->columns()
-                ->filter(fn ($column) => in_array($column->field, collect($columns)->pluck('handle')->toArray()))
+                ->setPreferred("runway.{$resource->handle()}.columns")
                 ->rejectUnlisted()
                 ->values(),
             'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),

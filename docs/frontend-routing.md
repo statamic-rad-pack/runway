@@ -28,7 +28,7 @@ class Product extends Model
     use RunwayRoutes;
 ```
 
-Last but not least, run `php please runway:rebuild-uris`. This command will essentially loop through all of your models, compile the Antlers URIs, and save it to the database for reference later.
+If you have any existing models, make sure you run `php please runway:rebuild-uris` to build the ["URIs cache"](#content-uri-cache) Runway uses to map models to URIs.
 
 ## Customising the template/layout used
 
@@ -76,4 +76,28 @@ You may also configure additional URIs to be invalidated on save.
     ],
 
 ],
+```
+
+## URI Cache
+
+Since Runway allows you to define your routes using Antlers, much like collections, Runway needs to index all the possible URIs so it can efficiently find the related Eloquent model.
+
+Runway uses the `runway_uris` table to do this. Unless disabled, your application will have a `runway_uris` table, which is responsible for mapping URIs to Eloquent models.
+
+Anytime you create, update or delete an Eloquent model, Runway will update its mappings in the `runway_uris` table.
+
+### Building the URI Cache
+
+When configuring front-end routing in an application with existing models, you should run the `php please runway:rebuild-uris` command to build the Runway's "URI Cache".
+
+If you wish to limit the models being "cached" by the `runway:rebuild-uris` command, you may add the `runwayRoutes` query scope to your model:
+
+```php
+class Product extends Model
+{
+	public function scopeRunwayRoutes($query)
+	{
+		return $query->where('is_public', true);
+	}
+}
 ```

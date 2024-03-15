@@ -141,6 +141,10 @@ class BaseFieldtype extends Relationship
             $data = [$data];
         }
 
+        if ($data instanceof Model) {
+            $data = Arr::wrap($data);
+        }
+
         return collect($data)->map(function ($item) use ($resource) {
             $column = $resource->titleField();
 
@@ -213,7 +217,7 @@ class BaseFieldtype extends Relationship
 
     protected function getAugmentableModels(Resource $resource, $values): Collection
     {
-        return collect(Arr::wrap($values))
+        return collect($values instanceof Collection ? $values : Arr::wrap($values))
             ->map(function ($model) use ($resource) {
                 if (! $model instanceof Model) {
                     $eagerLoadingRelationships = collect($this->config('with') ?? [])->join(',');

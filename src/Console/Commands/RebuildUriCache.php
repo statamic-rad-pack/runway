@@ -19,7 +19,8 @@ class RebuildUriCache extends Command
      *
      * @var string
      */
-    protected $signature = 'runway:rebuild-uris';
+    protected $signature = 'runway:rebuild-uris
+        { --force : Force rebuilding of the URI cache. }';
 
     /**
      * The console command description.
@@ -45,12 +46,14 @@ class RebuildUriCache extends Command
      */
     public function handle()
     {
-        $confirm = $this->confirm(
-            'You are about to rebuild your entire URI cache. This may take part of your site down while running. Are you sure you want to continue?'
-        );
+        if (! $this->option('force')) {
+            $confirm = $this->confirm(
+                'You are about to rebuild your entire URI cache. This may take part of your site down while running. Are you sure you want to continue?'
+            );
 
-        if (! $confirm) {
-            return;
+            if (! $confirm) {
+                return;
+            }
         }
 
         RunwayUri::all()->each->delete();
@@ -66,7 +69,10 @@ class RebuildUriCache extends Command
                     return;
                 }
 
-                $this->withProgressBar($resource->model()->all(), function ($model) use ($resource) {
+                $query = $resource->model()->newQuery();
+                $query->when($query->hasNamedScope('runwayRoutes'), fn ($query) => $query->runwayRoutes());
+
+                $this->withProgressBar($query->get(), function ($model) use ($resource) {
                     $uri = Antlers::parser()
                         ->parse($resource->route(), $model->toAugmentedArray())
                         ->__toString();

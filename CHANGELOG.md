@@ -1,5 +1,59 @@
 # Changelog
 
+## v6.6.1 (2024-03-15)
+
+### What's improved
+* Updated to PHPUnit 10 #464 by @duncanmcclean
+
+### What's fixed
+* Fixed `runway:generate-blueprint` command generating fields with incorrect fieldtype #462 by @duncanmcclean
+* Fixed failing tests #463 by @duncanmcclean
+
+
+### v6.6.0 (2024-03-11)
+
+### What's new
+* Added `--force` parameter to the `runway:rebuild-uris` command to prevent user confirmation #455 by @mefenlon
+
+
+
+## v6.5.0 (2024-03-08)
+
+### What's new
+* Added `runwayRoutes` scope to scope models indexed by `runway:rebuild-uris` command #454 by @mefenlon
+
+### What's fixed
+* Fixed an issue when augmenting nested fields by @duncanmcclean
+
+
+
+## v6.4.1 (2024-03-04)
+
+### What's fixed
+* Fixed route model binding issue on CP routes #453 by @edalzell
+
+
+
+## v6.4.0 (2024-03-01)
+
+### What's improved
+* Refactored how the Control Panel listing data is loaded #451 by @duncanmcclean
+
+### What's fixed
+* Fixed flaky tests #452 by @duncanmcclean
+
+
+
+## v6.3.0 (2024-02-26)
+
+### What's improved
+* Permissions are no longer grouped under `Miscellaneous` #443 by @caseydwyer
+
+### What's fixed
+* Fixed an issue when wrapping values for augmentation #445 by @duncanmcclean
+
+
+
 ## v6.2.2 (2024-02-22)
 
 ### What's fixed

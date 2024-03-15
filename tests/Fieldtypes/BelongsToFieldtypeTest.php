@@ -181,6 +181,22 @@ class BelongsToFieldtypeTest extends TestCase
     {
         $author = Author::factory()->create();
 
+        $preProcessIndex = $this->fieldtype->preProcessIndex($author);
+
+        $this->assertTrue($preProcessIndex instanceof Collection);
+
+        $this->assertEquals($preProcessIndex->first(), [
+            'id' => $author->id,
+            'title' => $author->name,
+            'edit_url' => 'http://localhost/cp/runway/author/1',
+        ]);
+    }
+
+    /** @test */
+    public function can_get_pre_process_index_with_model_id()
+    {
+        $author = Author::factory()->create();
+
         $preProcessIndex = $this->fieldtype->preProcessIndex($author->id);
 
         $this->assertTrue($preProcessIndex instanceof Collection);
