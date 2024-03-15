@@ -62,10 +62,10 @@ class GenerateBlueprint extends Command
             'normal' => 'date',
         ],
         \Doctrine\DBAL\Types\DecimalType::class => [
-            'normal' => 'floatval',
+            'normal' => 'float',
         ],
         \Doctrine\DBAL\Types\FloatType::class => [
-            'normal' => 'floatval',
+            'normal' => 'float',
         ],
         \Doctrine\DBAL\Types\GuidType::class => [],
         \Doctrine\DBAL\Types\IntegerType::class => [
