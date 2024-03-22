@@ -10,7 +10,7 @@ As of Runway v3.0, you may now search Runway models using [Statamic's search fun
 // config/statamic/search.php
 'myindex' => [
   'driver' => 'local',
-  'searchables' => ['collection:blog', 'runway:products'],
+  'searchables' => ['collection:blog', 'runway:order'],
 ]
 ```
 
