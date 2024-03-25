@@ -9,6 +9,7 @@
 * Updated an example on the "Search" page #466 by @Ken-vdE
 
 
+
 ## v6.6.1 (2024-03-15)
 
 ### What's improved
