@@ -162,7 +162,7 @@ class ServiceProvider extends AddonServiceProvider
 
     protected function registerBlueprints(): self
     {
-        if (app()->runningInConsole()) {
+        if (app()->runningInConsole() && ! app()->runningUnitTests()) {
             return $this;
         }
 
