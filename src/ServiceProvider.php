@@ -82,7 +82,6 @@ class ServiceProvider extends AddonServiceProvider
         ], 'runway-config');
 
         Statamic::booted(function () {
-
             Runway::discoverResources();
 
             $this
@@ -163,6 +162,10 @@ class ServiceProvider extends AddonServiceProvider
 
     protected function registerBlueprints(): self
     {
+        if (app()->runningInConsole()) {
+            return $this;
+        }
+
         Blueprint::addNamespace('runway', base_path('resources/blueprints/runway'));
 
         Runway::allResources()->each(fn (Resource $resource) => $resource->blueprint());
