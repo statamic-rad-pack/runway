@@ -173,7 +173,7 @@ class ServiceProvider extends AddonServiceProvider
             // yet to be migrated (for example: during a fresh install). We'll catch the exception here and
             // ignore it to prevent any errors during the `composer dump-autoload` command.
 
-            Log::warning("Runway attempted to register its blueprint namespace. However, it seems the `blueprints` table has yet to be migrated.");
+            Log::warning('Runway attempted to register its blueprint namespace. However, it seems the `blueprints` table has yet to be migrated.');
         }
 
         return $this;
