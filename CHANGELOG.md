@@ -1,5 +1,14 @@
 # Changelog
 
+## v6.6.2 (2024-03-25)
+
+### What's fixed
+* `QueryException` errors are now caught to prevent install issues when used alongside the Eloquent Driver #465 #467 by @duncanmcclean
+
+### Documentation updates
+* Updated an example on the "Search" page #466 by @Ken-vdE
+
+
 ## v6.6.1 (2024-03-15)
 
 ### What's improved
