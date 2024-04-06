@@ -124,7 +124,7 @@ class GenerateBlueprint extends Command
      */
     public function handle()
     {
-        $this->info('Generating blueprints...');
+        $this->components->info('Generating blueprints...');
         $this->line('');
 
         $resources = [];
@@ -143,7 +143,7 @@ class GenerateBlueprint extends Command
             $this->generateForResource($resource);
         }
 
-        $this->info('✔️ Done');
+        $this->components->info('✔️ Done');
     }
 
     protected function generateForResource(Resource $resource)
@@ -171,13 +171,13 @@ class GenerateBlueprint extends Command
         $this->generateNewBlueprint($resource, $fields);
 
         if (count($errorMessages) === 0) {
-            $this->line("✔️ {$resource->name()}");
+            $this->components->info("✔️ {$resource->name()}");
             $this->line('');
         } else {
             $this->line("❌ {$resource->name()}");
 
             foreach ($errorMessages as $errorMessage) {
-                $this->comment($errorMessage);
+                $this->components->comment($errorMessage);
             }
 
             $this->line('');

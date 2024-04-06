@@ -13,6 +13,8 @@ use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
 use Symfony\Component\Process\Process;
 
+use function Laravel\Prompts\confirm;
+
 class GenerateMigration extends Command
 {
     use RunsInPlease;
@@ -181,7 +183,7 @@ class GenerateMigration extends Command
      */
     public function handle()
     {
-        $this->info('Generating migrations...');
+        $this->components->info('Generating migrations...');
         $this->line('');
 
         $resources = [];
@@ -201,7 +203,7 @@ class GenerateMigration extends Command
             $this->generateForResource($resource);
         }
 
-        if ($this->ask('Should we run your migrations?', 'yes') === 'yes') {
+        if (confirm('Should we run your migrations?', 'yes') === 'yes') {
             Artisan::call('migrate');
         }
 

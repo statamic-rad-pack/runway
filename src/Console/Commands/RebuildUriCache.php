@@ -10,6 +10,9 @@ use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Routing\RunwayUri;
 use StatamicRadPack\Runway\Runway;
 
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\progress;
+
 class RebuildUriCache extends Command
 {
     use RunsInPlease;
@@ -47,7 +50,7 @@ class RebuildUriCache extends Command
     public function handle()
     {
         if (! $this->option('force')) {
-            $confirm = $this->confirm(
+            $confirm = confirm(
                 'You are about to rebuild your entire URI cache. This may take part of your site down while running. Are you sure you want to continue?'
             );
 
@@ -60,11 +63,8 @@ class RebuildUriCache extends Command
 
         Runway::allResources()
             ->each(function (Resource $resource) {
-                $this->newLine(2);
-                $this->info("Building {$resource->name()} URIs");
-
                 if (! $resource->hasRouting()) {
-                    $this->warn("Skipping {$resource->name()}, routing not configured.");
+                    $this->components->warn("Skipping {$resource->name()}, routing not configured.");
 
                     return;
                 }
@@ -72,17 +72,21 @@ class RebuildUriCache extends Command
                 $query = $resource->model()->newQuery();
                 $query->when($query->hasNamedScope('runwayRoutes'), fn ($query) => $query->runwayRoutes());
 
-                $this->withProgressBar($query->get(), function ($model) use ($resource) {
-                    $uri = Antlers::parser()
-                        ->parse($resource->route(), $model->toAugmentedArray())
-                        ->__toString();
+                progress(
+                    label: "Caching {$resource->name()} URIs",
+                    steps: $query->get(),
+                    callback: function ($model) use ($resource) {
+                        $uri = Antlers::parser()
+                            ->parse($resource->route(), $model->toAugmentedArray())
+                            ->__toString();
 
-                    $uri = Str::start($uri, '/');
+                        $uri = Str::start($uri, '/');
 
-                    $model->runwayUri()->create([
-                        'uri' => $uri,
-                    ]);
-                });
+                        $model->runwayUri()->create([
+                            'uri' => $uri,
+                        ]);
+                    }
+                );
             });
     }
 }
