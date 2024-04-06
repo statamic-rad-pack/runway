@@ -52,39 +52,34 @@ class ResourceType extends Type
 
     protected function nonBlueprintFields(): array
     {
-        $columns = Schema::getConnection()
-            ->getDoctrineSchemaManager()
-            ->listTableColumns($this->resource->databaseTable());
-
-        return collect($columns)
-            ->reject(fn ($column) => in_array(
-                $column->getName(),
+        return collect(Schema::getColumns($this->resource->databaseTable()))
+            ->reject(fn (array $column) => in_array(
+                $column['name'],
                 $this->resource->blueprint()->fields()->all()->keys()->toArray()
             ))
-            ->map(function ($column) {
+            ->mapWithKeys(function (array $column): array {
                 $type = null;
 
-                if ($column->getType() instanceof \Doctrine\DBAL\Types\BigIntType) {
+                if ($column['type_name'] === 'bigint') {
                     $type = GraphQL::int();
                 }
 
-                if ($column->getType() instanceof \Doctrine\DBAL\Types\StringType) {
+                if ($column['type_name'] === 'varchar' || $column['type_name'] === 'string') {
                     $type = GraphQL::string();
                 }
 
-                if ($column->getType() instanceof \Doctrine\DBAL\Types\DateTimeType) {
+                if ($column['type_name'] === 'timestamp' || $column['type_name'] === 'datetime') {
                     $type = GraphQL::string();
                 }
 
-                if ($column->getNotnull() === true && ! is_null($type)) {
+                if ($column['nullable'] === false && ! is_null($type)) {
                     $type = GraphQL::nonNull($type);
                 }
 
-                return [
-                    'type' => $type,
-                ];
+                return [$column['name'] => ['type' => $type]];
             })
-            ->reject(fn ($item) => is_null($item['type']))
+            ->reject(fn ($item): bool => is_null($item['type']))
+            // ->dd()
             ->toArray();
     }
 }
