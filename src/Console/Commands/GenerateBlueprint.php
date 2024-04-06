@@ -177,7 +177,7 @@ class GenerateBlueprint extends Command
             $this->line("❌ {$resource->name()}");
 
             foreach ($errorMessages as $errorMessage) {
-                $this->components->comment($errorMessage);
+                $this->components->error($errorMessage);
             }
 
             $this->line('');

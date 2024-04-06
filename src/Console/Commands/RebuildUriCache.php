@@ -72,6 +72,12 @@ class RebuildUriCache extends Command
                 $query = $resource->model()->newQuery();
                 $query->when($query->hasNamedScope('runwayRoutes'), fn ($query) => $query->runwayRoutes());
 
+                if (! $query->exists()) {
+                    $this->components->warn("Skipping {$resource->name()}, no models to cache.");
+
+                    return;
+                }
+
                 progress(
                     label: "Caching {$resource->name()} URIs",
                     steps: $query->get(),

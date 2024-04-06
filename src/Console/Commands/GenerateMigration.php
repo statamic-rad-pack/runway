@@ -203,7 +203,7 @@ class GenerateMigration extends Command
             $this->generateForResource($resource);
         }
 
-        if (confirm('Should we run your migrations?', 'yes') === 'yes') {
+        if (confirm('Should we run your migrations?')) {
             Artisan::call('migrate');
         }
 
