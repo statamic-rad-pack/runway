@@ -40,13 +40,10 @@ php artisan view:clear
 
 The minimum version of Statamic is now 5. Please review the [Statamic 5 upgrade guide](https://statamic.dev/upgrade-guide/4-0-to-5-0).
 
-### PHP and Laravel support
-**Affects apps using PHP < 8.2 or Laravel < 10.**
+### PHP support
+**Affects apps using PHP 8.1**
 
-- The minimum version of PHP is now 8.1.
-- The minimum version of Laravel is now 10.
-
-We highly recommend upgrading all the way to Laravel 11 and PHP 8.3.
+The minimum version of PHP is now 8.2. We highly recommend upgrading all the way to PHP 8.3.
 
 ## Previous upgrade guides
 
