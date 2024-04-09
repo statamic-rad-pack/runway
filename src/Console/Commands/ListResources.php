@@ -43,7 +43,7 @@ class ListResources extends Command
     public function handle()
     {
         if (! Runway::allResources()->count()) {
-            return $this->error("Your application doesn't have any resources.");
+            return $this->components->error("Your application doesn't have any resources.");
         }
 
         $this->table(

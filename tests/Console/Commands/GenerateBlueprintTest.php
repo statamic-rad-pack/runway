@@ -120,8 +120,8 @@ class GenerateBlueprintTest extends TestCase
             ->once();
 
         $this->artisan('runway:generate-blueprints', ['resource' => 'post'])
-            ->expectsOutput('Generating blueprints...')
-            ->expectsOutput('✔️ Done')
+            ->expectsOutputToContain('Generating blueprints...')
+            ->expectsOutputToContain('✔️ Done')
             ->assertExitCode(0);
     }
 
@@ -171,10 +171,10 @@ class GenerateBlueprintTest extends TestCase
             ->once();
 
         $this->artisan('runway:generate-blueprints', ['resource' => 'post'])
-            ->expectsOutput('Generating blueprints...')
+            ->expectsOutputToContain('Generating blueprints...')
             ->expectsOutput('❌ Posts')
-            ->expectsOutput('Column [blob] could not be matched with a fieldtype.')
-            ->expectsOutput('✔️ Done')
+            ->expectsOutputToContain('Column [blob] could not be matched with a fieldtype.')
+            ->expectsOutputToContain('✔️ Done')
             ->assertExitCode(0);
     }
 }

@@ -72,9 +72,12 @@ $table->json('values')->nullable();
 And the cast defined on the model:
 
 ```php
-protected $casts = [
-    'values' => 'array', // or 'json', AsArrayObject::class
-];
+protected function casts(): array
+{
+    return [
+        'values' => 'array', // or 'json', AsArrayObject::class
+    ];
+}
 ```
 
 :::note Note!

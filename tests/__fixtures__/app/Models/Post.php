@@ -23,10 +23,13 @@ class Post extends Model
         'excerpt',
     ];
 
-    protected $casts = [
-        'values' => 'array',
-        'external_links' => 'object',
-    ];
+    public function casts(): array
+    {
+        return [
+            'values' => 'array',
+            'external_links' => 'object',
+        ];
+    }
 
     public function scopeFood($query)
     {
