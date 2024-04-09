@@ -32,6 +32,6 @@ class ListResourcesTest extends TestCase
 
         $this
             ->artisan('runway:resources')
-            ->expectsOutput("Your application doesn't have any resources.");
+            ->expectsOutputToContain("Your application doesn't have any resources.");
     }
 }

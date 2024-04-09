@@ -4,18 +4,17 @@ namespace StatamicRadPack\Runway\Tests;
 
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use Rebing\GraphQL\GraphQLServiceProvider;
-use Statamic\Extend\Manifest;
+use Statamic\Extend\AddonTestCase;
 use Statamic\Facades\Blueprint;
-use Statamic\Providers\StatamicServiceProvider;
 use Statamic\Stache\Stores\UsersStore;
 use Statamic\Statamic;
 use StatamicRadPack\Runway\ServiceProvider;
 
-abstract class TestCase extends OrchestraTestCase
+abstract class TestCase extends AddonTestCase
 {
     use RefreshDatabase;
+
+    protected string $addonServiceProvider = ServiceProvider::class;
 
     protected $shouldFakeVersion = true;
 
@@ -23,43 +22,8 @@ abstract class TestCase extends OrchestraTestCase
     {
         parent::setUp();
 
-        $this->withoutVite();
-
         $this->loadMigrationsFrom(__DIR__.'/__fixtures__/database/migrations');
         $this->runLaravelMigrations();
-
-        if ($this->shouldFakeVersion) {
-            \Facades\Statamic\Version::shouldReceive('get')->andReturn('4.0.0-testing');
-            $this->addToAssertionCount(-1); // Dont want to assert this
-        }
-    }
-
-    protected function getPackageProviders($app)
-    {
-        return [
-            GraphQLServiceProvider::class,
-            StatamicServiceProvider::class,
-            ServiceProvider::class,
-        ];
-    }
-
-    protected function getPackageAliases($app)
-    {
-        return [
-            'Statamic' => Statamic::class,
-        ];
-    }
-
-    protected function getEnvironmentSetUp($app)
-    {
-        parent::getEnvironmentSetUp($app);
-
-        $app->make(Manifest::class)->manifest = [
-            'statamic-rad-pack/runway' => [
-                'id' => 'statamic-rad-pack/runway',
-                'namespace' => 'StatamicRadPack\\Runway',
-            ],
-        ];
     }
 
     protected function resolveApplicationConfiguration($app)
@@ -73,24 +37,6 @@ abstract class TestCase extends OrchestraTestCase
         $app['config']->set('view.paths', [
             __DIR__.'/__fixtures__/resources/views',
         ]);
-
-        $configs = [
-            'assets',
-            'cp',
-            'forms',
-            'static_caching',
-            'sites',
-            'stache',
-            'system',
-            'users',
-        ];
-
-        foreach ($configs as $config) {
-            $app['config']->set(
-                "statamic.$config",
-                require (__DIR__."/../vendor/statamic/cms/config/{$config}.php")
-            );
-        }
 
         $app['config']->set('statamic.api.enabled', true);
         $app['config']->set('statamic.editions.pro', true);
