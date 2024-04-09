@@ -15,7 +15,6 @@ jobs:
         php: [8.3, 8.2]
         laravel: [11.*]
         statamic: [^5.0]
-        testbench: [9.*]
         os: [ubuntu-latest]
 
     name: ${{ matrix.php }} - ${{ matrix.statamic }} - ${{ matrix.laravel }}
@@ -32,8 +31,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "statamic/cms:${{ matrix.statamic }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" "statamic/cms:${{ matrix.statamic }}" --no-interaction --no-update
           composer install --no-interaction
 
       - name: Run PHPUnit
-        run: composer test
+        run: vendor/bin/phpunit
