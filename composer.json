@@ -49,7 +49,7 @@
         "laravel/pint": "^1.0",
         "spatie/test-time": "^1.2",
         "orchestra/testbench": "^8.0 || ^9.0",
-        "phpunit/phpunit": "^10.0",
+        "phpunit/phpunit": "^10.0"
     },
     "config": {
         "optimize-autoloader": true,
