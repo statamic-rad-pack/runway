@@ -14,7 +14,7 @@ jobs:
       matrix:
         php: [8.3, 8.2]
         laravel: [11.*]
-        statamic: [dev-master]
+        statamic: [^5.0]
         testbench: [9.*]
         os: [ubuntu-latest]
 
