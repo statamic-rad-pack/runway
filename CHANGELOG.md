@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.6.3 (2024-04-11)
+
+### What's fixed
+* Fixed n+1 queries when selecting items in the listing table #469 #470 by @caseydwyer
+
+
+
 ## v6.6.2 (2024-03-25)
 
 ### What's fixed
