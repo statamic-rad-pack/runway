@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway\Http\Resources\CP;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Collection;
+use Statamic\CP\Column;
 use Statamic\Fields\Blueprint;
 use Statamic\Http\Resources\CP\Concerns\HasRequestedColumns;
 use StatamicRadPack\Runway\Resource;
@@ -41,7 +42,13 @@ class Models extends ResourceCollection
 
     public function setColumns(): self
     {
-        $columns = $this->runwayResource->blueprint()->columns();
+        $columns = $this->runwayResource->blueprint()->columns()->map(function (Column $column) {
+            if ($this->runwayResource->model()->hasAppended($column->field())) {
+                $column->sortable(false);
+            }
+
+            return $column;
+        });
 
         if ($key = $this->columnPreferenceKey) {
             $columns->setPreferred($key);
