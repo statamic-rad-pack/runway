@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.6.4 (2024-04-16)
+
+### What's fixed
+* Appended attributes shouldn't be sortable in listing tables #472 by @duncanmcclean
+
+
+
 ## v6.6.3 (2024-04-11)
 
 ### What's fixed
