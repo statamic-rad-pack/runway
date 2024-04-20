@@ -4,7 +4,7 @@ namespace StatamicRadPack\Runway\Tests;
 
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Statamic\Extend\AddonTestCase;
+use Statamic\Testing\AddonTestCase;
 use Statamic\Facades\Blueprint;
 use Statamic\Stache\Stores\UsersStore;
 use Statamic\Statamic;
