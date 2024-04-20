@@ -4,10 +4,10 @@ namespace StatamicRadPack\Runway\Tests;
 
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Statamic\Testing\AddonTestCase;
 use Statamic\Facades\Blueprint;
 use Statamic\Stache\Stores\UsersStore;
 use Statamic\Statamic;
+use Statamic\Testing\AddonTestCase;
 use StatamicRadPack\Runway\ServiceProvider;
 
 abstract class TestCase extends AddonTestCase
