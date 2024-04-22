@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.6.5 (2024-04-22)
+
+### What's fixed
+* Fixed CP nav items being added to the wrong sections when using languages other than English #474 by @mrmonat
+
+
+
 ## v6.6.4 (2024-04-16)
 
 ### What's fixed
