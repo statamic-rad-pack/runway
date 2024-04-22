@@ -152,7 +152,7 @@ class ServiceProvider extends AddonServiceProvider
                 ->reject(fn ($resource) => $resource->hidden())
                 ->each(function (Resource $resource) use (&$nav) {
                     $nav->create($resource->name())
-                        ->section(__('Content'))
+                        ->section('Content')
                         ->icon($resource->cpIcon())
                         ->route('runway.index', ['resource' => $resource->handle()])
                         ->can('view', $resource);
