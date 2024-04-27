@@ -3,7 +3,7 @@
 ## v7.0.0 (2024-xx-xx)
 
 ### Read First 👀
-Be sure to read the [Upgrade Guide](https://runway.duncanmcclean.com/upgrade-guides/v6-x-to-v7-0) first as manual changes may be necessary.
+Be sure to read the [Upgrade Guide](https://runway.duncanmcclean.com/upgrade-guides/v6-to-v7) first as manual changes may be necessary.
 
 ### What's new
 

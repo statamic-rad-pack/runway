@@ -2,8 +2,10 @@
 
 namespace StatamicRadPack\Runway;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Traits\Conditionable;
 use Statamic\API\Middleware\Cache;
@@ -82,7 +84,6 @@ class ServiceProvider extends AddonServiceProvider
         ], 'runway-config');
 
         Statamic::booted(function () {
-
             Runway::discoverResources();
 
             $this
@@ -151,7 +152,7 @@ class ServiceProvider extends AddonServiceProvider
                 ->reject(fn ($resource) => $resource->hidden())
                 ->each(function (Resource $resource) use (&$nav) {
                     $nav->create($resource->name())
-                        ->section(__('Content'))
+                        ->section('Content')
                         ->icon($resource->cpIcon())
                         ->route('runway.index', ['resource' => $resource->handle()])
                         ->can('view', $resource);
@@ -163,9 +164,17 @@ class ServiceProvider extends AddonServiceProvider
 
     protected function registerBlueprints(): self
     {
-        Blueprint::addNamespace('runway', base_path('resources/blueprints/runway'));
+        try {
+            Blueprint::addNamespace('runway', base_path('resources/blueprints/runway'));
 
-        Runway::allResources()->each(fn (Resource $resource) => $resource->blueprint());
+            Runway::allResources()->each(fn (Resource $resource) => $resource->blueprint());
+        } catch (QueryException $e) {
+            // A QueryException will be thrown when using the Eloquent Driver, where the `blueprints` table is
+            // yet to be migrated (for example: during a fresh install). We'll catch the exception here and
+            // ignore it to prevent any errors during the `composer dump-autoload` command.
+
+            Log::warning('Runway attempted to register its blueprint namespace. However, it seems the `blueprints` table has yet to be migrated.');
+        }
 
         return $this;
     }
