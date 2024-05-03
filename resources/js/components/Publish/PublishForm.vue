@@ -6,7 +6,7 @@
             :title="breadcrumbs[0].text"
         />
 
-        <div class="flex items-center mb-3">
+        <div class="flex items-center mb-6">
             <h1 class="flex-1">
                 <div class="flex items-center">
                     <span v-html="title" />
@@ -36,6 +36,8 @@
                     </button>
                 </save-button-options>
             </div>
+
+            <slot name="action-buttons-right" />
         </div>
 
         <publish-container
@@ -236,8 +238,8 @@ export default {
                         })
                     } else {
                         this.quickSave = false
-
                         this.$toast.success(__('Saved'))
+                        this.$nextTick(() => this.$emit('saved', response));
                     }
                 })
                 .catch((error) => this.handleAxiosError(error))
