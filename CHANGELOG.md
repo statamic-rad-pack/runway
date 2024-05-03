@@ -1,5 +1,17 @@
 # Changelog
 
+## v6.7.0 (2024-05-03)
+
+### What's new
+* An exception is now thrown when resource blueprint is empty #479 by @duncanmcclean
+
+### What's fixed
+* Added missing close button on Runway's inline publish form #484 by @duncanmcclean
+* Fixed Vite hot-reloading and dropped unused Vue component #483 by @duncanmcclean
+
+
+
+
 ## v6.6.5 (2024-04-22)
 
 ### What's fixed
