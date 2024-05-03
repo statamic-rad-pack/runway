@@ -84,7 +84,7 @@ class AugmentedModel extends AbstractAugmented
         return collect($this->data->getAppends());
     }
 
-    protected function blueprintFields(): Collection
+    public function blueprintFields(): Collection
     {
         $fields = $this->resource->blueprint()->fields()->all();
 
@@ -102,19 +102,6 @@ class AugmentedModel extends AbstractAugmented
         return $this->resource->eloquentRelationships()->reject(fn ($relationship) => $relationship === 'runwayUri');
     }
 
-    public function get($handle): Value
-    {
-        // When the $handle is an Eloquent relationship, ensure we pass the models to
-        // augmentation, rather than the Relationship instance.
-        if ($this->resource->eloquentRelationships()->flip()->has($handle)) {
-            return Blink::once("Runway::AugmentedModel_Relationship::{$this->data->{$this->resource->primaryKey()}}::{$handle}", function () use ($handle) {
-                return $this->wrapValue($this->getFromData($handle), $handle);
-            });
-        }
-
-        return parent::get($handle);
-    }
-
     protected function getFromData($handle)
     {
         if (Str::contains($handle, '->')) {
@@ -124,45 +111,88 @@ class AugmentedModel extends AbstractAugmented
         return $this->supplements->get($handle) ?? data_get($this->data, $handle);
     }
 
-    protected function wrapValue($value, $handle)
+    public function get($handle): Value
     {
-        $fields = $this->blueprintFields();
-
         if ($this->resource->eloquentRelationships()->flip()->has($handle)) {
-            $relatedField = $this->resource->eloquentRelationships()->flip()->get($handle);
+            $value = $this->wrapEloquentRelationship($handle);
 
-            return new Value(
-                $value,
-                $handle,
-                optional($fields->get($relatedField))->fieldtype(),
-                $this->data
-            );
+            return $value->resolve();
         }
 
         if (in_array($handle, $this->nestedFields)) {
-            $value = collect($value)
-                ->map(function ($value, $key) use ($handle, $fields) {
-                    $field = $fields->get("{$handle}->{$key}");
+            $value = $this->wrapNestedFields($handle);
 
+            return $value->resolve();
+        }
+
+        if ($this->hasModelAccessor($handle)) {
+            $value = $this->wrapModelAccessor($handle);
+
+            return $value->resolve();
+        }
+
+        return parent::get($handle);
+    }
+
+    private function wrapEloquentRelationship(string $handle): Value
+    {
+        $relatedField = $this->resource->eloquentRelationships()->flip()->get($handle);
+
+        return new Value(
+            fn () => $this->getFromData($handle),
+            $handle,
+            $this->fieldtype($relatedField),
+            $this->data
+        );
+    }
+
+    private function wrapNestedFields(string $handle): Value
+    {
+        return new Value(
+            function () use ($handle) {
+                $value = $this->getFromData($handle);
+
+                return collect($value)->map(function ($value, $key) use ($handle) {
                     return new Value(
                         $value,
                         $handle,
-                        $field?->fieldtype(),
-                        $this->data,
+                        $this->fieldtype("{$handle}->{$key}"),
+                        $this->data
                     );
-                })
-                ->toArray();
-        }
-
-        if ($value instanceof Attribute) {
-            $value = ($value->get)();
-        }
-
-        return new Value(
-            $value,
+                })->all();
+            },
             $handle,
-            optional($fields->get($handle))->fieldtype(),
+            null,
             $this->data
         );
+    }
+
+    private function hasModelAccessor(string $handle): bool
+    {
+        $method = Str::camel($handle);
+
+        return method_exists($this->data, $method)
+            && (new \ReflectionMethod($this->data, $method))->getReturnType()?->getName() === Attribute::class;
+    }
+
+    private function wrapModelAccessor(string $handle): Value
+    {
+        return new Value(
+            function () use ($handle) {
+                $method = Str::camel($handle);
+
+                $get = $this->data->$method()->get;
+
+                return $get();
+            },
+            $handle,
+            $this->fieldtype($handle),
+            $this->data
+        );
+    }
+
+    private function fieldtype($handle)
+    {
+        return optional($this->blueprintFields()->get($handle))->fieldtype();
     }
 }
