@@ -33,9 +33,9 @@ php artisan view:clear
 
 **Please test your project locally before deploying to production!**
 
-## Changes
+## High impact changes
 
-## High: Statamic support
+## Statamic support
 **Affects all apps using Runway**
 
 The minimum version of Statamic is now 5. Please review the [Statamic 5 upgrade guide](https://statamic.dev/upgrade-guide/4-0-to-5-0).
@@ -44,6 +44,23 @@ The minimum version of Statamic is now 5. Please review the [Statamic 5 upgrade 
 **Affects apps using PHP 8.1**
 
 The minimum version of PHP is now 8.2. We highly recommend upgrading all the way to PHP 8.3.
+
+### Resource handles are now generated differently
+**Affects apps with Eloquent models, where the class name is multiple words**
+
+Runway will now generate resource handles slightly differently for Eloquent models, where the class name is multiple words.
+
+For example: in v6, the resource handle for a model named `BlogPost` would have been `blogpost`. In v7, it will now be `blog_post` for easier readability.
+
+If this affects you, you can either update all references to the old resource handle in your blueprints & templates, or manually override the handle of the resource in your Runway config:
+
+```php
+// config/runway.php
+
+BlogPost::class => [
+    'handle' => 'blogpost',
+],
+```
 
 ## Previous upgrade guides
 
