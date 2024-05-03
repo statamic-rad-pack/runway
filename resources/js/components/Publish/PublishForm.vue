@@ -238,8 +238,8 @@ export default {
                         })
                     } else {
                         this.quickSave = false
-
                         this.$toast.success(__('Saved'))
+                        this.$nextTick(() => this.$emit('saved', response));
                     }
                 })
                 .catch((error) => this.handleAxiosError(error))
