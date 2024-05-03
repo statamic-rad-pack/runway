@@ -2,19 +2,19 @@
 
 namespace StatamicRadPack\Runway\Console\Commands;
 
+use Facades\Statamic\Facades\Endpoint\Path;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Console\RunsInPlease;
-use Facades\Statamic\Facades\Endpoint\Path;
 use Statamic\Fields\Field;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
-use Illuminate\Support\Facades\Process;
-
 use Symfony\Component\Process\PhpExecutableFinder;
+
 use function Laravel\Prompts\confirm;
 
 class GenerateMigration extends Command
@@ -341,7 +341,7 @@ class GenerateMigration extends Command
 
         Process::path(base_path())->run(
             (new PhpExecutableFinder())->find().
-            ' /'.Path::makeRelative(__DIR__ . '/../../../php-cs-fixer.phar').
+            ' /'.Path::makeRelative(__DIR__.'/../../../php-cs-fixer.phar').
             ' fix '.$migrationPath.' --rules='.$rules
         );
 
