@@ -31,8 +31,8 @@ class GenerateMigrationTest extends TestCase
 
         Runway::discoverResources();
 
-        collect(File::glob(database_path('migrations/*')))->each(function ($path) {
-            File::delete($path);
+        collect(File::allFiles(database_path('migrations')))->each(function (SplFileInfo $file) {
+            File::delete($file->getRealPath());
         });
     }
 
