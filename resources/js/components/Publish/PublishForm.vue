@@ -36,6 +36,8 @@
                     </button>
                 </save-button-options>
             </div>
+
+            <slot name="action-buttons-right" />
         </div>
 
         <publish-container
