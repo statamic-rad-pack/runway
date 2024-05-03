@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Statamic\Data\AbstractAugmented;
-use Statamic\Facades\Blink;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
 use Statamic\Statamic;
