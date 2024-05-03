@@ -13,8 +13,10 @@ Be sure to read the [Upgrade Guide](https://runway.duncanmcclean.com/upgrade-gui
 
 * Dropped PHP 8.1 support
 * Dropped Statamic 4 support
+* Resource handles are now generated differently #480 by @duncanmcclean
 
 ### What's improved
 
 * Improved the output of Runway's commands
 * Replaced `doctrine/dbal` dependency in favour of Laravel's new built-in methods #468 by @duncanmcclean
+* Augmentation improvements #481 by @duncanmcclean
