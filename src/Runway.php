@@ -16,7 +16,7 @@ class Runway
         static::$resources = collect(config('runway.resources'))
             ->mapWithKeys(function ($config, $model) {
                 $config = collect($config);
-                $handle = $config->get('handle', Str::lower(class_basename($model)));
+                $handle = $config->get('handle', Str::snake(class_basename($model)));
 
                 throw_if(
                     ! in_array(Traits\HasRunwayResource::class, class_uses_recursive($model)),
