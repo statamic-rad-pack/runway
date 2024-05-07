@@ -37,6 +37,11 @@ trait HasRunwayResource
         return Runway::findResourceByModel($this);
     }
 
+    public function reference(): string
+    {
+        return "runway::{$this->runwayResource()->handle()}::{$this->getKey()}";
+    }
+
     public function scopeRunwaySearch(Builder $query, string $searchQuery)
     {
         $this->runwayResource()->blueprint()->fields()->all()
