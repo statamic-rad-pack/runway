@@ -43,6 +43,7 @@
         <publish-container
             ref="container"
             :name="publishContainer"
+            :reference="initialReference"
             :blueprint="blueprint"
             :values="values"
             :meta="meta"
@@ -117,6 +118,7 @@ export default {
 
     props: {
         breadcrumbs: Array,
+        initialReference: String,
         initialActions: Object,
         initialBlueprint: Object,
         initialValues: Object,

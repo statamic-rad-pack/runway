@@ -7,6 +7,7 @@
 @section('content')
     <runway-publish-form
         :breadcrumbs="{{ $breadcrumbs->toJson() }}"
+        initial-reference="{{ $currentModel['reference'] }}"
         :initial-actions="{{ json_encode($actions) }}"
         :initial-blueprint='@json($blueprint)'
         :initial-meta='@json($meta)'
