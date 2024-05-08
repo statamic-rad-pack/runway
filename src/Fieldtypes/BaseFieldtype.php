@@ -286,6 +286,7 @@ class BaseFieldtype extends Relationship
 
         return [
             'id' => $model->getKey(),
+            'reference' => $model->reference(),
             'title' => $this->makeTitle($model, $resource),
             'edit_url' => $editUrl,
         ];

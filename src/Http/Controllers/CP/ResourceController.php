@@ -149,6 +149,7 @@ class ResourceController extends CpController
             'resourceHasRoutes' => $resource->hasRouting(),
             'currentModel' => [
                 'id' => $model->getKey(),
+                'reference' => $model->reference(),
                 'title' => $model->{$resource->titleField()},
                 'edit_url' => $request->url(),
             ],
