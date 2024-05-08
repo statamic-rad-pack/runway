@@ -1,5 +1,13 @@
 # Changelog
 
+## v6.7.1 (2024-05-08)
+
+### What's improved
+
+* "References" are now passed through to publish containers #486 by @duncanmcclean
+
+
+
 ## v6.7.0 (2024-05-03)
 
 ### What's new
