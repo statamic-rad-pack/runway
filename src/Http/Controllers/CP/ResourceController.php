@@ -153,6 +153,8 @@ class ResourceController extends CpController
                 'title' => $model->{$resource->titleField()},
                 'edit_url' => $request->url(),
             ],
+            'revisionsEnabled' => $resource->revisionsEnabled(),
+            'canPublish' => true,
         ];
 
         if ($request->wantsJson()) {

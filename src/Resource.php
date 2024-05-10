@@ -8,12 +8,15 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Fields\Blueprint;
 use Statamic\Fields\Field;
+use Statamic\Revisions\Revisable;
 use Statamic\Statamic;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 
 class Resource
 {
+    use Revisable;
+
     public function __construct(
         protected string $handle,
         protected Model $model,
@@ -235,5 +238,43 @@ class Resource
     public function __call($name, $arguments)
     {
         return $this->model()->{$name}(...$arguments);
+    }
+
+    public function revisionsEnabled(): bool
+    {
+        return $this->config->get('revisions', false);
+    }
+
+    protected function revisionKey()
+    {
+        return vsprintf('resources/%s/%s', [
+            $this->name(),
+            $this->model->id(),
+        ]);
+    }
+
+    protected function revisionAttributes()
+    {
+        return [
+            'id' => $this->id(),
+            'published' => $this->published(),
+            'data' => $this->model->toArray(),
+        ];
+    }
+
+    public function makeFromRevision($revision)
+    {
+        $entry = clone $this;
+
+        if (! $revision) {
+            return $entry;
+        }
+
+        $attrs = $revision->attributes();
+
+        $model = $attrs['class']::make([$attrs['data']]);
+
+
+        return $entry;
     }
 }

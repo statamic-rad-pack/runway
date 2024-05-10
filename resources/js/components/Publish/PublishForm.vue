@@ -17,11 +17,34 @@
                 <dropdown-item :text="__('Edit Blueprint')" :redirect="actions.editBlueprint" />
             </dropdown-list>
 
-            <div class="pt-px text-2xs text-gray-600 flex mr-4" v-if="readOnly">
+            <div class="flex pt-px mr-4 text-gray-600 text-2xs" v-if="readOnly">
                 <svg-icon name="light/lock" class="w-4 mr-1 -mt-1" /> {{ __('Read Only') }}
             </div>
 
-            <div v-if="!readOnly" class="hidden md:flex items-center">
+            <div class="flex items-center mt-6">
+                <button
+                    v-if="!readOnly"
+                    class="btn-lg"
+                    :class="{
+                        'btn-primary w-full': ! revisionsEnabled,
+                        'btn w-1/2 rtl:ml-4 ltr:mr-4': revisionsEnabled,
+                    }"
+                    @click.prevent="save"
+                    v-text="__(revisionsEnabled ? 'Save Changes' : 'Save')"
+                >
+                </button>
+
+                <button
+                    v-if="revisionsEnabled"
+                    class="flex items-center justify-center w-1/2 rtl:mr-2 ltr:ml-2 btn btn-lg btn-primary"
+                    :disabled="!canPublish"
+                    @click="confirmingPublish = true">
+                    <span v-text="__('Publish')" />
+                    <svg-icon name="micro/chevron-down-xs" class="w-2 rtl:mr-2 ltr:ml-2" />
+                </button>
+            </div>
+
+            <div v-if="!readOnly" class="items-center hidden md:flex">
                 <save-button-options
                     v-if="!readOnly"
                     :show-options="!isInline"
@@ -29,7 +52,6 @@
                 >
                     <button
                         class="btn-primary"
-                        :disabled="isSaving"
                         @click.prevent="save"
                     >
                         {{ __('Save') }}
@@ -40,6 +62,14 @@
             <slot name="action-buttons-right" />
         </div>
 
+        <div class="p-4">
+            <revision
+                :isDirty="false"
+                :isWorkingCopy="true"
+                :published="true"
+                @show-history="showRevisionHistory = true"
+            ></revision>
+        </div>
         <publish-container
             ref="container"
             :name="publishContainer"
@@ -69,14 +99,14 @@
                     @blur="$refs.container.$emit('blur', $event)"
                 >
                     <template #actions="{ shouldShowSidebar }">
-                        <div class="card p-0" :class="{ 'mb-5': resourceHasRoutes && permalink }">
+                        <div class="p-0 card" :class="{ 'mb-5': resourceHasRoutes && permalink }">
                             <div
                                 v-if="resourceHasRoutes && permalink"
                                 :class="{ hi: !shouldShowSidebar }"
                             >
-                                <div class="p-3 flex items-center space-x-2">
+                                <div class="flex items-center p-3 space-x-2">
                                     <a
-                                        class="flex items-center justify-center btn w-full"
+                                        class="flex items-center justify-center w-full btn"
                                         v-if="permalink"
                                         :href="permalink"
                                         target="_blank"
@@ -92,11 +122,10 @@
             </div>
         </publish-container>
 
-        <div class="md:hidden mt-3 flex items-center">
+        <div class="flex items-center mt-3 md:hidden">
             <button
                 v-if="!readOnly"
-                class="btn-lg btn-primary w-full"
-                :disabled="isSaving"
+                class="w-full btn-lg btn-primary"
                 @click.prevent="save"
             >
                 {{ __('Save') }}
@@ -108,9 +137,11 @@
 <script>
 import SaveButtonOptions from '../statamic/SaveButtonOptions.vue'
 import HasPreferences from '../statamic/HasPreferences.js'
+import Revision from '../statamic/Revision.vue'
 
 export default {
     components: {
+        Revision,
         SaveButtonOptions,
     },
 
@@ -144,6 +175,8 @@ export default {
         createAnotherUrl: String,
         listingUrl: String,
         canEditBlueprint: Boolean,
+        revisionsEnabled: Boolean,
+        canPublish: Boolean,
     },
 
     data() {
