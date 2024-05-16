@@ -77,6 +77,10 @@ class HasManyFieldtype extends BaseFieldtype
             return $data;
         }
 
+        if ($this->field()->visibility() === 'read_only') {
+            return $data;
+        }
+
         $model = $resource->model()->firstWhere(
             $resource->routeKey(),
             request()->route('model') ?? Blink::get('RunwayRouteModel')
