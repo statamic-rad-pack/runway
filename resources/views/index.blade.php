@@ -8,7 +8,7 @@
 
         @can('configure fields')
             <dropdown-list class="mr-2">
-                <dropdown-item :text="__('Edit Blueprints')" redirect="{{ cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]) }}"></dropdown-item>
+                <dropdown-item :text="__('Edit Blueprint')" redirect="{{ cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]) }}"></dropdown-item>
             </dropdown-list>
         @endcan
 
