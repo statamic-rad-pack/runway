@@ -15,6 +15,16 @@
 
             <dropdown-list class="mr-4" v-if="canEditBlueprint">
                 <dropdown-item :text="__('Edit Blueprint')" :redirect="actions.editBlueprint" />
+                <li class="divider" />
+                <data-list-inline-actions
+                    v-if="!isCreating"
+                    :item="values.id"
+                    :url="itemActionUrl"
+                    :actions="itemActions"
+                    :is-dirty="isDirty"
+                    @started="actionStarted"
+                    @completed="actionCompleted"
+                />
             </dropdown-list>
 
             <div class="pt-px text-2xs text-gray-600 flex mr-4" v-if="readOnly">
@@ -108,13 +118,15 @@
 <script>
 import SaveButtonOptions from '../statamic/SaveButtonOptions.vue'
 import HasPreferences from '../statamic/HasPreferences.js'
+import HasHiddenFields from '../../../../vendor/statamic/cms/resources/js/components/publish/HasHiddenFields.js'
+import HasActions from '../../../../vendor/statamic/cms/resources/js/components/publish/HasActions.js'
 
 export default {
     components: {
         SaveButtonOptions,
     },
 
-    mixins: [HasPreferences],
+    mixins: [HasPreferences, HasHiddenFields, HasActions],
 
     props: {
         breadcrumbs: Array,
@@ -304,6 +316,15 @@ export default {
                         })
                 })
             })
+        },
+
+        afterActionSuccessfullyCompleted(response) {
+            if (response.data) {
+                this.title = response.data.title;
+                if (!this.revisionsEnabled) this.permalink = response.data.permalink;
+                this.values = this.resetValuesFromResponse(response.data.values);
+                this.itemActions = response.data.itemActions;
+            }
         },
     },
 
