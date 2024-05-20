@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Statamic\API\Middleware\Cache;
 use Statamic\Facades\Blueprint;
@@ -85,7 +86,9 @@ class ServiceProvider extends AddonServiceProvider
         ], 'runway-config');
 
         Statamic::booted(function () {
-            Runway::discoverResources();
+            if ($this->shouldDiscoverResources()) {
+                Runway::discoverResources();
+            }
 
             $this
                 ->registerRouteBindings()
@@ -269,5 +272,14 @@ class ServiceProvider extends AddonServiceProvider
         }
 
         return $label;
+    }
+
+    protected function shouldDiscoverResources(): bool
+    {
+        if (Str::startsWith(request()->path(), '_ignition/')) {
+            return false;
+        }
+
+        return true;
     }
 }
