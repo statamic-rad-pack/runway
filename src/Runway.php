@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use StatamicRadPack\Runway\Exceptions\ResourceNotFound;
+use StatamicRadPack\Runway\Exceptions\TraitMissingException;
 
 class Runway
 {
@@ -20,7 +21,7 @@ class Runway
 
                 throw_if(
                     ! in_array(Traits\HasRunwayResource::class, class_uses_recursive($model)),
-                    new \Exception(__('The HasRunwayResource trait is missing from the [:model] model.', ['model' => $model]))
+                    new TraitMissingException($model),
                 );
 
                 $resource = new Resource(
