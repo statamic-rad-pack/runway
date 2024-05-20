@@ -5,6 +5,7 @@ namespace StatamicRadPack\Runway\Http\Controllers\CP;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\CP\Breadcrumbs;
 use Statamic\Exceptions\NotFoundHttpException;
+use Statamic\Facades\Action;
 use Statamic\Facades\Scope;
 use Statamic\Fields\Field;
 use Statamic\Http\Controllers\CP\CpController;
@@ -20,7 +21,7 @@ use StatamicRadPack\Runway\Runway;
 
 class ResourceController extends CpController
 {
-    use Traits\HasListingColumns, Traits\PreparesModels;
+    use Traits\ExtractsFromModelFields, Traits\HasListingColumns, Traits\PreparesModels;
 
     public function index(IndexRequest $request, Resource $resource)
     {
@@ -123,13 +124,12 @@ class ResourceController extends CpController
             throw new NotFoundHttpException();
         }
 
-        $values = $this->prepareModelForPublishForm($resource, $model);
-
         $blueprint = $resource->blueprint();
-        $fields = $blueprint->fields()->setParent($model)->addValues($values)->preProcess();
+
+        [$values, $meta] = $this->extractFromFields($model, $resource, $blueprint);
 
         $viewData = [
-            'title' => __('Edit :resource', ['resource' => $resource->singular()]),
+            'title' => $model->getAttribute($resource->titleField()),
             'method' => 'PATCH',
             'breadcrumbs' => new Breadcrumbs([[
                 'text' => $resource->plural(),
@@ -143,8 +143,8 @@ class ResourceController extends CpController
                 'editBlueprint' => cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]),
             ],
             'blueprint' => $blueprint->toPublishArray(),
-            'values' => $fields->values()->merge(['id' => $model->getKey()]),
-            'meta' => $fields->meta(),
+            'values' => $values,
+            'meta' => $meta,
             'permalink' => $resource->hasRouting() ? $model->uri() : null,
             'resourceHasRoutes' => $resource->hasRouting(),
             'currentModel' => [
@@ -153,6 +153,7 @@ class ResourceController extends CpController
                 'title' => $model->{$resource->titleField()},
                 'edit_url' => $request->url(),
             ],
+            'itemActions' => Action::for($model, ['resource' => $resource->handle(), 'view' => 'form']),
         ];
 
         if ($request->wantsJson()) {

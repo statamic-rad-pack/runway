@@ -23,6 +23,8 @@
         create-another-url="{{ cp_route('runway.create', ['resource' => $resource->handle()]) }}"
         listing-url="{{ cp_route('runway.index', ['resource' => $resource->handle()]) }}"
         :can-edit-blueprint="{{ Auth::user()->can('configure fields') ? 'true' : 'false' }}"
+        :initial-item-actions="{{ json_encode($itemActions) }}"
+        item-action-url="{{ cp_route('runway.actions.run', ['resource' => $resource->handle()]) }}"
     ></runway-publish-form>
 
     <script>
