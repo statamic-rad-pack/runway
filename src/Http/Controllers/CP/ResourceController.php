@@ -21,7 +21,7 @@ use StatamicRadPack\Runway\Runway;
 
 class ResourceController extends CpController
 {
-    use Traits\HasListingColumns, Traits\PreparesModels, Traits\ExtractsFromModelFields;
+    use Traits\ExtractsFromModelFields, Traits\HasListingColumns, Traits\PreparesModels;
 
     public function index(IndexRequest $request, Resource $resource)
     {
