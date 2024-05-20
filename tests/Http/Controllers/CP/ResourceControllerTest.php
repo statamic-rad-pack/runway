@@ -465,9 +465,6 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_edit_resource_if_model_is_user_model()
     {
-        Config::set('runway.resources', [UserModel::class => []]);
-        Runway::discoverResources();
-
         Config::set('auth.providers.users.model', UserModel::class);
 
         $user = UserModel::create([
@@ -680,9 +677,6 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function can_update_resource_if_model_is_user_model()
     {
-        Config::set('runway.resources', [UserModel::class => []]);
-        Runway::discoverResources();
-
         Config::set('auth.providers.users.model', UserModel::class);
 
         $user = UserModel::create([
