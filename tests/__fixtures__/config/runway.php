@@ -2,6 +2,7 @@
 
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\User;
 
 return [
     'resources' => [
@@ -20,7 +21,7 @@ return [
         ],
 
         Author::class => [
-            'name' => 'Author',
+            'name' => 'Authors',
             'listing' => [
                 'columns' => [
                     'name',
@@ -30,6 +31,10 @@ return [
                     'direction' => 'asc',
                 ],
             ],
+        ],
+
+        User::class => [
+            'name' => 'Users',
         ],
     ],
 ];

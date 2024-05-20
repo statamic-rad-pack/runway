@@ -2,12 +2,16 @@
 
 namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
 
+use Illuminate\Support\Facades\DB;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Config;
+use Statamic\Facades\Role;
 use Statamic\Facades\User;
+use Statamic\Facades\UserGroup;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\User as UserModel;
 use StatamicRadPack\Runway\Tests\TestCase;
 
 class ResourceControllerTest extends TestCase
@@ -459,6 +463,32 @@ class ResourceControllerTest extends TestCase
     }
 
     /** @test */
+    public function can_edit_resource_if_model_is_user_model()
+    {
+        Config::set('auth.providers.users.model', UserModel::class);
+
+        $user = UserModel::create([
+            'name' => 'John Doe',
+            'email' => 'john.doe@example.com',
+        ]);
+
+        UserGroup::make('admins')->title('Admins')->save();
+        DB::table('group_user')->insert(['user_id' => $user->id, 'group_id' => 'admins']);
+
+        Role::make('developer')->title('Developer')->save();
+        DB::table('role_user')->insert(['user_id' => $user->id, 'role_id' => 'developer']);
+
+        $this
+            ->actingAs(User::make()->makeSuper()->save())
+            ->get(cp_route('runway.edit', ['resource' => 'user', 'model' => $user->id]))
+            ->assertOk()
+            ->assertSee($user->name)
+            ->assertSee($user->email)
+            ->assertSee('Developer')
+            ->assertSee('Admins');
+    }
+
+    /** @test */
     public function can_update_resource()
     {
         $post = Post::factory()->create();
@@ -642,5 +672,46 @@ class ResourceControllerTest extends TestCase
         $post->refresh();
 
         $this->assertEquals($post->values['alt_title'], 'Claus is venturing out');
+    }
+
+    /** @test */
+    public function can_update_resource_if_model_is_user_model()
+    {
+        Config::set('auth.providers.users.model', UserModel::class);
+
+        $user = UserModel::create([
+            'name' => 'John Doe',
+            'email' => 'john.doe@example.com',
+        ]);
+
+        UserGroup::make('admins')->title('Admins')->save();
+        Role::make('developer')->title('Developer')->save();
+
+        $this
+            ->actingAs(User::make()->makeSuper()->save())
+            ->patch(cp_route('runway.update', ['resource' => 'user', 'model' => $user->id]), [
+                'name' => 'Jane Doe',
+                'email' => 'jane.doe@example.com',
+                'roles' => ['developer'],
+                'groups' => ['admins'],
+            ])
+            ->assertOk()
+            ->assertJsonStructure([
+                'data',
+            ]);
+
+        $user->refresh();
+
+        $this->assertEquals($user->name, 'Jane Doe');
+
+        $this->assertDatabaseHas('role_user', [
+            'user_id' => $user->id,
+            'role_id' => 'developer',
+        ]);
+
+        $this->assertDatabaseHas('group_user', [
+            'user_id' => $user->id,
+            'group_id' => 'admins',
+        ]);
     }
 }
