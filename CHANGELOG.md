@@ -1,5 +1,18 @@
 # Changelog
 
+## v7.1.0 (2024-05-20)
+
+### What's new
+* Ability to run actions from publish forms #498 by @duncanmcclean
+* Runway will now handle showing/updating role & user group fields on User models #485 #500 by @duncanmcclean
+* Added config option for customizing the name of the `runway_uris` table #490 #499 by @duncanmcclean
+* Improve exception handling #497 by @duncanmcclean
+
+### What's fixed
+* Fixed empty element showing border at the bottom of the publish form page by @duncanmcclean
+
+
+
 ## v7.0.0 (2024-05-09)
 
 ### Read First 👀
