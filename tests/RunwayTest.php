@@ -15,20 +15,25 @@ class RunwayTest extends TestCase
     {
         Runway::discoverResources();
 
-        $all = Runway::allResources();
+        $all = Runway::allResources()->values();
 
         $this->assertTrue($all instanceof Collection);
-        $this->assertCount(2, $all);
+        $this->assertCount(3, $all);
 
-        $this->assertTrue($all->first() instanceof Resource);
-        $this->assertEquals('post', $all->first()->handle());
-        $this->assertTrue($all->first()->model() instanceof Model);
-        $this->assertTrue($all->first()->blueprint() instanceof Blueprint);
+        $this->assertTrue($all[0] instanceof Resource);
+        $this->assertEquals('post', $all[0]->handle());
+        $this->assertTrue($all[0]->model() instanceof Model);
+        $this->assertTrue($all[0]->blueprint() instanceof Blueprint);
 
-        $this->assertTrue($all->last() instanceof Resource);
-        $this->assertEquals('author', $all->last()->handle());
-        $this->assertTrue($all->last()->model() instanceof Model);
-        $this->assertTrue($all->last()->blueprint() instanceof Blueprint);
+        $this->assertTrue($all[1] instanceof Resource);
+        $this->assertEquals('author', $all[1]->handle());
+        $this->assertTrue($all[1]->model() instanceof Model);
+        $this->assertTrue($all[1]->blueprint() instanceof Blueprint);
+
+        $this->assertTrue($all[2] instanceof Resource);
+        $this->assertEquals('user', $all[2]->handle());
+        $this->assertTrue($all[2]->model() instanceof Model);
+        $this->assertTrue($all[2]->blueprint() instanceof Blueprint);
     }
 
     /** @test */

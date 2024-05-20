@@ -79,7 +79,7 @@
                     @blur="$refs.container.$emit('blur', $event)"
                 >
                     <template #actions="{ shouldShowSidebar }">
-                        <div class="card p-0" :class="{ 'mb-5': resourceHasRoutes && permalink }">
+                        <div v-if="shouldShowSidebar" class="card p-0" :class="{ 'mb-5': resourceHasRoutes && permalink }">
                             <div
                                 v-if="resourceHasRoutes && permalink"
                                 :class="{ hi: !shouldShowSidebar }"
