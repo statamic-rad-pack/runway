@@ -2,9 +2,9 @@
 
 namespace StatamicRadPack\Runway\Exceptions;
 
+use Spatie\Ignition\Contracts\BaseSolution;
 use Spatie\Ignition\Contracts\ProvidesSolution;
 use Spatie\Ignition\Contracts\Solution;
-use Spatie\Ignition\Contracts\BaseSolution;
 
 class EmptyBlueprintException extends \Exception implements ProvidesSolution
 {
