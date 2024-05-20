@@ -6,6 +6,7 @@ use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Statamic\Fields\Field;
 use Statamic\Fieldtypes\Section;
@@ -16,7 +17,7 @@ use StatamicRadPack\Runway\Support\Json;
 
 trait PreparesModels
 {
-    protected function prepareModelForPublishForm(Resource $resource, Model $model): array
+    protected function prepareModelForPublishForm(Resource $resource, Model $model): Collection
     {
         $blueprint = $resource->blueprint();
 
@@ -53,8 +54,7 @@ trait PreparesModels
                 }
 
                 return [$field->handle() => $value];
-            })
-            ->toArray();
+            });
     }
 
     protected function prepareModelForSaving(Resource $resource, Model &$model, Request $request): void
