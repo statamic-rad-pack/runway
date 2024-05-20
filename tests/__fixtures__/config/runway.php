@@ -32,9 +32,5 @@ return [
                 ],
             ],
         ],
-
-        User::class => [
-            'name' => 'Users',
-        ],
     ],
 ];
