@@ -484,8 +484,8 @@ class ResourceControllerTest extends TestCase
             ->assertOk()
             ->assertSee($user->name)
             ->assertSee($user->email)
-            ->assertSee('Developer')
-            ->assertSee('Admins');
+            ->assertSee('developer')
+            ->assertSee('admins');
     }
 
     /** @test */

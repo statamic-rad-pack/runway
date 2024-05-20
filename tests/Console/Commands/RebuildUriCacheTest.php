@@ -67,7 +67,7 @@ class RebuildUriCacheTest extends TestCase
                 'You are about to rebuild your entire URI cache. This may take part of your site down while running. Are you sure you want to continue?',
                 'yes'
             )
-            ->expectsOutputToContain('Skipping Author, routing not configured.');
+            ->expectsOutputToContain('Skipping Authors, routing not configured.');
 
         $this->assertCount(0, RunwayUri::all());
     }
