@@ -129,7 +129,7 @@ class ResourceController extends CpController
         [$values, $meta] = $this->extractFromFields($model, $resource, $blueprint);
 
         $viewData = [
-            'title' => __('Edit :resource', ['resource' => $resource->singular()]),
+            'title' => $model->getAttribute($resource->titleField()),
             'method' => 'PATCH',
             'breadcrumbs' => new Breadcrumbs([[
                 'text' => $resource->plural(),
