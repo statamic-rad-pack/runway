@@ -309,7 +309,7 @@ class ResourceControllerTest extends TestCase
                 'date' => $post->created_at->format('Y-m-d'),
                 'time' => null,
             ],
-            $response->viewData('values')->get('created_at')
+            $response->viewData('values')['created_at']
         );
     }
 
@@ -349,7 +349,7 @@ class ResourceControllerTest extends TestCase
                 'date' => $post->created_at->format('Y-m-d'),
                 'time' => null,
             ],
-            $response->viewData('values')->get('created_at')
+            $response->viewData('values')['created_at']
         );
     }
 
@@ -389,7 +389,7 @@ class ResourceControllerTest extends TestCase
                 'date' => $post->created_at->format('Y-m-d'),
                 'time' => $post->created_at->format('H:i'),
             ],
-            $response->viewData('values')->get('created_at')
+            $response->viewData('values')['created_at']
         );
     }
 
