@@ -27,7 +27,7 @@
                 />
             </dropdown-list>
 
-            <div class="flex pt-px mr-4 text-gray-600 text-2xs" v-if="readOnly">
+            <div class="pt-px text-2xs text-gray-600 flex mr-4" v-if="readOnly">
                 <svg-icon name="light/lock" class="w-4 mr-1 -mt-1" /> {{ __('Read Only') }}
             </div>
 
@@ -54,7 +54,7 @@
                 </button>
             </div>
 
-            <div v-if="!readOnly" class="items-center hidden md:flex">
+            <div v-if="!readOnly" class="hidden md:flex items-center">
                 <save-button-options
                     v-if="!readOnly"
                     :show-options="!isInline"
@@ -80,6 +80,7 @@
                 @show-history="showRevisionHistory = true"
             ></revision>
         </div>
+
         <publish-container
             ref="container"
             :name="publishContainer"
@@ -114,9 +115,9 @@
                                 v-if="resourceHasRoutes && permalink"
                                 :class="{ hi: !shouldShowSidebar }"
                             >
-                                <div class="flex items-center p-3 space-x-2">
+                                <div class="p-3 flex items-center space-x-2">
                                     <a
-                                        class="flex items-center justify-center w-full btn"
+                                        class="flex items-center justify-center btn w-full"
                                         v-if="permalink"
                                         :href="permalink"
                                         target="_blank"
@@ -132,10 +133,10 @@
             </div>
         </publish-container>
 
-        <div class="flex items-center mt-3 md:hidden">
+        <div class="md:hidden mt-3 flex items-center">
             <button
                 v-if="!readOnly"
-                class="w-full btn-lg btn-primary"
+                class="btn-lg btn-primary w-full"
                 @click.prevent="save"
             >
                 {{ __('Save') }}
