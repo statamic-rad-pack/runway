@@ -15,8 +15,6 @@ use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 
 class Resource
 {
-    use Revisable;
-
     public function __construct(
         protected string $handle,
         protected Model $model,
@@ -247,38 +245,5 @@ class Resource
         }
 
         return $this->config->get('revisions', false);
-    }
-
-    protected function revisionKey()
-    {
-        return vsprintf('resources/%s/%s', [
-            $this->name(),
-            $this->model->id(),
-        ]);
-    }
-
-    protected function revisionAttributes()
-    {
-        return [
-            'id' => $this->id(),
-            'published' => $this->published(),
-            'data' => $this->model->toArray(),
-        ];
-    }
-
-    public function makeFromRevision($revision)
-    {
-        $entry = clone $this;
-
-        if (! $revision) {
-            return $entry;
-        }
-
-        $attrs = $revision->attributes();
-
-        $model = $attrs['class']::make([$attrs['data']]);
-
-
-        return $entry;
     }
 }

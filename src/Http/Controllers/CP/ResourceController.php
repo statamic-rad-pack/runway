@@ -7,6 +7,7 @@ use Statamic\CP\Breadcrumbs;
 use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Facades\Action;
 use Statamic\Facades\Scope;
+use Statamic\Facades\User;
 use Statamic\Fields\Field;
 use Statamic\Http\Controllers\CP\CpController;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
@@ -140,6 +141,7 @@ class ResourceController extends CpController
             'resource' => $resource,
             'actions' => [
                 'save' => cp_route('runway.update', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
+                'revisions' => cp_route('runway.revisions.index', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
                 'editBlueprint' => cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]),
             ],
             'blueprint' => $blueprint->toPublishArray(),
@@ -173,13 +175,24 @@ class ResourceController extends CpController
 
         $this->prepareModelForSaving($resource, $model, $request);
 
-        $model->save();
-
         if ($request->get('from_inline_publish_form')) {
             $this->handleInlinePublishForm($resource, $model);
         }
 
-        return ['data' => $this->getReturnData($resource, $model)];
+        // statamic checks if the entry is published here, maybe we need to do that too?
+        if ($resource->revisionsEnabled()) {
+            $saved = $model
+                ->makeWorkingCopy()
+                ->user(User::current())
+                ->save();
+
+            // catch any changes through RevisionSaving event
+            $model = $model->fromWorkingCopy();
+        } else {
+            $saved = $model->save();
+        }
+
+        return ['data' => $this->getReturnData($resource, $model), 'saved' => $saved];
     }
 
     /**

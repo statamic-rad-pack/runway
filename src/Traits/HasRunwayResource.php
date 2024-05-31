@@ -8,6 +8,7 @@ use Statamic\Fields\Field;
 use Statamic\Fieldtypes\Hidden;
 use Statamic\Fieldtypes\Section;
 use Statamic\GraphQL\ResolvesValues;
+use Statamic\Revisions\Revisable;
 use Statamic\Support\Traits\FluentlyGetsAndSets;
 use StatamicRadPack\Runway\Data\AugmentedModel;
 use StatamicRadPack\Runway\Data\HasAugmentedInstance;
@@ -17,7 +18,7 @@ use StatamicRadPack\Runway\Runway;
 
 trait HasRunwayResource
 {
-    use FluentlyGetsAndSets, HasAugmentedInstance;
+    use FluentlyGetsAndSets, HasAugmentedInstance, Revisable;
     use ResolvesValues {
         resolveGqlValue as traitResolveGqlValue;
     }
@@ -52,5 +53,45 @@ trait HasRunwayResource
                     || $field->visibility() === 'computed';
             })
             ->each(fn (Field $field) => $query->orWhere($field->handle(), 'LIKE', '%'.$searchQuery.'%'));
+    }
+
+    protected function revisionKey()
+    {
+        return vsprintf('resources/%s/%s', [
+            $this->runwayResource()->handle(),
+            $this->getKey(),
+        ]);
+    }
+
+    protected function revisionAttributes()
+    {
+        return [
+            'id' => $this->getKey(),
+            'published' => false, // todo
+            'date' => null,
+            'data' => $this->getAttributes(),
+        ];
+    }
+
+    public function makeFromRevision($revision)
+    {
+        $model = clone $this;
+
+        if (! $revision) {
+            return $model;
+        }
+
+        $attrs = $revision->attributes();
+
+        foreach ($attrs as $key => $value) {
+            $model->setAttribute($key, $value);
+        }
+
+        return $model;
+    }
+
+    public function revisionsEnabled()
+    {
+        return $this->runwayResource()->revisionsEnabled();
     }
 }
