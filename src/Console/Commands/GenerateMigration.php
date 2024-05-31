@@ -2,16 +2,20 @@
 
 namespace StatamicRadPack\Runway\Console\Commands;
 
+use Facades\Statamic\Facades\Endpoint\Path;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Console\RunsInPlease;
 use Statamic\Fields\Field;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
-use Symfony\Component\Process\Process;
+use Symfony\Component\Process\PhpExecutableFinder;
+
+use function Laravel\Prompts\confirm;
 
 class GenerateMigration extends Command
 {
@@ -181,7 +185,7 @@ class GenerateMigration extends Command
      */
     public function handle()
     {
-        $this->info('Generating migrations...');
+        $this->components->info('Generating migrations...');
         $this->line('');
 
         $resources = [];
@@ -201,7 +205,7 @@ class GenerateMigration extends Command
             $this->generateForResource($resource);
         }
 
-        if ($this->ask('Should we run your migrations?', 'yes') === 'yes') {
+        if (confirm('Should we run your migrations?')) {
             Artisan::call('migrate');
         }
 
@@ -333,9 +337,20 @@ class GenerateMigration extends Command
             $migrationContents
         );
 
-        $rules = '@PSR2,@PhpCsFixer,no_space_after_class_name';
+        $rules = '@PSR2,@PhpCsFixer';
 
-        $process = new Process(['./vendor/bin/php-cs-fixer', 'fix', $migrationPath, '--rules='.$rules], base_path());
-        $process->run();
+        Process::path(base_path())->run(
+            (new PhpExecutableFinder())->find().
+            ' /'.Path::makeRelative(__DIR__.'/../../../php-cs-fixer.phar').
+            ' fix '.$migrationPath.' --rules='.$rules
+        );
+
+        // I can't figure out the PHP CS Fixer rule for it, so I'm just going to do it manually for now.
+        File::put(
+            $migrationPath,
+            Str::of(File::get($migrationPath))
+                ->replace('return new class() extends Migration', 'return new class extends Migration')
+                ->__toString()
+        );
     }
 }

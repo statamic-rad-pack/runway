@@ -13,7 +13,7 @@ class CreateRunwayUrisTable extends Migration
      */
     public function up()
     {
-        Schema::create('runway_uris', function (Blueprint $table) {
+        Schema::create(config('runway.uris_table', 'runway_uris'), function (Blueprint $table) {
             $table->id();
             $table->string('uri');
             $table->string('model_type');
@@ -29,6 +29,6 @@ class CreateRunwayUrisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('runway_uris');
+        Schema::dropIfExists(config('runway.uris_table', 'runway_uris'));
     }
 }

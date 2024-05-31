@@ -31,8 +31,8 @@ class GenerateMigrationTest extends TestCase
 
         Runway::discoverResources();
 
-        collect(File::glob(database_path('migrations/*')))->each(function ($path) {
-            File::delete($path);
+        collect(File::allFiles(database_path('migrations')))->each(function (SplFileInfo $file) {
+            File::delete($file->getRealPath());
         });
     }
 
@@ -70,7 +70,7 @@ class GenerateMigrationTest extends TestCase
 
         $this
             ->artisan('runway:generate-migrations')
-            ->expectsQuestion('Should we run your migrations?', 'no')
+            ->expectsQuestion('Should we run your migrations?', false)
             ->execute();
 
         $this->assertFileExists(
@@ -122,7 +122,7 @@ class GenerateMigrationTest extends TestCase
             ->artisan('runway:generate-migrations', [
                 'resource' => 'food',
             ])
-            ->expectsQuestion('Should we run your migrations?', 'no')
+            ->expectsQuestion('Should we run your migrations?', false)
             ->execute();
 
         $this->assertFileExists(
@@ -163,7 +163,7 @@ class GenerateMigrationTest extends TestCase
             ->artisan('runway:generate-migrations', [
                 'resource' => 'food',
             ])
-            ->expectsQuestion('Should we run your migrations?', 'no')
+            ->expectsQuestion('Should we run your migrations?', false)
             ->expectsOutput('Table [foods] already exists. Runway is not smart enough yet to update existing migrations. Sorry!')
             ->execute();
 
@@ -193,7 +193,7 @@ class GenerateMigrationTest extends TestCase
             ->artisan('runway:generate-migrations', [
                 'resource' => 'food',
             ])
-            ->expectsQuestion('Should we run your migrations?', 'yes')
+            ->expectsQuestion('Should we run your migrations?', true)
             ->execute();
 
         $this->assertFileExists(database_path().'/migrations/'.now()->format('Y_m_d_His').'_create_foods_table.php');
@@ -226,7 +226,7 @@ class GenerateMigrationTest extends TestCase
             ->artisan('runway:generate-migrations', [
                 'resource' => 'food',
             ])
-            ->expectsQuestion('Should we run your migrations?', 'no')
+            ->expectsQuestion('Should we run your migrations?', false)
             ->execute();
 
         $this->assertFileExists(
@@ -275,7 +275,7 @@ class GenerateMigrationTest extends TestCase
             ->artisan('runway:generate-migrations', [
                 'resource' => 'food',
             ])
-            ->expectsQuestion('Should we run your migrations?', 'no')
+            ->expectsQuestion('Should we run your migrations?', false)
             ->execute();
 
         $this->assertFileExists(
@@ -320,7 +320,7 @@ class GenerateMigrationTest extends TestCase
             ->artisan('runway:generate-migrations', [
                 'resource' => 'food',
             ])
-            ->expectsQuestion('Should we run your migrations?', 'no')
+            ->expectsQuestion('Should we run your migrations?', false)
             ->execute();
 
         $this->assertFileExists(
@@ -355,7 +355,7 @@ class GenerateMigrationTest extends TestCase
             ->artisan('runway:generate-migrations', [
                 'resource' => 'food',
             ])
-            ->expectsQuestion('Should we run your migrations?', 'no')
+            ->expectsQuestion('Should we run your migrations?', false)
             ->execute();
 
         $this->assertFileExists(

@@ -13,6 +13,7 @@ class ResourceInterfaceTest extends TestCase
         $this->assertEquals([
             'runway_graphql_types_post' => 'runway_graphql_types_post',
             'runway_graphql_types_author' => 'runway_graphql_types_author',
+            'runway_graphql_types_user' => 'runway_graphql_types_user',
         ], GraphQL::getTypes());
     }
 }

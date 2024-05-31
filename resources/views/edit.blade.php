@@ -26,6 +26,8 @@
         :can-edit-blueprint="{{ Auth::user()->can('configure fields') ? 'true' : 'false' }}"
         :revisions-enabled="{{ $str::bool($revisionsEnabled) }}"
         :can-publish="{{ $str::bool($canPublish) }}"
+        :initial-item-actions="{{ json_encode($itemActions) }}"
+        item-action-url="{{ cp_route('runway.actions.run', ['resource' => $resource->handle()]) }}"
     ></runway-publish-form>
 
     <script>

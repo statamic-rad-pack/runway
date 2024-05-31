@@ -31,80 +31,24 @@ class GenerateBlueprint extends Command
      * The matching table for column types -> fieldtypes.
      */
     protected array $matching = [
-        \Doctrine\DBAL\Types\ArrayType::class => [
-            'type' => 'array',
-        ],
-        \Doctrine\DBAL\Types\AsciiType::class => [],
-        \Doctrine\DBAL\Types\BigIntType::class => [
-            'normal' => 'integer',
-        ],
-        \Doctrine\DBAL\Types\BinaryType::class => [],
-        \Doctrine\DBAL\Types\BlobType::class => [],
-        \Doctrine\DBAL\Types\BooleanType::class => [
-            'normal' => 'toggle',
-        ],
-        \Doctrine\DBAL\Types\DateImmutableType::class => [
-            'normal' => 'date',
-        ],
-        \Doctrine\DBAL\Types\DateTimeImmutableType::class => [
-            'normal' => 'date',
-        ],
-        \Doctrine\DBAL\Types\DateTimeType::class => [
-            'normal' => 'date',
-        ],
-        \Doctrine\DBAL\Types\DateTimeTzImmutableType::class => [
-            'normal' => 'date',
-        ],
-        \Doctrine\DBAL\Types\DateTimeTzType::class => [
-            'normal' => 'date',
-        ],
-        \Doctrine\DBAL\Types\DateType::class => [
-            'normal' => 'date',
-        ],
-        \Doctrine\DBAL\Types\DecimalType::class => [
-            'normal' => 'float',
-        ],
-        \Doctrine\DBAL\Types\FloatType::class => [
-            'normal' => 'float',
-        ],
-        \Doctrine\DBAL\Types\GuidType::class => [],
-        \Doctrine\DBAL\Types\IntegerType::class => [
-            'normal' => 'integer',
-        ],
-        \Doctrine\DBAL\Types\JsonType::class => [
-            'normal' => 'array',
-        ],
-        \Doctrine\DBAL\Types\ObjectType::class => [],
-        \Doctrine\DBAL\Types\PhpDateTimeMappingType::class => [
-            'normal' => 'date',
-        ],
-        \Doctrine\DBAL\Types\PhpIntegerMappingType::class => [
-            'normal' => 'integer',
-        ],
-        \Doctrine\DBAL\Types\SimpleArrayType::class => [
-            'normal' => 'array',
-        ],
-        \Doctrine\DBAL\Types\SmallIntType::class => [
-            'normal' => 'integer',
-        ],
-        \Doctrine\DBAL\Types\StringType::class => [
-            'normal' => 'text',
-        ],
-        \Doctrine\DBAL\Types\TextType::class => [
-            'normal' => 'textarea',
-        ],
-        \Doctrine\DBAL\Types\TimeImmutableType::class => [
-            'normal' => 'date',
-        ],
-        \Doctrine\DBAL\Types\TimeType::class => [
-            'normal' => 'date',
-        ],
-        \Doctrine\DBAL\Types\VarDateTimeImmutableType::class => [
-            'normal' => 'date',
-        ],
-        \Doctrine\DBAL\Types\VarDateTimeType::class => [
-            'normal' => 'date',
-        ],
+        'array' => ['type' => 'array'],
+        'bigint' => ['normal' => 'integer'],
+        'boolean' => ['normal' => 'toggle'],
+        'date_immutable' => ['normal' => 'date'],
+        'datetime_immutable' => ['normal' => 'date'],
+        'datetime' => ['normal' => 'date'],
+        'datetimetz_immutable' => ['normal' => 'date'],
+        'datetimetz' => ['normal' => 'date'],
+        'decimal' => ['normal' => 'float'],
+        'float' => ['normal' => 'float'],
+        'integer' => ['normal' => 'integer'],
+        'json' => ['normal' => 'array'],
+        'simple_array' => ['normal' => 'array'],
+        'smallint' => ['normal' => 'integer'],
+        'string' => ['normal' => 'text'],
+        'text' => ['normal' => 'textarea'],
+        'time_immutable' => ['normal' => 'date'],
+        'time' => ['normal' => 'date'],
     ];
 
     /**
@@ -124,7 +68,7 @@ class GenerateBlueprint extends Command
      */
     public function handle()
     {
-        $this->info('Generating blueprints...');
+        $this->components->info('Generating blueprints...');
         $this->line('');
 
         $resources = [];
@@ -143,22 +87,22 @@ class GenerateBlueprint extends Command
             $this->generateForResource($resource);
         }
 
-        $this->info('✔️ Done');
+        $this->components->info('✔️ Done');
     }
 
     protected function generateForResource(Resource $resource)
     {
         $errorMessages = [];
 
-        $columns = Schema::getConnection()->getDoctrineSchemaManager()->listTableColumns($resource->databaseTable());
+        $columns = Schema::getColumns($resource->databaseTable());
 
         $fields = collect($columns)
-            ->reject(fn (\Doctrine\DBAL\Schema\Column $column) => $column->getName() === 'id')
-            ->map(fn (\Doctrine\DBAL\Schema\Column $column) => [
-                'name' => $column->getName(),
+            ->reject(fn (array $column) => $column['name'] === 'id')
+            ->map(fn (array $column) => [
+                'name' => $column['name'],
                 'type' => $this->getMatchingFieldtype($column),
-                'nullable' => ! $column->getNotnull(),
-                'default' => $column->getDefault(),
+                'nullable' => $column['nullable'],
+                'default' => $column['default'],
                 'original_column' => $column,
             ])
             ->each(function ($field) use (&$errorMessages) {
@@ -171,28 +115,28 @@ class GenerateBlueprint extends Command
         $this->generateNewBlueprint($resource, $fields);
 
         if (count($errorMessages) === 0) {
-            $this->line("✔️ {$resource->name()}");
+            $this->components->info("✔️ {$resource->name()}");
             $this->line('');
         } else {
             $this->line("❌ {$resource->name()}");
 
             foreach ($errorMessages as $errorMessage) {
-                $this->comment($errorMessage);
+                $this->components->error($errorMessage);
             }
 
             $this->line('');
         }
     }
 
-    protected function getMatchingFieldtype(\Doctrine\DBAL\Schema\Column $column): ?string
+    protected function getMatchingFieldtype(array $column): ?string
     {
-        $match = $this->matching[$column->getType()::class] ?? null;
+        $match = $this->matching[$column['type_name']] ?? null;
 
         if (! $match) {
             return null;
         }
 
-        if ($match['normal'] === 'text' && $column->getName() === 'slug') {
+        if ($match['normal'] === 'text' && $column['name'] === 'slug') {
             return 'slug';
         }
 

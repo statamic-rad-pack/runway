@@ -19,6 +19,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Runway URIs Table
+    |--------------------------------------------------------------------------
+    |
+    | When using Runway's front-end routing functionality, Runway will store model
+    | URIs in a table to enable easy "URI -> model" lookups. If needed, you can
+    | customize the table name here.
+    |
+    */
+
+    'uris_table' => 'runway_uris',
+
+    /*
+    |--------------------------------------------------------------------------
     | Disable Migrations?
     |--------------------------------------------------------------------------
     |

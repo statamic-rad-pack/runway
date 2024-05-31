@@ -4,9 +4,9 @@ namespace StatamicRadPack\Runway\Routing\Traits;
 
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
+use Statamic\Facades\Antlers;
 use Statamic\StaticCaching\Cacher;
 use Statamic\Support\Arr;
-use Statamic\View\Antlers\Parser;
 use StatamicRadPack\Runway\Routing\Routable;
 use StatamicRadPack\Runway\Routing\RoutingModel;
 use StatamicRadPack\Runway\Routing\RunwayUri;
@@ -80,7 +80,7 @@ trait RunwayRoutes
                 return;
             }
 
-            $uri = (new Parser())
+            $uri = Antlers::parser()
                 ->parse($resource->route(), $model->toAugmentedArray())
                 ->__toString();
 

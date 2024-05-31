@@ -5,10 +5,13 @@ namespace StatamicRadPack\Runway\Actions;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Actions\Action;
 use StatamicRadPack\Runway\Exceptions\ResourceNotFound;
+use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
 
 class DuplicateModel extends Action
 {
+    private $newItems;
+
     public static function title()
     {
         return __('Duplicate');
@@ -46,18 +49,43 @@ class DuplicateModel extends Action
         return 'Duplicate|Duplicate :count items?';
     }
 
+    public function dirtyWarningText()
+    {
+        /** @translation */
+        return 'Any unsaved changes will not be duplicated into the new model.';
+    }
+
     public function run($items, $values)
     {
         $resource = Runway::findResourceByModel($items->first());
 
-        $items->each(function (Model $item) use ($resource) {
-            $duplicateModel = $item->replicate();
+        $this->newItems = $items->map(fn ($original) => $this->duplicateModel($original, $resource));
+    }
 
-            if ($resource->titleField()) {
-                $duplicateModel->{$resource->titleField()} = $duplicateModel->{$resource->titleField()}.' (Duplicate)';
-            }
+    private function duplicateModel(Model $original, Resource $resource): Model
+    {
+        $model = $original->replicate();
 
-            $duplicateModel->save();
-        });
+        if ($resource->titleField()) {
+            $model->setAttribute($resource->titleField(), $original->getAttribute($resource->titleField()).' (Duplicate)');
+        }
+
+        $model->save();
+
+        return $model;
+    }
+
+    public function redirect($items, $values)
+    {
+        if ($this->context['view'] !== 'form') {
+            return;
+        }
+
+        $item = $this->newItems->first();
+
+        return cp_route('runway.edit', [
+            'resource' => Runway::findResourceByModel($item)->handle(),
+            'model' => $item->getRouteKey(),
+        ]);
     }
 }

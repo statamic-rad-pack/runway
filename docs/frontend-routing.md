@@ -101,3 +101,22 @@ class Product extends Model
 	}
 }
 ```
+
+### Customizing the table name
+
+By default, Runway will use the `runway_uris` table to store the "URI Cache". If you wish to change the name of the table, you may do so in the `runway.php` configuration file:
+
+```php 
+/*
+|--------------------------------------------------------------------------
+| Runway URIs Table
+|--------------------------------------------------------------------------
+|
+| When using Runway's front-end routing functionality, Runway will store model
+| URIs in a table to enable easy "URI -> model" lookups. If needed, you can
+| customize the table name here.
+|
+*/
+
+'uris_table' => 'runway_uris',
+```

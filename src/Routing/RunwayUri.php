@@ -13,4 +13,9 @@ class RunwayUri extends Model
     {
         return $this->morphTo();
     }
+
+    public function getTable()
+    {
+        return config('runway.uris_table', 'runway_uris');
+    }
 }

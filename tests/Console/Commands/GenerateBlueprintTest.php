@@ -25,47 +25,67 @@ class GenerateBlueprintTest extends TestCase
     /** @test */
     public function can_generate_blueprint()
     {
-        Schema::shouldReceive('dropIfExists')->times(3);
+        Schema::shouldReceive('dropIfExists')->times(7);
 
-        Schema::shouldReceive('getConnection')
-            ->andReturnSelf()
-            ->shouldReceive('getDoctrineSchemaManager')
-            ->andReturnSelf()
-            ->shouldReceive('listTableColumns')
+        Schema::shouldReceive('getColumns')
             ->with('posts')
             ->andReturn([
-                new \Doctrine\DBAL\Schema\Column(
-                    'id',
-                    new \Doctrine\DBAL\Types\IntegerType(),
-                ),
-                new \Doctrine\DBAL\Schema\Column(
-                    'title',
-                    new \Doctrine\DBAL\Types\StringType(),
-                ),
-                (new \Doctrine\DBAL\Schema\Column(
-                    'description',
-                    new \Doctrine\DBAL\Types\TextType(),
-                ))->setNotnull(true),
-                (new \Doctrine\DBAL\Schema\Column(
-                    'price',
-                    new \Doctrine\DBAL\Types\IntegerType(),
-                ))->setDefault(4242),
-                (new \Doctrine\DBAL\Schema\Column(
-                    'metadata',
-                    new \Doctrine\DBAL\Types\JsonType(),
-                ))->setNotnull(true),
-                new \Doctrine\DBAL\Schema\Column(
-                    'date',
-                    new \Doctrine\DBAL\Types\DateType(),
-                ),
-                new \Doctrine\DBAL\Schema\Column(
-                    'created_at',
-                    new \Doctrine\DBAL\Types\DateTimeType(),
-                ),
-                new \Doctrine\DBAL\Schema\Column(
-                    'updated_at',
-                    new \Doctrine\DBAL\Types\DateTimeType(),
-                ),
+                [
+                    'name' => 'id',
+                    'type_name' => 'integer',
+                    'type' => 'integer',
+                    'nullable' => false,
+                    'default' => null,
+                ],
+                [
+                    'name' => 'title',
+                    'type_name' => 'string',
+                    'type' => 'string',
+                    'nullable' => true,
+                    'default' => null,
+                ],
+                [
+                    'name' => 'description',
+                    'type_name' => 'text',
+                    'type' => 'text',
+                    'nullable' => false,
+                    'default' => null,
+                ],
+                [
+                    'name' => 'price',
+                    'type_name' => 'integer',
+                    'type' => 'integer',
+                    'nullable' => false,
+                    'default' => 4242,
+                ],
+                [
+                    'name' => 'metadata',
+                    'type_name' => 'json',
+                    'type' => 'json',
+                    'nullable' => false,
+                    'default' => null,
+                ],
+                [
+                    'name' => 'date',
+                    'type_name' => 'date',
+                    'type' => 'date',
+                    'nullable' => true,
+                    'default' => null,
+                ],
+                [
+                    'name' => 'created_at',
+                    'type_name' => 'datetime',
+                    'type' => 'datetime',
+                    'nullable' => true,
+                    'default' => null,
+                ],
+                [
+                    'name' => 'updated_at',
+                    'type_name' => 'datetime',
+                    'type' => 'datetime',
+                    'nullable' => true,
+                    'default' => null,
+                ],
             ])
             ->once();
 
@@ -100,31 +120,33 @@ class GenerateBlueprintTest extends TestCase
             ->once();
 
         $this->artisan('runway:generate-blueprints', ['resource' => 'post'])
-            ->expectsOutput('Generating blueprints...')
-            ->expectsOutput('✔️ Done')
+            ->expectsOutputToContain('Generating blueprints...')
+            ->expectsOutputToContain('✔️ Done')
             ->assertExitCode(0);
     }
 
     /** @test */
     public function can_generate_resource_with_column_that_can_not_be_matched_to_a_fieldtype()
     {
-        Schema::shouldReceive('dropIfExists')->times(3);
+        Schema::shouldReceive('dropIfExists')->times(7);
 
-        Schema::shouldReceive('getConnection')
-            ->andReturnSelf()
-            ->shouldReceive('getDoctrineSchemaManager')
-            ->andReturnSelf()
-            ->shouldReceive('listTableColumns')
+        Schema::shouldReceive('getColumns')
             ->with('posts')
             ->andReturn([
-                new \Doctrine\DBAL\Schema\Column(
-                    'title',
-                    new \Doctrine\DBAL\Types\StringType(),
-                ),
-                (new \Doctrine\DBAL\Schema\Column(
-                    'blob',
-                    new \Doctrine\DBAL\Types\BlobType(),
-                )),
+                [
+                    'name' => 'title',
+                    'type_name' => 'string',
+                    'type' => 'string',
+                    'nullable' => true,
+                    'default' => null,
+                ],
+                [
+                    'name' => 'blob',
+                    'type_name' => 'blob',
+                    'type' => 'blob',
+                    'nullable' => true,
+                    'default' => null,
+                ],
             ])
             ->once();
 
@@ -149,10 +171,10 @@ class GenerateBlueprintTest extends TestCase
             ->once();
 
         $this->artisan('runway:generate-blueprints', ['resource' => 'post'])
-            ->expectsOutput('Generating blueprints...')
+            ->expectsOutputToContain('Generating blueprints...')
             ->expectsOutput('❌ Posts')
-            ->expectsOutput('Column [blob] could not be matched with a fieldtype.')
-            ->expectsOutput('✔️ Done')
+            ->expectsOutputToContain('Column [blob] could not be matched with a fieldtype.')
+            ->expectsOutputToContain('✔️ Done')
             ->assertExitCode(0);
     }
 }
