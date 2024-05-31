@@ -17,6 +17,7 @@ use StatamicRadPack\Runway\Http\Requests\CP\EditRequest;
 use StatamicRadPack\Runway\Http\Requests\CP\IndexRequest;
 use StatamicRadPack\Runway\Http\Requests\CP\StoreRequest;
 use StatamicRadPack\Runway\Http\Requests\CP\UpdateRequest;
+use StatamicRadPack\Runway\Http\Resources\CP\Model as ModelResource;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
 
@@ -26,8 +27,6 @@ class ResourceController extends CpController
 
     public function index(IndexRequest $request, Resource $resource)
     {
-        $blueprint = $resource->blueprint();
-
         $listingConfig = [
             'preferencesPrefix' => "runway.{$resource->handle()}",
             'requestUrl' => cp_route('runway.listing-api', ['resource' => $resource->handle()]),
@@ -100,18 +99,22 @@ class ResourceController extends CpController
 
         $this->prepareModelForSaving($resource, $model, $request);
 
-        $model->save();
+        if ($resource->revisionsEnabled()) {
+            $saved = $model->store([
+                'message' => $request->message,
+                'user' => User::current(),
+            ]);
+        } else {
+            $saved = $model->save();
+        }
 
         // Runs anything in the $postCreatedHooks array. See HasManyFieldtype@process for an example
         // of where this is used.
         $postCreatedHooks->each(fn ($postCreatedHook) => $postCreatedHook($resource, $model));
 
         return [
-            'data' => $this->getReturnData($resource, $model),
-            'redirect' => cp_route('runway.edit', [
-                'resource' => $resource->handle(),
-                'model' => $model->{$resource->routeKey()},
-            ]),
+            'data' => (new ModelResource($model->fresh()))->resolve()['data'],
+            'saved' => $saved,
         ];
     }
 
@@ -141,7 +144,11 @@ class ResourceController extends CpController
             'resource' => $resource,
             'actions' => [
                 'save' => cp_route('runway.update', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
+                'publish' => cp_route('runway.published.store', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
+                'unpublish' => cp_route('runway.published.destroy', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
                 'revisions' => cp_route('runway.revisions.index', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
+                'restore' => cp_route('runway.restore-revision', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
+                'createRevision' => cp_route('runway.revisions.store', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
                 'editBlueprint' => cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]),
             ],
             'blueprint' => $blueprint->toPublishArray(),
@@ -172,6 +179,7 @@ class ResourceController extends CpController
         $resource->blueprint()->fields()->setParent($model)->addValues($request->all())->validator()->validate();
 
         $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $model)->first();
+        $model = $model->fromWorkingCopy();
 
         $this->prepareModelForSaving($resource, $model, $request);
 
@@ -192,21 +200,14 @@ class ResourceController extends CpController
             $saved = $model->save();
         }
 
-        return ['data' => $this->getReturnData($resource, $model), 'saved' => $saved];
-    }
+        [$values] = $this->extractFromFields($model, $resource, $resource->blueprint());
 
-    /**
-     * Build an array with the correct return data for the inline publish forms.
-     */
-    protected function getReturnData(Resource $resource, Model $model): array
-    {
-        return array_merge($model->toArray(), [
-            'title' => $model->{$resource->titleField()},
-            'edit_url' => cp_route('runway.edit', [
-                'resource' => $resource->handle(),
-                'model' => $model->{$resource->routeKey()},
+        return [
+            'data' => array_merge((new ModelResource($model->fresh()))->resolve()['data'], [
+                'values' => $values,
             ]),
-        ]);
+            'saved' => $saved,
+        ];
     }
 
     /**

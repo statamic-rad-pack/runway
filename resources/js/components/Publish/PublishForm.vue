@@ -193,7 +193,17 @@
             />
         </stack>
 
-<!--        todo: publish-actions?-->
+        <publish-actions
+            v-if="confirmingPublish"
+            :actions="actions"
+            :published="published"
+            :resource="resource.handle"
+            :reference="initialReference"
+            :publish-container="publishContainer"
+            @closed="confirmingPublish = false"
+            @saving="saving = true"
+            @saved="publishActionCompleted"
+        />
     </div>
 </template>
 
@@ -202,12 +212,14 @@ import SaveButtonOptions from '../../../../vendor/statamic/cms/resources/js/comp
 import HasPreferences from '../../../../vendor/statamic/cms/resources/js/components/data-list/HasPreferences'
 import HasHiddenFields from '../../../../vendor/statamic/cms/resources/js/components/publish/HasHiddenFields.js'
 import HasActions from '../../../../vendor/statamic/cms/resources/js/components/publish/HasActions.js'
-import RevisionHistory from '../../../../vendor/statamic/cms/resources/js/components/revision-history/History.vue'
+import RevisionHistory from '../revisions/History.vue'
+import PublishActions from './PublishActions.vue'
 
 export default {
     components: {
         SaveButtonOptions,
         RevisionHistory,
+        PublishActions,
     },
 
     mixins: [HasPreferences, HasHiddenFields, HasActions],
@@ -262,7 +274,7 @@ export default {
             quickSave: false,
 
             showRevisionHistory: false,
-            confirmingPublish: false, // what does this do? do we need it?
+            confirmingPublish: false,
             isWorkingCopy: this.initialIsWorkingCopy,
 
             // Whether it was published the last time it was saved.
@@ -277,6 +289,10 @@ export default {
             return this.blueprint.tabs
                 .map((section) => section.handle)
                 .includes('sidebar')
+        },
+
+        isDirty() {
+            return this.$dirty.has(this.publishContainer);
         },
 
         canSave() {
@@ -325,14 +341,18 @@ export default {
     },
 
     mounted() {
-        this.saveKeyBinding = this.$keys.bindGlobal(
-            ['mod+s', 'mod+return'],
-            (e) => {
-                e.preventDefault()
-                this.quickSave = true
-                this.save()
-            }
-        )
+        this.saveKeyBinding = this.$keys.bindGlobal(['mod+return'], e => {
+            e.preventDefault();
+            if (this.confirmingPublish) return;
+            this.save();
+        });
+
+        this.quickSaveKeyBinding = this.$keys.bindGlobal(['mod+s'], e => {
+            e.preventDefault();
+            if (this.confirmingPublish) return;
+            this.quickSave = true;
+            this.save();
+        });
     },
 
     created() {
@@ -449,6 +469,12 @@ export default {
                 }).catch(e => console.error(e));
         },
 
+        confirmPublish() {
+            if (this.canPublish) {
+                this.confirmingPublish = true;
+            }
+        },
+
         handleAxiosError(e) {
             this.saving = false;
             if (e.response && e.response.status === 422) {
@@ -506,6 +532,21 @@ export default {
                         })
                 })
             })
+        },
+
+        publishActionCompleted({ published, isWorkingCopy, response }) {
+            this.saving = false;
+            // if (published !== undefined) {
+            //     // this.$refs.container.setFieldValue('published', published);
+            //     this.initialPublished = published;
+            // }
+            this.$refs.container.saved();
+            this.isWorkingCopy = isWorkingCopy;
+            this.confirmingPublish = false;
+            // this.title = response.data.data.title;
+            this.values = this.resetValuesFromResponse(response.data.data.values);
+            this.permalink = response.data.data.permalink
+            this.$nextTick(() => this.$emit('saved', response));
         },
 
         afterActionSuccessfullyCompleted(response) {

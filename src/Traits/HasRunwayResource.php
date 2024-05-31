@@ -94,4 +94,42 @@ trait HasRunwayResource
     {
         return $this->runwayResource()->revisionsEnabled();
     }
+
+    public function published($published = null)
+    {
+        return $this;
+    }
+
+    public function updateLastModified($user = false)
+    {
+        // who knows where this is coming from 🤷‍♂️
+        unset($this->date);
+        unset($this->data);
+
+        return $this;
+    }
+
+    public function publish($options = [])
+    {
+        if (method_exists($this, 'revisionsEnabled') && $this->revisionsEnabled()) {
+            return $this->publishWorkingCopy($options);
+        }
+
+        $this->save();
+//        $this->published(true)->save();
+
+        return $this;
+    }
+
+    public function unpublish($options = [])
+    {
+        if (method_exists($this, 'revisionsEnabled') && $this->revisionsEnabled()) {
+            return $this->unpublishWorkingCopy($options);
+        }
+
+        $this->save();
+//        $this->published(false)->save();
+
+        return $this;
+    }
 }

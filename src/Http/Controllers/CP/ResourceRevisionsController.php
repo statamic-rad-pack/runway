@@ -3,10 +3,8 @@
 namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
 use Illuminate\Http\Request;
-use Statamic\Facades\Site;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
-use Statamic\Http\Resources\CP\Entries\Entry as EntryResource;
 use StatamicRadPack\Runway\Http\Resources\CP\Model;
 use StatamicRadPack\Runway\Resource;
 
@@ -29,7 +27,7 @@ class ResourceRevisionsController extends CpController
                 $revision->attribute('item_url', cp_route('runway.revisions.show', [
                     'resource' => $resource->handle(),
                     'model' => $model->getKey(),
-                    'revision' => $revision->id,
+                    'revisionId' => $revision->id(),
                 ]));
             });
 
@@ -62,12 +60,13 @@ class ResourceRevisionsController extends CpController
         return new Model($model);
     }
 
-    public function show(Request $request, Resource $resource, $model, $revision)
+    public function show(Request $request, Resource $resource, $model, $revisionId)
     {
         $model = $resource->model()
             ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
             ->first();
 
+        $revision = $model->revision($revisionId);
         $model = $model->makeFromRevision($revision);
 
         // TODO: Most of this is duplicated with EntriesController@edit. DRY it off.
@@ -81,19 +80,26 @@ class ResourceRevisionsController extends CpController
             'editing' => true,
             'actions' => [
                 'save' => cp_route('runway.update', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
+                'publish' => cp_route('runway.published.store', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
+                'unpublish' => cp_route('runway.published.destroy', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
                 'revisions' => cp_route('runway.revisions.index', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
-                'restore' => cp_route('runway.restore-revision', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}, 'revision' => $revision]),
-                'createRevision' => cp_route('runway.revisions.create', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
+                'restore' => cp_route('runway.restore-revision', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
+                'createRevision' => cp_route('runway.revisions.store', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
             ],
             'values' => $values,
             'meta' => $meta,
+            'permalink' => $resource->hasRouting() ? $model->uri() : null,
+            'resourceHasRoutes' => $resource->hasRouting(),
             'blueprint' => $blueprint->toPublishArray(),
+            'resource' => $resource,
             'readOnly' => true,
         ];
     }
 
     protected function workingCopy($model)
     {
+        return $model->workingCopy();
+
 //        if ($model->published()) {
 //            return $model->workingCopy();
 //        }
