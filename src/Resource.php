@@ -242,6 +242,10 @@ class Resource
 
     public function revisionsEnabled(): bool
     {
+        if (! config('statamic.revisions.enabled') || ! Statamic::pro()) {
+            return false;
+        }
+
         return $this->config->get('revisions', false);
     }
 
