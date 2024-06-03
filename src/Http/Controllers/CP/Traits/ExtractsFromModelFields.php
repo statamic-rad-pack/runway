@@ -22,7 +22,7 @@ trait ExtractsFromModelFields
 
         $values = $fields->values()->merge([
             'id' => $model->getKey(),
-            'published' => $model->{$resource->publishedColumn()},
+            $resource->publishedColumn() => $model->{$resource->publishedColumn()},
         ]);
 
         return [$values->all(), $fields->meta()->all()];
