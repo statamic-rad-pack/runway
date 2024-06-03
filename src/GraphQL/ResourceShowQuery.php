@@ -29,6 +29,6 @@ class ResourceShowQuery extends Query
 
     public function resolve($root, $args)
     {
-        return $this->resource->model()->runwayStatus('published')->find($args[$this->resource->primaryKey()]);
+        return $this->resource->model()->whereStatus('published')->find($args[$this->resource->primaryKey()]);
     }
 }

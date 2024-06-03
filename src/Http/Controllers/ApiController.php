@@ -55,7 +55,7 @@ class ApiController extends StatamicApiController
             throw new NotFoundHttpException;
         }
 
-        if (! $model = $resource->model()->runwayStatus('published')->find($model)) {
+        if (! $model = $resource->model()->whereStatus('published')->find($model)) {
             throw new NotFoundHttpException;
         }
 

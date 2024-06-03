@@ -67,7 +67,7 @@ trait HasRunwayResource
         return 'published';
     }
 
-    public function scopeRunwayStatus(Builder $query, string $status): void
+    public function scopeWhereStatus(Builder $query, string $status): void
     {
         if (! $this->runwayResource()->hasPublishStates()) {
             return;
@@ -87,11 +87,6 @@ trait HasRunwayResource
             default:
                 throw new \Exception("Invalid status [$status]");
         }
-    }
-
-    public function scopeWhereStatus(Builder $query, string $status): void
-    {
-        $this->scopeRunwayStatus($query, $status);
     }
 
     public function resolveGqlValue($field)
