@@ -131,6 +131,18 @@ class Resource
             ->first();
     }
 
+    public function hasPublishStates(): bool
+    {
+        return $this->config->has('published');
+    }
+
+    public function publishedColumn(): string
+    {
+        return is_string($this->config->get('published'))
+            ? $this->config->get('published')
+            : 'published';
+    }
+
     /**
      * Maps Eloquent relationships to their respective blueprint fields.
      */

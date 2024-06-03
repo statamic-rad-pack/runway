@@ -183,6 +183,22 @@ However, if you wish, you can override the relationships that get eager loaded b
 ],
 ```
 
+### Published States
+
+If you're storing content that you'd like to be able to publish and unpublish, you can add the `published` config option which will allow you to manage publish states for a Runway model:
+
+```php
+'resources' => [
+	\App\Models\Order::class => [
+	    'name' => 'Orders',
+		'published' => true, // Assumes the model has a `published` boolean column.
+		'published' => 'active', // Otherwise, you can specify the column name.
+	],
+],
+```
+
+This will add a "Published" toggle to the resource's publish form, status indicators in the Control Panel, and filter out unpublished models during augmentation. 
+
 ## Actions
 
 In much the same way with entries, you can create custom Actions which will be usable in the listing tables provided by Runway.
