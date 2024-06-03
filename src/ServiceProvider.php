@@ -51,6 +51,7 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $scopes = [
         Query\Scopes\Filters\Fields::class,
+        Query\Scopes\Filters\Status::class,
     ];
 
     protected $tags = [
