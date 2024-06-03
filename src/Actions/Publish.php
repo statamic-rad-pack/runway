@@ -4,7 +4,6 @@ namespace StatamicRadPack\Runway\Actions;
 
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Actions\Action;
-use Statamic\Facades\User;
 
 class Publish extends Action
 {

@@ -2,13 +2,11 @@
 
 namespace StatamicRadPack\Runway\Tests\Actions;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 use Statamic\Facades\Role;
 use Statamic\Facades\User;
-use StatamicRadPack\Runway\Actions\DeleteModel;
 use StatamicRadPack\Runway\Actions\Publish;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
