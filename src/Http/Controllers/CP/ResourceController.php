@@ -75,7 +75,9 @@ class ResourceController extends CpController
             ],
             'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
             'blueprint' => $blueprint->toPublishArray(),
-            'values' => $fields->values(),
+            'values' => $fields->values()->merge([
+                $resource->publishedColumn() => true,
+            ])->all(),
             'meta' => $fields->meta(),
             'permalink' => null,
             'resourceHasRoutes' => $resource->hasRouting(),
