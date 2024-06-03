@@ -12,6 +12,10 @@ class ResourceRoutingRepository
             return null;
         }
 
+        if ($runwayUri->model->runwayResource()->hasPublishStates() && $runwayUri->model->publishedStatus() !== 'published') {
+            return null;
+        }
+
         return $runwayUri->model->routingModel();
     }
 }
