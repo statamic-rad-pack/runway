@@ -37,6 +37,7 @@ class BaseFieldtype extends Relationship
         'permalink' => 'permalink',
         'resource' => 'resource',
         'breadcrumbs' => 'breadcrumbs',
+        'canManagePublishState' => 'canManagePublishState',
     ];
 
     protected function configFieldItems(): array
