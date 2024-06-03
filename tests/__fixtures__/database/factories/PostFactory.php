@@ -28,6 +28,14 @@ class PostFactory extends Factory
             'slug' => Str::slug($title),
             'body' => implode(' ', $this->faker->paragraphs(10)),
             'author_id' => Author::factory()->create()->id,
+            'published' => true,
         ];
+    }
+
+    public function unpublished()
+    {
+        return $this->state([
+            'published' => false,
+        ]);
     }
 }
