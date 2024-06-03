@@ -68,6 +68,7 @@ class ResourceControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->post(cp_route('runway.store', ['resource' => 'post']), [
+                'published' => true,
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
@@ -120,6 +121,7 @@ class ResourceControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->post(cp_route('runway.store', ['resource' => 'post']), [
+                'published' => true,
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
@@ -148,6 +150,7 @@ class ResourceControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->post(cp_route('runway.store', ['resource' => 'post']), [
+                'published' => true,
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
@@ -176,6 +179,7 @@ class ResourceControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->post(cp_route('runway.store', ['resource' => 'post']), [
+                'published' => true,
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
@@ -204,6 +208,7 @@ class ResourceControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->post(cp_route('runway.store', ['resource' => 'post']), [
+                'published' => true,
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
@@ -497,6 +502,7 @@ class ResourceControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
+                'published' => true,
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -524,6 +530,7 @@ class ResourceControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
+                'published' => true,
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -574,6 +581,7 @@ class ResourceControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
+                'published' => true,
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -602,6 +610,7 @@ class ResourceControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
+                'published' => true,
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -630,6 +639,7 @@ class ResourceControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
+                'published' => true,
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
@@ -658,6 +668,7 @@ class ResourceControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
+                'published' => true,
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
