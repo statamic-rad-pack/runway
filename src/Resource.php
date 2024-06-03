@@ -138,8 +138,12 @@ class Resource
         return $this->config->has('published');
     }
 
-    public function publishedColumn(): string
+    public function publishedColumn(): ?string
     {
+        if (! $this->hasPublishStates()) {
+            return null;
+        }
+
         return is_string($this->config->get('published'))
             ? $this->config->get('published')
             : 'published';
