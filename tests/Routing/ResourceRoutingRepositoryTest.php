@@ -54,4 +54,17 @@ class ResourceRoutingRepositoryTest extends TestCase
 
         $this->assertNull($findByUri);
     }
+
+    /** @test */
+    public function cant_find_by_uri_when_model_is_unpublished()
+    {
+        $post = Post::factory()->unpublished()->create();
+        $runwayUri = $post->fresh()->runwayUri;
+
+        $this->assertEquals($runwayUri->uri, "/posts/{$post->slug}");
+
+        $findByUri = Data::findByUri("/posts/{$post->slug}");
+
+        $this->assertNull($findByUri);
+    }
 }
