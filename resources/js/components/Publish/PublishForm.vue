@@ -79,19 +79,15 @@
                     @blur="$refs.container.$emit('blur', $event)"
                 >
                     <template #actions="{ shouldShowSidebar }">
-                        <div v-if="shouldShowSidebar" class="card p-0" :class="{ 'mb-5': resourceHasRoutes && permalink }">
-                            <div
-                                v-if="resourceHasRoutes && permalink"
-                                :class="{ hi: !shouldShowSidebar }"
-                            >
-                                <div class="p-3 flex items-center space-x-2">
+                        <div class="card p-0 mb-5">
+                            <div v-if="resourceHasRoutes" :class="{ 'hi': resourceHasRoutes && permalink }">
+                                <div class="p-3 flex items-center space-x-2" v-if="showVisitUrlButton">
                                     <a
                                         class="flex items-center justify-center btn w-full"
-                                        v-if="permalink"
+                                        v-if="showVisitUrlButton"
                                         :href="permalink"
-                                        target="_blank"
-                                    >
-                                        <svg-icon name="light/external-link" class="w-4 h-4 mr-2 shrink-0" />
+                                        target="_blank">
+                                        <svg-icon name="light/external-link" class="w-4 h-4 rtl:ml-2 ltr:mr-2 shrink-0" />
                                         <span>{{ __('Visit URL') }}</span>
                                     </a>
                                 </div>
@@ -201,6 +197,10 @@ export default {
 
         shouldShowSidebar() {
             return this.enableSidebar
+        },
+
+        showVisitUrlButton() {
+            return !!this.permalink;
         },
 
         afterSaveOption() {
