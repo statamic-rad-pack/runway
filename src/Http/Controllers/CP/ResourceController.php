@@ -196,6 +196,8 @@ class ResourceController extends CpController
     {
         return array_merge($model->toArray(), [
             'title' => $model->{$resource->titleField()},
+            'published' => $model->{$resource->publishedColumn()},
+            'status' => $model->publishedStatus(),
             'edit_url' => cp_route('runway.edit', [
                 'resource' => $resource->handle(),
                 'model' => $model->{$resource->routeKey()},
