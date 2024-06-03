@@ -38,6 +38,7 @@ class BaseFieldtype extends Relationship
         'resource' => 'resource',
         'breadcrumbs' => 'breadcrumbs',
         'canManagePublishState' => 'canManagePublishState',
+        'publishedColumn' => 'publishedColumn',
     ];
 
     protected function configFieldItems(): array
