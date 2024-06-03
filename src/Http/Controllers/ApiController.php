@@ -33,7 +33,7 @@ class ApiController extends StatamicApiController
             throw new NotFoundHttpException;
         }
 
-        $results = $this->filterSortAndPaginate($resource->model()->query());
+        $results = $this->filterSortAndPaginate($resource->model()->query()->runwayStatus('published'));
 
         $results = ApiResource::collection($results);
 
@@ -56,7 +56,7 @@ class ApiController extends StatamicApiController
             throw new NotFoundHttpException;
         }
 
-        if (! $model = $resource->model()->find($model)) {
+        if (! $model = $resource->model()->runwayStatus('published')->find($model)) {
             throw new NotFoundHttpException;
         }
 
