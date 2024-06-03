@@ -1,3 +1,4 @@
+@inject('str', 'Statamic\Support\Str')
 @extends('statamic::layout')
 @section('title', __('Edit :resource', [
     'resource' => $resource->singular(),
@@ -23,6 +24,7 @@
         create-another-url="{{ cp_route('runway.create', ['resource' => $resource->handle()]) }}"
         listing-url="{{ cp_route('runway.index', ['resource' => $resource->handle()]) }}"
         :can-edit-blueprint="{{ Auth::user()->can('configure fields') ? 'true' : 'false' }}"
+        :can-manage-publish-state="{{ $str::bool($canManagePublishState) }}"
         :initial-item-actions="{{ json_encode($itemActions) }}"
         item-action-url="{{ cp_route('runway.actions.run', ['resource' => $resource->handle()]) }}"
     ></runway-publish-form>

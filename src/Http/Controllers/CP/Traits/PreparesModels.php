@@ -79,7 +79,11 @@ trait PreparesModels
     {
         $blueprint = $resource->blueprint();
 
-        $blueprint->fields()->setParent($model)->all()
+        $blueprint
+            ->ensureField('published', ['type' => 'toggle'])
+            ->fields()
+            ->setParent($model)
+            ->all()
             ->filter(fn (Field $field) => $this->shouldSaveField($field))
             ->each(function (Field $field) use ($resource, &$model, $request) {
                 $processedValue = $field->fieldtype()->process($request->get($field->handle()));

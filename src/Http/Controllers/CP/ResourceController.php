@@ -72,6 +72,7 @@ class ResourceController extends CpController
             'meta' => $fields->meta(),
             'permalink' => null,
             'resourceHasRoutes' => $resource->hasRouting(),
+            'canManagePublishState' => $resource->hasPublishStates(),
         ];
 
         if ($request->wantsJson()) {
@@ -153,6 +154,7 @@ class ResourceController extends CpController
                 'title' => $model->{$resource->titleField()},
                 'edit_url' => $request->url(),
             ],
+            'canManagePublishState' => $resource->hasPublishStates(),
             'itemActions' => Action::for($model, ['resource' => $resource->handle(), 'view' => 'form']),
         ];
 

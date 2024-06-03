@@ -20,6 +20,11 @@ trait ExtractsFromModelFields
             ->addValues($values->all())
             ->preProcess();
 
-        return [$fields->values()->merge(['id' => $model->getKey()])->all(), $fields->meta()->all()];
+        $values = $fields->values()->merge([
+            'id' => $model->getKey(),
+            'published' => $model->{$resource->publishedColumn()},
+        ]);
+
+        return [$values->all(), $fields->meta()->all()];
     }
 }

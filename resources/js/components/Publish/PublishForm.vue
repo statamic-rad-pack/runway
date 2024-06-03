@@ -96,6 +96,16 @@
                                     </a>
                                 </div>
                             </div>
+
+                            <div v-if="canManagePublishState">
+                                <div
+                                    class="flex items-center justify-between px-4 py-2"
+                                    :class="{ 'border-t dark:border-dark-900': resourceHasRoutes && permalink }"
+                                >
+                                    <label v-text="__('Published')" class="publish-field-label font-medium" />
+                                    <toggle-input :value="published" :read-only="!canManagePublishState" @input="setFieldValue('published', $event)" />
+                                </div>
+                            </div>
                         </div>
                     </template>
                 </publish-tabs>
@@ -156,6 +166,7 @@ export default {
         createAnotherUrl: String,
         listingUrl: String,
         canEditBlueprint: Boolean,
+        canManagePublishState: Boolean,
     },
 
     data() {
@@ -172,6 +183,11 @@ export default {
             containerWidth: null,
             saveKeyBinding: null,
             quickSave: false,
+
+            // Whether it was published the last time it was saved.
+            // Successful publish actions (if using revisions) or just saving (if not) will update this.
+            // The current published value is inside the "values" object, and also accessible as a computed.
+            initialPublished: this.initialValues.published,
         }
     },
 
@@ -188,6 +204,18 @@ export default {
 
         afterSaveOption() {
             return this.getPreference('after_save')
+        },
+
+        published() {
+            return this.values.published;
+        },
+
+        isUnpublishing() {
+            return this.initialPublished && ! this.published && ! this.isCreating;
+        },
+
+        isDraft() {
+            return ! this.published;
         },
     },
 
@@ -322,6 +350,7 @@ export default {
             if (response.data) {
                 this.title = response.data.title;
                 this.values = this.resetValuesFromResponse(response.data.values);
+                this.initialPublished = response.data.published;
                 this.itemActions = response.data.itemActions;
             }
         },
