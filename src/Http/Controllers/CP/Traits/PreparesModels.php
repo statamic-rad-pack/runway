@@ -79,15 +79,14 @@ trait PreparesModels
     {
         $blueprint = $resource->blueprint();
 
-        if ($resource->hasPublishStates()) {
-            $blueprint->ensureField($resource->publishedColumn(), ['type' => 'toggle']);
-        }
-
         $blueprint
             ->fields()
             ->setParent($model)
             ->all()
             ->filter(fn (Field $field) => $this->shouldSaveField($field))
+            ->when($resource->hasPublishStates(), function ($collection) use ($resource) {
+                $collection->put($resource->publishedColumn(), new Field($resource->publishedColumn(), ['type' => 'toggle']));
+            })
             ->each(function (Field $field) use ($resource, &$model, $request) {
                 $processedValue = $field->fieldtype()->process($request->get($field->handle()));
 
