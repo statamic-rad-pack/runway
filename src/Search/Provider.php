@@ -44,7 +44,7 @@ class Provider extends BaseProvider
             ->flatMap(function ($items, $handle) {
                 $ids = $items->map(fn ($item) => Str::after($item, '::'));
 
-                return Runway::findResource($handle)->model()->find($ids);
+                return Runway::findResource($handle)->model()->runwayStatus('published')->find($ids);
             })
             ->mapInto(Searchable::class);
     }
