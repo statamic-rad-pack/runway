@@ -43,6 +43,8 @@ class ListedModel extends JsonResource
 
         return [
             'id' => $model->getKey(),
+            'published' => $this->resource->{$this->runwayResource->publishedColumn()},
+            'status' => $this->resource->publishedStatus(),
             'edit_url' => cp_route('runway.edit', ['resource' => $this->runwayResource->handle(), 'model' => $model->getRouteKey()]),
             'permalink' => $this->runwayResource->hasRouting() ? $model->uri() : null,
             'editable' => User::current()->can('edit', [$this->runwayResource, $model]),

@@ -1,3 +1,4 @@
+@inject('str', 'Statamic\Support\Str')
 @extends('statamic::layout')
 @section('title', __('Create :resource', [
     'resource' => $resource->singular(),
@@ -19,5 +20,7 @@
         :resource='@json($resource->toArray())'
         create-another-url="{{ cp_route('runway.create', ['resource' => $resource->handle()]) }}"
         listing-url="{{ cp_route('runway.index', ['resource' => $resource->handle()]) }}"
+        :can-manage-publish-state="{{ $str::bool($canManagePublishState) }}"
+        published-column="{{ $publishedColumn }}"
     ></runway-publish-form>
 @endsection

@@ -47,7 +47,7 @@ class ResourceActionControllerTest extends TestCase
                 'selections' => [$post->id],
             ])
             ->assertOk()
-            ->assertJsonPath('0.handle', 'delete_model');
+            ->assertJsonPath('0.handle', 'unpublish');
     }
 }
 

@@ -79,21 +79,27 @@
                     @blur="$refs.container.$emit('blur', $event)"
                 >
                     <template #actions="{ shouldShowSidebar }">
-                        <div v-if="shouldShowSidebar" class="card p-0" :class="{ 'mb-5': resourceHasRoutes && permalink }">
-                            <div
-                                v-if="resourceHasRoutes && permalink"
-                                :class="{ hi: !shouldShowSidebar }"
-                            >
-                                <div class="p-3 flex items-center space-x-2">
+                        <div class="card p-0 mb-5">
+                            <div v-if="resourceHasRoutes" :class="{ 'hi': resourceHasRoutes && permalink }">
+                                <div class="p-3 flex items-center space-x-2" v-if="showVisitUrlButton">
                                     <a
                                         class="flex items-center justify-center btn w-full"
-                                        v-if="permalink"
+                                        v-if="showVisitUrlButton"
                                         :href="permalink"
-                                        target="_blank"
-                                    >
-                                        <svg-icon name="light/external-link" class="w-4 h-4 mr-2 shrink-0" />
+                                        target="_blank">
+                                        <svg-icon name="light/external-link" class="w-4 h-4 rtl:ml-2 ltr:mr-2 shrink-0" />
                                         <span>{{ __('Visit URL') }}</span>
                                     </a>
+                                </div>
+                            </div>
+
+                            <div v-if="canManagePublishState">
+                                <div
+                                    class="flex items-center justify-between px-4 py-2"
+                                    :class="{ 'border-t dark:border-dark-900': resourceHasRoutes && permalink }"
+                                >
+                                    <label v-text="__('Published')" class="publish-field-label font-medium" />
+                                    <toggle-input :value="published" :read-only="!canManagePublishState" @input="setFieldValue(publishedColumn, $event)" />
                                 </div>
                             </div>
                         </div>
@@ -156,6 +162,8 @@ export default {
         createAnotherUrl: String,
         listingUrl: String,
         canEditBlueprint: Boolean,
+        canManagePublishState: Boolean,
+        publishedColumn: String,
     },
 
     data() {
@@ -172,6 +180,11 @@ export default {
             containerWidth: null,
             saveKeyBinding: null,
             quickSave: false,
+
+            // Whether it was published the last time it was saved.
+            // Successful publish actions (if using revisions) or just saving (if not) will update this.
+            // The current published value is inside the "values" object, and also accessible as a computed.
+            initialPublished: this.initialValues[this.publishedColumn],
         }
     },
 
@@ -186,8 +199,24 @@ export default {
             return this.enableSidebar
         },
 
+        showVisitUrlButton() {
+            return !!this.permalink;
+        },
+
         afterSaveOption() {
             return this.getPreference('after_save')
+        },
+
+        published() {
+            return this.values[this.publishedColumn];
+        },
+
+        isUnpublishing() {
+            return this.initialPublished && ! this.published && ! this.isCreating;
+        },
+
+        isDraft() {
+            return ! this.published;
         },
     },
 
@@ -322,6 +351,7 @@ export default {
             if (response.data) {
                 this.title = response.data.title;
                 this.values = this.resetValuesFromResponse(response.data.values);
+                this.initialPublished = response.data[this.publishedColumn];
                 this.itemActions = response.data.itemActions;
             }
         },

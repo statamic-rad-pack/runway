@@ -29,6 +29,11 @@ class RunwayTag extends Tags
 
         $query = $resource->model()->query()
             ->when(
+                $this->params->get('status'),
+                fn ($query, $status) => $query->whereStatus($status),
+                fn ($query) => $query->whereStatus('published')
+            )
+            ->when(
                 $this->params->get('with'),
                 fn ($query) => $query->with(explode('|', (string) $this->params->get('with'))),
                 fn ($query) => $query->with($resource->eagerLoadingRelationships())

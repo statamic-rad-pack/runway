@@ -53,4 +53,48 @@ trait HasRunwayResource
             })
             ->each(fn (Field $field) => $query->orWhere($field->handle(), 'LIKE', '%'.$searchQuery.'%'));
     }
+
+    public function publishedStatus(): ?string
+    {
+        if (! $this->runwayResource()->hasPublishStates()) {
+            return null;
+        }
+
+        if (! $this->{$this->runwayResource()->publishedColumn()}) {
+            return 'draft';
+        }
+
+        return 'published';
+    }
+
+    public function scopeWhereStatus(Builder $query, string $status): void
+    {
+        if (! $this->runwayResource()->hasPublishStates()) {
+            return;
+        }
+
+        switch ($status) {
+            case 'published':
+                $query->where($this->runwayResource()->publishedColumn(), true);
+                break;
+            case 'draft':
+                $query->where($this->runwayResource()->publishedColumn(), false);
+                break;
+            case 'scheduled':
+                throw new \Exception("Runway doesn't currently support the [scheduled] status.");
+            case 'expired':
+                throw new \Exception("Runway doesn't currently support the [expired] status.");
+            default:
+                throw new \Exception("Invalid status [$status]");
+        }
+    }
+
+    public function resolveGqlValue($field)
+    {
+        if ($this->runwayResource()->handle() && $field === 'status') {
+            return $this->publishedStatus();
+        }
+
+        return $this->traitResolveGqlValue($field);
+    }
 }

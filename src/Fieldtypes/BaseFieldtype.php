@@ -37,6 +37,8 @@ class BaseFieldtype extends Relationship
         'permalink' => 'permalink',
         'resource' => 'resource',
         'breadcrumbs' => 'breadcrumbs',
+        'canManagePublishState' => 'canManagePublishState',
+        'publishedColumn' => 'publishedColumn',
     ];
 
     protected function configFieldItems(): array
@@ -120,6 +122,8 @@ class BaseFieldtype extends Relationship
                     ->merge([
                         'id' => $model->{$resource->primaryKey()},
                         'title' => $this->makeTitle($model, $resource),
+                        'status' => $resource->hasPublishStates() ? $model->publishedStatus() : null,
+                        'collection' => ['dated' => false],
                     ])
                     ->toArray();
             });
@@ -258,6 +262,15 @@ class BaseFieldtype extends Relationship
                     ->sortable($blueprintField->isSortable())
                     ->defaultOrder($index + 1);
             })
+            ->when($resource->hasPublishStates(), function ($collection) {
+                $collection->push(
+                    Column::make('status')
+                        ->listable(true)
+                        ->visible(true)
+                        ->defaultVisibility(true)
+                        ->sortable(false)
+                );
+            })
             ->toArray();
     }
 
@@ -287,6 +300,7 @@ class BaseFieldtype extends Relationship
         return [
             'id' => $model->getKey(),
             'reference' => $model->reference(),
+            'status' => $model->publishedStatus(),
             'title' => $this->makeTitle($model, $resource),
             'edit_url' => $editUrl,
         ];
@@ -318,5 +332,12 @@ class BaseFieldtype extends Relationship
     public function filter()
     {
         return new Models($this);
+    }
+
+    protected function statusIcons()
+    {
+        $resource = Runway::findResource($this->config('resource'));
+
+        return $resource->hasPublishStates();
     }
 }

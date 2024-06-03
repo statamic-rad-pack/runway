@@ -22,6 +22,10 @@ class ResourceType extends Type
     {
         return $this->resource->blueprint()->fields()->toGql()
             ->merge($this->nonBlueprintFields())
+            ->when($this->resource->hasPublishStates(), function ($collection) {
+                $collection->put('status', ['type' => GraphQL::nonNull(GraphQL::string())]);
+                $collection->put('published', ['type' => GraphQL::nonNull(GraphQL::boolean())]);
+            })
             ->mapWithKeys(fn ($value, $key) => [
                 Str::replace('_id', '', $key) => $value,
             ])
@@ -79,7 +83,6 @@ class ResourceType extends Type
                 return [$column['name'] => ['type' => $type]];
             })
             ->reject(fn ($item): bool => is_null($item['type']))
-            // ->dd()
             ->toArray();
     }
 }

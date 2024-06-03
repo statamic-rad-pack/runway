@@ -126,9 +126,27 @@ class Resource
             ->reject(function ($handle) {
                 $field = $this->blueprint()->field($handle);
 
-                return $field->fieldtype()->indexComponent() === 'relationship' || $field->type() === 'section';
+                return $field->fieldtype()->indexComponent() === 'relationship'
+                    || $field->type() === 'section'
+                    || $field->handle() === 'published';
             })
             ->first();
+    }
+
+    public function hasPublishStates(): bool
+    {
+        return $this->config->has('published');
+    }
+
+    public function publishedColumn(): ?string
+    {
+        if (! $this->hasPublishStates()) {
+            return null;
+        }
+
+        return is_string($this->config->get('published'))
+            ? $this->config->get('published')
+            : 'published';
     }
 
     /**

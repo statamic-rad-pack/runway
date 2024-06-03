@@ -41,58 +41,18 @@ class ApiControllerTest extends TestCase
     }
 
     /** @test */
-    public function gets_a_resource_model_that_exists()
+    public function it_filters_out_unpublished_models()
     {
-        $post = Post::factory()->create();
+        $posts = Post::factory()->count(2)->create();
+        Post::factory()->count(2)->unpublished()->create();
 
         $this
-            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => $post->id]))
+            ->get(route('statamic.api.runway.index', ['resourceHandle' => 'posts']))
             ->assertOk()
-            ->assertSee(['data'])
-            ->assertJsonPath('data.id', $post->id)
-            ->assertJsonPath('data.title', $post->title);
-    }
-
-    /** @test */
-    public function gets_a_resource_model_with_nested_fields()
-    {
-        $post = Post::factory()->create([
-            'values' => [
-                'alt_title' => 'Alternative Title...',
-                'alt_body' => 'This is a **great** post! You should *read* it.',
-            ],
-        ]);
-
-        $this
-            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => $post->id]))
-            ->assertOk()
-            ->assertSee(['data'])
-            ->assertJsonPath('data.id', $post->id)
-            ->assertJsonPath('data.values.alt_title', 'Alternative Title...')
-            ->assertJsonPath('data.values.alt_body', '<p>This is a <strong>great</strong> post! You should <em>read</em> it.</p>
-');
-    }
-
-    /** @test */
-    public function gets_a_resource_model_with_belongs_to_relationship()
-    {
-        $post = Post::factory()->create();
-
-        $this
-            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => $post->id]))
-            ->assertOk()
-            ->assertSee(['data'])
-            ->assertJsonPath('data.id', $post->id)
-            ->assertJsonPath('data.author_id.id', $post->author->id)
-            ->assertJsonPath('data.author_id.name', $post->author->name);
-    }
-
-    /** @test */
-    public function returns_not_found_on_a_model_that_does_not_exist()
-    {
-        $this
-            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => 44]))
-            ->assertNotFound();
+            ->assertJsonStructure(['data', 'meta'])
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.0.id', $posts[0]->id)
+            ->assertJsonPath('data.1.id', $posts[1]->id);
     }
 
     /** @test */
@@ -157,5 +117,70 @@ class ApiControllerTest extends TestCase
         $this
             ->get(route('statamic.api.runway.index', ['resourceHandle' => 'posts', 'filter[slug:contains]' => 'one']))
             ->assertStatus(422);
+    }
+
+    /** @test */
+    public function gets_a_resource_model_that_exists()
+    {
+        $post = Post::factory()->create();
+
+        $this
+            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => $post->id]))
+            ->assertOk()
+            ->assertSee(['data'])
+            ->assertJsonPath('data.id', $post->id)
+            ->assertJsonPath('data.title', $post->title);
+    }
+
+    /** @test */
+    public function gets_a_resource_model_with_nested_fields()
+    {
+        $post = Post::factory()->create([
+            'values' => [
+                'alt_title' => 'Alternative Title...',
+                'alt_body' => 'This is a **great** post! You should *read* it.',
+            ],
+        ]);
+
+        $this
+            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => $post->id]))
+            ->assertOk()
+            ->assertSee(['data'])
+            ->assertJsonPath('data.id', $post->id)
+            ->assertJsonPath('data.values.alt_title', 'Alternative Title...')
+            ->assertJsonPath('data.values.alt_body', '<p>This is a <strong>great</strong> post! You should <em>read</em> it.</p>
+');
+    }
+
+    /** @test */
+    public function gets_a_resource_model_with_belongs_to_relationship()
+    {
+        $post = Post::factory()->create();
+
+        $this
+            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => $post->id]))
+            ->assertOk()
+            ->assertSee(['data'])
+            ->assertJsonPath('data.id', $post->id)
+            ->assertJsonPath('data.author_id.id', $post->author->id)
+            ->assertJsonPath('data.author_id.name', $post->author->name);
+    }
+
+    /** @test */
+    public function returns_not_found_on_a_model_that_does_not_exist()
+    {
+        $this
+            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => 44]))
+            ->assertNotFound();
+    }
+
+    /** @test */
+    public function it_doesnt_return_unpublished_model()
+    {
+        $post = Post::factory()->unpublished()->create();
+
+        $this
+            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => $post->id]))
+            ->assertNotFound();
     }
 }

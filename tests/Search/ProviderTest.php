@@ -30,6 +30,23 @@ class ProviderTest extends TestCase
         $this->assertEquals("runway::post::{$posts[4]->id}", $models[4]->getSearchReference());
     }
 
+    /** @test */
+    public function it_filters_out_unpublished_models()
+    {
+        $publishedModels = Post::factory()->count(2)->create();
+        Post::factory()->count(2)->unpublished()->create();
+
+        $provider = $this->makeProvider('en', ['searchables' => ['post']]);
+        $models = $provider->provide();
+
+        $this->assertCount(2, $models);
+
+        $this->assertEquals([
+            "runway::post::{$publishedModels[0]->id}",
+            "runway::post::{$publishedModels[1]->id}",
+        ], $models->map->getSearchReference()->all());
+    }
+
     private function makeProvider($locale, $config)
     {
         $index = $this->makeIndex($locale, $config);
