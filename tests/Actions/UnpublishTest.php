@@ -7,6 +7,7 @@ use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 use Statamic\Facades\Role;
 use Statamic\Facades\User;
+use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
 use StatamicRadPack\Runway\Actions\Unpublish;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
@@ -14,6 +15,8 @@ use StatamicRadPack\Runway\Tests\TestCase;
 
 class UnpublishTest extends TestCase
 {
+    use PreventsSavingStacheItemsToDisk;
+
     /** @test */
     public function it_returns_title()
     {
