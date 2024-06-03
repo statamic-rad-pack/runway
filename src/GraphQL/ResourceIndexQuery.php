@@ -39,6 +39,7 @@ class ResourceIndexQuery extends Query
     {
         $query = $this->resource->model()
             ->newQuery()
+            ->runwayStatus('published')
             ->with($this->resource->eagerLoadingRelationships());
 
         $this->filterQuery($query, $args['filter'] ?? []);
