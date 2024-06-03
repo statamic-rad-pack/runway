@@ -66,4 +66,26 @@ trait HasRunwayResource
 
         return 'published';
     }
+
+    public function scopeRunwayStatus(Builder $query, string $status): void
+    {
+        if (! $this->runwayResource()->hasPublishStates()) {
+            return;
+        }
+
+        switch ($status) {
+            case 'published':
+                $query->where($this->runwayResource()->publishedColumn(), true);
+                break;
+            case 'draft':
+                $query->where($this->runwayResource()->publishedColumn(), false);
+                break;
+            case 'scheduled':
+                throw new \Exception("Runway doesn't currently support the [scheduled] status.");
+            case 'expired':
+                throw new \Exception("Runway doesn't currently support the [expired] status.");
+            default:
+                throw new \Exception("Invalid status [$status]");
+        }
+    }
 }
