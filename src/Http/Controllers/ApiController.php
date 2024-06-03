@@ -16,9 +16,8 @@ class ApiController extends StatamicApiController
     private $config;
 
     protected $resourceConfigKey = 'runway';
-
     protected $routeResourceKey = 'resourceHandle';
-
+    protected $filterPublished = true;
     protected $resourceHandle;
 
     public function index($resourceHandle)
@@ -33,7 +32,7 @@ class ApiController extends StatamicApiController
             throw new NotFoundHttpException;
         }
 
-        $results = $this->filterSortAndPaginate($resource->model()->query()->runwayStatus('published'));
+        $results = $this->filterSortAndPaginate($resource->model()->query());
 
         $results = ApiResource::collection($results);
 
