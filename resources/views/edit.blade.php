@@ -27,6 +27,7 @@
         :can-manage-publish-state="{{ $str::bool($canManagePublishState) }}"
         :initial-item-actions="{{ json_encode($itemActions) }}"
         item-action-url="{{ cp_route('runway.actions.run', ['resource' => $resource->handle()]) }}"
+        published-column="{{ $publishedColumn }}"
     ></runway-publish-form>
 
     <script>

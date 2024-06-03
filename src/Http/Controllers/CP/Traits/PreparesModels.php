@@ -80,7 +80,7 @@ trait PreparesModels
         $blueprint = $resource->blueprint();
 
         $blueprint
-            ->ensureField('published', ['type' => 'toggle'])
+            ->ensureField($resource->publishedColumn(), ['type' => 'toggle'])
             ->fields()
             ->setParent($model)
             ->all()

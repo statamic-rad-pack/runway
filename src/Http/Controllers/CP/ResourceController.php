@@ -80,6 +80,7 @@ class ResourceController extends CpController
             'permalink' => null,
             'resourceHasRoutes' => $resource->hasRouting(),
             'canManagePublishState' => $resource->hasPublishStates(),
+            'publishedColumn' => $resource->publishedColumn(),
         ];
 
         if ($request->wantsJson()) {
@@ -162,6 +163,7 @@ class ResourceController extends CpController
                 'edit_url' => $request->url(),
             ],
             'canManagePublishState' => $resource->hasPublishStates(),
+            'publishedColumn' => $resource->publishedColumn(),
             'itemActions' => Action::for($model, ['resource' => $resource->handle(), 'view' => 'form']),
         ];
 
