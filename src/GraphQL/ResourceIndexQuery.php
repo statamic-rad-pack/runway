@@ -5,6 +5,7 @@ namespace StatamicRadPack\Runway\GraphQL;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Str;
 use Statamic\Facades\GraphQL;
+use Statamic\GraphQL\Queries\Concerns\FiltersQuery;
 use Statamic\GraphQL\Queries\Query;
 use Statamic\GraphQL\Types\JsonArgument;
 use Statamic\Support\Arr;
@@ -13,7 +14,9 @@ use StatamicRadPack\Runway\Resource;
 
 class ResourceIndexQuery extends Query
 {
-    use QueriesConditions;
+    use FiltersQuery {
+        filterQuery as traitFilterQuery;
+    }
 
     public function __construct(protected Resource $resource)
     {
@@ -39,7 +42,6 @@ class ResourceIndexQuery extends Query
     {
         $query = $this->resource->model()
             ->newQuery()
-            ->runwayStatus('published')
             ->with($this->resource->eagerLoadingRelationships());
 
         $this->filterQuery($query, $args['filter'] ?? []);
@@ -53,24 +55,13 @@ class ResourceIndexQuery extends Query
         );
     }
 
-    protected function filterQuery($query, $filters): void
+    private function filterQuery($query, $filters)
     {
-        foreach ($filters as $field => $definitions) {
-            if (! is_array($definitions)) {
-                $definitions = [['equals' => $definitions]];
-            }
-
-            if (Arr::assoc($definitions)) {
-                $definitions = collect($definitions)->map(fn ($value, $key) => [$key => $value])->values()->all();
-            }
-
-            foreach ($definitions as $definition) {
-                $condition = array_keys($definition)[0];
-                $value = array_values($definition)[0];
-
-                $this->queryCondition($query, $field, $condition, $value);
-            }
+        if (! isset($filters['status']) && ! isset($filters['published'])) {
+            $filters['status'] = 'published';
         }
+
+        $this->traitFilterQuery($query, $filters);
     }
 
     protected function sortQuery($query, $sorts): void

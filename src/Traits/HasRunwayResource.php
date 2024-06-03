@@ -88,4 +88,18 @@ trait HasRunwayResource
                 throw new \Exception("Invalid status [$status]");
         }
     }
+
+    public function scopeWhereStatus(Builder $query, string $status): void
+    {
+        $this->scopeRunwayStatus($query, $status);
+    }
+
+    public function resolveGqlValue($field)
+    {
+        if ($this->runwayResource()->handle() && $field === 'status') {
+            return $this->publishedStatus();
+        }
+
+        return $this->traitResolveGqlValue($field);
+    }
 }
