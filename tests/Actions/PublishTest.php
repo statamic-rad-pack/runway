@@ -2,11 +2,14 @@
 
 namespace StatamicRadPack\Runway\Tests\Actions;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 use Statamic\Facades\Role;
 use Statamic\Facades\User;
+use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
+use StatamicRadPack\Runway\Actions\DeleteModel;
 use StatamicRadPack\Runway\Actions\Publish;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
@@ -14,6 +17,8 @@ use StatamicRadPack\Runway\Tests\TestCase;
 
 class PublishTest extends TestCase
 {
+    use PreventsSavingStacheItemsToDisk;
+
     /** @test */
     public function it_returns_title()
     {
