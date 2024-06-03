@@ -15,9 +15,7 @@
         >
             <div slot-scope="{ hasSelections }">
                 <div class="card overflow-hidden p-0 relative">
-                    <div
-                        class="flex flex-wrap items-center justify-between px-2 pb-2 text-sm border-b dark:border-dark-900"
-                    >
+                    <div class="flex flex-wrap items-center justify-between px-2 pb-2 text-sm border-b dark:border-dark-900">
                         <data-list-filter-presets
                             ref="presets"
                             v-show="alwaysShowFilters || !showFilters"
@@ -101,13 +99,15 @@
                             :column-preferences-key="preferencesKey('columns')"
                             @sorted="sorted"
                         >
-                            <template
-                                :slot="primaryColumn"
-                                slot-scope="{ row, value }"
-                            >
-                                <a :href="row.edit_url" @click.stop>{{
-                                    value
-                                }}</a>
+                            <template :slot="primaryColumn" slot-scope="{ row: model, value }">
+                                <a class="title-index-field inline-flex items-center" :href="model.edit_url" @click.stop>
+                                    <span class="little-dot rtl:ml-2 ltr:mr-2" v-tooltip="getStatusLabel(model)" :class="getStatusClass(model)" v-if="hasPublishStates && ! columnShowing('status')" />
+                                    <span v-text="value" />
+                                </a>
+                            </template>
+
+                            <template v-if="hasPublishStates" slot="cell-status" slot-scope="{ row: model }">
+                                <div class="status-index-field select-none" v-tooltip="getStatusTooltip(model)" :class="`status-${model.status}`" v-text="getStatusLabel(model)" />
                             </template>
 
                             <template
@@ -196,6 +196,7 @@ export default {
         initialColumns: Array,
         actionUrl: String,
         initialPrimaryColumn: String,
+        hasPublishStates: Boolean,
     },
 
     data() {
@@ -211,6 +212,34 @@ export default {
     },
 
     methods: {
+        getStatusClass(model) {
+            if (model.published) {
+                return 'bg-green-600';
+            } else {
+                return 'bg-gray-400';
+            }
+        },
+
+        getStatusLabel(model) {
+            if (model.status === 'published') {
+                return __('Published');
+            } else if (model.status === 'draft') {
+                return __('Draft');
+            }
+        },
+
+        getStatusTooltip(model) {
+            if (model.status === 'published') {
+                return null; // Models don't have publish dates.
+            } else if (model.status === 'draft') {
+                return null; // The label is sufficient.
+            }
+        },
+
+        columnShowing(column) {
+            return this.visibleColumns.find(c => c.field === column);
+        },
+
         canViewRow(row) {
             return row.viewable && row.permalink
         },

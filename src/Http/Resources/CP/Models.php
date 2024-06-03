@@ -50,6 +50,17 @@ class Models extends ResourceCollection
             return $column;
         });
 
+        if ($this->runwayResource->hasPublishStates()) {
+            $status = Column::make('status')
+                ->listable(true)
+                ->visible(true)
+                ->defaultVisibility(true)
+                ->defaultOrder($columns->count() + 1)
+                ->sortable(false);
+
+            $columns->put('status', $status);
+        }
+
         if ($key = $this->columnPreferenceKey) {
             $columns->setPreferred($key);
         }

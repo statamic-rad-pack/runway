@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
 use Illuminate\Database\Eloquent\Model;
 use Statamic\CP\Breadcrumbs;
+use Statamic\CP\Column;
 use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Facades\Action;
 use Statamic\Facades\Scope;
@@ -25,8 +26,6 @@ class ResourceController extends CpController
 
     public function index(IndexRequest $request, Resource $resource)
     {
-        $blueprint = $resource->blueprint();
-
         $listingConfig = [
             'preferencesPrefix' => "runway.{$resource->handle()}",
             'requestUrl' => cp_route('runway.listing-api', ['resource' => $resource->handle()]),
@@ -39,12 +38,20 @@ class ResourceController extends CpController
             'modelCount' => $resource->model()->count(),
             'primaryColumn' => $this->getPrimaryColumn($resource),
             'columns' => $resource->blueprint()->columns()
+                ->when($resource->hasPublishStates(), function ($collection) {
+                    $collection->put('status', Column::make('status')
+                        ->listable(true)
+                        ->visible(true)
+                        ->defaultVisibility(true)
+                        ->sortable(false));
+                })
                 ->setPreferred("runway.{$resource->handle()}.columns")
                 ->rejectUnlisted()
                 ->values(),
             'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
             'listingConfig' => $listingConfig,
             'actionUrl' => cp_route('runway.actions.run', ['resource' => $resource->handle()]),
+            'hasPublishStates' => $resource->hasPublishStates(),
         ]);
     }
 
