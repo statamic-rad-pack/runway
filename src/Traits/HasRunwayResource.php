@@ -60,7 +60,7 @@ trait HasRunwayResource
             return null;
         }
 
-        if (! $this->{$this->runwayResource()->publishedColumn()}) {
+        if (! $this->published()) {
             return 'draft';
         }
 
@@ -112,5 +112,20 @@ trait HasRunwayResource
             'resource' => $this->runwayResource()->handle(),
             'model' => $this->{$this->runwayResource()->routeKey()},
         ]);
+    }
+
+    public function published($published = null)
+    {
+        if (! $this->runwayResource()->hasPublishStates()) {
+            return func_num_args() === 0 ? null : $this;
+        }
+
+        if (func_num_args() === 0) {
+            return (bool) $this->getAttribute($this->runwayResource()->publishedColumn());
+        }
+
+        $this->setAttribute($this->runwayResource()->publishedColumn(), $published);
+
+        return $this;
     }
 }
