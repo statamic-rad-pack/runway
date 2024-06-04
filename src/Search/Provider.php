@@ -18,7 +18,12 @@ class Provider extends BaseProvider
         $resources = $this->usesWildcard() ? Runway::allResources()->keys() : $this->keys;
 
         return collect($resources)->flatMap(function ($handle) {
-            return Runway::findResource($handle)->model()->all()->mapInto(Searchable::class);
+            return Runway::findResource($handle)
+                ->model()
+                ->query()
+                ->whereStatus('published')
+                ->get()
+                ->mapInto(Searchable::class);
         })->filter($this->filter());
     }
 
@@ -44,7 +49,7 @@ class Provider extends BaseProvider
             ->flatMap(function ($items, $handle) {
                 $ids = $items->map(fn ($item) => Str::after($item, '::'));
 
-                return Runway::findResource($handle)->model()->find($ids);
+                return Runway::findResource($handle)->model()->whereStatus('published')->find($ids);
             })
             ->mapInto(Searchable::class);
     }

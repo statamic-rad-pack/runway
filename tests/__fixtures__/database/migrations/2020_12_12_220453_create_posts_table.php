@@ -24,6 +24,7 @@ class CreatePostsTable extends Migration
             $table->integer('sort_order')->nullable();
             $table->datetime('start_date')->nullable();
             $table->datetime('end_date')->nullable();
+            $table->boolean('published')->default(false);
             $table->timestamps();
         });
     }

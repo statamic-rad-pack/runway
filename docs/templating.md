@@ -129,6 +129,19 @@ As [with the collection tag](https://statamic.dev/tags/collection#scope), you ma
 {{ /runway:post }}
 ```
 
+## Publish State
+
+By default, when you're using Runway's [Publish States](/resources#publish-states) feature, only published models are included. Models can be queried against `published` or `draft` status with conditions on `status` like this:
+
+```antlers
+{{ runway:post status="published" }}
+    {{ posts }}
+        <h2>{{ title }}</h2>
+        <p>{{ intro_text }}</p>
+    {{ /posts }}
+{{ /runway:post }}
+```
+
 ### Pagination
 
 If you want to paginate your results onto multiple pages, you can use the `paginate` parameter, along with [scoping](#scoping) and [limiting](#limiting).

@@ -15,7 +15,7 @@ class Post extends Model
     use HasFactory, HasRunwayResource, RunwayRoutes;
 
     protected $fillable = [
-        'title', 'slug', 'body', 'values', 'external_links', 'author_id', 'sort_order',
+        'title', 'slug', 'body', 'values', 'external_links', 'author_id', 'sort_order', 'published',
     ];
 
     protected $appends = [
@@ -26,6 +26,7 @@ class Post extends Model
     protected $casts = [
         'values' => 'array',
         'external_links' => 'object',
+        'published' => 'boolean',
     ];
 
     public function scopeFood($query)

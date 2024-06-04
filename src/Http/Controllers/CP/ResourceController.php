@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
 use Illuminate\Database\Eloquent\Model;
 use Statamic\CP\Breadcrumbs;
+use Statamic\CP\Column;
 use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Facades\Action;
 use Statamic\Facades\Scope;
@@ -39,12 +40,20 @@ class ResourceController extends CpController
             'modelCount' => $resource->model()->count(),
             'primaryColumn' => $this->getPrimaryColumn($resource),
             'columns' => $resource->blueprint()->columns()
+                ->when($resource->hasPublishStates(), function ($collection) {
+                    $collection->put('status', Column::make('status')
+                        ->listable(true)
+                        ->visible(true)
+                        ->defaultVisibility(true)
+                        ->sortable(false));
+                })
                 ->setPreferred("runway.{$resource->handle()}.columns")
                 ->rejectUnlisted()
                 ->values(),
             'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
             'listingConfig' => $listingConfig,
             'actionUrl' => cp_route('runway.actions.run', ['resource' => $resource->handle()]),
+            'hasPublishStates' => $resource->hasPublishStates(),
         ]);
     }
 
@@ -56,7 +65,6 @@ class ResourceController extends CpController
 
         $viewData = [
             'title' => __('Create :resource', ['resource' => $resource->singular()]),
-            'method' => 'POST',
             'breadcrumbs' => new Breadcrumbs([[
                 'text' => $resource->plural(),
                 'url' => cp_route('runway.index', [
@@ -68,10 +76,12 @@ class ResourceController extends CpController
             ],
             'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
             'blueprint' => $blueprint->toPublishArray(),
-            'values' => $fields->values(),
+            'values' => $fields->values()->merge([
+                $resource->publishedColumn() => true,
+            ])->all(),
             'meta' => $fields->meta(),
-            'permalink' => null,
             'resourceHasRoutes' => $resource->hasRouting(),
+            'canManagePublishState' => User::current()->can('edit', $resource),
         ];
 
         if ($request->wantsJson()) {
@@ -134,7 +144,8 @@ class ResourceController extends CpController
 
         $viewData = [
             'title' => $model->getAttribute($resource->titleField()),
-            'method' => 'PATCH',
+            'reference' => $model->reference(),
+            'method' => 'patch',
             'breadcrumbs' => new Breadcrumbs([[
                 'text' => $resource->plural(),
                 'url' => cp_route('runway.index', [
@@ -143,7 +154,7 @@ class ResourceController extends CpController
             ]]),
             'resource' => $resource,
             'actions' => [
-                'save' => cp_route('runway.update', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
+                'save' => $model->runwayUpdateUrl(),
                 'publish' => cp_route('runway.published.store', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
                 'unpublish' => cp_route('runway.published.destroy', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
                 'revisions' => cp_route('runway.revisions.index', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
@@ -154,6 +165,7 @@ class ResourceController extends CpController
             'blueprint' => $blueprint->toPublishArray(),
             'values' => $values,
             'meta' => $meta,
+            'readOnly' => $resource->readOnly(),
             'permalink' => $resource->hasRouting() ? $model->uri() : null,
             'resourceHasRoutes' => $resource->hasRouting(),
             'currentModel' => [
@@ -162,9 +174,10 @@ class ResourceController extends CpController
                 'title' => $model->{$resource->titleField()},
                 'edit_url' => $request->url(),
             ],
+            'canManagePublishState' => User::current()->can('edit', $resource),
+            'itemActions' => Action::for($model, ['resource' => $resource->handle(), 'view' => 'form']),
             'revisionsEnabled' => $resource->revisionsEnabled(),
             'canPublish' => true,
-            'itemActions' => Action::for($model, ['resource' => $resource->handle(), 'view' => 'form']),
         ];
 
         if ($request->wantsJson()) {
@@ -227,13 +240,9 @@ class ResourceController extends CpController
                 $model->{$field->handle()} = $model->{$relationshipName}()
                     ->select($relatedResource->model()->qualifyColumn($relatedResource->primaryKey()), $column)
                     ->get()
-                    ->each(function ($model) use ($relatedResource, $column) {
+                    ->each(function ($model) use ($column) {
                         $model->title = $model->{$column};
-
-                        $model->edit_url = cp_route('runway.edit', [
-                            'resource' => $relatedResource->handle(),
-                            'model' => $model->{$relatedResource->routeKey()},
-                        ]);
+                        $model->edit_url = $model->runwayEditUrl();
 
                         return $model;
                     });

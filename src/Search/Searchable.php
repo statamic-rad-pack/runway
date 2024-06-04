@@ -69,7 +69,7 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
 
     public function getCpSearchResultUrl(): string
     {
-        return cp_route('runway.edit', [$this->resource->handle(), $this->model->getRouteKey()]);
+        return $this->model->runwayEditUrl();
     }
 
     public function getCpSearchResultBadge(): string

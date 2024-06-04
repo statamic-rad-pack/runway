@@ -1,3 +1,4 @@
+@inject('str', 'Statamic\Support\Str')
 @extends('statamic::layout')
 @section('title', $title)
 @section('wrapper_class', 'max-w-full')
@@ -32,5 +33,6 @@
         :initial-columns='@json($columns)'
         action-url="{{ $actionUrl }}"
         initial-primary-column="{{ $primaryColumn }}"
+        :has-publish-states="{{ $str::bool($hasPublishStates) }}"
     ></runway-listing>
 @endsection

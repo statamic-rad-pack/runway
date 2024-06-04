@@ -29,7 +29,7 @@ Next, you'll need to enable the resources you want to make available. To do this
     'collections' => true,
     // ...
     'runway' => [
-        'product' => true,
+        'products' => true,
     ],
 ],
 ```
@@ -47,7 +47,7 @@ To enable filtering for your resources, you'll need to opt in by defining a list
 
 ```php
 'runway' => [
-    'product' => [
+    'products' => [
         'allowed_filters' => ['name', 'slug'],
     ],
 ],

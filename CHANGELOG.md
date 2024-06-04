@@ -1,5 +1,12 @@
 # Changelog
 
+## v7.1.1 (2024-05-31)
+
+### What's fixed
+* Fixed styling issues in Dark Mode #504 #505 by @mynetx
+
+
+
 ## v7.1.0 (2024-05-20)
 
 ### What's new

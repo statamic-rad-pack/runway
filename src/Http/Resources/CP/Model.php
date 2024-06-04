@@ -14,6 +14,8 @@ class Model extends JsonResource
             'id' => $this->resource->getKey(),
             'reference' => $this->resource->reference(),
             'title' => $this->resource->{$runwayResource->titleField()},
+            'permalink' => $runwayResource->hasRouting() ? $this->resource->absoluteUrl() : null,
+            'published' => $this->resource->publishedStatus(),
             'edit_url' => cp_route('runway.edit', [
                 'resource' => $runwayResource->handle(),
                 'model' => $this->resource->{$runwayResource->routeKey()},

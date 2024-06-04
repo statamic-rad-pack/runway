@@ -27,16 +27,19 @@ class BaseFieldtype extends Relationship
     protected $formComponent = 'runway-publish-form';
 
     protected $formComponentProps = [
+        'initialReference' => 'reference',
         'initialBlueprint' => 'blueprint',
         'initialValues' => 'values',
         'initialMeta' => 'meta',
         'initialTitle' => 'title',
-        'initialActions' => 'actions',
-        'method' => 'method',
-        'resourceHasRoutes' => 'resourceHasRoutes',
-        'permalink' => 'permalink',
         'resource' => 'resource',
         'breadcrumbs' => 'breadcrumbs',
+        'initialActions' => 'actions',
+        'method' => 'method',
+        'initialReadOnly' => 'readOnly',
+        'initialPermalink' => 'permalink',
+        'canManagePublishState' => 'canManagePublishState',
+        'resourceHasRoutes' => 'resourceHasRoutes',
     ];
 
     protected function configFieldItems(): array
@@ -120,6 +123,8 @@ class BaseFieldtype extends Relationship
                     ->merge([
                         'id' => $model->{$resource->primaryKey()},
                         'title' => $this->makeTitle($model, $resource),
+                        'status' => $resource->hasPublishStates() ? $model->publishedStatus() : null,
+                        'collection' => ['dated' => false],
                     ])
                     ->toArray();
             });
@@ -170,15 +175,10 @@ class BaseFieldtype extends Relationship
                 return null;
             }
 
-            $url = cp_route('runway.edit', [
-                'resource' => $resource->handle(),
-                'model' => $model->{$resource->routeKey()},
-            ]);
-
             return [
                 'id' => $model->{$resource->primaryKey()},
                 'title' => $fieldtype->preProcessIndex($model->{$column}),
-                'edit_url' => $url,
+                'edit_url' => $model->runwayEditUrl(),
             ];
         });
     }
@@ -258,6 +258,15 @@ class BaseFieldtype extends Relationship
                     ->sortable($blueprintField->isSortable())
                     ->defaultOrder($index + 1);
             })
+            ->when($resource->hasPublishStates(), function ($collection) {
+                $collection->push(
+                    Column::make('status')
+                        ->listable(true)
+                        ->visible(true)
+                        ->defaultVisibility(true)
+                        ->sortable(false)
+                );
+            })
             ->toArray();
     }
 
@@ -279,16 +288,12 @@ class BaseFieldtype extends Relationship
             ];
         }
 
-        $editUrl = cp_route('runway.edit', [
-            'resource' => $resource->handle(),
-            'model' => $model->{$resource->routeKey()},
-        ]);
-
         return [
             'id' => $model->getKey(),
             'reference' => $model->reference(),
+            'status' => $model->publishedStatus(),
             'title' => $this->makeTitle($model, $resource),
-            'edit_url' => $editUrl,
+            'edit_url' => $model->runwayEditUrl(),
         ];
     }
 
@@ -318,5 +323,12 @@ class BaseFieldtype extends Relationship
     public function filter()
     {
         return new Models($this);
+    }
+
+    protected function statusIcons()
+    {
+        $resource = Runway::findResource($this->config('resource'));
+
+        return $resource->hasPublishStates();
     }
 }
