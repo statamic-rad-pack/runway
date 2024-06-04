@@ -137,6 +137,19 @@ You may also specify if you want a resource to be 'read only' - eg. users will n
 ],
 ```
 
+### Prevent creation
+
+You may also specify if you want to prevent creation of new models - ie you will only be able to edit existing models.
+
+```php
+'resources' => [
+	\App\Models\Order::class => [
+	    'name' => 'Orders',
+        'can_create' => false,
+	],
+],
+```
+
 ### Ordering
 
 Sometimes you may want to change the order that your models are returned in the Control Panel listing table. You can use the `order_by` and `order_by_direction` configuration options to tell Runway the order you wish models to be returned.

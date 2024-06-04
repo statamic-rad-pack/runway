@@ -44,6 +44,17 @@ class DuplicateModelTest extends TestCase
     }
 
     /** @test */
+    public function is_not_visible_to_eloquent_model_when_resource_creation_is_now_allowed()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.can_create', false);
+        Runway::discoverResources();
+
+        $visibleTo = (new DuplicateModel())->visibleTo(Post::factory()->create());
+
+        $this->assertFalse($visibleTo);
+    }
+
+    /** @test */
     public function is_not_visible_to_eloquent_model_without_a_runway_resource()
     {
         $model = new class extends Model

@@ -101,6 +101,11 @@ class Resource
         return $this->config->get('graphql', false);
     }
 
+    public function canCreate(): bool
+    {
+        return $this->config->get('can_create', true);
+    }
+
     public function readOnly(): bool
     {
         return $this->config->get('read_only', false);

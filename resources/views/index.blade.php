@@ -13,7 +13,7 @@
             </dropdown-list>
         @endcan
 
-        @if(! $resource->readOnly())
+        @if($resource->canCreate() && ! $resource->readOnly())
             @can('create', $resource)
                 <a
                     class="btn-primary"

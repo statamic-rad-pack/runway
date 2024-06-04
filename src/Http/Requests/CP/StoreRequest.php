@@ -11,7 +11,7 @@ class StoreRequest extends FormRequest
     {
         $resource = $this->route('resource');
 
-        if ($resource->readOnly()) {
+        if (! $resource->canCreate() || $resource->readOnly()) {
             return false;
         }
 
