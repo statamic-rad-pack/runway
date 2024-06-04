@@ -7,27 +7,25 @@
 
 @section('content')
     <runway-publish-form
-        :breadcrumbs="{{ $breadcrumbs->toJson() }}"
-        initial-reference="{{ $currentModel['reference'] }}"
-        :initial-actions="{{ json_encode($actions) }}"
-        :initial-blueprint='@json($blueprint)'
-        :initial-meta='@json($meta)'
-        :initial-values='@json($values)'
-        initial-title="{{ $title }}"
-        method="{{ $method }}"
-        :resource-has-routes="{{ $resourceHasRoutes ? 'true' : 'false' }}"
-        permalink="{{ $permalink }}"
-        :is-creating="false"
         publish-container="base"
-        :read-only="{{ $resource->readOnly() ? 'true' : 'false' }}"
+        :initial-actions='@json($actions)'
+        method="patch"
         :resource='@json($resource->toArray())'
-        create-another-url="{{ cp_route('runway.create', ['resource' => $resource->handle()]) }}"
-        listing-url="{{ cp_route('runway.index', ['resource' => $resource->handle()]) }}"
+        :resource-has-routes="{{ $str::bool($resourceHasRoutes) }}"
+        initial-title="{{ $title }}"
+        initial-reference="{{ $reference }}"
+        :initial-blueprint='@json($blueprint)'
+        :initial-values='@json($values)'
+        :initial-meta='@json($meta)'
+        initial-permalink="{{ $permalink }}"
+        :initial-read-only="{{ $str::bool($readOnly) }}"
+        :breadcrumbs="{{ $breadcrumbs->toJson() }}"
         :can-edit-blueprint="{{ Auth::user()->can('configure fields') ? 'true' : 'false' }}"
         :can-manage-publish-state="{{ $str::bool($canManagePublishState) }}"
+        create-another-url="{{ cp_route('runway.create', ['resource' => $resource->handle()]) }}"
+        initial-listing-url="{{ cp_route('runway.index', ['resource' => $resource->handle()]) }}"
         :initial-item-actions="{{ json_encode($itemActions) }}"
         item-action-url="{{ cp_route('runway.actions.run', ['resource' => $resource->handle()]) }}"
-        published-column="{{ $publishedColumn }}"
     ></runway-publish-form>
 
     <script>

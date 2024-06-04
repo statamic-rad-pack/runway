@@ -242,6 +242,8 @@ class Resource
             'cp_icon' => $this->cpIcon(),
             'hidden' => $this->hidden(),
             'route' => $this->route(),
+            'has_publish_states' => $this->hasPublishStates(),
+            'published_column' => $this->publishedColumn(),
         ];
     }
 
