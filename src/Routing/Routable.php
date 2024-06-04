@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Routing;
 
 use Statamic\Contracts\Routing\UrlBuilder;
+use Statamic\Facades\Site;
 use Statamic\Facades\URL;
 use Statamic\Support\Str;
 
@@ -68,7 +69,7 @@ trait Routable
 
     public function redirectUrl()
     {
-        if ($redirect = $this->value('redirect')) {
+        if ($redirect = $this->redirect) {
             return (new \Statamic\Routing\ResolveRedirect)($redirect, $this);
         }
     }
@@ -89,7 +90,7 @@ trait Routable
         }
 
         $url = vsprintf('%s/%s', [
-            rtrim($this->site()->absoluteUrl(), '/'),
+            rtrim(Site::selected()->absoluteUrl(), '/'),
             ltrim($url, '/'),
         ]);
 
