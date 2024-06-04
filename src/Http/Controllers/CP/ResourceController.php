@@ -8,6 +8,7 @@ use Statamic\CP\Column;
 use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Facades\Action;
 use Statamic\Facades\Scope;
+use Statamic\Facades\User;
 use Statamic\Fields\Field;
 use Statamic\Http\Controllers\CP\CpController;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
@@ -17,6 +18,7 @@ use StatamicRadPack\Runway\Http\Requests\CP\EditRequest;
 use StatamicRadPack\Runway\Http\Requests\CP\IndexRequest;
 use StatamicRadPack\Runway\Http\Requests\CP\StoreRequest;
 use StatamicRadPack\Runway\Http\Requests\CP\UpdateRequest;
+use StatamicRadPack\Runway\Http\Resources\CP\Model as ModelResource;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
 
@@ -63,7 +65,6 @@ class ResourceController extends CpController
 
         $viewData = [
             'title' => __('Create :resource', ['resource' => $resource->singular()]),
-            'method' => 'POST',
             'breadcrumbs' => new Breadcrumbs([[
                 'text' => $resource->plural(),
                 'url' => cp_route('runway.index', [
@@ -79,10 +80,8 @@ class ResourceController extends CpController
                 $resource->publishedColumn() => true,
             ])->all(),
             'meta' => $fields->meta(),
-            'permalink' => null,
             'resourceHasRoutes' => $resource->hasRouting(),
-            'canManagePublishState' => $resource->hasPublishStates(),
-            'publishedColumn' => $resource->publishedColumn(),
+            'canManagePublishState' => User::current()->can('edit', $resource),
         ];
 
         if ($request->wantsJson()) {
@@ -110,30 +109,34 @@ class ResourceController extends CpController
 
         $this->prepareModelForSaving($resource, $model, $request);
 
-        $model->save();
+        if ($resource->revisionsEnabled()) {
+            $saved = $model->store([
+                'message' => $request->message,
+                'user' => User::current(),
+            ]);
+        } else {
+            $saved = $model->save();
+        }
 
         // Runs anything in the $postCreatedHooks array. See HasManyFieldtype@process for an example
         // of where this is used.
         $postCreatedHooks->each(fn ($postCreatedHook) => $postCreatedHook($resource, $model));
 
         return [
-            'data' => $this->getReturnData($resource, $model),
-            'redirect' => cp_route('runway.edit', [
-                'resource' => $resource->handle(),
-                'model' => $model->{$resource->routeKey()},
-            ]),
+            'data' => (new ModelResource($model->fresh()))->resolve()['data'],
+            'saved' => $saved,
         ];
     }
 
     public function edit(EditRequest $request, Resource $resource, $model)
     {
-        $model = $resource->model()
-            ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
-            ->first();
+        $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $model)->first();
 
         if (! $model) {
             throw new NotFoundHttpException();
         }
+
+        $model = $model->fromWorkingCopy();
 
         $blueprint = $resource->blueprint();
 
@@ -141,7 +144,8 @@ class ResourceController extends CpController
 
         $viewData = [
             'title' => $model->getAttribute($resource->titleField()),
-            'method' => 'PATCH',
+            'reference' => $model->reference(),
+            'method' => 'patch',
             'breadcrumbs' => new Breadcrumbs([[
                 'text' => $resource->plural(),
                 'url' => cp_route('runway.index', [
@@ -150,12 +154,18 @@ class ResourceController extends CpController
             ]]),
             'resource' => $resource,
             'actions' => [
-                'save' => cp_route('runway.update', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
+                'save' => $model->runwayUpdateUrl(),
+                'publish' => $model->runwayPublishUrl(),
+                'unpublish' => $model->runwayUnpublishUrl(),
+                'revisions' => $model->runwayRevisionsUrl(),
+                'restore' => $model->runwayRestoreRevisionUrl(),
+                'createRevision' => $model->runwayCreateRevisionUrl(),
                 'editBlueprint' => cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]),
             ],
             'blueprint' => $blueprint->toPublishArray(),
             'values' => $values,
             'meta' => $meta,
+            'readOnly' => $resource->readOnly(),
             'permalink' => $resource->hasRouting() ? $model->uri() : null,
             'resourceHasRoutes' => $resource->hasRouting(),
             'currentModel' => [
@@ -164,9 +174,9 @@ class ResourceController extends CpController
                 'title' => $model->{$resource->titleField()},
                 'edit_url' => $request->url(),
             ],
-            'canManagePublishState' => $resource->hasPublishStates(),
-            'publishedColumn' => $resource->publishedColumn(),
+            'canManagePublishState' => User::current()->can('edit', $resource),
             'itemActions' => Action::for($model, ['resource' => $resource->handle(), 'view' => 'form']),
+            'revisionsEnabled' => $resource->revisionsEnabled(),
         ];
 
         if ($request->wantsJson()) {
@@ -181,32 +191,33 @@ class ResourceController extends CpController
         $resource->blueprint()->fields()->setParent($model)->addValues($request->all())->validator()->validate();
 
         $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $model)->first();
+        $model = $model->fromWorkingCopy();
 
         $this->prepareModelForSaving($resource, $model, $request);
-
-        $model->save();
 
         if ($request->get('from_inline_publish_form')) {
             $this->handleInlinePublishForm($resource, $model);
         }
 
-        return ['data' => $this->getReturnData($resource, $model)];
-    }
+        if ($resource->revisionsEnabled() && $model->published()) {
+            $saved = $model
+                ->makeWorkingCopy()
+                ->user(User::current())
+                ->save();
 
-    /**
-     * Build an array with the correct return data for the inline publish forms.
-     */
-    protected function getReturnData(Resource $resource, Model $model): array
-    {
-        return array_merge($model->toArray(), [
-            'title' => $model->{$resource->titleField()},
-            'published' => $model->{$resource->publishedColumn()},
-            'status' => $model->publishedStatus(),
-            'edit_url' => cp_route('runway.edit', [
-                'resource' => $resource->handle(),
-                'model' => $model->{$resource->routeKey()},
+            $model = $model->fromWorkingCopy();
+        } else {
+            $saved = $model->save();
+        }
+
+        [$values] = $this->extractFromFields($model, $resource, $resource->blueprint());
+
+        return [
+            'data' => array_merge((new ModelResource($model->fresh()))->resolve()['data'], [
+                'values' => $values,
             ]),
-        ]);
+            'saved' => $saved,
+        ];
     }
 
     /**
@@ -226,13 +237,9 @@ class ResourceController extends CpController
                 $model->{$field->handle()} = $model->{$relationshipName}()
                     ->select($relatedResource->model()->qualifyColumn($relatedResource->primaryKey()), $column)
                     ->get()
-                    ->each(function ($model) use ($relatedResource, $column) {
+                    ->each(function ($model) use ($column) {
                         $model->title = $model->{$column};
-
-                        $model->edit_url = cp_route('runway.edit', [
-                            'resource' => $relatedResource->handle(),
-                            'model' => $model->{$relatedResource->routeKey()},
-                        ]);
+                        $model->edit_url = $model->runwayEditUrl();
 
                         return $model;
                     });

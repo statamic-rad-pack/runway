@@ -70,6 +70,10 @@ class DuplicateModel extends Action
             $model->setAttribute($resource->titleField(), $original->getAttribute($resource->titleField()).' (Duplicate)');
         }
 
+        if ($resource->hasPublishStates()) {
+            $model->published(false);
+        }
+
         $model->save();
 
         return $model;
@@ -83,9 +87,6 @@ class DuplicateModel extends Action
 
         $item = $this->newItems->first();
 
-        return cp_route('runway.edit', [
-            'resource' => Runway::findResourceByModel($item)->handle(),
-            'model' => $item->getRouteKey(),
-        ]);
+        return $item->runwayEditUrl();
     }
 }
