@@ -1,19 +1,15 @@
 <template>
     <div>
-        <breadcrumb
-            v-if="breadcrumbs"
-            :url="breadcrumbs[0].url"
-            :title="breadcrumbs[0].text"
-        />
+        <breadcrumb v-if="breadcrumbs" :url="breadcrumbs[0].url" :title="breadcrumbs[0].text" />
 
         <div class="flex items-center mb-6">
             <h1 class="flex-1">
                 <div class="flex items-center">
-                    <span v-html="title" />
+                    <span v-html="$options.filters.striptags(__(title))" />
                 </div>
             </h1>
 
-            <dropdown-list class="mr-4" v-if="canEditBlueprint">
+            <dropdown-list class="rtl:ml-4 ltr:mr-4" v-if="canEditBlueprint">
                 <dropdown-item :text="__('Edit Blueprint')" :redirect="actions.editBlueprint" />
                 <li class="divider" />
                 <data-list-inline-actions
@@ -27,22 +23,23 @@
                 />
             </dropdown-list>
 
-            <div class="pt-px text-2xs text-gray-600 flex mr-4" v-if="readOnly">
-                <svg-icon name="light/lock" class="w-4 mr-1 -mt-1" /> {{ __('Read Only') }}
+            <div class="pt-px text-2xs text-gray-600 flex rtl:ml-4 ltr:mr-4" v-if="readOnly">
+                <svg-icon name="light/lock" class="w-4 rtl:ml-1 ltr:mr-1 -mt-1" /> {{ __('Read Only') }}
             </div>
 
             <div v-if="!readOnly" class="hidden md:flex items-center">
                 <save-button-options
                     v-if="!readOnly"
                     :show-options="!isInline"
+                    :button-class="saveButtonClass"
                     :preferences-prefix="preferencesPrefix"
                 >
                     <button
-                        class="btn-primary"
-                        :disabled="isSaving"
+                        :class="saveButtonClass"
+                        :disabled="!canSave"
                         @click.prevent="save"
+                        v-text="saveText"
                     >
-                        {{ __('Save') }}
                     </button>
                 </save-button-options>
             </div>
@@ -53,9 +50,9 @@
         <publish-container
             ref="container"
             :name="publishContainer"
-            :reference="initialReference"
             :blueprint="blueprint"
             :values="values"
+            :reference="initialReference"
             :meta="meta"
             :errors="errors"
             @updated="values = $event"
@@ -72,7 +69,6 @@
 
                 <publish-tabs
                     :read-only="readOnly"
-                    :enable-sidebar="shouldShowSidebar"
                     @updated="setFieldValue"
                     @meta-updated="setFieldMeta"
                     @focus="$refs.container.$emit('focus', $event)"
@@ -106,7 +102,27 @@
                     </template>
                 </publish-tabs>
             </div>
+
+            <template v-slot:buttons>
+                <button
+                    v-if="!readOnly"
+                    class="rtl:mr-4 ltr:ml-4"
+                    :class="saveButtonClass"
+                    :disabled="!canSave"
+                    @click.prevent="save"
+                    v-text="saveText">
+                </button>
+            </template>
         </publish-container>
+
+        <div class="md:hidden mt-6 flex items-center">
+            <button
+                v-if="!readOnly"
+                class="btn-lg btn-primary w-full"
+                :disabled="!canSave"
+                @click.prevent="save"
+                v-text="__('Save')" />
+        </div>
 
         <div class="md:hidden mt-3 flex items-center">
             <button
@@ -122,8 +138,8 @@
 </template>
 
 <script>
-import SaveButtonOptions from '../statamic/SaveButtonOptions.vue'
-import HasPreferences from '../statamic/HasPreferences.js'
+import SaveButtonOptions from '../../../../vendor/statamic/cms/resources/js/components/publish/SaveButtonOptions.vue'
+import HasPreferences from '../../../../vendor/statamic/cms/resources/js/components/data-list/HasPreferences.js'
 import HasHiddenFields from '../../../../vendor/statamic/cms/resources/js/components/publish/HasHiddenFields.js'
 import HasActions from '../../../../vendor/statamic/cms/resources/js/components/publish/HasActions.js'
 
@@ -189,26 +205,33 @@ export default {
     },
 
     computed: {
-        enableSidebar() {
-            return this.blueprint.tabs
-                .map((section) => section.handle)
-                .includes('sidebar')
+        somethingIsLoading() {
+            return ! this.$progress.isComplete();
         },
 
-        shouldShowSidebar() {
-            return this.enableSidebar
+        canSave() {
+            return !this.readOnly && !this.somethingIsLoading;
         },
 
         showVisitUrlButton() {
             return !!this.permalink;
         },
 
-        afterSaveOption() {
-            return this.getPreference('after_save')
-        },
-
         published() {
             return this.values[this.publishedColumn];
+        },
+
+        saveText() {
+            switch(true) {
+                case this.isUnpublishing:
+                    return __('Save & Unpublish');
+                case this.isDraft:
+                    return __('Save Draft');
+                default:
+                    return this.canManagePublishState
+                        ? __('Save & Publish')
+                        : __('Save');
+            }
         },
 
         isUnpublishing() {
@@ -217,6 +240,16 @@ export default {
 
         isDraft() {
             return ! this.published;
+        },
+
+        saveButtonClass() {
+            return {
+                'btn-primary': this.isCreating || true,
+            };
+        },
+
+        afterSaveOption() {
+            return this.getPreference('after_save')
         },
     },
 
