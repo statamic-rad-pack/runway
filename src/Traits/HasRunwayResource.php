@@ -142,7 +142,7 @@ trait HasRunwayResource
 
     public function runwayRevisionUrl(Revision $revision): string
     {
-        return cp_route('runway.revisions.index', [
+        return cp_route('runway.revisions.show', [
             'resource' => $this->runwayResource()->handle(),
             'model' => $this->{$this->runwayResource()->routeKey()},
             'revisionId' => $revision->id(),
