@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use StatamicRadPack\Runway\Http\Controllers\CP\PublishedModelsController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceActionController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceListingController;
-use StatamicRadPack\Runway\Http\Controllers\CP\RestoreResourceRevisionController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceRevisionsController;
-use StatamicRadPack\Runway\Http\Controllers\CP\PublishedModelsController;
+use StatamicRadPack\Runway\Http\Controllers\CP\RestoreResourceRevisionController;
 
 Route::name('runway.')->prefix('runway')->group(function () {
     Route::get('/{resource}', [ResourceController::class, 'index'])->name('index');

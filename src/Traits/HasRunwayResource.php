@@ -251,7 +251,6 @@ trait HasRunwayResource
      * - The updated_at timestamp is updated automatically by the database.
      * - We don't have an updated_by column to store the user who last modified the model.
      *
-     * @param $user
      * @return $this
      */
     public function updateLastModified($user = false): self

@@ -5,8 +5,8 @@ namespace StatamicRadPack\Runway\Http\Controllers\CP;
 use Illuminate\Http\Request;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
-use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Http\Resources\CP\Model as ModelResource;
+use StatamicRadPack\Runway\Resource;
 
 class PublishedModelsController extends CpController
 {

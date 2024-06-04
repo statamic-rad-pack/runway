@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Fields\Blueprint;
 use Statamic\Fields\Field;
-use Statamic\Revisions\Revisable;
 use Statamic\Statamic;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
