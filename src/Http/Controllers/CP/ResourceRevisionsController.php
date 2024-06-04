@@ -98,11 +98,9 @@ class ResourceRevisionsController extends CpController
 
     protected function workingCopy($model)
     {
-        return $model->workingCopy();
-
-//        if ($model->published()) {
-//            return $model->workingCopy();
-//        }
+        if ($model->published()) {
+            return $model->workingCopy();
+        }
 
         return $model
             ->makeWorkingCopy()
