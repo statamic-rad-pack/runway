@@ -97,7 +97,7 @@
                                 </div>
                             </div>
 
-                            <div v-if="resource.has_publish_states && !revisionsEnabled">
+                            <div v-if="publishStatesEnabled && !revisionsEnabled">
                                 <div
                                     class="flex items-center justify-between px-4 py-2"
                                     :class="{ 'border-t dark:border-dark-900': resourceHasRoutes && permalink }"
@@ -301,8 +301,12 @@ export default {
             return true;
         },
 
+        publishStatesEnabled() {
+            return this.resource.has_publish_states;
+        },
+
         published() {
-            if (! this.resource.has_publish_states) return false;
+            if (! this.publishStatesEnabled) return false;
 
             return this.values[this.resource.published_column];
         },
@@ -327,23 +331,23 @@ export default {
             switch(true) {
                 case this.isUnpublishing:
                     return __('Save & Unpublish');
-                case this.resource.has_publish_states && this.isDraft:
+                case this.publishStatesEnabled && this.isDraft:
                     return __('Save Draft');
                 default:
-                    return this.resource.has_publish_states
+                    return this.publishStatesEnabled
                         ? __('Save & Publish')
                         : __('Save');
             }
         },
 
         isUnpublishing() {
-            if (! this.resource.has_publish_states) return false;
+            if (! this.publishStatesEnabled) return false;
 
             return this.initialPublished && ! this.published && ! this.isCreating;
         },
 
         isDraft() {
-            if (! this.resource.has_publish_states) return false;
+            if (! this.publishStatesEnabled) return false;
 
             return ! this.published;
         },
@@ -367,6 +371,13 @@ export default {
     watch: {
         saving(saving) {
             this.$progress.loading(`runway-publish-form`, saving)
+        },
+
+        title(title) {
+            if (this.isBase) {
+                const arrow = this.direction === 'ltr' ? '‹' : '›';
+                document.title = `${title} ${arrow} ${this.breadcrumbs[0].text} ${arrow} ${__('Statamic')}`;
+            }
         },
     },
 
@@ -449,8 +460,6 @@ export default {
 
                     let nextAction = this.quickSave ? 'continue_editing' : this.afterSaveOption;
 
-                    console.log(nextAction)
-
                     // If the user has opted to create another entry, redirect them to create page.
                     if (!this.isInline && nextAction === 'create_another') {
                         window.location = this.createAnotherUrl;
@@ -470,7 +479,7 @@ export default {
                         this.values = this.resetValuesFromResponse(response.data.data.values);
                         this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 350);
 
-                        if (this.resource.has_publish_states) {
+                        if (this.publishStatesEnabled) {
                             this.initialPublished = response.data.data.published;
                         }
 
@@ -547,7 +556,7 @@ export default {
                 this.title = response.data.title;
                 if (!this.revisionsEnabled) this.permalink = response.data.permalink;
                 this.values = this.resetValuesFromResponse(response.data.values);
-                if (this.resource.has_publish_states) {
+                if (this.publishStatesEnabled) {
                     this.initialPublished = response.data.published;
                 }
                 this.itemActions = response.data.itemActions;

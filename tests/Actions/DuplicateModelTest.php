@@ -138,5 +138,9 @@ class DuplicateModelTest extends TestCase
         (new DuplicateModel)->run(collect([$post]), []);
 
         $this->assertCount(2, Post::where('title', 'like', 'Hello World%')->get());
+
+        $duplicate = Post::query()->whereNot('id', $post->id)->first();
+
+        $this->assertFalse($duplicate->published());
     }
 }

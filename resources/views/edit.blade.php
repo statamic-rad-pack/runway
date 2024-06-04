@@ -1,8 +1,6 @@
 @inject('str', 'Statamic\Support\Str')
 @extends('statamic::layout')
-@section('title', __('Edit :resource', [
-    'resource' => $resource->singular(),
-]))
+@section('title', $breadcrumbs->title($title))
 @section('wrapper_class', 'max-w-3xl')
 
 @section('content')

@@ -70,6 +70,10 @@ class DuplicateModel extends Action
             $model->setAttribute($resource->titleField(), $original->getAttribute($resource->titleField()).' (Duplicate)');
         }
 
+        if ($resource->hasPublishStates()) {
+            $model->published(false);
+        }
+
         $model->save();
 
         return $model;

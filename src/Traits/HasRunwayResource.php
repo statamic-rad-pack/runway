@@ -62,7 +62,7 @@ trait HasRunwayResource
             return null;
         }
 
-        if (! $this->{$this->runwayResource()->publishedColumn()}) {
+        if (! $this->published()) {
             return 'draft';
         }
 
