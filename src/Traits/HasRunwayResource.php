@@ -115,7 +115,7 @@ trait HasRunwayResource
         ]);
     }
 
-    protected function revisionKey()
+    protected function revisionKey(): string
     {
         return vsprintf('resources/%s/%s', [
             $this->runwayResource()->handle(),
@@ -123,7 +123,7 @@ trait HasRunwayResource
         ]);
     }
 
-    protected function revisionAttributes()
+    protected function revisionAttributes(): array
     {
         return [
             'id' => $this->getKey(),
@@ -133,7 +133,7 @@ trait HasRunwayResource
         ];
     }
 
-    public function makeFromRevision($revision)
+    public function makeFromRevision($revision): self
     {
         $model = clone $this;
 
@@ -150,46 +150,62 @@ trait HasRunwayResource
         return $model;
     }
 
-    public function revisionsEnabled()
+    public function revisionsEnabled(): bool
     {
         return $this->runwayResource()->revisionsEnabled();
     }
 
     public function published($published = null)
     {
-        return $this;
-    }
+        if (! $this->runwayResource()->hasPublishStates()) {
+            return func_num_args() === 0 ? null : $this;
+        }
 
-    public function updateLastModified($user = false)
-    {
-        // who knows where this is coming from 🤷‍♂️
-        unset($this->date);
-        unset($this->data);
+        if (func_num_args() === 0) {
+            return (bool) $this->getAttribute($this->runwayResource()->publishedColumn());
+        }
+
+        $this->setAttribute($this->runwayResource()->publishedColumn(), $published);
 
         return $this;
     }
 
     public function publish($options = [])
     {
-        if (method_exists($this, 'revisionsEnabled') && $this->revisionsEnabled()) {
+        if ($this->revisionsEnabled()) {
             return $this->publishWorkingCopy($options);
         }
 
-        $this->save();
-        //        $this->published(true)->save();
+        if ($this->runwayResource()->hasPublishStates()) {
+            $this->published(true)->save();
+        }
 
         return $this;
     }
 
     public function unpublish($options = [])
     {
-        if (method_exists($this, 'revisionsEnabled') && $this->revisionsEnabled()) {
+        if ($this->revisionsEnabled()) {
             return $this->unpublishWorkingCopy($options);
         }
 
-        $this->save();
-        //        $this->published(false)->save();
+        if ($this->runwayResource()->hasPublishStates()) {
+            $this->published(false)->save();
+        }
 
+        return $this;
+    }
+
+    /**
+     * We don't need to do anything here, since:
+     * - The updated_at timestamp is updated automatically by the database.
+     * - We don't have an updated_by column to store the user who last modified the model.
+     *
+     * @param $user
+     * @return $this
+     */
+    public function updateLastModified($user = false): self
+    {
         return $this;
     }
 }
