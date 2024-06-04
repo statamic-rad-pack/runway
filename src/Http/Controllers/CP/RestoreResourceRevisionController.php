@@ -20,7 +20,6 @@ class RestoreResourceRevisionController extends CpController
             // todo: handle invalid revision reference
         }
 
-        // todo: we don't have a published concept, what do we do here??
         if ($model->published()) {
             WorkingCopy::fromRevision($target)->date(now())->save();
         } else {
