@@ -285,6 +285,13 @@ export default {
         saving(saving) {
             this.$progress.loading(`runway-publish-form`, saving)
         },
+
+        title(title) {
+            if (this.isBase) {
+                const arrow = this.direction === 'ltr' ? '‹' : '›';
+                document.title = `${title} ${arrow} ${this.breadcrumbs[0].text} ${arrow} ${__('Statamic')}`;
+            }
+        },
     },
 
     methods: {
@@ -355,8 +362,6 @@ export default {
                 })
                 .then(() => {
                     let nextAction = this.quickSave ? 'continue_editing' : this.afterSaveOption;
-
-                    console.log(nextAction)
 
                     // If the user has opted to create another entry, redirect them to create page.
                     if (!this.isInline && nextAction === 'create_another') {
