@@ -147,7 +147,7 @@ class ResourceController extends CpController
             ]]),
             'resource' => $resource,
             'actions' => [
-                'save' => cp_route('runway.update', ['resource' => $resource->handle(), 'model' => $model->{$resource->routeKey()}]),
+                'save' => $model->runwayUpdateUrl(),
                 'editBlueprint' => cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]),
             ],
             'blueprint' => $blueprint->toPublishArray(),
@@ -214,13 +214,9 @@ class ResourceController extends CpController
                 $model->{$field->handle()} = $model->{$relationshipName}()
                     ->select($relatedResource->model()->qualifyColumn($relatedResource->primaryKey()), $column)
                     ->get()
-                    ->each(function ($model) use ($relatedResource, $column) {
+                    ->each(function ($model) use ($column) {
                         $model->title = $model->{$column};
-
-                        $model->edit_url = cp_route('runway.edit', [
-                            'resource' => $relatedResource->handle(),
-                            'model' => $model->{$relatedResource->routeKey()},
-                        ]);
+                        $model->edit_url = $model->runwayEditUrl();
 
                         return $model;
                     });

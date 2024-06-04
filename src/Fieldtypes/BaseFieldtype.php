@@ -175,15 +175,10 @@ class BaseFieldtype extends Relationship
                 return null;
             }
 
-            $url = cp_route('runway.edit', [
-                'resource' => $resource->handle(),
-                'model' => $model->{$resource->routeKey()},
-            ]);
-
             return [
                 'id' => $model->{$resource->primaryKey()},
                 'title' => $fieldtype->preProcessIndex($model->{$column}),
-                'edit_url' => $url,
+                'edit_url' => $model->runwayEditUrl(),
             ];
         });
     }
@@ -293,17 +288,12 @@ class BaseFieldtype extends Relationship
             ];
         }
 
-        $editUrl = cp_route('runway.edit', [
-            'resource' => $resource->handle(),
-            'model' => $model->{$resource->routeKey()},
-        ]);
-
         return [
             'id' => $model->getKey(),
             'reference' => $model->reference(),
             'status' => $model->publishedStatus(),
             'title' => $this->makeTitle($model, $resource),
-            'edit_url' => $editUrl,
+            'edit_url' => $model->runwayEditUrl(),
         ];
     }
 
