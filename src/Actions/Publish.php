@@ -17,13 +17,12 @@ class Publish extends Action
         return $this->context['view'] === 'list'
             && $item instanceof Model
             && $item->runwayResource()->readOnly() !== true
-            && $item->runwayResource()->hasPublishStates()
-            && ! $item->{$item->runwayResource()->publishedColumn()};
+            && $item->published() === false;
     }
 
     public function visibleToBulk($items)
     {
-        if ($items->filter(fn ($item) => $item->{$item->runwayResource()->publishedColumn()})->count() > 0) {
+        if ($items->filter(fn ($item) => $item->published())->count() > 0) {
             return false;
         }
 
@@ -49,9 +48,6 @@ class Publish extends Action
 
     public function run($models, $values)
     {
-        $models->each(function ($model) {
-            $model->{$model->runwayResource()->publishedColumn()} = true;
-            $model->save();
-        });
+        $models->each(fn ($model) => $model->published(true)->save());
     }
 }
