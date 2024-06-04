@@ -216,7 +216,7 @@ import SaveButtonOptions from '../../../../vendor/statamic/cms/resources/js/comp
 import HasPreferences from '../../../../vendor/statamic/cms/resources/js/components/data-list/HasPreferences.js'
 import HasHiddenFields from '../../../../vendor/statamic/cms/resources/js/components/publish/HasHiddenFields.js'
 import HasActions from '../../../../vendor/statamic/cms/resources/js/components/publish/HasActions.js'
-import RevisionHistory from '../revisions/History.vue'
+import RevisionHistory from '../revision-history/History.vue'
 import PublishActions from './PublishActions.vue'
 
 export default {
