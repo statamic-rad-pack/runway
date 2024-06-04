@@ -115,6 +115,46 @@ trait HasRunwayResource
         ]);
     }
 
+    public function runwayPublishUrl(): string
+    {
+        return cp_route('runway.published.store', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
+
+    public function runwayUnpublishUrl(): string
+    {
+        return cp_route('runway.published.destroy', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
+
+    public function runwayRevisionsUrl(): string
+    {
+        return cp_route('runway.revisions.index', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
+
+    public function runwayRestoreRevisionUrl(): string
+    {
+        return cp_route('runway.restore-revision', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
+
+    public function runwayCreateRevisionUrl(): string
+    {
+        return cp_route('runway.revisions.store', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
+
     protected function revisionKey(): string
     {
         return vsprintf('resources/%s/%s', [
