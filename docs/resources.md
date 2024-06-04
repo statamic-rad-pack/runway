@@ -185,19 +185,29 @@ However, if you wish, you can override the relationships that get eager loaded b
 
 ### Publish States
 
-If you're storing content you'd like to be able to store without publishing right away, you can use the `published` config option to add a "Published" toggle to your Runway model:
+If you're writing content that you would like to be able to store without publishing right away, you can add the `published` config option to your resource's config array. It'll allow you to have published & unpublished models, with all of the status indicators and filtering you'd expect.
 
 ```php
 'resources' => [
 	\App\Models\Order::class => [
 	    'name' => 'Orders',
 		'published' => true, // Assumes the model has a `published` boolean column.
-		'published' => 'active', // Otherwise, you can specify the column name.
+		'published' => 'is_active', // Otherwise, you can specify the column name.
 	],
 ],
 ```
 
-In addition to adding the "Published" toggle, you'll see status indicators in the Control Panel and unpublished models will be filtered out during augmentation, in a very similar way to how Statamic deals with unpublished content.
+By default, it'll use a `published` column in the database to keep track of the model's "status". You're free to change the name of this column as needed.
+
+:::note Note!
+Runway **won't** automatically add this database column for you, you will need to add it yourself:
+
+```php
+Schema::table('products', function (Blueprint $table) {
+    $table->boolean('published');
+});
+```
+:::
 
 ## Actions
 
