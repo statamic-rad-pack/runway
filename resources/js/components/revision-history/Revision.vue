@@ -84,6 +84,7 @@ export default {
                 initialIsWorkingCopy: 'hasWorkingCopy',
                 initialIsRoot: 'isRoot',
                 initialReadOnly: 'readOnly',
+                canManagePublishState: 'canManagePublishState',
                 resourceHasRoutes: 'resourceHasRoutes',
                 resource: 'resource',
             }
