@@ -34,6 +34,8 @@ class PublishedModelsController extends CpController
 
     public function destroy(Request $request, Resource $resource, $model)
     {
+        $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $model)->first();
+
         $model = $model->unpublish([
             'message' => $request->message,
             'user' => User::fromUser($request->user()),
