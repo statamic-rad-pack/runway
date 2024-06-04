@@ -7,7 +7,7 @@ use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Revisions\WorkingCopy;
 use StatamicRadPack\Runway\Resource;
 
-class RestoreResourceRevisionController extends CpController
+class RestoreModelRevisionController extends CpController
 {
     public function __invoke(Request $request, Resource $resource, $model)
     {

@@ -5,8 +5,8 @@ use StatamicRadPack\Runway\Http\Controllers\CP\PublishedModelsController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceActionController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceListingController;
-use StatamicRadPack\Runway\Http\Controllers\CP\ResourceRevisionsController;
-use StatamicRadPack\Runway\Http\Controllers\CP\RestoreResourceRevisionController;
+use StatamicRadPack\Runway\Http\Controllers\CP\ModelRevisionsController;
+use StatamicRadPack\Runway\Http\Controllers\CP\RestoreModelRevisionController;
 
 Route::name('runway.')->prefix('runway')->group(function () {
     Route::get('/{resource}', [ResourceController::class, 'index'])->name('index');
@@ -24,7 +24,7 @@ Route::name('runway.')->prefix('runway')->group(function () {
         Route::post('publish', [PublishedModelsController::class, 'store'])->name('published.store');
         Route::post('unpublish', [PublishedModelsController::class, 'destroy'])->name('published.destroy');
 
-        Route::resource('revisions', ResourceRevisionsController::class, [
+        Route::resource('revisions', ModelRevisionsController::class, [
             'as' => 'revisions',
             'only' => ['index', 'store', 'show'],
         ])->names([
@@ -33,6 +33,6 @@ Route::name('runway.')->prefix('runway')->group(function () {
             'show' => 'revisions.show',
         ])->parameters(['revisions' => 'revisionId']);
 
-        Route::post('restore-revision', RestoreResourceRevisionController::class)->name('restore-revision');
+        Route::post('restore-revision', RestoreModelRevisionController::class)->name('restore-revision');
     });
 });

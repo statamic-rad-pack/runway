@@ -8,7 +8,7 @@ use Statamic\Http\Controllers\CP\CpController;
 use StatamicRadPack\Runway\Http\Resources\CP\Model;
 use StatamicRadPack\Runway\Resource;
 
-class ResourceRevisionsController extends CpController
+class ModelRevisionsController extends CpController
 {
     use Traits\ExtractsFromModelFields;
 
