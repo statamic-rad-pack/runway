@@ -18,9 +18,9 @@ use StatamicRadPack\Runway\Http\Requests\CP\EditRequest;
 use StatamicRadPack\Runway\Http\Requests\CP\IndexRequest;
 use StatamicRadPack\Runway\Http\Requests\CP\StoreRequest;
 use StatamicRadPack\Runway\Http\Requests\CP\UpdateRequest;
+use StatamicRadPack\Runway\Http\Resources\CP\Model as ModelResource;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
-use StatamicRadPack\Runway\Http\Resources\CP\Model as ModelResource;
 
 class ResourceController extends CpController
 {
