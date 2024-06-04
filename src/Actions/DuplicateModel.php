@@ -83,9 +83,6 @@ class DuplicateModel extends Action
 
         $item = $this->newItems->first();
 
-        return cp_route('runway.edit', [
-            'resource' => Runway::findResourceByModel($item)->handle(),
-            'model' => $item->getRouteKey(),
-        ]);
+        return $item->runwayEditUrl();
     }
 }

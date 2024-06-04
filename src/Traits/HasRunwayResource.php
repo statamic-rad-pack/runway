@@ -97,4 +97,20 @@ trait HasRunwayResource
 
         return $this->traitResolveGqlValue($field);
     }
+
+    public function runwayEditUrl(): string
+    {
+        return cp_route('runway.update', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
+
+    public function runwayUpdateUrl(): string
+    {
+        return cp_route('runway.update', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
 }
