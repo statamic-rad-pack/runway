@@ -130,13 +130,13 @@ class ResourceController extends CpController
 
     public function edit(EditRequest $request, Resource $resource, $model)
     {
-        $model = $resource->model()
-            ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
-            ->first();
+        $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $model)->first();
 
         if (! $model) {
             throw new NotFoundHttpException();
         }
+
+        $model = $model->fromWorkingCopy();
 
         $blueprint = $resource->blueprint();
 
