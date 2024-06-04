@@ -2,7 +2,6 @@
 
 namespace Http\Controllers\CP;
 
-use Illuminate\Support\Carbon;
 use Statamic\Facades\Folder;
 use Statamic\Facades\User;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;

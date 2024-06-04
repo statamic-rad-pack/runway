@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use StatamicRadPack\Runway\Http\Controllers\CP\ModelRevisionsController;
 use StatamicRadPack\Runway\Http\Controllers\CP\PublishedModelsController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceActionController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceListingController;
-use StatamicRadPack\Runway\Http\Controllers\CP\ModelRevisionsController;
 use StatamicRadPack\Runway\Http\Controllers\CP\RestoreModelRevisionController;
 
 Route::name('runway.')->prefix('runway')->group(function () {
