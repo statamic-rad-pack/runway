@@ -200,14 +200,12 @@ class ResourceController extends CpController
             $this->handleInlinePublishForm($resource, $model);
         }
 
-        // statamic checks if the entry is published here, maybe we need to do that too?
-        if ($resource->revisionsEnabled()) {
+        if ($resource->revisionsEnabled() && $model->published()) {
             $saved = $model
                 ->makeWorkingCopy()
                 ->user(User::current())
                 ->save();
 
-            // catch any changes through RevisionSaving event
             $model = $model->fromWorkingCopy();
         } else {
             $saved = $model->save();
