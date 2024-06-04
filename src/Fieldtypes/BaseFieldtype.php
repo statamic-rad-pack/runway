@@ -40,6 +40,7 @@ class BaseFieldtype extends Relationship
         'initialPermalink' => 'permalink',
         'canManagePublishState' => 'canManagePublishState',
         'resourceHasRoutes' => 'resourceHasRoutes',
+        'revisionsEnabled' => 'revisionsEnabled',
     ];
 
     protected function configFieldItems(): array
