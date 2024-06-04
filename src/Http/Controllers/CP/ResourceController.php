@@ -214,7 +214,7 @@ class ResourceController extends CpController
                 $model->{$field->handle()} = $model->{$relationshipName}()
                     ->select($relatedResource->model()->qualifyColumn($relatedResource->primaryKey()), $column)
                     ->get()
-                    ->each(function ($model) use ($relatedResource, $column) {
+                    ->each(function ($model) use ($column) {
                         $model->title = $model->{$column};
                         $model->edit_url = $model->runwayEditUrl();
 
