@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway\Traits;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Statamic\Contracts\Data\Augmented;
+use Statamic\Contracts\Revisions\Revision;
 use Statamic\Fields\Field;
 use Statamic\Fieldtypes\Hidden;
 use Statamic\Fieldtypes\Section;
@@ -136,6 +137,15 @@ trait HasRunwayResource
         return cp_route('runway.revisions.index', [
             'resource' => $this->runwayResource()->handle(),
             'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
+
+    public function runwayRevisionUrl(Revision $revision): string
+    {
+        return cp_route('runway.revisions.index', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+            'revisionId' => $revision->id(),
         ]);
     }
 

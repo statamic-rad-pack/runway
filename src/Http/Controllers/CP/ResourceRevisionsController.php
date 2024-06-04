@@ -23,12 +23,8 @@ class ResourceRevisionsController extends CpController
             ->reverse()
             ->prepend($this->workingCopy($model))
             ->filter()
-            ->each(function ($revision) use ($resource, $model) {
-                $revision->attribute('item_url', cp_route('runway.revisions.show', [
-                    'resource' => $resource->handle(),
-                    'model' => $model->getKey(),
-                    'revisionId' => $revision->id(),
-                ]));
+            ->each(function ($revision) use ($model) {
+                $revision->attribute('item_url', $model->runwayRevisionUrl($revision));
             });
 
         // The first non manually created revision would be considered the "current"
@@ -56,7 +52,6 @@ class ResourceRevisionsController extends CpController
             'user' => User::fromUser($request->user()),
         ]);
 
-        // todo: we might need to return more stuff from this resource, but let's see.
         return new Model($model);
     }
 
