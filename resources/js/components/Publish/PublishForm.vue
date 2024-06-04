@@ -1,19 +1,15 @@
 <template>
     <div>
-        <breadcrumb
-            v-if="breadcrumbs"
-            :url="breadcrumbs[0].url"
-            :title="breadcrumbs[0].text"
-        />
+        <breadcrumb v-if="breadcrumbs" :url="breadcrumbs[0].url" :title="breadcrumbs[0].text" />
 
         <div class="flex items-center mb-6">
             <h1 class="flex-1">
                 <div class="flex items-center">
-                    <span v-html="title" />
+                    <span v-html="$options.filters.striptags(__(title))" />
                 </div>
             </h1>
 
-            <dropdown-list class="mr-4" v-if="canEditBlueprint">
+            <dropdown-list class="rtl:ml-4 ltr:mr-4" v-if="canEditBlueprint">
                 <dropdown-item :text="__('Edit Blueprint')" :redirect="actions.editBlueprint" />
                 <li class="divider" />
                 <data-list-inline-actions
@@ -27,22 +23,23 @@
                 />
             </dropdown-list>
 
-            <div class="pt-px text-2xs text-gray-600 flex mr-4" v-if="readOnly">
-                <svg-icon name="light/lock" class="w-4 mr-1 -mt-1" /> {{ __('Read Only') }}
+            <div class="pt-px text-2xs text-gray-600 flex rtl:ml-4 ltr:mr-4" v-if="readOnly">
+                <svg-icon name="light/lock" class="w-4 rtl:ml-1 ltr:mr-1 -mt-1" /> {{ __('Read Only') }}
             </div>
 
             <div v-if="!readOnly" class="hidden md:flex items-center">
                 <save-button-options
                     v-if="!readOnly"
                     :show-options="!isInline"
+                    :button-class="saveButtonClass"
                     :preferences-prefix="preferencesPrefix"
                 >
                     <button
-                        class="btn-primary"
-                        :disabled="isSaving"
+                        :class="saveButtonClass"
+                        :disabled="!canSave"
                         @click.prevent="save"
+                        v-text="saveText"
                     >
-                        {{ __('Save') }}
                     </button>
                 </save-button-options>
             </div>
@@ -53,9 +50,9 @@
         <publish-container
             ref="container"
             :name="publishContainer"
-            :reference="initialReference"
             :blueprint="blueprint"
             :values="values"
+            :reference="initialReference"
             :meta="meta"
             :errors="errors"
             @updated="values = $event"
@@ -72,7 +69,6 @@
 
                 <publish-tabs
                     :read-only="readOnly"
-                    :enable-sidebar="shouldShowSidebar"
                     @updated="setFieldValue"
                     @meta-updated="setFieldMeta"
                     @focus="$refs.container.$emit('focus', $event)"
@@ -80,7 +76,7 @@
                 >
                     <template #actions="{ shouldShowSidebar }">
                         <div class="card p-0 mb-5">
-                            <div v-if="resourceHasRoutes" :class="{ 'hi': resourceHasRoutes && permalink }">
+                            <div v-if="resourceHasRoutes">
                                 <div class="p-3 flex items-center space-x-2" v-if="showVisitUrlButton">
                                     <a
                                         class="flex items-center justify-center btn w-full"
@@ -93,20 +89,40 @@
                                 </div>
                             </div>
 
-                            <div v-if="canManagePublishState">
+                            <div v-if="resource.has_publish_states">
                                 <div
                                     class="flex items-center justify-between px-4 py-2"
                                     :class="{ 'border-t dark:border-dark-900': resourceHasRoutes && permalink }"
                                 >
                                     <label v-text="__('Published')" class="publish-field-label font-medium" />
-                                    <toggle-input :value="published" :read-only="!canManagePublishState" @input="setFieldValue(publishedColumn, $event)" />
+                                    <toggle-input :value="published" :read-only="!canManagePublishState" @input="setFieldValue(resource.published_column, $event)" />
                                 </div>
                             </div>
                         </div>
                     </template>
                 </publish-tabs>
             </div>
+
+            <template v-slot:buttons>
+                <button
+                    v-if="!readOnly"
+                    class="rtl:mr-4 ltr:ml-4"
+                    :class="saveButtonClass"
+                    :disabled="!canSave"
+                    @click.prevent="save"
+                    v-text="saveText">
+                </button>
+            </template>
         </publish-container>
+
+        <div class="md:hidden mt-6 flex items-center">
+            <button
+                v-if="!readOnly"
+                class="btn-lg btn-primary w-full"
+                :disabled="!canSave"
+                @click.prevent="save"
+                v-text="__('Save')" />
+        </div>
 
         <div class="md:hidden mt-3 flex items-center">
             <button
@@ -122,8 +138,9 @@
 </template>
 
 <script>
-import SaveButtonOptions from '../statamic/SaveButtonOptions.vue'
-import HasPreferences from '../statamic/HasPreferences.js'
+import axios from 'axios'
+import SaveButtonOptions from '../../../../vendor/statamic/cms/resources/js/components/publish/SaveButtonOptions.vue'
+import HasPreferences from '../../../../vendor/statamic/cms/resources/js/components/data-list/HasPreferences.js'
 import HasHiddenFields from '../../../../vendor/statamic/cms/resources/js/components/publish/HasHiddenFields.js'
 import HasActions from '../../../../vendor/statamic/cms/resources/js/components/publish/HasActions.js'
 
@@ -135,176 +152,254 @@ export default {
     mixins: [HasPreferences, HasHiddenFields, HasActions],
 
     props: {
-        breadcrumbs: Array,
+        publishContainer: String,
         initialReference: String,
-        initialActions: Object,
         initialBlueprint: Object,
         initialValues: Object,
         initialMeta: Object,
         initialTitle: String,
+        resource: Object,
+        breadcrumbs: Array,
+        initialActions: Object,
         method: String,
-        resourceHasRoutes: Boolean,
-        permalink: String,
-        isCreating: {
-            type: Boolean,
-            default: false,
-        },
-        isInline: {
-            type: Boolean,
-            default: false,
-        },
-        publishContainer: String,
-        readOnly: Boolean,
-        resource: {
-            type: Object,
-            required: true,
-        },
-        createAnotherUrl: String,
-        listingUrl: String,
+        isCreating: Boolean,
+        isInline: Boolean,
+        initialReadOnly: Boolean,
+        initialPermalink: String,
+        // revisionsEnabled: Boolean,
         canEditBlueprint: Boolean,
         canManagePublishState: Boolean,
-        publishedColumn: String,
+        createAnotherUrl: String,
+        initialListingUrl: String,
+        resourceHasRoutes: Boolean,
     },
 
     data() {
         return {
             actions: this.initialActions,
-            blueprint: this.initialBlueprint,
-            values: this.initialValues,
-            meta: this.initialMeta,
-            title: this.initialTitle,
-            preferencesPrefix: `runway.${this.resource.handle}`,
-
-            errors: {},
             saving: false,
-            containerWidth: null,
-            saveKeyBinding: null,
-            quickSave: false,
+            trackDirtyState: true,
+            blueprint: this.initialBlueprint,
+            title: this.initialTitle,
+            values: _.clone(this.initialValues),
+            meta: _.clone(this.initialMeta),
+            // isWorkingCopy: this.initialWorkingCopy,
+            error: null,
+            errors: {},
+            state: 'new',
+            // revisionMessage: null,
+            // showRevisionHistory: null,
+            preferencesPrefix: `runway.${this.resource.handle}`,
 
             // Whether it was published the last time it was saved.
             // Successful publish actions (if using revisions) or just saving (if not) will update this.
             // The current published value is inside the "values" object, and also accessible as a computed.
-            initialPublished: this.initialValues[this.publishedColumn],
+            initialPublished: this.initialValues[this.resource.published_column],
+
+            // confirmingPublish: false,
+            readOnly: this.initialReadOnly,
+            permalink: this.initialPermalink,
+
+            saveKeyBinding: null,
+            quickSaveKeyBinding: null,
+            quickSave: false,
         }
     },
 
     computed: {
-        enableSidebar() {
-            return this.blueprint.tabs
-                .map((section) => section.handle)
-                .includes('sidebar')
+        somethingIsLoading() {
+            return ! this.$progress.isComplete();
         },
 
-        shouldShowSidebar() {
-            return this.enableSidebar
+        canSave() {
+            return !this.readOnly && !this.somethingIsLoading;
+        },
+
+        published() {
+            if (! this.resource.has_publish_states) return false;
+
+            return this.values[this.resource.published_column];
+        },
+
+        listingUrl() {
+            return `${this.initialListingUrl}`;
         },
 
         showVisitUrlButton() {
             return !!this.permalink;
         },
 
-        afterSaveOption() {
-            return this.getPreference('after_save')
+        isBase() {
+            return this.publishContainer === 'base';
         },
 
-        published() {
-            return this.values[this.publishedColumn];
+        isDirty() {
+            return this.$dirty.has(this.publishContainer);
+        },
+
+        saveText() {
+            switch(true) {
+                case this.isUnpublishing:
+                    return __('Save & Unpublish');
+                case this.resource.has_publish_states && this.isDraft:
+                    return __('Save Draft');
+                default:
+                    return this.resource.has_publish_states
+                        ? __('Save & Publish')
+                        : __('Save');
+            }
         },
 
         isUnpublishing() {
+            if (! this.resource.has_publish_states) return false;
+
             return this.initialPublished && ! this.published && ! this.isCreating;
         },
 
         isDraft() {
+            if (! this.resource.has_publish_states) return false;
+
             return ! this.published;
+        },
+
+        saveButtonClass() {
+            return {
+                'btn-primary': this.isCreating || true,
+            };
+        },
+
+        afterSaveOption() {
+            return this.getPreference('after_save')
+        },
+
+        direction() {
+            return this.$config.get('direction', 'ltr');
         },
     },
 
-    mounted() {
-        this.saveKeyBinding = this.$keys.bindGlobal(
-            ['mod+s', 'mod+return'],
-            (e) => {
-                e.preventDefault()
-                this.quickSave = true
-                this.save()
-            }
-        )
-    },
-
-    created() {
-        if (this.publishContainer.includes('relate-fieldtype-inline')) {
-            this.prefillBelongsToField()
-        }
+    watch: {
+        saving(saving) {
+            this.$progress.loading(`runway-publish-form`, saving)
+        },
     },
 
     methods: {
-        save() {
-            this.saving = true
-            this.clearErrors()
-
-            this.$axios({
-                method: this.method,
-                url: this.actions.save,
-                data: this.values,
-            })
-                .then((response) => {
-                    this.saving = false
-                    this.$refs.container.saved()
-                    this.$emit('saved', response)
-
-                    let nextAction = this.quickSave
-                        ? 'continue_editing'
-                        : this.afterSaveOption
-
-                    // If the user has opted to create another entry, redirect them to create page.
-                    if (!this.isInline && nextAction === 'create_another') {
-                        this.$nextTick(() => {
-                            window.location = this.createAnotherUrl
-                        })
-
-                        return
-                    }
-
-                    // If the user has opted to go to listing (default/null option), redirect them there.
-                    if (!this.isInline && nextAction === null) {
-                        this.$nextTick(() => {
-                            window.location = this.listingUrl
-                        })
-
-                        return
-                    }
-
-                    // Otherwise, leave them on the edit form (or redirect them to the edit form if they're creating a new model).
-                    if (this.isCreating && this.publishContainer === 'base') {
-                        this.$nextTick(() => {
-                            window.location.href = response.data.redirect
-                        })
-                    } else {
-                        this.quickSave = false
-                        this.$toast.success(__('Saved'))
-                        this.$nextTick(() => this.$emit('saved', response));
-                    }
-                })
-                .catch((error) => this.handleAxiosError(error))
-        },
-
         clearErrors() {
             this.error = null
             this.errors = {}
         },
 
-        handleAxiosError(e) {
-            this.saving = false
+        save() {
+            if (! this.canSave) {
+                this.quickSave = false;
+                return;
+            }
 
+            this.saving = true;
+            this.clearErrors();
+
+            setTimeout(() => this.runBeforeSaveHook(), 151); // 150ms is the debounce time for fieldtype updates
+        },
+
+        runBeforeSaveHook() {
+            this.$refs.container.saving();
+
+            Statamic.$hooks.run('runway.saving', {
+                resource: this.resource,
+                values: this.values,
+                container: this.$refs.container,
+                storeName: this.publishContainer,
+            })
+                .then(this.performSaveRequest)
+                .catch(error => {
+                    this.saving = false;
+                    this.$toast.error(error || 'Something went wrong');
+                });
+        },
+
+        performSaveRequest() {
+            // Once the hook has completed, we need to make the actual request.
+            // We build the payload here because the before hook may have modified values.
+            const payload = { ...this.visibleValues};
+
+            axios({
+                method: this.method,
+                url: this.actions.save,
+                data: payload,
+            }).then(response => {
+                this.saving = false;
+                if (! response.data.saved) {
+                    return this.$toast.error(__(`Couldn't save entry`));
+                }
+                this.title = response.data.data.title;
+                // this.isWorkingCopy = true;
+                // if (!this.revisionsEnabled) this.permalink = response.data.data.permalink;
+                if (!this.isCreating) this.$toast.success(__('Saved'));
+                this.$refs.container.saved();
+                this.runAfterSaveHook(response);
+            }).catch(error => this.handleAxiosError(error));
+        },
+
+        runAfterSaveHook(response) {
+            // Once the save request has completed, we want to run the "after" hook.
+            // Devs can do what they need and we'll wait for them, but they can't cancel anything.
+            Statamic.$hooks
+                .run('runway.saved', {
+                    resource: this.resource,
+                    reference: this.initialReference,
+                    response
+                })
+                .then(() => {
+                    let nextAction = this.quickSave ? 'continue_editing' : this.afterSaveOption;
+
+                    console.log(nextAction)
+
+                    // If the user has opted to create another entry, redirect them to create page.
+                    if (!this.isInline && nextAction === 'create_another') {
+                        window.location = this.createAnotherUrl;
+                    }
+
+                    // If the user has opted to go to listing (default/null option), redirect them there.
+                    else if (!this.isInline && nextAction === null) {
+                        window.location = this.listingUrl;
+                    }
+
+                    // Otherwise, leave them on the edit form and emit an event. We need to wait until after
+                    // the hooks are resolved because if this form is being shown in a stack, we only
+                    // want to close it once everything's done.
+                    else {
+                        clearTimeout(this.trackDirtyStateTimeout);
+                        this.trackDirtyState = false;
+                        this.values = this.resetValuesFromResponse(response.data.data.values);
+                        this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 350);
+
+                        if (this.resource.has_publish_states) {
+                            this.initialPublished = response.data.data.published;
+                        }
+
+                        this.$nextTick(() => this.$emit('saved', response));
+
+                        if (this.isCreating) {
+                            window.location = response.data.data.edit_url + '?created=true';
+                        }
+                    }
+
+                    this.quickSave = false;
+                }).catch(e => console.error(e));
+        },
+
+        handleAxiosError(e) {
+            this.saving = false;
             if (e.response && e.response.status === 422) {
-                const { message, errors } = e.response.data
-                this.error = message
-                this.errors = errors
-                this.$toast.error(message)
+                const { message, errors } = e.response.data;
+                this.error = message;
+                this.errors = errors;
+                this.$toast.error(message);
+                this.$reveal.invalid();
             } else if (e.response) {
-                this.$toast.error(e.response.data.message)
+                this.$toast.error(e.response.data.message);
             } else {
-                this.$toast.error(e || 'Something went wrong')
+                this.$toast.error(e || 'Something went wrong');
             }
         },
 
@@ -313,14 +408,11 @@ export default {
         },
 
         setFieldMeta(handle, value) {
-            this.$store.dispatch(
-                `publish/${this.publishContainer}/setFieldMeta`,
-                {
-                    handle,
-                    value,
-                    user: Statamic.user.id,
-                }
-            )
+            this.$store.dispatch(`publish/${this.publishContainer}/setFieldMeta`, {
+                handle,
+                value,
+                user: Statamic.user.id,
+            })
         },
 
         /**
@@ -350,21 +442,44 @@ export default {
         afterActionSuccessfullyCompleted(response) {
             if (response.data) {
                 this.title = response.data.title;
+                // if (!this.revisionsEnabled) this.permalink = response.data.permalink;
                 this.values = this.resetValuesFromResponse(response.data.values);
-                this.initialPublished = response.data[this.publishedColumn];
+                if (this.resource.has_publish_states) {
+                    this.initialPublished = response.data.published;
+                }
                 this.itemActions = response.data.itemActions;
             }
         },
     },
 
-    watch: {
-        saving(saving) {
-            this.$progress.loading(`runway-publish-form`, saving)
-        },
+    mounted() {
+        this.saveKeyBinding = this.$keys.bindGlobal(['mod+return'], e => {
+            e.preventDefault();
+            if (this.confirmingPublish) return;
+            this.save();
+        });
+
+        this.quickSaveKeyBinding = this.$keys.bindGlobal(['mod+s'], e => {
+            e.preventDefault();
+            if (this.confirmingPublish) return;
+            this.quickSave = true;
+            this.save();
+        });
+    },
+
+    created() {
+        if (this.publishContainer.includes('relate-fieldtype-inline')) {
+            this.prefillBelongsToField()
+        }
+    },
+
+    unmounted() {
+        clearTimeout(this.trackDirtyStateTimeout);
     },
 
     destroyed() {
-        this.saveKeyBinding.destroy()
+        this.saveKeyBinding.destroy();
+        this.quickSaveKeyBinding.destroy();
     },
 }
 </script>

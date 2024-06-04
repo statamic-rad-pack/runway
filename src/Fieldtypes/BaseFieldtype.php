@@ -27,18 +27,19 @@ class BaseFieldtype extends Relationship
     protected $formComponent = 'runway-publish-form';
 
     protected $formComponentProps = [
+        'initialReference' => 'reference',
         'initialBlueprint' => 'blueprint',
         'initialValues' => 'values',
         'initialMeta' => 'meta',
         'initialTitle' => 'title',
-        'initialActions' => 'actions',
-        'method' => 'method',
-        'resourceHasRoutes' => 'resourceHasRoutes',
-        'permalink' => 'permalink',
         'resource' => 'resource',
         'breadcrumbs' => 'breadcrumbs',
+        'initialActions' => 'actions',
+        'method' => 'method',
+        'initialReadOnly' => 'readOnly',
+        'initialPermalink' => 'permalink',
         'canManagePublishState' => 'canManagePublishState',
-        'publishedColumn' => 'publishedColumn',
+        'resourceHasRoutes' => 'resourceHasRoutes',
     ];
 
     protected function configFieldItems(): array

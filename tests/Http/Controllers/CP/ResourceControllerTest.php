@@ -75,9 +75,7 @@ class ResourceControllerTest extends TestCase
                 'author_id' => [$author->id],
             ])
             ->assertOk()
-            ->assertJsonStructure([
-                'redirect',
-            ]);
+            ->assertJsonStructure(['data', 'saved']);
 
         $this->assertDatabaseHas('posts', [
             'title' => 'Jingle Bells',
@@ -129,9 +127,7 @@ class ResourceControllerTest extends TestCase
                 'age' => 25, // This is the computed field
             ])
             ->assertOk()
-            ->assertJsonStructure([
-                'redirect',
-            ]);
+            ->assertJsonStructure(['data', 'saved']);
 
         $this->assertDatabaseHas('posts', [
             'title' => 'Jingle Bells',
@@ -158,9 +154,7 @@ class ResourceControllerTest extends TestCase
                 'dont_save' => 25,
             ])
             ->assertOk()
-            ->assertJsonStructure([
-                'redirect',
-            ]);
+            ->assertJsonStructure(['data', 'saved']);
 
         $this->assertDatabaseHas('posts', [
             'title' => 'Jingle Bells',
@@ -187,9 +181,7 @@ class ResourceControllerTest extends TestCase
                 'author_id' => [$author->id],
             ])
             ->assertOk()
-            ->assertJsonStructure([
-                'redirect',
-            ]);
+            ->assertJsonStructure(['data', 'saved']);
 
         $this->assertDatabaseHas('posts', [
             'title' => 'Jingle Bells',
@@ -216,9 +208,7 @@ class ResourceControllerTest extends TestCase
                 'author_id' => [$author->id],
             ])
             ->assertOk()
-            ->assertJsonStructure([
-                'redirect',
-            ]);
+            ->assertJsonStructure(['data', 'saved']);
 
         $this->assertDatabaseHas('posts', [
             'values->alt_title' => 'Batman Smells',
@@ -509,9 +499,7 @@ class ResourceControllerTest extends TestCase
                 'author_id' => [$post->author_id],
             ])
             ->assertOk()
-            ->assertJsonStructure([
-                'data',
-            ]);
+            ->assertJsonStructure(['data', 'saved']);
 
         $post->refresh();
 
@@ -538,9 +526,7 @@ class ResourceControllerTest extends TestCase
                 'from_inline_publish_form' => true,
             ])
             ->assertOk()
-            ->assertJsonStructure([
-                'data',
-            ]);
+            ->assertJsonStructure(['data', 'saved']);
 
         $post->refresh();
 
@@ -589,9 +575,7 @@ class ResourceControllerTest extends TestCase
                 'age' => 19, // This is the computed field
             ])
             ->assertOk()
-            ->assertJsonStructure([
-                'data',
-            ]);
+            ->assertJsonStructure(['data', 'saved']);
 
         $post->refresh();
 
@@ -618,9 +602,7 @@ class ResourceControllerTest extends TestCase
                 'dont_save' => 19,
             ])
             ->assertOk()
-            ->assertJsonStructure([
-                'data',
-            ]);
+            ->assertJsonStructure(['data', 'saved']);
 
         $post->refresh();
 
@@ -647,9 +629,7 @@ class ResourceControllerTest extends TestCase
                 'author_id' => [$post->author_id],
             ])
             ->assertOk()
-            ->assertJsonStructure([
-                'data',
-            ]);
+            ->assertJsonStructure(['data', 'saved']);
 
         $post->refresh();
 
@@ -676,9 +656,7 @@ class ResourceControllerTest extends TestCase
                 'author_id' => [$post->author_id],
             ])
             ->assertOk()
-            ->assertJsonStructure([
-                'data',
-            ]);
+            ->assertJsonStructure(['data', 'saved']);
 
         $post->refresh();
 
@@ -707,9 +685,7 @@ class ResourceControllerTest extends TestCase
                 'groups' => ['admins'],
             ])
             ->assertOk()
-            ->assertJsonStructure([
-                'data',
-            ]);
+            ->assertJsonStructure(['data', 'saved']);
 
         $user->refresh();
 
