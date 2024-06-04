@@ -236,4 +236,68 @@ class ResourceTest extends TestCase
 
         $this->assertEquals('values->listable_hidden_field', $resource->titleField());
     }
+
+    /** @test */
+    public function revisions_can_be_enabled()
+    {
+        Config::set('statamic.editions.pro', true);
+        Config::set('statamic.revisions.enabled', true);
+
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.published', true);
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.revisions', true);
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $this->assertTrue($resource->revisionsEnabled());
+    }
+
+    /** @test */
+    public function revisions_cant_be_enabled_without_revisions_being_enabled_globally()
+    {
+        Config::set('statamic.editions.pro', true);
+        Config::set('statamic.revisions.enabled', false);
+
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.published', true);
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.revisions', true);
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $this->assertFalse($resource->revisionsEnabled());
+    }
+
+    /** @test */
+    public function revisions_cant_be_enabled_without_statamic_pro()
+    {
+        Config::set('statamic.editions.pro', false);
+        Config::set('statamic.revisions.enabled', true);
+
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.published', true);
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.revisions', true);
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $this->assertFalse($resource->revisionsEnabled());
+    }
+
+    /** @test */
+    public function revisions_cant_be_enabled_without_publish_states()
+    {
+        Config::set('statamic.editions.pro', true);
+        Config::set('statamic.revisions.enabled', true);
+
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.published', false);
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.revisions', true);
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $this->assertFalse($resource->revisionsEnabled());
+    }
 }

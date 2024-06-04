@@ -109,7 +109,14 @@ class ResourceController extends CpController
 
         $this->prepareModelForSaving($resource, $model, $request);
 
-        $saved = $model->save();
+        if ($resource->revisionsEnabled()) {
+            $saved = $model->store([
+                'message' => $request->message,
+                'user' => User::current(),
+            ]);
+        } else {
+            $saved = $model->save();
+        }
 
         // Runs anything in the $postCreatedHooks array. See HasManyFieldtype@process for an example
         // of where this is used.
@@ -123,13 +130,13 @@ class ResourceController extends CpController
 
     public function edit(EditRequest $request, Resource $resource, $model)
     {
-        $model = $resource->model()
-            ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
-            ->first();
+        $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $model)->first();
 
         if (! $model) {
             throw new NotFoundHttpException();
         }
+
+        $model = $model->fromWorkingCopy();
 
         $blueprint = $resource->blueprint();
 
@@ -148,6 +155,11 @@ class ResourceController extends CpController
             'resource' => $resource,
             'actions' => [
                 'save' => $model->runwayUpdateUrl(),
+                'publish' => $model->runwayPublishUrl(),
+                'unpublish' => $model->runwayUnpublishUrl(),
+                'revisions' => $model->runwayRevisionsUrl(),
+                'restore' => $model->runwayRestoreRevisionUrl(),
+                'createRevision' => $model->runwayCreateRevisionUrl(),
                 'editBlueprint' => cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]),
             ],
             'blueprint' => $blueprint->toPublishArray(),
@@ -164,6 +176,7 @@ class ResourceController extends CpController
             ],
             'canManagePublishState' => User::current()->can('edit', $resource),
             'itemActions' => Action::for($model, ['resource' => $resource->handle(), 'view' => 'form']),
+            'revisionsEnabled' => $resource->revisionsEnabled(),
         ];
 
         if ($request->wantsJson()) {
@@ -178,13 +191,23 @@ class ResourceController extends CpController
         $resource->blueprint()->fields()->setParent($model)->addValues($request->all())->validator()->validate();
 
         $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $model)->first();
+        $model = $model->fromWorkingCopy();
 
         $this->prepareModelForSaving($resource, $model, $request);
 
-        $saved = $model->save();
-
         if ($request->get('from_inline_publish_form')) {
             $this->handleInlinePublishForm($resource, $model);
+        }
+
+        if ($resource->revisionsEnabled() && $model->published()) {
+            $saved = $model
+                ->makeWorkingCopy()
+                ->user(User::current())
+                ->save();
+
+            $model = $model->fromWorkingCopy();
+        } else {
+            $saved = $model->save();
         }
 
         [$values] = $this->extractFromFields($model, $resource, $resource->blueprint());

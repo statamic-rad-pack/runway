@@ -135,7 +135,8 @@ class Resource
 
     public function hasPublishStates(): bool
     {
-        return $this->config->has('published');
+        return is_string($published = $this->config->get('published'))
+            || $published === true;
     }
 
     public function publishedColumn(): ?string
@@ -230,6 +231,15 @@ class Resource
     public function databaseColumns(): array
     {
         return Schema::getColumnListing($this->databaseTable());
+    }
+
+    public function revisionsEnabled(): bool
+    {
+        if (! config('statamic.revisions.enabled') || ! Statamic::pro() || ! $this->hasPublishStates()) {
+            return false;
+        }
+
+        return $this->config->get('revisions', false);
     }
 
     public function toArray(): array

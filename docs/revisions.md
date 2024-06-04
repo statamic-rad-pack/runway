@@ -1,0 +1,49 @@
+---
+title: Revisions
+---
+
+Revisions is a powerful feature of Statamic that adds an entire publishing workflow to your authoring process. It allows you to create revisions, review and rollback to previous revisions of your content, and more.
+
+## Enabling
+
+If you haven't already, you will need to [enable Statamic's revisions feature](https://statamic.dev/revisions#enabling) in your `.env`:
+
+```dotenv
+STATAMIC_REVISIONS_ENABLED=true
+```
+
+Next, make sure to enable Runway's ["publish states" feature](https://runway.duncanmcclean.com/resources#content-publish-states). This is a prerequisite for using revisions, it provides a way for models to be published or unpublished, much like entries.
+
+```php
+'resources' => [
+    \App\Models\Order::class => [
+        'name' => 'Orders',
+        'published' => true, // Assumes the model has a `published` boolean column.
+        'published' => 'active', // Otherwise, you can specify the column name.
+    ],
+],
+```
+
+Finally, add the `revisions` config option to your resource's config:
+
+```php
+'resources' => [
+    \App\Models\Order::class => [
+        'name' => 'Orders',
+        'published' => true,
+        'revisions' => true,
+    ],
+],
+```
+
+Now, when you're editing a model in the Control Panel, you'll be able to save using Revisions and view the history of changes.
+
+## Storing Revisions in the Database
+
+Out of the box, Statamic will store revisions in your project's `storage/statamic/revisions` directory. 
+
+However, if you'd prefer for Statamic to store revisions in the database instead, you can install the official Eloquent Driver and select the "Revisions" repository:
+
+```shell
+php please install:eloquent-driver
+```

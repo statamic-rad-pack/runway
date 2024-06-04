@@ -4,10 +4,12 @@ namespace StatamicRadPack\Runway\Traits;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Statamic\Contracts\Data\Augmented;
+use Statamic\Contracts\Revisions\Revision;
 use Statamic\Fields\Field;
 use Statamic\Fieldtypes\Hidden;
 use Statamic\Fieldtypes\Section;
 use Statamic\GraphQL\ResolvesValues;
+use Statamic\Revisions\Revisable;
 use Statamic\Support\Traits\FluentlyGetsAndSets;
 use StatamicRadPack\Runway\Data\AugmentedModel;
 use StatamicRadPack\Runway\Data\HasAugmentedInstance;
@@ -17,7 +19,7 @@ use StatamicRadPack\Runway\Runway;
 
 trait HasRunwayResource
 {
-    use FluentlyGetsAndSets, HasAugmentedInstance;
+    use FluentlyGetsAndSets, HasAugmentedInstance, Revisable;
     use ResolvesValues {
         resolveGqlValue as traitResolveGqlValue;
     }
@@ -114,6 +116,107 @@ trait HasRunwayResource
         ]);
     }
 
+    public function runwayPublishUrl(): string
+    {
+        return cp_route('runway.published.store', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
+
+    public function runwayUnpublishUrl(): string
+    {
+        return cp_route('runway.published.destroy', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
+
+    public function runwayRevisionsUrl(): string
+    {
+        return cp_route('runway.revisions.index', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
+
+    public function runwayRevisionUrl(Revision $revision): string
+    {
+        return cp_route('runway.revisions.show', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+            'revisionId' => $revision->id(),
+        ]);
+    }
+
+    public function runwayRestoreRevisionUrl(): string
+    {
+        return cp_route('runway.restore-revision', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
+
+    public function runwayCreateRevisionUrl(): string
+    {
+        return cp_route('runway.revisions.store', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
+
+    protected function revisionKey(): string
+    {
+        return vsprintf('resources/%s/%s', [
+            $this->runwayResource()->handle(),
+            $this->getKey(),
+        ]);
+    }
+
+    protected function revisionAttributes(): array
+    {
+        $fields = $this->runwayResource()->blueprint()
+            ->fields()
+            ->setParent($this)
+            ->all()
+            ->reject(fn (Field $field) => $field->fieldtype() instanceof Section)
+            ->reject(fn (Field $field) => $field->visibility() === 'computed')
+            ->reject(fn (Field $field) => $field->get('save', true) === false)
+            ->map->handle()
+            ->values()
+            ->all();
+
+        return [
+            'id' => $this->getKey(),
+            'published' => $this->published(),
+            'data' => $this->only($fields),
+        ];
+    }
+
+    public function makeFromRevision($revision): self
+    {
+        $model = clone $this;
+
+        if (! $revision) {
+            return $model;
+        }
+
+        $attrs = $revision->attributes();
+
+        $model->published($attrs['published']);
+
+        foreach ($attrs['data'] as $key => $value) {
+            $model->setAttribute($key, $value);
+        }
+
+        return $model;
+    }
+
+    public function revisionsEnabled(): bool
+    {
+        return $this->runwayResource()->revisionsEnabled();
+    }
+
     public function published($published = null)
     {
         if (! $this->runwayResource()->hasPublishStates()) {
@@ -126,6 +229,44 @@ trait HasRunwayResource
 
         $this->setAttribute($this->runwayResource()->publishedColumn(), $published);
 
+        return $this;
+    }
+
+    public function publish($options = [])
+    {
+        if ($this->revisionsEnabled()) {
+            return $this->publishWorkingCopy($options);
+        }
+
+        if ($this->runwayResource()->hasPublishStates()) {
+            $this->published(true)->save();
+        }
+
+        return $this;
+    }
+
+    public function unpublish($options = [])
+    {
+        if ($this->revisionsEnabled()) {
+            return $this->unpublishWorkingCopy($options);
+        }
+
+        if ($this->runwayResource()->hasPublishStates()) {
+            $this->published(false)->save();
+        }
+
+        return $this;
+    }
+
+    /**
+     * We don't need to do anything here, since:
+     * - The updated_at timestamp is updated automatically by the database.
+     * - We don't have an updated_by column to store the user who last modified the model.
+     *
+     * @return $this
+     */
+    public function updateLastModified($user = false): self
+    {
         return $this;
     }
 }
