@@ -1,5 +1,20 @@
 # Changelog
 
+## v7.2.0 (2024-06-04)
+
+### What's new
+* Revisions support #492 by @edalzell
+* Runway now supports "publish states" (publishing/unpublishing models) #506 by @duncanmcclean
+
+### What's improved
+* Improved page titles on publish form pages #513 by @duncanmcclean
+* Updated publish form to better align with Statamic's entry publish form #509 by @duncanmcclean
+
+### What's fixed
+* Fixed errors when getting redirect URL for models using frontend routing #510 by @duncanmcclean
+
+
+
 ## v7.1.1 (2024-05-31)
 
 ### What's fixed
