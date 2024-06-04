@@ -199,7 +199,7 @@
             v-if="confirmingPublish"
             :actions="actions"
             :published="published"
-            :collection="collectionHandle"
+            :resource-handle="resource.handle"
             :reference="initialReference"
             :publish-container="publishContainer"
             :can-manage-publish-state="canManagePublishState"

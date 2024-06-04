@@ -1,5 +1,10 @@
 <template>
 
+    <!--
+        This component is *mostly* the same as the one in Statamic Core, however with one difference:
+        it uses the RunwayPublishForm component instead of Statamic's EntryPublishForm.
+    -->
+
     <div class="revision-item"
          :class="{
             'status-working-copy': revision.working,

@@ -1,5 +1,11 @@
 <template>
 
+    <!--
+        This component is *mostly* the same as the one in Statamic Core, however with a few differences:
+        - The `collection` prop` has been renamed to `resourceHandle`
+        - The JS hooks have been renamed to be prefixed with `runway.` instead of `entry.`
+    -->
+
     <stack narrow name="publish-options" @closed="$emit('closed')">
         <div slot-scope="{ close }" class="bg-white dark:bg-dark-800 h-full flex flex-col">
 
@@ -77,7 +83,7 @@ export default {
     props: {
         actions: Object,
         published: Boolean,
-        resource: String,
+        resourceHandle: String,
         reference: String,
         publishContainer: String,
         canManagePublishState: Boolean,
@@ -96,13 +102,13 @@ export default {
         options() {
             const options = [];
 
-            // if (this.canManagePublishState) {
+            if (this.canManagePublishState) {
                 options.push({ value: 'publish', label: __('Publish Now') });
 
-                // if (this.published) {
-                //     options.push({ value: 'unpublish', label: __('Unpublish') });
-                // }
-            // }
+                if (this.published) {
+                    options.push({ value: 'unpublish', label: __('Unpublish') });
+                }
+            }
 
             options.push({ value: 'revision', label: __('Create Revision') });
 
@@ -113,10 +119,10 @@ export default {
             switch (this.action) {
                 case 'publish':
                     return __('messages.publish_actions_publish');
-                // case 'schedule':
-                //     return __('messages.publish_actions_schedule');
-                // case 'unpublish':
-                //     return __('messages.publish_actions_unpublish');
+                case 'schedule':
+                    return __('messages.publish_actions_schedule');
+                case 'unpublish':
+                    return __('messages.publish_actions_unpublish');
                 case 'revision':
                     return __('messages.publish_actions_create_revision');
             }
@@ -143,7 +149,7 @@ export default {
 
         runBeforePublishHook() {
             Statamic.$hooks
-                .run('model.publishing', { resource: this.resource, message: this.revisionMessage, storeName: this.publishContainer })
+                .run('runway.publishing', { resource: this.resourceHandle, message: this.revisionMessage, storeName: this.publishContainer })
                 .then(this.performPublishRequest)
                 .catch(error => {
                     this.saving = false;
@@ -165,8 +171,8 @@ export default {
             // Once the publish request has completed, we want to run the "after" hook.
             // Devs can do what they need and we'll wait for them, but they can't cancel anything.
             Statamic.$hooks
-                .run('model.published', {
-                    collection: this.collection,
+                .run('runway.published', {
+                    resource: this.resourceHandle,
                     reference: this.reference,
                     message: this.revisionMessage,
                     response
@@ -183,15 +189,15 @@ export default {
             // todo
         },
 
-        // submitUnpublish() {
-        //     const payload = { message: this.revisionMessage };
-        //
-        //     this.$axios.post(this.actions.unpublish, { data: payload }).then(response => {
-        //         this.$toast.success(__('Unpublished'));
-        //         this.revisionMessage = null;
-        //         this.$emit('saved', { published: false, isWorkingCopy: false, response });
-        //     }).catch(e => this.handleAxiosError(e));
-        // },
+        submitUnpublish() {
+            const payload = { message: this.revisionMessage };
+
+            this.$axios.post(this.actions.unpublish, { data: payload }).then(response => {
+                this.$toast.success(__('Unpublished'));
+                this.revisionMessage = null;
+                this.$emit('saved', { published: false, isWorkingCopy: false, response });
+            }).catch(e => this.handleAxiosError(e));
+        },
 
         submitRevision() {
             const payload = { message: this.revisionMessage };
