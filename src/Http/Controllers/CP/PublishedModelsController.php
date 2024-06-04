@@ -14,7 +14,9 @@ class PublishedModelsController extends CpController
 
     public function store(Request $request, Resource $resource, $model)
     {
-        $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $model)->first();
+        $model = $resource->model()
+            ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
+            ->first();
 
         $model = $model->publish([
             'message' => $request->message,
@@ -34,7 +36,9 @@ class PublishedModelsController extends CpController
 
     public function destroy(Request $request, Resource $resource, $model)
     {
-        $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $model)->first();
+        $model = $resource->model()
+            ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
+            ->first();
 
         $model = $model->unpublish([
             'message' => $request->message,

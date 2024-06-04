@@ -19,6 +19,7 @@ return [
             ],
             'route' => '/posts/{{ slug }}',
             'published' => true,
+            'revisions' => true,
         ],
 
         Author::class => [

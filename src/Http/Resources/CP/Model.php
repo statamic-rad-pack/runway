@@ -16,10 +16,7 @@ class Model extends JsonResource
             'title' => $this->resource->{$runwayResource->titleField()},
             'permalink' => $runwayResource->hasRouting() ? $this->resource->absoluteUrl() : null,
             'published' => $this->resource->publishedStatus(),
-            'edit_url' => cp_route('runway.edit', [
-                'resource' => $runwayResource->handle(),
-                'model' => $this->resource->{$runwayResource->routeKey()},
-            ]),
+            'edit_url' => $this->resource->runwayEditUrl(),
             'resource' => [
                 'handle' => $runwayResource->handle(),
             ],
