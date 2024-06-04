@@ -27,7 +27,6 @@
         :initial-item-actions="{{ json_encode($itemActions) }}"
         item-action-url="{{ cp_route('runway.actions.run', ['resource' => $resource->handle()]) }}"
         :revisions-enabled="{{ $str::bool($revisionsEnabled) }}"
-        :can-publish="{{ $str::bool($canPublish) }}"
     ></runway-publish-form>
 
     <script>

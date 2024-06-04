@@ -177,7 +177,6 @@ class ResourceController extends CpController
             'canManagePublishState' => User::current()->can('edit', $resource),
             'itemActions' => Action::for($model, ['resource' => $resource->handle(), 'view' => 'form']),
             'revisionsEnabled' => $resource->revisionsEnabled(),
-            'canPublish' => true,
         ];
 
         if ($request->wantsJson()) {

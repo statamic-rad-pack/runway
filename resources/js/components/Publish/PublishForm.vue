@@ -250,7 +250,6 @@ export default {
         createAnotherUrl: String,
         initialListingUrl: String,
         resourceHasRoutes: Boolean,
-        canPublish: Boolean,
     },
 
     data() {
