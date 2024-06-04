@@ -233,6 +233,15 @@ class Resource
         return Schema::getColumnListing($this->databaseTable());
     }
 
+    public function revisionsEnabled(): bool
+    {
+        if (! config('statamic.revisions.enabled') || ! Statamic::pro() || ! $this->hasPublishStates()) {
+            return false;
+        }
+
+        return $this->config->get('revisions', false);
+    }
+
     public function toArray(): array
     {
         return [
@@ -256,14 +265,5 @@ class Resource
     public function __call($name, $arguments)
     {
         return $this->model()->{$name}(...$arguments);
-    }
-
-    public function revisionsEnabled(): bool
-    {
-        if (! config('statamic.revisions.enabled') || ! Statamic::pro()) {
-            return false;
-        }
-
-        return $this->config->get('revisions', false);
     }
 }
