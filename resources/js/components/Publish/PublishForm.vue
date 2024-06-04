@@ -515,6 +515,21 @@ export default {
             }
         },
 
+        publishActionCompleted({ published, isWorkingCopy, response }) {
+            this.saving = false;
+            if (published !== undefined) {
+                this.$refs.container.setFieldValue('published', published);
+                this.initialPublished = published;
+            }
+            this.$refs.container.saved();
+            this.isWorkingCopy = isWorkingCopy;
+            this.confirmingPublish = false;
+            this.title = response.data.data.title;
+            this.values = this.resetValuesFromResponse(response.data.data.values);
+            this.permalink = response.data.data.permalink
+            this.$nextTick(() => this.$emit('saved', response));
+        },
+
         setFieldValue(handle, value) {
             this.$refs.container.setFieldValue(handle, value)
         },
