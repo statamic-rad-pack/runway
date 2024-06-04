@@ -175,11 +175,21 @@ trait HasRunwayResource
 
     protected function revisionAttributes(): array
     {
+        $fields = $this->runwayResource()->blueprint()
+            ->fields()
+            ->setParent($this)
+            ->all()
+            ->reject(fn (Field $field) => $field->fieldtype() instanceof Section)
+            ->reject(fn (Field $field) => $field->visibility() === 'computed')
+            ->reject(fn (Field $field) => $field->get('save', true) === false)
+            ->map->handle()
+            ->values()
+            ->all();
+
         return [
             'id' => $this->getKey(),
-            'published' => false, // todo
-            'date' => null,
-            'data' => $this->getAttributes(),
+            'published' => $this->published(),
+            'data' => $this->only($fields),
         ];
     }
 
@@ -193,7 +203,9 @@ trait HasRunwayResource
 
         $attrs = $revision->attributes();
 
-        foreach ($attrs as $key => $value) {
+        $model->published($attrs['published']);
+
+        foreach ($attrs['data'] as $key => $value) {
             $model->setAttribute($key, $value);
         }
 
