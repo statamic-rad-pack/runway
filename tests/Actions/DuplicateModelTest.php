@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway\Tests\Actions;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Statamic\Facades\Blueprint;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 use Statamic\Facades\Role;
@@ -44,9 +45,12 @@ class DuplicateModelTest extends TestCase
     }
 
     /** @test */
-    public function is_not_visible_to_eloquent_model_when_resource_creation_is_now_allowed()
+    public function is_not_visible_to_eloquent_model_when_resource_creation_is_not_allowed()
     {
-        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.can_create', false);
+        $postBlueprint = Blueprint::find('runway::post');
+
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->setHidden(true));
+
         Runway::discoverResources();
 
         $visibleTo = (new DuplicateModel())->visibleTo(Post::factory()->create());

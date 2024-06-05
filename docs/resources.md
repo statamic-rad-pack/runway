@@ -139,15 +139,10 @@ You may also specify if you want a resource to be 'read only' - eg. users will n
 
 ### Prevent creation
 
-You may also specify if you want to prevent creation of new models - ie you will only be able to edit existing models.
+If you want to prevent creation of new models through the control panel, set your blueprint to be hidden:
 
-```php
-'resources' => [
-	\App\Models\Order::class => [
-	    'name' => 'Orders',
-        'can_create' => false,
-	],
-],
+```yaml
+hide: true
 ```
 
 ### Ordering
