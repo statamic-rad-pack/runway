@@ -37,6 +37,7 @@ class DuplicateModelTest extends TestCase
     public function is_not_visible_to_eloquent_model_when_resource_is_read_only()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.read_only', true);
+
         Runway::discoverResources();
 
         $visibleTo = (new DuplicateModel())->visibleTo(Post::factory()->create());
@@ -47,11 +48,9 @@ class DuplicateModelTest extends TestCase
     /** @test */
     public function is_not_visible_to_eloquent_model_when_resource_creation_is_not_allowed()
     {
-        $postBlueprint = Blueprint::find('runway::post');
+        $blueprint = Blueprint::find('runway::post');
 
-        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->setHidden(true));
-
-        Runway::discoverResources();
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($blueprint->setHidden(true));
 
         $visibleTo = (new DuplicateModel())->visibleTo(Post::factory()->create());
 
