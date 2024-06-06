@@ -101,9 +101,9 @@ class Resource
         return $this->config->get('graphql', false);
     }
 
-    public function canCreate(): bool
+    public function hasVisibleBlueprint(): bool
     {
-        return ! $this->blueprint()->hidden();
+        return $this->blueprint()->hidden() === false;
     }
 
     public function readOnly(): bool

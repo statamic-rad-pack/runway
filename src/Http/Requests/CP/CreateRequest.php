@@ -11,7 +11,7 @@ class CreateRequest extends FormRequest
     {
         $resource = $this->route('resource');
 
-        if (! $resource->canCreate() || $resource->readOnly()) {
+        if (! $resource->hasVisibleBlueprint() || $resource->readOnly()) {
             return false;
         }
 

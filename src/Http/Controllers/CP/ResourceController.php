@@ -54,6 +54,7 @@ class ResourceController extends CpController
             'listingConfig' => $listingConfig,
             'actionUrl' => cp_route('runway.actions.run', ['resource' => $resource->handle()]),
             'hasPublishStates' => $resource->hasPublishStates(),
+            'canCreate' => $resource->hasVisibleBlueprint() && ! $resource->readOnly(),
         ]);
     }
 
