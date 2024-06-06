@@ -103,7 +103,7 @@ class Resource
 
     public function canCreate(): bool
     {
-        return $this->config->get('can_create', true);
+        return ! $this->blueprint()->hidden();
     }
 
     public function readOnly(): bool

@@ -62,7 +62,11 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function cant_create_resource_if_resource_is_set_to_not_allow_creating()
     {
-        Config::set('runway.resources.'.Post::class.'.can_create', false);
+        $postBlueprint = Blueprint::find('runway::post');
+
+        Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->setHidden(true));
 
         Runway::discoverResources();
 
@@ -125,7 +129,11 @@ class ResourceControllerTest extends TestCase
     /** @test */
     public function cant_store_resource_if_resource_is_set_to_prevent_creation()
     {
-        Config::set('runway.resources.'.Post::class.'.can_create', false);
+        $postBlueprint = Blueprint::find('runway::post');
+
+        Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->setHidden(true));
 
         Runway::discoverResources();
 
