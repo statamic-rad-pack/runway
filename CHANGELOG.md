@@ -1,5 +1,12 @@
 # Changelog
 
+## v7.3.1 (2024-06-06)
+
+### What's fixed
+* Fixed broken Has Many fieldtype when used outside a Runway context #517 by @duncanmcclean
+
+
+
 ## v7.3.0 (2024-06-06)
 
 ### What's new
