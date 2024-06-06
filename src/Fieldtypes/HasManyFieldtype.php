@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway\Fieldtypes;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Arr;
 use Statamic\Facades\Blink;
 use Statamic\Facades\GraphQL;
 use StatamicRadPack\Runway\Runway;
@@ -55,7 +56,7 @@ class HasManyFieldtype extends BaseFieldtype
         $resourceHandle = request()->route('resource');
 
         if (! $resourceHandle) {
-            return $data;
+            return Arr::wrap($data);
         }
 
         return collect($data)
