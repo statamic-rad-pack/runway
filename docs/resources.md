@@ -137,14 +137,6 @@ You may also specify if you want a resource to be 'read only' - eg. users will n
 ],
 ```
 
-### Prevent creation
-
-If you want to prevent creation of new models through the control panel, set your blueprint to be hidden:
-
-```yaml
-hide: true
-```
-
 ### Ordering
 
 Sometimes you may want to change the order that your models are returned in the Control Panel listing table. You can use the `order_by` and `order_by_direction` configuration options to tell Runway the order you wish models to be returned.
@@ -216,6 +208,14 @@ Schema::table('products', function (Blueprint $table) {
 });
 ```
 :::
+
+### Prevent creating new models
+
+If you want to prevent new models being created via the Control Panel, you can mark the resource's blueprint as "Hidden":
+
+```yaml
+hide: true
+```
 
 ## Actions
 
