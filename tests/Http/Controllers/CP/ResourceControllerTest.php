@@ -60,15 +60,13 @@ class ResourceControllerTest extends TestCase
     }
 
     /** @test */
-    public function cant_create_resource_if_resource_is_set_to_not_allow_creating()
+    public function cant_create_resource_when_blueprint_is_hidden()
     {
-        $postBlueprint = Blueprint::find('runway::post');
+        $blueprint = Blueprint::find('runway::post');
 
         Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
         Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
-        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->setHidden(true));
-
-        Runway::discoverResources();
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($blueprint->setHidden(true));
 
         $user = User::make()->makeSuper()->save();
 
@@ -127,15 +125,13 @@ class ResourceControllerTest extends TestCase
     }
 
     /** @test */
-    public function cant_store_resource_if_resource_is_set_to_prevent_creation()
+    public function cant_store_resource_when_blueprint_is_hidden()
     {
         $postBlueprint = Blueprint::find('runway::post');
 
         Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
         Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
         Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->setHidden(true));
-
-        Runway::discoverResources();
 
         $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
