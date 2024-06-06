@@ -209,6 +209,14 @@ Schema::table('products', function (Blueprint $table) {
 ```
 :::
 
+### Prevent creating new models
+
+If you want to prevent new models being created via the Control Panel, you can mark the resource's blueprint as "Hidden":
+
+```yaml
+hide: true
+```
+
 ## Actions
 
 In much the same way with entries, you can create custom Actions which will be usable in the listing tables provided by Runway.

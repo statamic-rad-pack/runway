@@ -11,7 +11,7 @@ class StoreRequest extends FormRequest
     {
         $resource = $this->route('resource');
 
-        if ($resource->readOnly()) {
+        if (! $resource->hasVisibleBlueprint() || $resource->readOnly()) {
             return false;
         }
 

@@ -8,22 +8,20 @@
         <h1 class="flex-1">{{ $title }}</h1>
 
         @can('configure fields')
-            <dropdown-list class="mr-2">
+            <dropdown-list @if($canCreate) class="mr-2" @endif>
                 <dropdown-item :text="__('Edit Blueprint')" redirect="{{ cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]) }}"></dropdown-item>
             </dropdown-list>
         @endcan
 
-        @if(! $resource->readOnly())
-            @can('create', $resource)
-                <a
-                    class="btn-primary"
-                    href="{{ cp_route('runway.create', ['resource' => $resource->handle()]) }}"
-                >
-                    {{ __('Create :resource', [
-                        'resource' => $resource->singular()
-                    ]) }}
-                </a>
-            @endcan
+        @if($canCreate)
+            <a
+                class="btn-primary"
+                href="{{ cp_route('runway.create', ['resource' => $resource->handle()]) }}"
+            >
+                {{ __('Create :resource', [
+                    'resource' => $resource->singular()
+                ]) }}
+            </a>
         @endif
     </div>
 

@@ -60,6 +60,23 @@ class ResourceControllerTest extends TestCase
     }
 
     /** @test */
+    public function cant_create_resource_when_blueprint_is_hidden()
+    {
+        $blueprint = Blueprint::find('runway::post');
+
+        Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($blueprint->setHidden(true));
+
+        $user = User::make()->makeSuper()->save();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.create', ['resource' => 'post']))
+            ->assertRedirect();
+    }
+
+    /** @test */
     public function can_store_resource()
     {
         $author = Author::factory()->create();
@@ -88,6 +105,33 @@ class ResourceControllerTest extends TestCase
         Config::set('runway.resources.'.Post::class.'.read_only', true);
 
         Runway::discoverResources();
+
+        $author = Author::factory()->create();
+        $user = User::make()->makeSuper()->save();
+
+        $this
+            ->actingAs($user)
+            ->post(cp_route('runway.store', ['resource' => 'post']), [
+                'title' => 'Jingle Bells',
+                'slug' => 'jingle-bells',
+                'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
+                'author_id' => [$author->id],
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseMissing('posts', [
+            'title' => 'Jingle Bells',
+        ]);
+    }
+
+    /** @test */
+    public function cant_store_resource_when_blueprint_is_hidden()
+    {
+        $postBlueprint = Blueprint::find('runway::post');
+
+        Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->setHidden(true));
 
         $author = Author::factory()->create();
         $user = User::make()->makeSuper()->save();
