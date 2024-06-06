@@ -1,5 +1,15 @@
 # Changelog
 
+## v7.3.0 (2024-06-06)
+
+### What's new
+* You can now hide the "Create" button by setting `hide: true` on blueprints #508 by @ryanmitchell
+
+### What's fixed
+* Fixed issue where the sidebar section would show on the Publish Form when it's not needed #515 by @duncanmcclean
+
+
+
 ## v7.2.0 (2024-06-04)
 
 ### What's new
