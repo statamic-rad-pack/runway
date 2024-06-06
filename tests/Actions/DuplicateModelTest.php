@@ -46,7 +46,7 @@ class DuplicateModelTest extends TestCase
     }
 
     /** @test */
-    public function is_not_visible_to_eloquent_model_when_resource_creation_is_not_allowed()
+    public function is_not_visible_to_eloquent_model_when_blueprint_is_hidden()
     {
         $blueprint = Blueprint::find('runway::post');
 
