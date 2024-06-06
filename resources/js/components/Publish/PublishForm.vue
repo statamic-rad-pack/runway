@@ -77,6 +77,7 @@
 
                 <publish-tabs
                     :read-only="readOnly"
+                    :enable-sidebar="sidebarEnabled"
                     @updated="setFieldValue"
                     @meta-updated="setFieldMeta"
                     @focus="$refs.container.$emit('focus', $event)"
@@ -365,6 +366,12 @@ export default {
 
         direction() {
             return this.$config.get('direction', 'ltr');
+        },
+
+        sidebarEnabled() {
+            let hasSidebarTab = this.blueprint.tabs.filter((tab) => tab.handle === 'sidebar').length > 0
+
+            return this.resourceHasRoutes || this.publishStatesEnabled || hasSidebarTab
         },
     },
 
