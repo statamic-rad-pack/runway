@@ -92,7 +92,10 @@ class BaseFieldtype extends Relationship
         $query = $resource->model()->newQuery();
 
         $query->when($query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
-        $query->when($request->search, fn ($query) => $query->runwaySearch($request->search));
+
+        $searchQuery = $request->search ?? false;
+
+        $query = $this->applySearch($resource, $query, $searchQuery);
 
         $query->when($query->getQuery()->orders, function ($query) use ($request, $resource) {
             if ($orderBy = $request->input('sort')) {
@@ -107,6 +110,10 @@ class BaseFieldtype extends Relationship
         $items = $request->boolean('paginate', true)
             ? $query->paginate()
             : $query->get();
+
+        if ($searchQuery && $resource->hasSearchIndex()) {
+            $results->setCollection($results->getCollection()->map(fn ($item) => $item->getSearchable()->model()));
+        }
 
         $items
             ->transform(function ($model) use ($resource) {
@@ -331,5 +338,18 @@ class BaseFieldtype extends Relationship
         $resource = Runway::findResource($this->config('resource'));
 
         return $resource->hasPublishStates();
+    }
+
+    private function applySearch(Resource $resource, $query, $searchQuery)
+    {
+        if (! $searchQuery) {
+            return $query;
+        }
+
+        if ($resource->hasSearchIndex() && ($index == $resource->searchIndex())) {
+            return $index->ensureExists()->search($searchQuery);
+        }
+
+        return $query->runwaySearch($searchQuery);
     }
 }

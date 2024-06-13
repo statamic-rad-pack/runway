@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Search;
 
+use Illuminate\Database\Eloquent\Model;
 use Statamic\Contracts\Data\Augmentable;
 use Statamic\Contracts\Data\Augmented;
 use Statamic\Contracts\Query\ContainsQueryableValues;
@@ -23,11 +24,21 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
 
     protected $resource;
 
-    public function __construct($model)
+    public function __construct(Model $model)
     {
         $this->model = $model;
         $this->resource = Runway::findResourceByModel($model);
         $this->supplements = collect();
+    }
+
+    public function get($key, $fallback = null)
+    {
+        return $this->model->{$key} ?? $fallback;
+    }
+
+    public function model(): Model
+    {
+        return $this->model;
     }
 
     public function resource(): Resource

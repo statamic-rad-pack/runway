@@ -24,9 +24,12 @@ class ResourceListingController extends CpController
         $query = $resource->model()->with($resource->eagerLoadingRelationships());
 
         $query->when($query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
-        $query->when($request->search, fn ($query) => $query->runwaySearch($request->search));
 
-        $query->when($query->getQuery()->orders, function ($query) use ($request) {
+        $searchQuery = $request->search ?? false;
+
+        $query = $this->applySearch($resource, $query, $searchQuery);
+
+        $query->when(method_exists($query, 'getQuery') && $query->getQuery()->orders, function ($query) use ($request) {
             if ($request->input('sort')) {
                 $query->reorder($request->input('sort'), $request->input('order'));
             }
@@ -39,6 +42,10 @@ class ResourceListingController extends CpController
 
         $results = $query->paginate($request->input('perPage', config('statamic.cp.pagination_size')));
 
+        if ($searchQuery && $resource->hasSearchIndex()) {
+            $results->setCollection($results->getCollection()->map(fn ($item) => $item->getSearchable()->model()));
+        }
+
         return (new Models($results))
             ->runwayResource($resource)
             ->blueprint($resource->blueprint())
@@ -48,5 +55,18 @@ class ResourceListingController extends CpController
                     'activeFilterBadges' => $activeFilterBadges,
                 ],
             ]);
+    }
+
+    private function applySearch(Resource $resource, $query, $searchQuery)
+    {
+        if (! $searchQuery) {
+            return $query;
+        }
+
+        if ($resource->hasSearchIndex() && ($index == $resource->searchIndex())) {
+            return $index->ensureExists()->search($searchQuery);
+        }
+
+        return $query->runwaySearch($searchQuery);
     }
 }
