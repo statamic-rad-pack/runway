@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
+use Statamic\Query\Builder as BaseStatamicBuilder;
 use Statamic\Query\Scopes\Filters\Concerns\QueriesFilters;
 use StatamicRadPack\Runway\Http\Resources\CP\Models;
 use StatamicRadPack\Runway\Resource;
-use Statamic\Query\Builder as BaseStatamicBuilder;
 
 class ResourceListingController extends CpController
 {

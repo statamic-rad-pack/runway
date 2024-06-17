@@ -11,9 +11,9 @@ use Statamic\CP\Column;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
 use Statamic\Fieldtypes\Relationship;
+use Statamic\Query\Builder as BaseStatamicBuilder;
 use StatamicRadPack\Runway\Query\Scopes\Filters\Fields\Models;
 use StatamicRadPack\Runway\Resource;
-use Statamic\Query\Builder as BaseStatamicBuilder;
 use StatamicRadPack\Runway\Runway;
 
 class BaseFieldtype extends Relationship
