@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Fieldtypes;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -12,6 +13,7 @@ use Statamic\Facades\Parse;
 use Statamic\Fieldtypes\Relationship;
 use StatamicRadPack\Runway\Query\Scopes\Filters\Fields\Models;
 use StatamicRadPack\Runway\Resource;
+use Statamic\Query\Builder as BaseStatamicBuilder;
 use StatamicRadPack\Runway\Runway;
 
 class BaseFieldtype extends Relationship
@@ -340,7 +342,7 @@ class BaseFieldtype extends Relationship
         return $resource->hasPublishStates();
     }
 
-    private function applySearch(Resource $resource, $query, $searchQuery)
+    private function applySearch(Resource $resource, Builder $query, string $searchQuery): Builder|BaseStatamicBuilder
     {
         if (! $searchQuery) {
             return $query;

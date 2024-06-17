@@ -2,12 +2,14 @@
 
 namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
+use Illuminate\Database\Eloquent\Builder;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
 use Statamic\Query\Scopes\Filters\Concerns\QueriesFilters;
 use StatamicRadPack\Runway\Http\Resources\CP\Models;
 use StatamicRadPack\Runway\Resource;
+use Statamic\Query\Builder as BaseStatamicBuilder;
 
 class ResourceListingController extends CpController
 {
@@ -57,7 +59,7 @@ class ResourceListingController extends CpController
             ]);
     }
 
-    private function applySearch(Resource $resource, $query, $searchQuery)
+    private function applySearch(Resource $resource, Builder $query, string $searchQuery): Builder|BaseStatamicBuilder
     {
         if (! $searchQuery) {
             return $query;
