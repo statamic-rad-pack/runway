@@ -168,9 +168,9 @@ If you'd like to specify a different field, you may do so by setting the `title_
 ],
 ```
 
-### Search index
+### Search Index
 
-Allows you to specify a [search index](https://statamic.dev/search#indexes) to be used when searching for entries in the CP listing.
+The `search_index` option allows you to specify a [search index](https://statamic.dev/search#indexes) which should be used when search models in the Control Panel listing table.
 
 ```php
 'resources' => [
