@@ -10,6 +10,7 @@ use Statamic\Facades\Blink;
 use Statamic\Fields\Field;
 use Statamic\Http\Requests\FilteredRequest;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
+use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\TestCase;
 
@@ -143,6 +144,33 @@ class BelongsToFieldtypeTest extends TestCase
     /** @test */
     public function can_get_index_items_and_search()
     {
+        Author::factory()->count(10)->create();
+        $hasselhoff = Author::factory()->create(['name' => 'David Hasselhoff']);
+
+        $getIndexItems = $this->fieldtype->getIndexItems(
+            new FilteredRequest(['search' => 'hasselhoff'])
+        );
+
+        $this->assertIsObject($getIndexItems);
+        $this->assertTrue($getIndexItems instanceof Paginator);
+        $this->assertEquals($getIndexItems->count(), 1);
+
+        $this->assertEquals($getIndexItems->first()['id'], $hasselhoff->id);
+    }
+
+    /** @test */
+    public function can_get_index_items_and_search_using_a_search_index()
+    {
+        Config::set('statamic.search.indexes.test_search_index', [
+            'driver' => 'local',
+            'searchables' => ['runway:author'],
+            'fields' => ['name'],
+        ]);
+
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.search_index', 'test_search_index');
+
+        Runway::discoverResources();
+
         Author::factory()->count(10)->create();
         $hasselhoff = Author::factory()->create(['name' => 'David Hasselhoff']);
 
