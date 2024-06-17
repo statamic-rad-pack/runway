@@ -1,5 +1,15 @@
 # Changelog
 
+## v7.5.0 (2024-06-17)
+
+### What's new
+* Added `search_index` config option to resources #524 by @ryanmitchell
+
+### What's fixed
+* Fixed "title field" not being used when columns have been customized #526 by @duncanmcclean
+
+
+
 ## v7.4.0 (2024-06-17)
 
 ### What's new
