@@ -25,6 +25,7 @@ trait HasListingColumns
                     return $field->fieldtype()->indexComponent() === 'relationship' || $field->type() === 'section';
                 })
                 ->map->handle()
+                ->prepend($resource->titleField())
                 ->first();
         }
 
