@@ -223,6 +223,8 @@ class ResourceListingControllerTest extends TestCase
 
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.search_index', 'test_search_index');
 
+        Runway::discoverResources();
+
         $user = User::make()->makeSuper()->save();
         $posts = Post::factory()->count(2)->create();
 
