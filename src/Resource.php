@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use Statamic\Facades\Search;
 use Statamic\Fields\Blueprint;
 use Statamic\Fields\Field;
 use Statamic\Statamic;
@@ -245,6 +246,20 @@ class Resource
         }
 
         return $this->config->get('revisions', false);
+    }
+
+    public function searchIndex()
+    {
+        if (! $index = $this->config->get('search_index', false)) {
+            return;
+        }
+
+        return Search::index($index);
+    }
+
+    public function hasSearchIndex()
+    {
+        return $this->searchIndex() !== null;
     }
 
     public function toArray(): array

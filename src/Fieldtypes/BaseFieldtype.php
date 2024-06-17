@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Fieldtypes;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -10,6 +11,7 @@ use Statamic\CP\Column;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
 use Statamic\Fieldtypes\Relationship;
+use Statamic\Query\Builder as BaseStatamicBuilder;
 use StatamicRadPack\Runway\Query\Scopes\Filters\Fields\Models;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
@@ -92,9 +94,12 @@ class BaseFieldtype extends Relationship
         $query = $resource->model()->newQuery();
 
         $query->when($query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
-        $query->when($request->search, fn ($query) => $query->runwaySearch($request->search));
 
-        $query->when($query->getQuery()->orders, function ($query) use ($request, $resource) {
+        $searchQuery = $request->search ?? false;
+
+        $query = $this->applySearch($resource, $query, $searchQuery);
+
+        $query->when(method_exists($query, 'getQuery') && $query->getQuery()->orders, function ($query) use ($request, $resource) {
             if ($orderBy = $request->input('sort')) {
                 // The stack selector always uses `title` as the default sort column, but
                 // the "title field" for the model might be a different column so we need to convert it.
@@ -107,6 +112,10 @@ class BaseFieldtype extends Relationship
         $items = $request->boolean('paginate', true)
             ? $query->paginate()
             : $query->get();
+
+        if ($searchQuery && $resource->hasSearchIndex()) {
+            $items->setCollection($items->getCollection()->map(fn ($item) => $item->getSearchable()->model()));
+        }
 
         $items
             ->transform(function ($model) use ($resource) {
@@ -331,5 +340,18 @@ class BaseFieldtype extends Relationship
         $resource = Runway::findResource($this->config('resource'));
 
         return $resource->hasPublishStates();
+    }
+
+    private function applySearch(Resource $resource, Builder $query, string $searchQuery): Builder|BaseStatamicBuilder
+    {
+        if (! $searchQuery) {
+            return $query;
+        }
+
+        if ($resource->hasSearchIndex() && ($index = $resource->searchIndex())) {
+            return $index->ensureExists()->search($searchQuery);
+        }
+
+        return $query->runwaySearch($searchQuery);
     }
 }

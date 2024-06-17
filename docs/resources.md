@@ -168,6 +168,19 @@ If you'd like to specify a different field, you may do so by setting the `title_
 ],
 ```
 
+### Search Index
+
+The `search_index` option allows you to specify a [search index](https://statamic.dev/search#indexes) which should be used when search models in the Control Panel listing table.
+
+```php
+'resources' => [
+	\App\Models\Order::class => [
+	    'name' => 'Orders',
+		'search_index' => 'my_search_index',
+	],
+],
+```
+
 ### Eager Loading
 
 To help with performance, Runway will automatically ["eager load"](https://laravel.com/docs/master/eloquent-relationships#eager-loading) any Eloquent relationships it knows about based on the fields you've defined in your blueprint.

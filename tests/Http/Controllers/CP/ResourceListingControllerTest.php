@@ -213,6 +213,39 @@ class ResourceListingControllerTest extends TestCase
     }
 
     /** @test */
+    public function can_search_using_a_search_index()
+    {
+        Config::set('statamic.search.indexes.test_search_index', [
+            'driver' => 'local',
+            'searchables' => ['runway:post'],
+            'fields' => ['title', 'slug'],
+        ]);
+
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.search_index', 'test_search_index');
+
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+        $posts = Post::factory()->count(2)->create();
+
+        $posts[0]->update(['title' => 'Apple Pie']);
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.listing-api', ['resource' => 'post', 'search' => 'Apple']))
+            ->assertOk()
+            ->assertJson([
+                'data' => [
+                    [
+                        'title' => $posts[0]->title,
+                        'edit_url' => "http://localhost/cp/runway/post/{$posts[0]->id}",
+                        'id' => $posts[0]->id,
+                    ],
+                ],
+            ]);
+    }
+
+    /** @test */
     public function can_paginate_results()
     {
         Post::factory()->count(15)->create();

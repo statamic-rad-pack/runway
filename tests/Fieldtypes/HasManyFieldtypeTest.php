@@ -203,6 +203,36 @@ class HasManyFieldtypeTest extends TestCase
     }
 
     /** @test */
+    public function can_get_index_items_and_search_using_a_search_index()
+    {
+        Config::set('statamic.search.indexes.test_search_index', [
+            'driver' => 'local',
+            'searchables' => ['runway:post'],
+            'fields' => ['title', 'slug'],
+        ]);
+
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.search_index', 'test_search_index');
+
+        Runway::discoverResources();
+
+        $author = Author::factory()->create();
+        Post::factory()->count(10)->create(['author_id' => $author->id]);
+        $spacePandaPosts = Post::factory()->count(3)->create(['author_id' => $author->id, 'title' => 'Space Pandas']);
+
+        $getIndexItems = $this->fieldtype->getIndexItems(
+            new FilteredRequest(['search' => 'space pan'])
+        );
+
+        $this->assertIsObject($getIndexItems);
+        $this->assertTrue($getIndexItems instanceof Paginator);
+        $this->assertEquals($getIndexItems->count(), 3);
+
+        $this->assertEquals($getIndexItems->first()['title'], $spacePandaPosts[0]->title);
+        $this->assertEquals($getIndexItems->last()['title'], $spacePandaPosts[1]->title);
+        $this->assertEquals($getIndexItems->last()['title'], $spacePandaPosts[2]->title);
+    }
+
+    /** @test */
     public function can_get_item_array_with_title_format()
     {
         $author = Author::factory()->create();
