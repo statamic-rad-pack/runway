@@ -1,5 +1,12 @@
 # Changelog
 
+## v7.4.0 (2024-06-17)
+
+### What's new
+* Added support for `int` and `timestamp` columns in `runway:generate-blueprints` command #523 #525 by @ryanmitchell
+
+
+
 ## v7.3.1 (2024-06-06)
 
 ### What's fixed
