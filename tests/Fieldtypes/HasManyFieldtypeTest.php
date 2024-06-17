@@ -208,7 +208,7 @@ class HasManyFieldtypeTest extends TestCase
         Config::set('statamic.search.indexes.test_search_index', [
             'driver' => 'local',
             'searchables' => ['runway:post'],
-            'fields' => ['name', 'slug'],
+            'fields' => ['title', 'slug'],
         ]);
 
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.search_index', 'test_search_index');

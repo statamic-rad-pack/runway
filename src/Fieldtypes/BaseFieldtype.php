@@ -97,7 +97,7 @@ class BaseFieldtype extends Relationship
 
         $query = $this->applySearch($resource, $query, $searchQuery);
 
-        $query->when($query->getQuery()->orders, function ($query) use ($request, $resource) {
+        $query->when(method_exists($query, 'getQuery') && $query->getQuery()->orders, function ($query) use ($request, $resource) {
             if ($orderBy = $request->input('sort')) {
                 // The stack selector always uses `title` as the default sort column, but
                 // the "title field" for the model might be a different column so we need to convert it.
@@ -112,7 +112,7 @@ class BaseFieldtype extends Relationship
             : $query->get();
 
         if ($searchQuery && $resource->hasSearchIndex()) {
-            $results->setCollection($results->getCollection()->map(fn ($item) => $item->getSearchable()->model()));
+            $items->setCollection($items->getCollection()->map(fn ($item) => $item->getSearchable()->model()));
         }
 
         $items
