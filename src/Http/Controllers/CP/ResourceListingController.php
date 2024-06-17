@@ -63,7 +63,7 @@ class ResourceListingController extends CpController
             return $query;
         }
 
-        if ($resource->hasSearchIndex() && ($index == $resource->searchIndex())) {
+        if ($resource->hasSearchIndex() && ($index = $resource->searchIndex())) {
             return $index->ensureExists()->search($searchQuery);
         }
 
