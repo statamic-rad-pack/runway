@@ -41,6 +41,7 @@ class GenerateBlueprint extends Command
         'datetimetz' => ['normal' => 'date'],
         'decimal' => ['normal' => 'float'],
         'float' => ['normal' => 'float'],
+        'int' => ['normal' => 'integer'],
         'integer' => ['normal' => 'integer'],
         'json' => ['normal' => 'array'],
         'simple_array' => ['normal' => 'array'],
@@ -49,6 +50,7 @@ class GenerateBlueprint extends Command
         'text' => ['normal' => 'textarea'],
         'time_immutable' => ['normal' => 'date'],
         'time' => ['normal' => 'date'],
+        'timestamp' => ['normal' => 'date'],
     ];
 
     /**
