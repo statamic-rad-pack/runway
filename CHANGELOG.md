@@ -1,5 +1,12 @@
 # Changelog
 
+## v7.5.1 (2024-06-21)
+
+### What's fixed
+* Fixed Ignition Runnable Solutions #529 by @duncanmcclean
+
+
+
 ## v7.5.0 (2024-06-17)
 
 ### What's new
