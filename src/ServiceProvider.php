@@ -21,7 +21,7 @@ use Statamic\Http\Middleware\RequireStatamicPro;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 use StatamicRadPack\Runway\Http\Controllers\ApiController;
-use StatamicRadPack\Runway\Ignition\SolutionProviders\TraitMissingException;
+use StatamicRadPack\Runway\Ignition\SolutionProviders\TraitMissing;
 use StatamicRadPack\Runway\Policies\ResourcePolicy;
 use StatamicRadPack\Runway\Search\Provider as SearchProvider;
 use StatamicRadPack\Runway\Search\Searchable;
@@ -116,7 +116,7 @@ class ServiceProvider extends AddonServiceProvider
     {
         try {
             $this->app->make(SolutionProviderRepository::class)
-                ->registerSolutionProvider(TraitMissingException::class);
+                ->registerSolutionProvider(TraitMissing::class);
         } catch (BindingResolutionException $e) {
             //
         }

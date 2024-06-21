@@ -6,7 +6,7 @@ use Spatie\Ignition\Contracts\HasSolutionsForThrowable;
 use StatamicRadPack\Runway\Ignition\Solutions\AddTraitToModel;
 use Throwable;
 
-class TraitMissingException implements HasSolutionsForThrowable
+class TraitMissing implements HasSolutionsForThrowable
 {
     public function canSolve(Throwable $throwable): bool
     {
