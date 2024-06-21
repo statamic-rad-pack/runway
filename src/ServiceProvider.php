@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
+use Spatie\ErrorSolutions\Contracts\SolutionProviderRepository;
 use Statamic\API\Middleware\Cache;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\CP\Nav;
@@ -19,6 +21,7 @@ use Statamic\Http\Middleware\RequireStatamicPro;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 use StatamicRadPack\Runway\Http\Controllers\ApiController;
+use StatamicRadPack\Runway\Ignition\SolutionProviders\TraitMissing;
 use StatamicRadPack\Runway\Policies\ResourcePolicy;
 use StatamicRadPack\Runway\Search\Provider as SearchProvider;
 use StatamicRadPack\Runway\Search\Searchable;
@@ -88,6 +91,8 @@ class ServiceProvider extends AddonServiceProvider
             __DIR__.'/../config/runway.php' => config_path('runway.php'),
         ], 'runway-config');
 
+        $this->registerIgnitionSolutionProviders();
+
         Statamic::booted(function () {
             if ($this->shouldDiscoverResources()) {
                 Runway::discoverResources();
@@ -105,6 +110,16 @@ class ServiceProvider extends AddonServiceProvider
                 ->bootModelEventListeners()
                 ->bootDataRepository();
         });
+    }
+
+    protected function registerIgnitionSolutionProviders(): void
+    {
+        try {
+            $this->app->make(SolutionProviderRepository::class)
+                ->registerSolutionProvider(TraitMissing::class);
+        } catch (BindingResolutionException $e) {
+            //
+        }
     }
 
     protected function registerRouteBindings(): self
