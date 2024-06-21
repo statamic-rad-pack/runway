@@ -43,7 +43,7 @@
         "laravel/framework": "^10.25.0 || ^11.0",
         "laravel/prompts": "^0.1.17",
         "pixelfear/composer-dist-plugin": "^0.1.5",
-        "spatie/ignition": "^1.14",
+        "spatie/ignition": "^1.15",
         "statamic/cms": "^5.7.0"
     },
     "require-dev": {
