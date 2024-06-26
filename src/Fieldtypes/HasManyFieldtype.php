@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway\Fieldtypes;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Arr;
 use Statamic\Facades\Blink;
 use Statamic\Facades\GraphQL;
@@ -99,9 +100,15 @@ class HasManyFieldtype extends BaseFieldtype
                         ->each(function ($relatedId) use ($model, $relatedResource, $relatedField) {
                             $relatedModel = $relatedResource->model()->find($relatedId);
 
-                            $relatedModel->update([
+                            $update = [
                                 $relatedField->getForeignKeyName() => $model->{$relatedResource->primaryKey()},
-                            ]);
+                            ];
+            
+                            if ($relatedField instanceof MorphMany) {
+                                $update[$relatedField->getMorphType()] = $relatedField->getMorphClass();
+                            }
+            
+                            $relatedModel->update($update);
                         });
                 }
             };
@@ -144,9 +151,15 @@ class HasManyFieldtype extends BaseFieldtype
             ->each(function ($relatedId) use ($model, $relatedResource, $relatedField) {
                 $relatedModel = $relatedResource->model()->find($relatedId);
 
-                $relatedModel->update([
+                $update = [
                     $relatedField->getForeignKeyName() => $model->{$relatedResource->primaryKey()},
-                ]);
+                ];
+
+                if ($relatedField instanceof MorphMany) {
+                    $update[$relatedField->getMorphType()] = $relatedField->getMorphClass();
+                }
+
+                $relatedModel->update($update);
             });
 
         // If reordering is enabled, update all models with their new sort order.
