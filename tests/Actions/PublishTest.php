@@ -79,7 +79,7 @@ class PublishTest extends TestCase
 
         Entry::make()->collection('posts')->slug('hello-world')->save();
 
-        $visibleTo = (new Unpublish())->context([])->visibleToBulk(Entry::all());
+        $visibleTo = (new Publish())->context([])->visibleToBulk(Entry::all());
 
         $this->assertFalse($visibleTo);
     }
