@@ -8,11 +8,12 @@ use Statamic\Facades\Blueprint;
 use Statamic\Stache\Stores\UsersStore;
 use Statamic\Statamic;
 use Statamic\Testing\AddonTestCase;
+use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
 use StatamicRadPack\Runway\ServiceProvider;
 
 abstract class TestCase extends AddonTestCase
 {
-    use RefreshDatabase;
+    use PreventsSavingStacheItemsToDisk, RefreshDatabase;
 
     protected string $addonServiceProvider = ServiceProvider::class;
 
