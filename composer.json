@@ -20,7 +20,10 @@
             "StatamicRadPack\\Runway\\Tests\\": "tests",
             "StatamicRadPack\\Runway\\Tests\\Fixtures\\": "tests/__fixtures__/app",
             "StatamicRadPack\\Runway\\Tests\\Fixtures\\Database\\Factories\\": "tests/__fixtures__/database/factories"
-        }
+        },
+        "classmap": [
+            "tests/__fixtures__/database"
+        ]
     },
     "extra": {
         "statamic": {
