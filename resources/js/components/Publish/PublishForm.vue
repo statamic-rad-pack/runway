@@ -116,11 +116,11 @@
                                 <label class="publish-field-label font-medium mb-2" v-text="__('Revisions')"/>
                                 <div class="mb-1 flex items-center" v-if="published">
                                     <span class="text-green-600 w-6 text-center">&check;</span>
-                                    <span class="text-2xs" v-text="__('Entry has a published version')"></span>
+                                    <span class="text-2xs" v-text="__('Model has a published version')"></span>
                                 </div>
                                 <div class="mb-1 flex items-center" v-else>
                                     <span class="text-orange w-6 text-center">!</span>
-                                    <span class="text-2xs" v-text="__('Entry has not been published')"></span>
+                                    <span class="text-2xs" v-text="__('Model has not been published')"></span>
                                 </div>
                                 <div class="mb-1 flex items-center" v-if="!isWorkingCopy && published">
                                     <span class="text-green-600 w-6 text-center">&check;</span>
