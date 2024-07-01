@@ -1,6 +1,6 @@
 <?php
 
-namespace Http\Controllers\CP;
+namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
 
 use Statamic\Facades\Folder;
 use Statamic\Facades\User;
