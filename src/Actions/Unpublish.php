@@ -22,11 +22,7 @@ class Unpublish extends Action
 
     public function visibleToBulk($items)
     {
-        $allowedOnItems = $items->filter(function ($item) {
-            return $this->visibleTo($item);
-        });
-
-        return $items->count() === $allowedOnItems->count();
+        return $items->every(fn ($item) => $this->visibleTo($item));
     }
 
     public function authorize($user, $item)
