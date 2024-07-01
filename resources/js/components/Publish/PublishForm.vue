@@ -5,7 +5,7 @@
         <div class="flex items-center mb-6">
             <h1 class="flex-1">
                 <div class="flex items-center">
-                    <span v-html="$options.filters.striptags(__(title))" />
+                    <span v-html="$options.filters.striptags(title)" />
                 </div>
             </h1>
 
