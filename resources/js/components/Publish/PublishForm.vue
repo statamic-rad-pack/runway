@@ -330,6 +330,8 @@ export default {
 
         saveText() {
             switch(true) {
+                case this.revisionsEnabled:
+                    return __('Save Changes');
                 case this.isUnpublishing:
                     return __('Save & Unpublish');
                 case this.publishStatesEnabled && this.isDraft:
