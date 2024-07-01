@@ -22,11 +22,7 @@ class Publish extends Action
 
     public function visibleToBulk($items)
     {
-        if ($items->filter(fn ($item) => $item->published())->count() > 0) {
-            return false;
-        }
-
-        return true;
+        return $items->every(fn ($item) => $this->visibleTo($item));
     }
 
     public function authorize($user, $item)
