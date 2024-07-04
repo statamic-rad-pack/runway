@@ -555,8 +555,6 @@ export default {
          * When creating a new model via the HasMany fieldtype, pre-fill the belongs_to field to the current model.
          */
         prefillBelongsToField() {
-            this.values['from_inline_publish_form'] = true
-
             this.initialBlueprint.tabs.forEach((tab) => {
                 tab.sections.forEach((section) => {
                     section.fields

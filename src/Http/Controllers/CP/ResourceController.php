@@ -198,10 +198,6 @@ class ResourceController extends CpController
 
         $this->prepareModelForSaving($resource, $model, $request);
 
-        if ($request->get('from_inline_publish_form')) {
-            $this->handleInlinePublishForm($resource, $model);
-        }
-
         if ($resource->revisionsEnabled() && $model->published()) {
             $saved = $model
                 ->makeWorkingCopy()
@@ -221,31 +217,5 @@ class ResourceController extends CpController
             ]),
             'saved' => $saved,
         ];
-    }
-
-    /**
-     * Handle saving data from the Inline Publish Form (the one that appears when you edit models in a stack).
-     */
-    protected function handleInlinePublishForm(Resource $resource, Model &$model): void
-    {
-        collect($resource->blueprint()->fields()->all())
-            ->filter(fn (Field $field) => $field->fieldtype() instanceof BelongsToFieldtype || $field->fieldtype() instanceof HasManyFieldtype)
-            ->each(function (Field $field) use (&$model, $resource) {
-                $relatedResource = Runway::findResource($field->get('resource'));
-
-                $column = $relatedResource->titleField();
-
-                $relationshipName = $resource->eloquentRelationships()->get($field->handle()) ?? $field->handle();
-
-                $model->{$field->handle()} = $model->{$relationshipName}()
-                    ->select($relatedResource->model()->qualifyColumn($relatedResource->primaryKey()), $column)
-                    ->get()
-                    ->each(function ($model) use ($column) {
-                        $model->title = $model->{$column};
-                        $model->edit_url = $model->runwayEditUrl();
-
-                        return $model;
-                    });
-            });
     }
 }
