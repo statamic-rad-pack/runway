@@ -494,7 +494,7 @@ export default {
 
                         this.$nextTick(() => this.$emit('saved', response));
 
-                        if (this.isCreating) {
+                        if (!this.isInline && this.isCreating) {
                             window.location = response.data.data.edit_url + '?created=true';
                         }
                     }
