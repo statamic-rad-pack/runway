@@ -1,5 +1,13 @@
 # Changelog
 
+## v7.5.3 (2024-07-04)
+
+### What's fixed
+* Prevent redirect when creating model via inline publish form #548 by @duncanmcclean
+* Fix error when saving models via inline publish form #547 by @duncanmcclean
+
+
+
 ## v7.5.2 (2024-07-01)
 
 ### What's fixed
