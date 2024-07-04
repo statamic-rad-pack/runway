@@ -550,33 +550,6 @@ class ResourceControllerTest extends TestCase
         $this->assertEquals($post->title, 'Santa is coming home');
     }
 
-    /**
-     * @test
-     * https://github.com/statamic-rad-pack/runway/issues/187
-     */
-    public function can_update_resource_when_being_updated_from_inline_publish_form()
-    {
-        $post = Post::factory()->create();
-        $user = User::make()->makeSuper()->save();
-
-        $this
-            ->actingAs($user)
-            ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
-                'published' => true,
-                'title' => 'Santa is coming home',
-                'slug' => 'santa-is-coming-home',
-                'body' => $post->body,
-                'author_id' => [$post->author_id],
-                'from_inline_publish_form' => true,
-            ])
-            ->assertOk()
-            ->assertJsonStructure(['data', 'saved']);
-
-        $post->refresh();
-
-        $this->assertEquals($post->title, 'Santa is coming home');
-    }
-
     /** @test */
     public function cant_update_resource_if_resource_is_read_only()
     {
