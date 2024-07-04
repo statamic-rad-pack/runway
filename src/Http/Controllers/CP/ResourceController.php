@@ -2,7 +2,6 @@
 
 namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
-use Illuminate\Database\Eloquent\Model;
 use Statamic\CP\Breadcrumbs;
 use Statamic\CP\Column;
 use Statamic\Exceptions\NotFoundHttpException;
@@ -11,7 +10,6 @@ use Statamic\Facades\Scope;
 use Statamic\Facades\User;
 use Statamic\Fields\Field;
 use Statamic\Http\Controllers\CP\CpController;
-use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 use StatamicRadPack\Runway\Http\Requests\CP\CreateRequest;
 use StatamicRadPack\Runway\Http\Requests\CP\EditRequest;
@@ -20,7 +18,6 @@ use StatamicRadPack\Runway\Http\Requests\CP\StoreRequest;
 use StatamicRadPack\Runway\Http\Requests\CP\UpdateRequest;
 use StatamicRadPack\Runway\Http\Resources\CP\Model as ModelResource;
 use StatamicRadPack\Runway\Resource;
-use StatamicRadPack\Runway\Runway;
 
 class ResourceController extends CpController
 {
