@@ -182,6 +182,7 @@ trait HasRunwayResource
             ->reject(fn (Field $field) => $field->fieldtype() instanceof Section)
             ->reject(fn (Field $field) => $field->visibility() === 'computed')
             ->reject(fn (Field $field) => $field->get('save', true) === false)
+            ->reject(fn (Field $field) => $field->type() === 'has_many')
             ->map->handle()
             ->values()
             ->all();

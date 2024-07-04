@@ -18,7 +18,7 @@ class RunwayTest extends TestCase
         $all = Runway::allResources()->values();
 
         $this->assertTrue($all instanceof Collection);
-        $this->assertCount(3, $all);
+        $this->assertCount(4, $all);
 
         $this->assertTrue($all[0] instanceof Resource);
         $this->assertEquals('post', $all[0]->handle());
@@ -26,14 +26,19 @@ class RunwayTest extends TestCase
         $this->assertTrue($all[0]->blueprint() instanceof Blueprint);
 
         $this->assertTrue($all[1] instanceof Resource);
-        $this->assertEquals('author', $all[1]->handle());
+        $this->assertEquals('comment', $all[1]->handle());
         $this->assertTrue($all[1]->model() instanceof Model);
         $this->assertTrue($all[1]->blueprint() instanceof Blueprint);
 
         $this->assertTrue($all[2] instanceof Resource);
-        $this->assertEquals('user', $all[2]->handle());
+        $this->assertEquals('author', $all[2]->handle());
         $this->assertTrue($all[2]->model() instanceof Model);
         $this->assertTrue($all[2]->blueprint() instanceof Blueprint);
+
+        $this->assertTrue($all[3] instanceof Resource);
+        $this->assertEquals('user', $all[3]->handle());
+        $this->assertTrue($all[3]->model() instanceof Model);
+        $this->assertTrue($all[3]->blueprint() instanceof Blueprint);
     }
 
     /** @test */

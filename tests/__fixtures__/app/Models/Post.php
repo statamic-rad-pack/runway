@@ -5,6 +5,7 @@ namespace StatamicRadPack\Runway\Tests\Fixtures\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Statamic\Facades\Blink;
 use StatamicRadPack\Runway\Routing\Traits\RunwayRoutes;
 use StatamicRadPack\Runway\Tests\Fixtures\Database\Factories\PostFactory;
@@ -51,6 +52,11 @@ class Post extends Model
     public function author()
     {
         return $this->belongsTo(Author::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
     }
 
     public function excerpt(): Attribute

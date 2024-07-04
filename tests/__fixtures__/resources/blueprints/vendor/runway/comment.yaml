@@ -1,0 +1,9 @@
+tabs:
+  main:
+    sections:
+      - fields:
+        -
+          handle: comment
+          field:
+            type: text
+            listable: true

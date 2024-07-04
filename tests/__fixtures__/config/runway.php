@@ -1,6 +1,7 @@
 <?php
 
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Comment;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\User;
 
@@ -20,6 +21,10 @@ return [
             'route' => '/posts/{{ slug }}',
             'published' => true,
             'revisions' => true,
+        ],
+
+        Comment::class => [
+            'name' => 'Comments',
         ],
 
         Author::class => [

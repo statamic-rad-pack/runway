@@ -65,6 +65,7 @@ class ResourceTest extends TestCase
 
         $this->assertEquals([
             'author',
+            'comments',
             'runwayUri',
         ], $eagerLoadingRelationships);
     }
@@ -300,4 +301,15 @@ class ResourceTest extends TestCase
 
         $this->assertFalse($resource->revisionsEnabled());
     }
+
+    // /** @test */
+    // public function it_filters_out_proper_fields_from_revisions()
+    // {
+    //     $model = Post::factory()->create(['title' => 'Original title']);
+
+    //     tap($model->makeRevision(), function ($copy) {
+    //         $copy->message('Revision one');
+    //         $copy->date(Carbon::parse('2023-12-12 15:00:00'));
+    //     })->save();
+    // }
 }
