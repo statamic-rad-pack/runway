@@ -63,6 +63,18 @@ class UnpublishTest extends TestCase
     }
 
     /** @test */
+    public function is_not_visible_in_bulk_to_entry()
+    {
+        Collection::make('posts')->save();
+
+        Entry::make()->collection('posts')->slug('hello-world')->save();
+
+        $visibleTo = (new Unpublish())->context([])->visibleToBulk(Entry::all());
+
+        $this->assertFalse($visibleTo);
+    }
+
+    /** @test */
     public function is_visible_to_eloquent_models_in_bulk()
     {
         $posts = Post::factory()->count(3)->create();

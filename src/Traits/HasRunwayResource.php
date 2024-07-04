@@ -10,6 +10,7 @@ use Statamic\Fieldtypes\Hidden;
 use Statamic\Fieldtypes\Section;
 use Statamic\GraphQL\ResolvesValues;
 use Statamic\Revisions\Revisable;
+use Statamic\Support\Str;
 use Statamic\Support\Traits\FluentlyGetsAndSets;
 use StatamicRadPack\Runway\Data\AugmentedModel;
 use StatamicRadPack\Runway\Data\HasAugmentedInstance;
@@ -183,8 +184,9 @@ trait HasRunwayResource
             ->reject(fn (Field $field) => $field->visibility() === 'computed')
             ->reject(fn (Field $field) => $field->get('save', true) === false)
             ->reject(fn (Field $field) => $field->type() === 'has_many')
-            ->map->handle()
+            ->map(fn (Field $field) => Str::before($field->handle(), '->'))
             ->values()
+            ->unique()
             ->all();
 
         return [

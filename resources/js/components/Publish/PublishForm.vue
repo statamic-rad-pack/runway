@@ -5,7 +5,7 @@
         <div class="flex items-center mb-6">
             <h1 class="flex-1">
                 <div class="flex items-center">
-                    <span v-html="$options.filters.striptags(__(title))" />
+                    <span v-html="$options.filters.striptags(title)" />
                 </div>
             </h1>
 
@@ -116,11 +116,11 @@
                                 <label class="publish-field-label font-medium mb-2" v-text="__('Revisions')"/>
                                 <div class="mb-1 flex items-center" v-if="published">
                                     <span class="text-green-600 w-6 text-center">&check;</span>
-                                    <span class="text-2xs" v-text="__('Entry has a published version')"></span>
+                                    <span class="text-2xs" v-text="__('Model has a published version')"></span>
                                 </div>
                                 <div class="mb-1 flex items-center" v-else>
                                     <span class="text-orange w-6 text-center">!</span>
-                                    <span class="text-2xs" v-text="__('Entry has not been published')"></span>
+                                    <span class="text-2xs" v-text="__('Model has not been published')"></span>
                                 </div>
                                 <div class="mb-1 flex items-center" v-if="!isWorkingCopy && published">
                                     <span class="text-green-600 w-6 text-center">&check;</span>
@@ -330,6 +330,8 @@ export default {
 
         saveText() {
             switch(true) {
+                case this.revisionsEnabled:
+                    return __('Save Changes');
                 case this.isUnpublishing:
                     return __('Save & Unpublish');
                 case this.publishStatesEnabled && this.isDraft:
@@ -492,7 +494,7 @@ export default {
 
                         this.$nextTick(() => this.$emit('saved', response));
 
-                        if (this.isCreating) {
+                        if (!this.isInline && this.isCreating) {
                             window.location = response.data.data.edit_url + '?created=true';
                         }
                     }
@@ -553,8 +555,6 @@ export default {
          * When creating a new model via the HasMany fieldtype, pre-fill the belongs_to field to the current model.
          */
         prefillBelongsToField() {
-            this.values['from_inline_publish_form'] = true
-
             this.initialBlueprint.tabs.forEach((tab) => {
                 tab.sections.forEach((section) => {
                     section.fields
