@@ -180,10 +180,7 @@ trait HasRunwayResource
             ->fields()
             ->setParent($this)
             ->all()
-            ->reject(fn (Field $field) => $field->fieldtype() instanceof Section)
-            ->reject(fn (Field $field) => $field->visibility() === 'computed')
-            ->reject(fn (Field $field) => $field->get('save', true) === false)
-            ->reject(fn (Field $field) => $field->type() === 'has_many')
+            ->reject(fn (Field $field) => $this->shouldReject($field))
             ->map(fn (Field $field) => Str::before($field->handle(), '->'))
             ->values()
             ->unique()
@@ -271,5 +268,16 @@ trait HasRunwayResource
     public function updateLastModified($user = false): self
     {
         return $this;
+    }
+
+    private function shouldReject(Field $field): bool
+    {
+        return match (true) {
+            $field->fieldtype() instanceof Section => true,
+            $field->visibility() === 'computed' => true,
+            $field->get('save', true) === false => true,
+            $field->type() === 'has_many' => true,
+            default => false,
+        };
     }
 }
