@@ -97,7 +97,7 @@ Nested Fields aren't currently available in GraphQL.
 
 ## Generating migrations from your blueprints
 
-If you’ve already went and created a blueprint for your model(s) and still to do the database side of things, Runway can help!
+If you’ve already created a blueprint for your model(s) and still need to do the database side of things, Runway can help!
 
 Runway can automatically generate migrations for your models, based on the fields defined in your blueprint, and their configurations.
 
