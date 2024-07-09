@@ -149,6 +149,9 @@ class ServiceProvider extends AddonServiceProvider
                                     Permission::make("create {$resource->handle()}")
                                         ->label($this->permissionLabel('create', $resource)),
 
+                                    Permission::make("publish {$resource->handle()}")
+                                        ->label("Manage {$resource->handle()} Publish State"),
+
                                     Permission::make("delete {$resource->handle()}")
                                         ->label($this->permissionLabel('delete', $resource)),
                                 ]),
