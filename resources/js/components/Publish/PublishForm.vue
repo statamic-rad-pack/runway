@@ -47,9 +47,9 @@
                     v-if="revisionsEnabled && !isCreating"
                     class="rtl:mr-4 ltr:ml-4 btn-primary flex items-center"
                     :disabled="!canPublish"
-                    @click="confirmingPublish = true">
-                    <span>{{ __('Publish') }}…</span>
-                </button>
+                    @click="confirmingPublish = true"
+                    v-text="this.canManagePublishState ? __('Publish') : __('Create Revision')"
+                />
             </div>
 
             <slot name="action-buttons-right" />
@@ -103,7 +103,7 @@
                                     class="flex items-center justify-between px-4 py-2"
                                     :class="{ 'border-t dark:border-dark-900': resourceHasRoutes && permalink }"
                                 >
-                                    <label v-text="__('Published')" class="publish-field-label font-medium" />
+                                    <label v-text="__('Published')" class="font-medium publish-field-label" />
                                     <toggle-input :value="published" :read-only="!canManagePublishState" @input="setFieldValue(resource.published_column, $event)" />
                                 </div>
                             </div>
@@ -158,8 +158,8 @@
                     class="rtl:mr-4 ltr:ml-4 btn-primary flex items-center"
                     :disabled="!canPublish"
                     @click="confirmingPublish = true">
-                    <span v-text="__('Publish')" />
-                    <svg-icon name="micro/chevron-down-xs" class="rtl:mr-2 ltr:ml-2 w-2" />
+                    <span v-text="this.canManagePublishState ? __('Publish') : __('Create Revision')" />
+                    <svg-icon name="micro/chevron-down-xs" class="w-2 rtl:mr-2 ltr:ml-2" />
                 </button>
             </template>
         </publish-container>
@@ -181,8 +181,8 @@
                 class="rtl:mr-2 ltr:ml-2 btn btn-lg justify-center btn-primary flex items-center w-1/2"
                 :disabled="!canPublish"
                 @click="confirmingPublish = true">
-                <span v-text="__('Publish')" />
-                <svg-icon name="micro/chevron-down-xs" class="rtl:mr-2 ltr:ml-2 w-2" />
+                <span v-text="this.canManagePublishState ? __('Publish') : __('Create Revision')" />
+                <svg-icon name="micro/chevron-down-xs" class="w-2 rtl:mr-2 ltr:ml-2" />
             </button>
         </div>
 
