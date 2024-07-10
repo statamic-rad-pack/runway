@@ -16,6 +16,7 @@
         :initial-values='@json($values)'
         :initial-meta='@json($meta)'
         initial-permalink="{{ $permalink }}"
+        :initial-is-working-copy="{{ $str::bool($hasWorkingCopy) }}"
         :initial-read-only="{{ $str::bool($readOnly) }}"
         :breadcrumbs="{{ $breadcrumbs->toJson() }}"
         :can-edit-blueprint="{{ Auth::user()->can('configure fields') ? 'true' : 'false' }}"
