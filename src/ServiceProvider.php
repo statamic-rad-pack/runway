@@ -67,6 +67,7 @@ class ServiceProvider extends AddonServiceProvider
     protected $updateScripts = [
         UpdateScripts\ChangePermissionNames::class,
         UpdateScripts\MigrateBlueprints::class,
+        UpdateScripts\AddManagePublishStatesPermissionToRoles::class,
     ];
 
     protected $vite = [
