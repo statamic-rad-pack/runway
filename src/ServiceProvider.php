@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Spatie\ErrorSolutions\Contracts\SolutionProviderRepository;
 use Statamic\API\Middleware\Cache;
+use Statamic\Auth\Permission as AuthPermission;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
@@ -143,18 +144,12 @@ class ServiceProvider extends AddonServiceProvider
                     $permission
                         ->label($this->permissionLabel('view', $resource))
                         ->children([
-                            Permission::make("edit {$resource->handle()}")
-                                ->label($this->permissionLabel('edit', $resource))
-                                ->children([
-                                    Permission::make("create {$resource->handle()}")
-                                        ->label($this->permissionLabel('create', $resource)),
-
-                                    Permission::make("publish {$resource->handle()}")
-                                        ->label("Manage {$resource->handle()} Publish State"),
-
-                                    Permission::make("delete {$resource->handle()}")
-                                        ->label($this->permissionLabel('delete', $resource)),
-                                ]),
+                            $this->makePermission("edit {$resource->handle()}", $this->permissionLabel('edit', $resource))
+                                ->children(array_filter([
+                                    $this->makePermission("create {$resource->handle()}", $this->permissionLabel('create', $resource)),
+                                    $resource->hasPublishStates() ? $this->makePermission("publish {$resource->handle()}", "Manage {$resource->name()} Publish State") : null,
+                                    $this->makePermission("delete {$resource->handle()}", $this->permissionLabel('delete', $resource)),
+                                ])),
                         ]);
                 });
             }
@@ -302,5 +297,10 @@ class ServiceProvider extends AddonServiceProvider
         }
 
         return true;
+    }
+
+    private function makePermission(string $permission, string $label): AuthPermission
+    {
+        return Permission::make($permission)->label($label);
     }
 }
