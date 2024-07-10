@@ -20,7 +20,7 @@ class AddManagePublishStatesPermissionToRoles extends UpdateScript
             $requiresSave = false;
 
             Runway::allResources()->each(function (Resource $resource) use ($role, &$requiresSave) {
-                if ($role->hasPermission("create {$resource->handle()}")) {
+                if ($resource->hasPublishStates() && $role->hasPermission("create {$resource->handle()}")) {
                     $role->addPermission("publish {$resource->handle()}");
                     $requiresSave = true;
                 }
