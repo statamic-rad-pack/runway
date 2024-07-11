@@ -220,6 +220,7 @@ trait HasRunwayResource
 
             if ($field->fieldtype() instanceof HasManyFieldtype) {
                 $model->runwayRelationships[$key] = $value;
+
                 return;
             }
 

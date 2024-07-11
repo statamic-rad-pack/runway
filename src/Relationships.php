@@ -10,9 +10,7 @@ use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 
 class Relationships
 {
-    public function __construct(protected Model $model, protected array $data = [])
-    {
-    }
+    public function __construct(protected Model $model, protected array $data = []) {}
 
     public static function for(Model $model): self
     {

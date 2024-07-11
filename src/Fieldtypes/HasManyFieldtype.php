@@ -4,9 +4,7 @@ namespace StatamicRadPack\Runway\Fieldtypes;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Arr;
-use Statamic\Facades\Blink;
 use Statamic\Facades\GraphQL;
 use StatamicRadPack\Runway\Runway;
 
@@ -51,7 +49,6 @@ class HasManyFieldtype extends BaseFieldtype
     /**
      * Pre-process the values before they get sent to the publish form.
      *
-     * @param $data
      * @return array
      */
     public function preProcess($data)
