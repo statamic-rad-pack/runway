@@ -208,12 +208,14 @@ class ResourceController extends CpController
 
                 return true;
             });
+
+            $model->refresh();
         }
 
         [$values] = $this->extractFromFields($model, $resource, $resource->blueprint());
 
         return [
-            'data' => array_merge((new ModelResource($model->fresh()))->resolve()['data'], [
+            'data' => array_merge((new ModelResource($model))->resolve()['data'], [
                 'values' => $values,
             ]),
             'saved' => $saved,
