@@ -62,13 +62,20 @@ trait PreparesModels
                     }
                 }
 
-                // HasMany fieldtype: when reordering is enabled, we need to ensure the models are returned in the correct order.
-                if ($field->fieldtype() instanceof HasManyFieldtype && $field->get('reorderable', false)) {
-                    $orderColumn = $field->get('order_column');
+                if ($field->fieldtype() instanceof HasManyFieldtype) {
+                    // Use IDs from the model's $runwayRelationships property, if there are any.
+                    if (isset($model->runwayRelationships[$field->handle()])) {
+                        $value = $model->runwayRelationships[$field->handle()];
+                    }
 
-                    $value = $model->{$field->handle()}()
-                        ->reorder($orderColumn, 'ASC')
-                        ->get();
+                    // When re-ordering is enabled, ensure the models are returned in the correct order.
+                    if ($field->get('reorderable', false)) {
+                        $orderColumn = $field->get('order_column');
+
+                        $value = $model->{$field->handle()}()
+                            ->reorder($orderColumn, 'ASC')
+                            ->get();
+                    }
                 }
 
                 return [$field->handle() => $value];
