@@ -15,6 +15,7 @@ use Statamic\Support\Traits\FluentlyGetsAndSets;
 use StatamicRadPack\Runway\Data\AugmentedModel;
 use StatamicRadPack\Runway\Data\HasAugmentedInstance;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
+use StatamicRadPack\Runway\Relationships;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
 
@@ -212,9 +213,18 @@ trait HasRunwayResource
 
         $model->published($attrs['published']);
 
-        foreach ($attrs['data'] as $key => $value) {
+        $blueprint = $this->runwayResource()->blueprint();
+
+        collect($attrs['data'])->each(function ($value, $key) use (&$model, $blueprint) {
+            $field = $blueprint->field($key);
+
+            if ($field->fieldtype() instanceof HasManyFieldtype) {
+                $model->runwayRelationships[$key] = $value;
+                return;
+            }
+
             $model->setAttribute($key, $value);
-        }
+        });
 
         return $model;
     }
@@ -242,7 +252,11 @@ trait HasRunwayResource
     public function publish($options = [])
     {
         if ($this->revisionsEnabled()) {
-            return $this->publishWorkingCopy($options);
+            $model = $this->publishWorkingCopy($options);
+
+            Relationships::for($model)->with($model->runwayRelationships)->save();
+
+            return $model;
         }
 
         if ($this->runwayResource()->hasPublishStates()) {
