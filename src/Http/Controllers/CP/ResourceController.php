@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
+use Illuminate\Support\Facades\DB;
 use Statamic\CP\Breadcrumbs;
 use Statamic\CP\Column;
 use Statamic\Exceptions\NotFoundHttpException;
@@ -17,6 +18,7 @@ use StatamicRadPack\Runway\Http\Requests\CP\IndexRequest;
 use StatamicRadPack\Runway\Http\Requests\CP\StoreRequest;
 use StatamicRadPack\Runway\Http\Requests\CP\UpdateRequest;
 use StatamicRadPack\Runway\Http\Resources\CP\Model as ModelResource;
+use StatamicRadPack\Runway\Relationships;
 use StatamicRadPack\Runway\Resource;
 
 class ResourceController extends CpController
@@ -102,11 +104,6 @@ class ResourceController extends CpController
 
         $model = $resource->model();
 
-        $postCreatedHooks = $resource->blueprint()->fields()->all()
-            ->filter(fn (Field $field) => $field->fieldtype() instanceof HasManyFieldtype)
-            ->map(fn (Field $field) => $field->fieldtype()->process($request->get($field->handle())))
-            ->values();
-
         $this->prepareModelForSaving($resource, $model, $request);
 
         if ($resource->revisionsEnabled()) {
@@ -115,12 +112,13 @@ class ResourceController extends CpController
                 'user' => User::current(),
             ]);
         } else {
-            $saved = $model->save();
-        }
+            $saved = DB::transaction(function () use ($model, $request) {
+                $model->save();
+                Relationships::for($model)->with($request->all())->save();
 
-        // Runs anything in the $postCreatedHooks array. See HasManyFieldtype@process for an example
-        // of where this is used.
-        $postCreatedHooks->each(fn ($postCreatedHook) => $postCreatedHook($resource, $model));
+                return true;
+            });
+        }
 
         return [
             'data' => (new ModelResource($model->fresh()))->resolve()['data'],
@@ -204,7 +202,12 @@ class ResourceController extends CpController
 
             $model = $model->fromWorkingCopy();
         } else {
-            $saved = $model->save();
+            $saved = DB::transaction(function () use ($model, $request) {
+                $model->save();
+                Relationships::for($model)->with($request->all())->save();
+
+                return true;
+            });
         }
 
         [$values] = $this->extractFromFields($model, $resource, $resource->blueprint());
