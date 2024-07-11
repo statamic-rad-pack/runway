@@ -90,10 +90,6 @@ trait PreparesModels
             ->each(function (Field $field) use ($resource, &$model, $request) {
                 $processedValue = $field->fieldtype()->process($request->get($field->handle()));
 
-                if ($field->fieldtype() instanceof HasManyFieldtype) {
-                    return;
-                }
-
                 // Skip the field if it exists in the model's $appends array AND there's no mutator for it on the model.
                 if (in_array($field->handle(), $model->getAppends(), true) && ! $model->hasSetMutator($field->handle()) && ! $model->hasAttributeSetMutator($field->handle())) {
                     return;
@@ -152,7 +148,7 @@ trait PreparesModels
 
     protected function shouldSaveField(Field $field): bool
     {
-        if ($field->fieldtype() instanceof Section) {
+        if ($field->fieldtype() instanceof Section || $field->fieldtype() instanceof HasManyFieldtype) {
             return false;
         }
 
