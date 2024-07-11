@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Fieldtypes;
 
 use GraphQL\Type\Definition\ResolveInfo;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Arr;
 use Statamic\Facades\Blink;
@@ -47,21 +48,21 @@ class HasManyFieldtype extends BaseFieldtype
         return array_merge(parent::configFieldItems(), $config);
     }
 
-    // Pre-process the data before it gets sent to the publish page
+    /**
+     * Pre-process the values before they get sent to the publish form.
+     *
+     * @param $data
+     * @return array
+     */
     public function preProcess($data)
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        // Determine whether or not this field is on a resource or a collection
-        $resourceHandle = request()->route('resource');
-
-        if (! $resourceHandle) {
-            return Arr::wrap($data);
+        if (collect($data)->every(fn ($item) => $item instanceof Model)) {
+            return collect($data)->pluck($resource->primaryKey())->all();
         }
 
-        return collect($data)
-            ->pluck($resource->primaryKey())
-            ->toArray();
+        return Arr::wrap($data);
     }
 
     public function preload()
