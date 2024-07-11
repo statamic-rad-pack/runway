@@ -25,6 +25,8 @@ trait HasRunwayResource
         resolveGqlValue as traitResolveGqlValue;
     }
 
+    public array $runwayRelationships = [];
+
     public function newAugmentedInstance(): Augmented
     {
         return new AugmentedModel($this);
@@ -176,22 +178,25 @@ trait HasRunwayResource
 
     protected function revisionAttributes(): array
     {
-        $fields = $this->runwayResource()->blueprint()
-            ->fields()
-            ->setParent($this)
-            ->all()
+        $data = $this->runwayResource()->blueprint()->fields()->setParent($this)->all()
             ->reject(fn (Field $field) => $field->fieldtype() instanceof Section)
             ->reject(fn (Field $field) => $field->visibility() === 'computed')
             ->reject(fn (Field $field) => $field->get('save', true) === false)
-            ->map(fn (Field $field) => Str::before($field->handle(), '->'))
-            ->values()
-            ->unique()
+            ->mapWithKeys(function (Field $field) {
+                $handle = Str::before($field->handle(), '->');
+
+                if ($field->fieldtype() instanceof HasManyFieldtype) {
+                    return [$handle => $this->runwayRelationships[$handle] ?? []];
+                }
+
+                return [$handle => $this->getAttribute($field->handle())];
+            })
             ->all();
 
         return [
             'id' => $this->getKey(),
             'published' => $this->published(),
-            'data' => $this->only($fields),
+            'data' => $data,
         ];
     }
 
