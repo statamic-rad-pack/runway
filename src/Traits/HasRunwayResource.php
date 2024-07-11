@@ -218,7 +218,7 @@ trait HasRunwayResource
         collect($attrs['data'])->each(function ($value, $key) use (&$model, $blueprint) {
             $field = $blueprint->field($key);
 
-            if ($field->fieldtype() instanceof HasManyFieldtype) {
+            if ($field?->fieldtype() instanceof HasManyFieldtype) {
                 $model->runwayRelationships[$key] = $value;
 
                 return;
