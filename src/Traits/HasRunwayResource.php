@@ -10,11 +10,13 @@ use Statamic\Fieldtypes\Hidden;
 use Statamic\Fieldtypes\Section;
 use Statamic\GraphQL\ResolvesValues;
 use Statamic\Revisions\Revisable;
+use Statamic\Support\Arr;
 use Statamic\Support\Str;
 use Statamic\Support\Traits\FluentlyGetsAndSets;
 use StatamicRadPack\Runway\Data\AugmentedModel;
 use StatamicRadPack\Runway\Data\HasAugmentedInstance;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
+use StatamicRadPack\Runway\Relationships;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
 
@@ -24,6 +26,8 @@ trait HasRunwayResource
     use ResolvesValues {
         resolveGqlValue as traitResolveGqlValue;
     }
+
+    public array $runwayRelationships = [];
 
     public function newAugmentedInstance(): Augmented
     {
@@ -176,22 +180,25 @@ trait HasRunwayResource
 
     protected function revisionAttributes(): array
     {
-        $fields = $this->runwayResource()->blueprint()
-            ->fields()
-            ->setParent($this)
-            ->all()
+        $data = $this->runwayResource()->blueprint()->fields()->setParent($this)->all()
             ->reject(fn (Field $field) => $field->fieldtype() instanceof Section)
             ->reject(fn (Field $field) => $field->visibility() === 'computed')
             ->reject(fn (Field $field) => $field->get('save', true) === false)
-            ->map(fn (Field $field) => Str::before($field->handle(), '->'))
-            ->values()
-            ->unique()
+            ->mapWithKeys(function (Field $field) {
+                $handle = Str::before($field->handle(), '->');
+
+                if ($field->fieldtype() instanceof HasManyFieldtype) {
+                    return [$handle => Arr::get($this->runwayRelationships, $handle, [])];
+                }
+
+                return [$handle => $this->getAttribute($field->handle())];
+            })
             ->all();
 
         return [
             'id' => $this->getKey(),
             'published' => $this->published(),
-            'data' => $this->only($fields),
+            'data' => $data,
         ];
     }
 
@@ -207,9 +214,19 @@ trait HasRunwayResource
 
         $model->published($attrs['published']);
 
-        foreach ($attrs['data'] as $key => $value) {
+        $blueprint = $this->runwayResource()->blueprint();
+
+        collect($attrs['data'])->each(function ($value, $key) use (&$model, $blueprint) {
+            $field = $blueprint->field($key);
+
+            if ($field?->fieldtype() instanceof HasManyFieldtype) {
+                $model->runwayRelationships[$key] = $value;
+
+                return;
+            }
+
             $model->setAttribute($key, $value);
-        }
+        });
 
         return $model;
     }
@@ -237,7 +254,11 @@ trait HasRunwayResource
     public function publish($options = [])
     {
         if ($this->revisionsEnabled()) {
-            return $this->publishWorkingCopy($options);
+            $model = $this->publishWorkingCopy($options);
+
+            Relationships::for($model)->with($model->runwayRelationships)->save();
+
+            return $model;
         }
 
         if ($this->runwayResource()->hasPublishStates()) {

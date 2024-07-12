@@ -5,12 +5,12 @@ namespace StatamicRadPack\Runway\Http\Controllers\CP\Traits;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Statamic\Fields\Field;
 use Statamic\Fieldtypes\Section;
+use Statamic\Support\Arr;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 use StatamicRadPack\Runway\Resource;
@@ -62,13 +62,20 @@ trait PreparesModels
                     }
                 }
 
-                // HasMany fieldtype: when reordering is enabled, we need to ensure the models are returned in the correct order.
-                if ($field->fieldtype() instanceof HasManyFieldtype && $field->get('reorderable', false)) {
-                    $orderColumn = $field->get('order_column');
+                if ($field->fieldtype() instanceof HasManyFieldtype) {
+                    // Use IDs from the model's $runwayRelationships property, if there are any.
+                    if (array_key_exists($field->handle(), $model->runwayRelationships)) {
+                        $value = Arr::get($model->runwayRelationships, $field->handle());
+                    }
 
-                    $value = $model->{$field->handle()}()
-                        ->reorder($orderColumn, 'ASC')
-                        ->get();
+                    // When re-ordering is enabled, ensure the models are returned in the correct order.
+                    if ($field->get('reorderable', false)) {
+                        $orderColumn = $field->get('order_column');
+
+                        $value = $model->{$field->handle()}()
+                            ->reorder($orderColumn, 'ASC')
+                            ->get();
+                    }
                 }
 
                 return [$field->handle() => $value];
@@ -91,6 +98,8 @@ trait PreparesModels
                 $processedValue = $field->fieldtype()->process($request->get($field->handle()));
 
                 if ($field->fieldtype() instanceof HasManyFieldtype) {
+                    $model->runwayRelationships[$field->handle()] = $processedValue;
+
                     return;
                 }
 

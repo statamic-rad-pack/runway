@@ -7,7 +7,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Blink;
-use Statamic\Facades\Blueprint;
 use Statamic\Fields\Field;
 use Statamic\Http\Requests\FilteredRequest;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
@@ -22,52 +21,15 @@ class HasManyFieldtypeTest extends TestCase
 
     protected HasManyFieldtype $fieldtype;
 
-    protected HasManyFieldtype $fieldtypeUsingPivotTable;
-
     public function setUp(): void
     {
         parent::setUp();
-
-        $postBlueprint = Blueprint::find('runway::post');
-
-        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->ensureFieldsInTab([
-            [
-                'handle' => 'name',
-                'field' => [
-                    'type' => 'text',
-                ],
-            ],
-            [
-                'handle' => 'posts',
-                'field' => [
-                    'type' => 'has_many',
-                    'resource' => 'post',
-                    'mode' => 'select',
-                ],
-            ],
-            [
-                'handle' => 'pivottedPosts',
-                'field' => [
-                    'type' => 'has_many',
-                    'resource' => 'post',
-                    'mode' => 'select',
-                ],
-            ],
-        ], 'main'));
 
         $this->fieldtype = tap(new HasManyFieldtype())
             ->setField(new Field('posts', [
                 'mode' => 'stack',
                 'resource' => 'post',
                 'display' => 'Posts',
-                'type' => 'has_many',
-            ]));
-
-        $this->fieldtypeUsingPivotTable = tap(new HasManyFieldtype())
-            ->setField(new Field('pivottedPosts', [
-                'mode' => 'stack',
-                'resource' => 'post',
-                'display' => 'Pivotted Posts',
                 'type' => 'has_many',
             ]));
     }
@@ -266,155 +228,6 @@ class HasManyFieldtypeTest extends TestCase
             'id' => $posts[0]->id,
             'title' => $posts[0]->title,
             'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
-        ]);
-    }
-
-    /** @test */
-    public function can_process_and_add_relations_to_model()
-    {
-        $author = Author::factory()->create();
-        $posts = Post::factory()->count(10)->create();
-
-        // Usually these bits would be fetched from the request. However, as we can't mock
-        // the request, we're using Blink.
-        Blink::put('RunwayRouteResource', 'author');
-        Blink::put('RunwayRouteModel', $author->id);
-
-        $this->fieldtype->process(collect($posts)->pluck('id')->toArray());
-
-        // Ensure the author is attached to all 10 posts
-        $this->assertEquals($posts[0]->fresh()->author_id, $author->id);
-        $this->assertEquals($posts[1]->fresh()->author_id, $author->id);
-        $this->assertEquals($posts[2]->fresh()->author_id, $author->id);
-        $this->assertEquals($posts[3]->fresh()->author_id, $author->id);
-        $this->assertEquals($posts[4]->fresh()->author_id, $author->id);
-        $this->assertEquals($posts[5]->fresh()->author_id, $author->id);
-        $this->assertEquals($posts[6]->fresh()->author_id, $author->id);
-        $this->assertEquals($posts[7]->fresh()->author_id, $author->id);
-        $this->assertEquals($posts[8]->fresh()->author_id, $author->id);
-        $this->assertEquals($posts[9]->fresh()->author_id, $author->id);
-    }
-
-    /** @test */
-    public function can_process_and_add_relations_to_model_with_pivot_table()
-    {
-        $author = Author::factory()->create();
-        $posts = Post::factory()->count(3)->create();
-
-        // Usually these bits would be fetched from the request. However, as we can't mock
-        // the request, we're using Blink.
-        Blink::put('RunwayRouteResource', 'author');
-        Blink::put('RunwayRouteModel', $author->id);
-
-        $this->fieldtypeUsingPivotTable->process([
-            $posts[0]->id,
-            $posts[1]->id,
-            $posts[2]->id,
-        ]);
-
-        // Ensure the author is attached to all 3 posts AND the pivot_sort_order is persisted.
-        $this->assertDatabaseHas('post_author', [
-            'post_id' => $posts[0]->id,
-            'author_id' => $author->id,
-        ]);
-
-        $this->assertDatabaseHas('post_author', [
-            'post_id' => $posts[1]->id,
-            'author_id' => $author->id,
-        ]);
-
-        $this->assertDatabaseHas('post_author', [
-            'post_id' => $posts[2]->id,
-            'author_id' => $author->id,
-        ]);
-    }
-
-    /** @test */
-    public function can_process_and_add_relations_to_model_and_can_persist_users_sort_order()
-    {
-        $author = Author::factory()->create();
-        $posts = Post::factory()->count(3)->create();
-
-        $this->fieldtype->field()->setConfig(array_merge($this->fieldtype->field()->config(), [
-            'reorderable' => true,
-            'order_column' => 'sort_order',
-        ]));
-
-        // Usually these bits would be fetched from the request. However, as we can't mock
-        // the request, we're using Blink.
-        Blink::put('RunwayRouteResource', 'author');
-        Blink::put('RunwayRouteModel', $author->id);
-
-        $this->fieldtype->process([
-            $posts[1]->id,
-            $posts[2]->id,
-            $posts[0]->id,
-        ]);
-
-        // Ensure the author is attached to all 3 posts
-        $this->assertEquals($posts[0]->fresh()->author_id, $author->id);
-        $this->assertEquals($posts[1]->fresh()->author_id, $author->id);
-        $this->assertEquals($posts[2]->fresh()->author_id, $author->id);
-
-        // Ensure the sort_order is persisted correctly for all 3 posts
-        $this->assertDatabaseHas('posts', [
-            'id' => $posts[0]->id,
-            'sort_order' => 2,
-        ]);
-
-        $this->assertDatabaseHas('posts', [
-            'id' => $posts[1]->id,
-            'sort_order' => 0,
-        ]);
-
-        $this->assertDatabaseHas('posts', [
-            'id' => $posts[2]->id,
-            'sort_order' => 1,
-        ]);
-    }
-
-    /**
-     * @test
-     * https://github.com/duncanmcclean/runway/issues/287
-     */
-    public function can_process_and_add_relations_to_model_and_can_persist_users_sort_order_on_pivot_table()
-    {
-        $author = Author::factory()->create();
-        $posts = Post::factory()->count(3)->create();
-
-        $this->fieldtypeUsingPivotTable->field()->setConfig(array_merge($this->fieldtypeUsingPivotTable->field()->config(), [
-            'reorderable' => true,
-            'order_column' => 'pivot_sort_order',
-        ]));
-
-        // Usually these bits would be fetched from the request. However, as we can't mock
-        // the request, we're using Blink.
-        Blink::put('RunwayRouteResource', 'author');
-        Blink::put('RunwayRouteModel', $author->id);
-
-        $this->fieldtypeUsingPivotTable->process([
-            $posts[1]->id,
-            $posts[2]->id,
-            $posts[0]->id,
-        ]);
-
-        // Ensure the author is attached to all 3 posts AND the pivot_sort_order is persisted.
-        $this->assertDatabaseHas('post_author', [
-            'post_id' => $posts[1]->id,
-            'author_id' => $author->id,
-            'pivot_sort_order' => 0,
-        ]);
-
-        $this->assertDatabaseHas('post_author', [
-            'post_id' => $posts[2]->id,
-            'author_id' => $author->id,
-            'pivot_sort_order' => 1,
-        ]);
-
-        $this->assertDatabaseHas('post_author', [
-            'post_id' => $posts[0]->id,
-            'author_id' => $author->id,
-            'pivot_sort_order' => 2,
         ]);
     }
 
