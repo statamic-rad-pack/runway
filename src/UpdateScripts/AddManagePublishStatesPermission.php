@@ -17,18 +17,12 @@ class AddManagePublishStatesPermission extends UpdateScript
     public function update()
     {
         Role::all()->each(function ($role) {
-            $requiresSave = false;
+            Runway::allResources()
+                ->filter->hasPublishStates()
+                ->filter(fn (Resource $resource) => $role->hasPermission("create {$resource->handle()}"))
+                ->each(fn (Resource $resource) => $role->addPermission("publish {$resource->handle()}"));
 
-            Runway::allResources()->each(function (Resource $resource) use ($role, &$requiresSave) {
-                if ($resource->hasPublishStates() && $role->hasPermission("create {$resource->handle()}")) {
-                    $role->addPermission("publish {$resource->handle()}");
-                    $requiresSave = true;
-                }
-            });
-
-            if ($requiresSave) {
-                $role->save();
-            }
+            $role->save();
         });
     }
 }
