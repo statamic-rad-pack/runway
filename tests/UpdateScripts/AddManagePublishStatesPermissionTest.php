@@ -2,13 +2,10 @@
 
 namespace StatamicRadPack\Runway\Tests\UpdateScripts;
 
-use Illuminate\Support\Facades\File;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Role;
-use Statamic\Facades\YAML;
 use StatamicRadPack\Runway\Tests\TestCase;
 use StatamicRadPack\Runway\UpdateScripts\AddManagePublishStatesPermission;
-use StatamicRadPack\Runway\UpdateScripts\ChangePermissionNames;
 
 class AddManagePublishStatesPermissionTest extends TestCase
 {

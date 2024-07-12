@@ -9,7 +9,9 @@ use StatamicRadPack\Runway\Traits\HasRunwayResource;
 
 class AddTraitToModel implements RunnableSolution
 {
-    public function __construct(protected $model = null) {}
+    public function __construct(protected $model = null)
+    {
+    }
 
     public function getSolutionTitle(): string
     {

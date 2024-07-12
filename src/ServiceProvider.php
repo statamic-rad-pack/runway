@@ -12,7 +12,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Spatie\ErrorSolutions\Contracts\SolutionProviderRepository;
 use Statamic\API\Middleware\Cache;
-use Statamic\Auth\Permission as AuthPermission;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
@@ -158,7 +157,7 @@ class ServiceProvider extends AddonServiceProvider
 
                                     Permission::make("delete {$resource->handle()}")
                                         ->label($this->permissionLabel('delete', $resource)),
-                                ]))
+                                ])),
                         ]);
                 });
             }
