@@ -7,7 +7,7 @@ use Statamic\UpdateScripts\UpdateScript;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
 
-class AddManagePublishStatesPermissionToRoles extends UpdateScript
+class AddManagePublishStatesPermission extends UpdateScript
 {
     public function shouldUpdate($newVersion, $oldVersion)
     {
@@ -24,7 +24,6 @@ class AddManagePublishStatesPermissionToRoles extends UpdateScript
                     $role->addPermission("publish {$resource->handle()}");
                     $requiresSave = true;
                 }
-
             });
 
             if ($requiresSave) {
