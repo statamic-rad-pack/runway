@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 use Statamic\CP\Column;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
@@ -19,13 +20,9 @@ use StatamicRadPack\Runway\Runway;
 class BaseFieldtype extends Relationship
 {
     protected $canEdit = true;
-
     protected $canCreate = true;
-
     protected $canSearch = true;
-
     protected $categories = ['relationship'];
-
     protected $formComponent = 'runway-publish-form';
 
     protected $formComponentProps = [
@@ -85,6 +82,11 @@ class BaseFieldtype extends Relationship
                 'width' => 50,
             ],
         ];
+    }
+
+    public function icon()
+    {
+        return File::get(__DIR__.'/../../resources/svg/database.svg');
     }
 
     public function getIndexItems($request)
