@@ -534,7 +534,10 @@ export default {
             this.isWorkingCopy = isWorkingCopy;
             this.confirmingPublish = false;
             this.title = response.data.data.title;
+            clearTimeout(this.trackDirtyStateTimeout);
+            this.trackDirtyState = false;
             this.values = this.resetValuesFromResponse(response.data.data.values);
+            this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 350);
             this.permalink = response.data.data.permalink
             this.$nextTick(() => this.$emit('saved', response));
         },
@@ -577,7 +580,10 @@ export default {
             if (response.data) {
                 this.title = response.data.title;
                 if (!this.revisionsEnabled) this.permalink = response.data.permalink;
+                clearTimeout(this.trackDirtyStateTimeout);
+                this.trackDirtyState = false;
                 this.values = this.resetValuesFromResponse(response.data.values);
+                this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 350);
                 if (this.publishStatesEnabled) {
                     this.initialPublished = response.data.published;
                 }
