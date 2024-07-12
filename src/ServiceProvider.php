@@ -145,12 +145,20 @@ class ServiceProvider extends AddonServiceProvider
                     $permission
                         ->label($this->permissionLabel('view', $resource))
                         ->children([
-                            $this->makePermission("edit {$resource->handle()}", $this->permissionLabel('edit', $resource))
+                            Permission::make("edit {$resource->handle()}")
+                                ->label($this->permissionLabel('edit', $resource))
                                 ->children(array_filter([
-                                    $this->makePermission("create {$resource->handle()}", $this->permissionLabel('create', $resource)),
-                                    $resource->hasPublishStates() ? $this->makePermission("publish {$resource->handle()}", "Manage {$resource->name()} Publish State") : null,
-                                    $this->makePermission("delete {$resource->handle()}", $this->permissionLabel('delete', $resource)),
-                                ])),
+                                    Permission::make("create {$resource->handle()}")
+                                        ->label($this->permissionLabel('create', $resource)),
+
+                                    $resource->hasPublishStates()
+                                        ? Permission::make("publish {$resource->handle()}")
+                                            ->label($this->permissionLabel('publish', $resource))
+                                        : null,
+
+                                    Permission::make("delete {$resource->handle()}")
+                                        ->label($this->permissionLabel('delete', $resource)),
+                                ]))
                         ]);
                 });
             }
@@ -284,6 +292,7 @@ class ServiceProvider extends AddonServiceProvider
                 'view' => "View {$resource->name()}",
                 'edit' => "Edit {$resource->name()}",
                 'create' => "Create {$resource->name()}",
+                'publish' => "Manage {$resource->name()} Publish State",
                 'delete' => "Delete {$resource->name()}"
             };
         }
