@@ -103,7 +103,7 @@
                                     class="flex items-center justify-between px-4 py-2"
                                     :class="{ 'border-t dark:border-dark-900': resourceHasRoutes && permalink }"
                                 >
-                                    <label v-text="__('Published')" class="font-medium publish-field-label" />
+                                    <label v-text="__('Published')" class="publish-field-label font-medium" />
                                     <toggle-input :value="published" :read-only="!canManagePublishState" @input="setFieldValue(resource.published_column, $event)" />
                                 </div>
                             </div>
@@ -159,7 +159,7 @@
                     :disabled="!canPublish"
                     @click="confirmingPublish = true">
                     <span v-text="this.publishButtonText" />
-                    <svg-icon name="micro/chevron-down-xs" class="w-2 rtl:mr-2 ltr:ml-2" />
+                    <svg-icon name="micro/chevron-down-xs" class="rtl:mr-2 ltr:ml-2 w-2" />
                 </button>
             </template>
         </publish-container>
@@ -182,7 +182,7 @@
                 :disabled="!canPublish"
                 @click="confirmingPublish = true">
                 <span v-text="this.publishButtonText" />
-                <svg-icon name="micro/chevron-down-xs" class="w-2 rtl:mr-2 ltr:ml-2" />
+                <svg-icon name="micro/chevron-down-xs" class="rtl:mr-2 ltr:ml-2 w-2" />
             </button>
         </div>
 
