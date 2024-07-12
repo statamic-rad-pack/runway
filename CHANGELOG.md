@@ -1,5 +1,20 @@
 # Changelog
 
+## v7.6.0 (2024-07-12)
+
+### What's new
+* Added icons to Runway's fieldtypes #558 by @duncanmcclean
+* Added "Publish" permission for resources with publish states enabled #553 by @edalzell
+
+### What's fixed
+* Refactored the Has Many fieldtype #556 by @duncanmcclean
+* Fixed incorrect revisions status #555 by @duncanmcclean
+* Move test suite from metadata to attributes #557 by @duncanmcclean
+* Fixed dirty state after entry action or revision publish #559 by @duncanmcclean
+* An exception is now thrown, instead of an infinite loop, when a published column is missing #554 by @duncanmcclean
+
+
+
 ## v7.5.3 (2024-07-04)
 
 ### What's fixed
