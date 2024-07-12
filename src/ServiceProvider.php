@@ -308,9 +308,4 @@ class ServiceProvider extends AddonServiceProvider
 
         return true;
     }
-
-    private function makePermission(string $permission, string $label): AuthPermission
-    {
-        return Permission::make($permission)->label($label);
-    }
 }
