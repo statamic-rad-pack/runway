@@ -10,7 +10,9 @@ use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 
 class Relationships
 {
-    public function __construct(protected Model $model, protected array $data = []) {}
+    public function __construct(protected Model $model, protected array $data = [])
+    {
+    }
 
     public static function for(Model $model): self
     {
@@ -40,60 +42,37 @@ class Relationships
 
     protected function saveHasManyRelationship(Field $field, array $data): void
     {
-        $deleted = [];
         $relatedResource = Runway::findResource($field->fieldtype()->config('resource'));
 
         /** @var HasMany $relationship */
         $relationship = $this->model->{$field->handle()}();
 
-        // Delete any deleted models
-        collect($relationship->get())
-            ->reject(fn ($relatedModel) => in_array($relatedModel->id, $data))
-            ->each(function ($relatedModel) use ($relatedResource, &$deleted) {
-                $deleted[] = $relatedModel->{$relatedResource->primaryKey()};
+        $deleted = $relationship->whereNotIn($relatedResource->primaryKey(), $data)->get()
+            ->each->delete()
+            ->map->getKey()
+            ->all();
 
-                $relatedModel->delete();
-            });
+        $models = $relationship->get();
 
-        // Add anything new
         collect($data)
-            ->reject(fn ($relatedId) => $relationship->get()->pluck($relatedResource->primaryKey())->contains($relatedId))
-            ->reject(fn ($relatedId) => in_array($relatedId, $deleted))
-            ->each(function ($relatedId) use ($relatedResource, $relationship) {
-                $relatedModel = $relatedResource->model()->find($relatedId);
+            ->reject(fn ($id) => $models->pluck($relatedResource->primaryKey())->contains($id))
+            ->reject(fn ($id) => in_array($id, $deleted))
+            ->each(fn ($id) => $relatedResource->model()->find($id)->update([
+                $relationship->getForeignKeyName() => $this->model->getKey(),
+            ]));
 
-                $relatedModel->update([
-                    $relationship->getForeignKeyName() => $this->model->{$relatedResource->primaryKey()},
-                ]);
-            });
-
-        // If reordering is enabled, update all models with their new sort order.
         if ($field->fieldtype()->config('reorderable') && $orderColumn = $field->fieldtype()->config('order_column')) {
             collect($data)
-                ->each(function ($relatedId, $index) use ($relatedResource, $orderColumn) {
-                    $relatedModel = $relatedResource->model()->find($relatedId);
-
-                    if ($relatedModel->{$orderColumn} === $index) {
-                        return;
-                    }
-
-                    $relatedModel->update([
-                        $orderColumn => $index,
-                    ]);
-                });
+                ->map(fn ($id) => $relatedResource->model()->find($id))
+                ->reject(fn (Model $model, int $index) => $model->getAttribute($orderColumn) === $index)
+                ->each(fn (Model $model, int $index) => $model->update([$orderColumn => $index]));
         }
     }
 
     protected function saveBelongsToManyRelationship(Field $field, array $data): void
     {
-        // When Reordering is enabled, we need to change the format of the $data array. The key should
-        // be the foreign key and the value should be the pivot data (our sort order).
         if ($field->fieldtype()->config('reorderable') && $orderColumn = $field->fieldtype()->config('order_column')) {
-            $data = collect($data)
-                ->mapWithKeys(function ($relatedId, $index) use ($orderColumn) {
-                    return [$relatedId => [$orderColumn => $index]];
-                })
-                ->toArray();
+            $data = collect($data)->mapWithKeys(fn ($id, $index) => [$id => [$orderColumn => $index]])->all();
         }
 
         $this->model->{$field->handle()}()->sync($data);
