@@ -188,7 +188,7 @@ trait HasRunwayResource
                 $handle = Str::before($field->handle(), '->');
 
                 if ($field->fieldtype() instanceof HasManyFieldtype) {
-                    return [$handle, Arr::get($this->runwayRelationships, $handle, [])];
+                    return [$handle => Arr::get($this->runwayRelationships, $handle, [])];
                 }
 
                 return [$handle => $this->getAttribute($field->handle())];
