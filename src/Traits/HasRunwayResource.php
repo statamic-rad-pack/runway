@@ -10,6 +10,7 @@ use Statamic\Fieldtypes\Hidden;
 use Statamic\Fieldtypes\Section;
 use Statamic\GraphQL\ResolvesValues;
 use Statamic\Revisions\Revisable;
+use Statamic\Support\Arr;
 use Statamic\Support\Str;
 use Statamic\Support\Traits\FluentlyGetsAndSets;
 use StatamicRadPack\Runway\Data\AugmentedModel;
@@ -187,7 +188,7 @@ trait HasRunwayResource
                 $handle = Str::before($field->handle(), '->');
 
                 if ($field->fieldtype() instanceof HasManyFieldtype) {
-                    return [$handle => $this->runwayRelationships[$handle] ?? []];
+                    return [$handle, Arr::get($this->runwayRelationships, $handle, [])];
                 }
 
                 return [$handle => $this->getAttribute($field->handle())];
