@@ -4,13 +4,14 @@ namespace StatamicRadPack\Runway\Tests;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Fields\Blueprint;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
 
 class RunwayTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function can_discover_and_get_all_resources()
     {
         Runway::discoverResources();
@@ -36,7 +37,7 @@ class RunwayTest extends TestCase
         $this->assertTrue($all[2]->blueprint() instanceof Blueprint);
     }
 
-    /** @test */
+    #[Test]
     public function can_find_resource()
     {
         Runway::discoverResources();

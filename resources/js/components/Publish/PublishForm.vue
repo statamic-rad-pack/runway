@@ -262,7 +262,7 @@ export default {
             title: this.initialTitle,
             values: _.clone(this.initialValues),
             meta: _.clone(this.initialMeta),
-            isWorkingCopy: this.initialWorkingCopy,
+            isWorkingCopy: this.initialIsWorkingCopy,
             error: null,
             errors: {},
             state: 'new',

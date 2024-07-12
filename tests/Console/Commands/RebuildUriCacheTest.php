@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Tests\Console\Commands;
 
 use Illuminate\Database\Eloquent\Model;
+use PHPUnit\Framework\Attributes\Test;
 use StatamicRadPack\Runway\Routing\RunwayUri;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
@@ -10,7 +11,7 @@ use StatamicRadPack\Runway\Tests\TestCase;
 
 class RebuildUriCacheTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_rebuilds_the_uri_cache()
     {
         Post::factory()->count(5)->createQuietly();
@@ -25,7 +26,7 @@ class RebuildUriCacheTest extends TestCase
         $this->assertCount(5, RunwayUri::all());
     }
 
-    /** @test */
+    #[Test]
     public function can_build_uri_with_antlers()
     {
         Post::factory()->createQuietly(['slug' => 'hello-world']);
@@ -41,7 +42,7 @@ class RebuildUriCacheTest extends TestCase
         $this->assertEquals('/posts/hello-world', RunwayUri::first()->uri);
     }
 
-    /** @test */
+    #[Test]
     public function does_not_rebuild_uri_cache_when_no_confirmation_is_provided()
     {
         Post::factory()->count(5)->create(); // `create` will trigger the URIs to be built via model events.
@@ -56,7 +57,7 @@ class RebuildUriCacheTest extends TestCase
         $this->assertCount(5, RunwayUri::all());
     }
 
-    /** @test */
+    #[Test]
     public function skips_resources_without_routing_configured()
     {
         Author::factory()->count(3)->createQuietly();

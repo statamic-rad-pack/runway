@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Tests\Search;
 
+use PHPUnit\Framework\Attributes\Test;
 use StatamicRadPack\Runway\Search\Provider;
 use StatamicRadPack\Runway\Search\Searchable;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
@@ -9,7 +10,7 @@ use StatamicRadPack\Runway\Tests\TestCase;
 
 class ProviderTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_gets_models()
     {
         $posts = Post::factory()->count(5)->create();
@@ -30,7 +31,7 @@ class ProviderTest extends TestCase
         $this->assertEquals("runway::post::{$posts[4]->id}", $models[4]->getSearchReference());
     }
 
-    /** @test */
+    #[Test]
     public function it_filters_out_unpublished_models()
     {
         $publishedModels = Post::factory()->count(2)->create();

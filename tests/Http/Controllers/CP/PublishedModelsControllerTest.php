@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
 
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Folder;
 use Statamic\Facades\User;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
@@ -27,7 +28,7 @@ class PublishedModelsControllerTest extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
+    #[Test]
     public function can_publish_a_model()
     {
         $model = Post::factory()->unpublished()->create();
@@ -49,7 +50,7 @@ class PublishedModelsControllerTest extends TestCase
         $this->assertTrue($model->fresh()->published());
     }
 
-    /** @test */
+    #[Test]
     public function can_unpublish_a_model()
     {
         $model = Post::factory()->create();

@@ -5,6 +5,7 @@ namespace StatamicRadPack\Runway\Tests\Routing;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\Attributes\Test;
 use StatamicRadPack\Runway\Routing\RoutingModel;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
@@ -12,7 +13,7 @@ use StatamicRadPack\Runway\Tests\TestCase;
 
 class RoutingModelTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function can_get_route()
     {
         $post = Post::factory()->createQuietly();
@@ -23,7 +24,7 @@ class RoutingModelTest extends TestCase
         $this->assertEquals('/blog/post-slug', $routingModel->route());
     }
 
-    /** @test */
+    #[Test]
     public function cant_get_route_without_runway_uri()
     {
         $post = Post::factory()->createQuietly();
@@ -33,7 +34,7 @@ class RoutingModelTest extends TestCase
         $this->assertNull($routingModel->route());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_route_data()
     {
         $post = Post::factory()->createQuietly();
@@ -46,7 +47,7 @@ class RoutingModelTest extends TestCase
         ], $routingModel->routeData());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_uri()
     {
         $post = Post::factory()->createQuietly();
@@ -57,7 +58,7 @@ class RoutingModelTest extends TestCase
         $this->assertEquals('/blog/post-slug', $routingModel->uri());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_url_without_redirect()
     {
         $post = Post::factory()->createQuietly();
@@ -68,7 +69,7 @@ class RoutingModelTest extends TestCase
         $this->assertEquals('/blog/post-slug', $routingModel->urlWithoutRedirect());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_response()
     {
         $post = Post::factory()->createQuietly();
@@ -83,7 +84,7 @@ class RoutingModelTest extends TestCase
         $this->assertStringContainsString("<article>{$post->body}</article>", $response->getContent());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_template()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.template', 'posts.show');
@@ -97,7 +98,7 @@ class RoutingModelTest extends TestCase
         $this->assertEquals('posts.show', $routingModel->template());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_layout()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.layout', 'layouts.post');
@@ -111,7 +112,7 @@ class RoutingModelTest extends TestCase
         $this->assertEquals('layouts.post', $routingModel->layout());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_id()
     {
         $post = Post::factory()->createQuietly();
@@ -122,7 +123,7 @@ class RoutingModelTest extends TestCase
         $this->assertEquals($post->id, $routingModel->id());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_route_key()
     {
         $post = Post::factory()->createQuietly();
@@ -133,7 +134,7 @@ class RoutingModelTest extends TestCase
         $this->assertEquals($post->id, $routingModel->getRouteKey());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_augmented_array_data()
     {
         $post = Post::factory()->createQuietly();
@@ -144,7 +145,7 @@ class RoutingModelTest extends TestCase
         $this->assertEquals($post->toArray(), $routingModel->augmentedArrayData());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_something_from_model()
     {
         $post = Post::factory()->createQuietly();

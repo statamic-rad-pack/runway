@@ -2,12 +2,13 @@
 
 namespace StatamicRadPack\Runway\Tests\GraphQL;
 
+use PHPUnit\Framework\Attributes\Test;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use StatamicRadPack\Runway\Tests\TestCase;
 
 class ResourceInterfaceTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_adds_types()
     {
         $this->assertEquals([

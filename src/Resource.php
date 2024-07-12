@@ -4,12 +4,14 @@ namespace StatamicRadPack\Runway;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Facades\Search;
 use Statamic\Fields\Blueprint;
 use Statamic\Fields\Field;
 use Statamic\Statamic;
+use StatamicRadPack\Runway\Exceptions\PublishedColumnMissingException;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 
@@ -66,7 +68,7 @@ class Resource
     public function cpIcon(): string
     {
         if (! $this->config->has('cp_icon')) {
-            return file_get_contents(__DIR__.'/../resources/svg/database.svg');
+            return File::get(__DIR__.'/../resources/svg/database.svg');
         }
 
         return $this->config->get('cp_icon');
@@ -150,9 +152,15 @@ class Resource
             return null;
         }
 
-        return is_string($this->config->get('published'))
+        $column = is_string($this->config->get('published'))
             ? $this->config->get('published')
             : 'published';
+
+        if (! in_array($column, $this->databaseColumns())) {
+            throw new PublishedColumnMissingException($this->databaseTable(), $column);
+        }
+
+        return $column;
     }
 
     /**
