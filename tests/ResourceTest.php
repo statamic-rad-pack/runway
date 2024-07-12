@@ -3,10 +3,10 @@
 namespace StatamicRadPack\Runway\Tests;
 
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Fieldset;
 use StatamicRadPack\Runway\Runway;
-use PHPUnit\Framework\Attributes\Test;
 
 class ResourceTest extends TestCase
 {

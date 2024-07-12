@@ -4,10 +4,10 @@ namespace StatamicRadPack\Runway\Tests;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Fields\Blueprint;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
-use PHPUnit\Framework\Attributes\Test;
 
 class RunwayTest extends TestCase
 {

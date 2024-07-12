@@ -2,12 +2,12 @@
 
 namespace StatamicRadPack\Runway\Tests\Data;
 
+use PHPUnit\Framework\Attributes\Test;
 use Spatie\TestTime\TestTime;
 use StatamicRadPack\Runway\Data\AugmentedModel;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class AugmentedModelTest extends TestCase
 {

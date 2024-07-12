@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Tests\Tags;
 
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Antlers;
 use Statamic\Facades\Blueprint;
 use Statamic\Fields\Value;
@@ -11,7 +12,6 @@ use StatamicRadPack\Runway\Tags\RunwayTag;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class RunwayTagTest extends TestCase
 {

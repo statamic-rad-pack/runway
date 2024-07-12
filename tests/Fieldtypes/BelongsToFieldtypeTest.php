@@ -6,6 +6,7 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blink;
 use Statamic\Fields\Field;
 use Statamic\Http\Requests\FilteredRequest;
@@ -13,7 +14,6 @@ use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class BelongsToFieldtypeTest extends TestCase
 {

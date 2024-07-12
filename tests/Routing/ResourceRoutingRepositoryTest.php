@@ -2,11 +2,11 @@
 
 namespace StatamicRadPack\Runway\Tests\Routing;
 
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Data;
 use StatamicRadPack\Runway\Routing\RoutingModel;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class ResourceRoutingRepositoryTest extends TestCase
 {

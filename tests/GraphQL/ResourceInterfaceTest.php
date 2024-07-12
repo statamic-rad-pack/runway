@@ -2,9 +2,9 @@
 
 namespace StatamicRadPack\Runway\Tests\GraphQL;
 
+use PHPUnit\Framework\Attributes\Test;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use StatamicRadPack\Runway\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class ResourceInterfaceTest extends TestCase
 {

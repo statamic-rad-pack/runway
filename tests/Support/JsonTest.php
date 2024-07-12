@@ -2,9 +2,9 @@
 
 namespace StatamicRadPack\Runway\Tests\Support;
 
+use PHPUnit\Framework\Attributes\Test;
 use StatamicRadPack\Runway\Support\Json;
 use StatamicRadPack\Runway\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class JsonTest extends TestCase
 {

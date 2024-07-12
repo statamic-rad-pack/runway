@@ -3,11 +3,11 @@
 namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
 
 use Illuminate\Support\Carbon;
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Folder;
 use Statamic\Facades\User;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class ModelRevisionsControllerTest extends TestCase
 {

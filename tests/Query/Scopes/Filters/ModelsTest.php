@@ -2,13 +2,13 @@
 
 namespace StatamicRadPack\Runway\Tests\Query\Scopes\Filters;
 
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Fields\Field;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Query\Scopes\Filters\Fields\Models;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class ModelsTest extends TestCase
 {

@@ -3,9 +3,9 @@
 namespace StatamicRadPack\Runway\Tests\UpdateScripts;
 
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\Test;
 use StatamicRadPack\Runway\Tests\TestCase;
 use StatamicRadPack\Runway\UpdateScripts\ChangePermissionNames;
-use PHPUnit\Framework\Attributes\Test;
 
 class ChangePermissionNamesTest extends TestCase
 {

@@ -3,10 +3,10 @@
 namespace StatamicRadPack\Runway\Tests\Routing;
 
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\Attributes\Test;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class FrontendRoutingTest extends TestCase
 {

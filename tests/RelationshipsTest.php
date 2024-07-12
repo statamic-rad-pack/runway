@@ -2,12 +2,12 @@
 
 namespace StatamicRadPack\Runway\Tests;
 
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blueprint;
 use Statamic\Fields\Blueprint as FieldsBlueprint;
 use StatamicRadPack\Runway\Relationships;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
-use PHPUnit\Framework\Attributes\Test;
 
 class RelationshipsTest extends TestCase
 {

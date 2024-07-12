@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
 
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Config;
 use Statamic\Facades\Role;
@@ -13,7 +14,6 @@ use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\User as UserModel;
 use StatamicRadPack\Runway\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class ResourceControllerTest extends TestCase
 {

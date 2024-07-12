@@ -5,11 +5,11 @@ namespace StatamicRadPack\Runway\Tests\Routing;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\Attributes\Test;
 use StatamicRadPack\Runway\Routing\RoutingModel;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class RoutingModelTest extends TestCase
 {

@@ -2,11 +2,11 @@
 
 namespace StatamicRadPack\Runway\Tests\Search;
 
+use PHPUnit\Framework\Attributes\Test;
 use StatamicRadPack\Runway\Search\Provider;
 use StatamicRadPack\Runway\Search\Searchable;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class ProviderTest extends TestCase
 {

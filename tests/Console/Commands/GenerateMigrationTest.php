@@ -7,13 +7,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
+use PHPUnit\Framework\Attributes\Test;
 use Spatie\TestTime\TestTime;
 use SplFileInfo;
 use Statamic\Facades\Blueprint;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\TestCase;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
-use PHPUnit\Framework\Attributes\Test;
 
 class GenerateMigrationTest extends TestCase
 {

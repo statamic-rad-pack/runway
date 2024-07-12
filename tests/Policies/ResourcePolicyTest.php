@@ -2,12 +2,12 @@
 
 namespace StatamicRadPack\Runway\Tests\Policies;
 
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Role;
 use Statamic\Facades\User;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class ResourcePolicyTest extends TestCase
 {

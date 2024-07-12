@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Tests\Actions;
 
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 use Statamic\Facades\Role;
@@ -12,7 +13,6 @@ use StatamicRadPack\Runway\Actions\Publish;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class PublishTest extends TestCase
 {

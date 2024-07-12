@@ -5,10 +5,10 @@ namespace StatamicRadPack\Runway\Tests\Console\Commands;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blueprint;
 use Statamic\Fields\Blueprint as FieldsBlueprint;
 use StatamicRadPack\Runway\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class GenerateBlueprintTest extends TestCase
 {
