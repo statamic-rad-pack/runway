@@ -34,8 +34,8 @@ class Relationships
                 $relationshipName = $this->model->runwayResource()->eloquentRelationships()->get($field->handle());
 
                 match (get_class($this->model->{$relationshipName}())) {
-                    HasMany::class => $this->saveHasManyRelationship($field, $this->values[$field->handle()] ?? null),
-                    BelongsToMany::class => $this->saveBelongsToManyRelationship($field, $this->values[$field->handle()] ?? null),
+                    HasMany::class => $this->saveHasManyRelationship($field, $this->values[$field->handle()] ?? []),
+                    BelongsToMany::class => $this->saveBelongsToManyRelationship($field, $this->values[$field->handle()] ?? []),
                 };
             });
     }
