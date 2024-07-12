@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Facades\Search;
@@ -67,7 +68,7 @@ class Resource
     public function cpIcon(): string
     {
         if (! $this->config->has('cp_icon')) {
-            return file_get_contents(__DIR__.'/../resources/svg/database.svg');
+            return File::get(__DIR__.'/../resources/svg/database.svg');
         }
 
         return $this->config->get('cp_icon');
