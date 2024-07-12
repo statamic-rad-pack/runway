@@ -10,7 +10,7 @@ use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 
 class Relationships
 {
-    public function __construct(protected Model $model, protected array $data = [])
+    public function __construct(protected Model $model, protected array $values = [])
     {
     }
 
@@ -19,9 +19,9 @@ class Relationships
         return new static($model);
     }
 
-    public function with(array $data): self
+    public function with(array $values): self
     {
-        $this->data = $data;
+        $this->values = $values;
 
         return $this;
     }
@@ -34,27 +34,26 @@ class Relationships
                 $relationshipName = $this->model->runwayResource()->eloquentRelationships()->get($field->handle());
 
                 match (get_class($this->model->{$relationshipName}())) {
-                    HasMany::class => $this->saveHasManyRelationship($field, $this->data[$field->handle()] ?? null),
-                    BelongsToMany::class => $this->saveBelongsToManyRelationship($field, $this->data[$field->handle()] ?? null),
+                    HasMany::class => $this->saveHasManyRelationship($field, $this->values[$field->handle()] ?? null),
+                    BelongsToMany::class => $this->saveBelongsToManyRelationship($field, $this->values[$field->handle()] ?? null),
                 };
             });
     }
 
-    protected function saveHasManyRelationship(Field $field, array $data): void
+    protected function saveHasManyRelationship(Field $field, array $values): void
     {
-        $relatedResource = Runway::findResource($field->fieldtype()->config('resource'));
-
         /** @var HasMany $relationship */
         $relationship = $this->model->{$field->handle()}();
+        $relatedResource = Runway::findResource($field->fieldtype()->config('resource'));
 
-        $deleted = $relationship->whereNotIn($relatedResource->primaryKey(), $data)->get()
+        $deleted = $relationship->whereNotIn($relatedResource->primaryKey(), $values)->get()
             ->each->delete()
             ->map->getKey()
             ->all();
 
         $models = $relationship->get();
 
-        collect($data)
+        collect($values)
             ->reject(fn ($id) => $models->pluck($relatedResource->primaryKey())->contains($id))
             ->reject(fn ($id) => in_array($id, $deleted))
             ->each(fn ($id) => $relatedResource->model()->find($id)->update([
@@ -62,19 +61,19 @@ class Relationships
             ]));
 
         if ($field->fieldtype()->config('reorderable') && $orderColumn = $field->fieldtype()->config('order_column')) {
-            collect($data)
+            collect($values)
                 ->map(fn ($id) => $relatedResource->model()->find($id))
                 ->reject(fn (Model $model, int $index) => $model->getAttribute($orderColumn) === $index)
                 ->each(fn (Model $model, int $index) => $model->update([$orderColumn => $index]));
         }
     }
 
-    protected function saveBelongsToManyRelationship(Field $field, array $data): void
+    protected function saveBelongsToManyRelationship(Field $field, array $values): void
     {
         if ($field->fieldtype()->config('reorderable') && $orderColumn = $field->fieldtype()->config('order_column')) {
-            $data = collect($data)->mapWithKeys(fn ($id, $index) => [$id => [$orderColumn => $index]])->all();
+            $values = collect($values)->mapWithKeys(fn ($id, $index) => [$id => [$orderColumn => $index]])->all();
         }
 
-        $this->model->{$field->handle()}()->sync($data);
+        $this->model->{$field->handle()}()->sync($values);
     }
 }
