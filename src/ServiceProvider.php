@@ -66,6 +66,7 @@ class ServiceProvider extends AddonServiceProvider
     protected $updateScripts = [
         UpdateScripts\ChangePermissionNames::class,
         UpdateScripts\MigrateBlueprints::class,
+        UpdateScripts\AddManagePublishStatesPermission::class,
     ];
 
     protected $vite = [
@@ -145,13 +146,18 @@ class ServiceProvider extends AddonServiceProvider
                         ->children([
                             Permission::make("edit {$resource->handle()}")
                                 ->label($this->permissionLabel('edit', $resource))
-                                ->children([
+                                ->children(array_filter([
                                     Permission::make("create {$resource->handle()}")
                                         ->label($this->permissionLabel('create', $resource)),
 
+                                    $resource->hasPublishStates()
+                                        ? Permission::make("publish {$resource->handle()}")
+                                            ->label($this->permissionLabel('publish', $resource))
+                                        : null,
+
                                     Permission::make("delete {$resource->handle()}")
                                         ->label($this->permissionLabel('delete', $resource)),
-                                ]),
+                                ])),
                         ]);
                 });
             }
@@ -285,6 +291,7 @@ class ServiceProvider extends AddonServiceProvider
                 'view' => "View {$resource->name()}",
                 'edit' => "Edit {$resource->name()}",
                 'create' => "Create {$resource->name()}",
+                'publish' => "Manage {$resource->name()} Publish State",
                 'delete' => "Delete {$resource->name()}"
             };
         }

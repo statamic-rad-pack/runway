@@ -81,7 +81,7 @@ class ResourceController extends CpController
             ])->all(),
             'meta' => $fields->meta(),
             'resourceHasRoutes' => $resource->hasRouting(),
-            'canManagePublishState' => User::current()->can('edit', $resource),
+            'canManagePublishState' => User::current()->can('publish', $resource),
         ];
 
         if ($request->wantsJson()) {
@@ -170,7 +170,7 @@ class ResourceController extends CpController
                 'title' => $model->{$resource->titleField()},
                 'edit_url' => $request->url(),
             ],
-            'canManagePublishState' => User::current()->can('edit', $resource),
+            'canManagePublishState' => User::current()->can('publish', $resource),
             'itemActions' => Action::for($model, ['resource' => $resource->handle(), 'view' => 'form']),
             'revisionsEnabled' => $resource->revisionsEnabled(),
             'hasWorkingCopy' => $model->hasWorkingCopy(),
