@@ -7,10 +7,11 @@ use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Search\Searchable;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class SearchableTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function can_get_resource()
     {
         $post = Post::factory()->create();
@@ -20,7 +21,7 @@ class SearchableTest extends TestCase
         $this->assertEquals(Runway::findResource('post'), $searchable->resource());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_queryable_value()
     {
         $post = Post::factory()->create();
@@ -33,7 +34,7 @@ class SearchableTest extends TestCase
         $this->assertEquals('default', $searchable->getQueryableValue('site'));
     }
 
-    /** @test */
+    #[Test]
     public function can_get_search_value()
     {
         $post = Post::factory()->create();
@@ -45,7 +46,7 @@ class SearchableTest extends TestCase
         $this->assertEquals($post->id, $searchable->getSearchValue('id'));
     }
 
-    /** @test */
+    #[Test]
     public function can_get_search_reference()
     {
         $post = Post::factory()->create();
@@ -55,7 +56,7 @@ class SearchableTest extends TestCase
         $this->assertEquals("runway::post::{$post->id}", $searchable->getSearchReference());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_search_result()
     {
         $post = Post::factory()->create();
@@ -69,7 +70,7 @@ class SearchableTest extends TestCase
         $this->assertEquals('runway:post', $result->getType());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_cp_search_result_title()
     {
         $post = Post::factory()->create();
@@ -79,7 +80,7 @@ class SearchableTest extends TestCase
         $this->assertEquals($post->title, $searchable->getCpSearchResultTitle());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_cp_search_result_url()
     {
         $post = Post::factory()->create();
@@ -89,7 +90,7 @@ class SearchableTest extends TestCase
         $this->assertStringContainsString("/runway/post/{$post->id}", $searchable->getCpSearchResultUrl());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_cp_search_result_badge()
     {
         $post = Post::factory()->create();
@@ -99,7 +100,7 @@ class SearchableTest extends TestCase
         $this->assertEquals('Posts', $searchable->getCpSearchResultBadge());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_new_augmented_instance()
     {
         $post = Post::factory()->create();

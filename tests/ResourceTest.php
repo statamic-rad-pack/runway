@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Fieldset;
 use StatamicRadPack\Runway\Runway;
+use PHPUnit\Framework\Attributes\Test;
 
 class ResourceTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function can_get_eloquent_relationships_for_belongs_to_field()
     {
         Runway::discoverResources();
@@ -21,7 +22,7 @@ class ResourceTest extends TestCase
         $this->assertContains('author', $eloquentRelationships->toArray());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_eloquent_relationships_for_has_many_field()
     {
         $blueprint = Blueprint::find('runway::author');
@@ -42,7 +43,7 @@ class ResourceTest extends TestCase
         $this->assertContains('posts', $eloquentRelationships->toArray());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_eloquent_relationships_for_runway_uri_routing()
     {
         Runway::discoverResources();
@@ -54,7 +55,7 @@ class ResourceTest extends TestCase
         $this->assertContains('runwayUri', $eloquentRelationships->toArray());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_eager_loading_relationships()
     {
         Runway::discoverResources();
@@ -69,7 +70,7 @@ class ResourceTest extends TestCase
         ], $eagerLoadingRelationships);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_eager_loading_relationships_from_config()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.with', [
@@ -87,7 +88,7 @@ class ResourceTest extends TestCase
         ], $eagerLoadingRelationships);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_generated_singular()
     {
         Runway::discoverResources();
@@ -99,7 +100,7 @@ class ResourceTest extends TestCase
         $this->assertEquals($singular, 'Post');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_configured_singular()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.singular', 'Bibliothek');
@@ -113,7 +114,7 @@ class ResourceTest extends TestCase
         $this->assertEquals($singular, 'Bibliothek');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_generated_plural()
     {
         Runway::discoverResources();
@@ -125,7 +126,7 @@ class ResourceTest extends TestCase
         $this->assertEquals($plural, 'Posts');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_configured_plural()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.plural', 'Bibliotheken');
@@ -139,7 +140,7 @@ class ResourceTest extends TestCase
         $this->assertEquals($plural, 'Bibliotheken');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_blueprint()
     {
         $resource = Runway::findResource('post');
@@ -151,7 +152,7 @@ class ResourceTest extends TestCase
         $this->assertSame('post', $blueprint->handle());
     }
 
-    /** @test */
+    #[Test]
     public function can_create_blueprint_if_one_does_not_exist()
     {
         $resource = Runway::findResource('post');
@@ -168,7 +169,7 @@ class ResourceTest extends TestCase
         $this->assertSame('post', $blueprint->handle());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_listable_columns()
     {
         Fieldset::make('seo')->setContents([
@@ -209,7 +210,7 @@ class ResourceTest extends TestCase
         ], $resource->listableColumns()->toArray());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_title_field()
     {
         $blueprint = Blueprint::make()->setContents([
@@ -237,7 +238,7 @@ class ResourceTest extends TestCase
         $this->assertEquals('values->listable_hidden_field', $resource->titleField());
     }
 
-    /** @test */
+    #[Test]
     public function revisions_can_be_enabled()
     {
         Config::set('statamic.editions.pro', true);
@@ -253,7 +254,7 @@ class ResourceTest extends TestCase
         $this->assertTrue($resource->revisionsEnabled());
     }
 
-    /** @test */
+    #[Test]
     public function revisions_cant_be_enabled_without_revisions_being_enabled_globally()
     {
         Config::set('statamic.editions.pro', true);
@@ -269,7 +270,7 @@ class ResourceTest extends TestCase
         $this->assertFalse($resource->revisionsEnabled());
     }
 
-    /** @test */
+    #[Test]
     public function revisions_cant_be_enabled_without_statamic_pro()
     {
         Config::set('statamic.editions.pro', false);
@@ -285,7 +286,7 @@ class ResourceTest extends TestCase
         $this->assertFalse($resource->revisionsEnabled());
     }
 
-    /** @test */
+    #[Test]
     public function revisions_cant_be_enabled_without_publish_states()
     {
         Config::set('statamic.editions.pro', true);

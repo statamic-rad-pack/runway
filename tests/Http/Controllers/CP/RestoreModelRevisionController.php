@@ -6,6 +6,7 @@ use Statamic\Facades\Folder;
 use Statamic\Facades\User;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class RestoreModelRevisionController extends TestCase
 {
@@ -27,7 +28,7 @@ class RestoreModelRevisionController extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
+    #[Test]
     public function it_restores_revision()
     {
         $model = Post::factory()->create(['title' => 'Some new title']);

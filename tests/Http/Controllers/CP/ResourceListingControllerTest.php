@@ -11,12 +11,13 @@ use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ResourceListingControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    /** @test */
+    #[Test]
     public function user_with_no_permissions_cannot_access_resource_listing()
     {
         $this
@@ -25,7 +26,7 @@ class ResourceListingControllerTest extends TestCase
             ->assertRedirect();
     }
 
-    /** @test */
+    #[Test]
     public function can_sort_listing_rows()
     {
         $user = User::make()->makeSuper()->save();
@@ -51,7 +52,7 @@ class ResourceListingControllerTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function listing_rows_are_ordered_as_per_config()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.order_by', 'id');
@@ -82,7 +83,7 @@ class ResourceListingControllerTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function listing_rows_are_ordered_from_runway_listing_scope()
     {
         $user = User::make()->makeSuper()->save();
@@ -110,7 +111,7 @@ class ResourceListingControllerTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function listing_rows_arent_ordered_from_runway_listing_scope_when_user_defines_an_order()
     {
         $user = User::make()->makeSuper()->save();
@@ -138,7 +139,7 @@ class ResourceListingControllerTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function listing_rows_are_ordered_when_user_defines_an_order_and_no_runway_listing_scope_order_exists()
     {
         $user = User::make()->makeSuper()->save();
@@ -164,7 +165,7 @@ class ResourceListingControllerTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function can_search()
     {
         $user = User::make()->makeSuper()->save();
@@ -187,7 +188,7 @@ class ResourceListingControllerTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function can_search_models_with_has_many_relationship()
     {
         $user = User::make()->makeSuper()->save();
@@ -212,7 +213,7 @@ class ResourceListingControllerTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function can_search_using_a_search_index()
     {
         Config::set('statamic.search.indexes.test_search_index', [
@@ -245,7 +246,7 @@ class ResourceListingControllerTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function can_paginate_results()
     {
         Post::factory()->count(15)->create();
@@ -264,10 +265,7 @@ class ResourceListingControllerTest extends TestCase
             ]);
     }
 
-    /**
-     * @test
-     * https://github.com/statamic-rad-pack/runway/pull/223
-     */
+    #[Test]
     public function can_get_values_from_nested_fields()
     {
         $posts = Post::factory()->count(3)->create([

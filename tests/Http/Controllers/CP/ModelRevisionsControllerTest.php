@@ -7,6 +7,7 @@ use Statamic\Facades\Folder;
 use Statamic\Facades\User;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ModelRevisionsControllerTest extends TestCase
 {
@@ -28,7 +29,7 @@ class ModelRevisionsControllerTest extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_revisions()
     {
         $this->travelTo('2024-01-01 10:30:00');
@@ -71,7 +72,7 @@ class ModelRevisionsControllerTest extends TestCase
             ->assertJsonPath('1.revisions.1.attributes.item_url', "http://localhost/cp/runway/post/{$model->id}/revisions/".Carbon::parse('2024-01-01 08:00:00')->timestamp);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_a_revision()
     {
         $model = Post::factory()->unpublished()->create(['title' => 'Original title']);
@@ -109,7 +110,7 @@ class ModelRevisionsControllerTest extends TestCase
         $this->assertTrue($model->hasWorkingCopy());
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_revision()
     {
         $model = Post::factory()->create(['title' => 'Original title']);

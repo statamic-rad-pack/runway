@@ -7,10 +7,11 @@ use Illuminate\Support\Collection;
 use Statamic\Fields\Blueprint;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
+use PHPUnit\Framework\Attributes\Test;
 
 class RunwayTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function can_discover_and_get_all_resources()
     {
         Runway::discoverResources();
@@ -36,7 +37,7 @@ class RunwayTest extends TestCase
         $this->assertTrue($all[2]->blueprint() instanceof Blueprint);
     }
 
-    /** @test */
+    #[Test]
     public function can_find_resource()
     {
         Runway::discoverResources();

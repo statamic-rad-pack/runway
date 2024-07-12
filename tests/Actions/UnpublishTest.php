@@ -12,18 +12,19 @@ use StatamicRadPack\Runway\Actions\Unpublish;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class UnpublishTest extends TestCase
 {
     use PreventsSavingStacheItemsToDisk;
 
-    /** @test */
+    #[Test]
     public function it_returns_title()
     {
         $this->assertEquals('Unpublish', Unpublish::title());
     }
 
-    /** @test */
+    #[Test]
     public function is_visible_to_eloquent_model()
     {
         $visibleTo = (new Unpublish())->context([])->visibleTo(Post::factory()->create());
@@ -31,7 +32,7 @@ class UnpublishTest extends TestCase
         $this->assertTrue($visibleTo);
     }
 
-    /** @test */
+    #[Test]
     public function is_not_visible_to_unpublished_eloquent_model()
     {
         $visibleTo = (new Unpublish())->context([])->visibleTo(Post::factory()->unpublished()->create());
@@ -39,7 +40,7 @@ class UnpublishTest extends TestCase
         $this->assertFalse($visibleTo);
     }
 
-    /** @test */
+    #[Test]
     public function is_not_visible_to_eloquent_model_when_resource_is_read_only()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.read_only', true);
@@ -50,7 +51,7 @@ class UnpublishTest extends TestCase
         $this->assertFalse($visibleTo);
     }
 
-    /** @test */
+    #[Test]
     public function is_not_visible_to_entry()
     {
         Collection::make('posts')->save();
@@ -62,7 +63,7 @@ class UnpublishTest extends TestCase
         $this->assertFalse($visibleTo);
     }
 
-    /** @test */
+    #[Test]
     public function is_not_visible_in_bulk_to_entry()
     {
         Collection::make('posts')->save();
@@ -74,7 +75,7 @@ class UnpublishTest extends TestCase
         $this->assertFalse($visibleTo);
     }
 
-    /** @test */
+    #[Test]
     public function is_visible_to_eloquent_models_in_bulk()
     {
         $posts = Post::factory()->count(3)->create();
@@ -84,7 +85,7 @@ class UnpublishTest extends TestCase
         $this->assertTrue($visibleToBulk);
     }
 
-    /** @test */
+    #[Test]
     public function is_not_visible_to_eloquent_models_in_bulk_when_not_all_models_are_published()
     {
         $posts = Post::factory()->count(3)->create();
@@ -95,7 +96,7 @@ class UnpublishTest extends TestCase
         $this->assertFalse($visibleToBulk);
     }
 
-    /** @test */
+    #[Test]
     public function super_user_is_authorized()
     {
         $user = User::make()->makeSuper()->save();
@@ -105,7 +106,7 @@ class UnpublishTest extends TestCase
         $this->assertTrue($authorize);
     }
 
-    /** @test */
+    #[Test]
     public function user_with_permission_is_authorized()
     {
         Role::make('editor')->addPermission('edit post')->save();
@@ -119,7 +120,7 @@ class UnpublishTest extends TestCase
         Role::find('editor')->delete();
     }
 
-    /** @test */
+    #[Test]
     public function user_without_permission_is_not_authorized()
     {
         $user = User::make()->save();
@@ -129,7 +130,7 @@ class UnpublishTest extends TestCase
         $this->assertFalse($authorize);
     }
 
-    /** @test */
+    #[Test]
     public function it_publishes_models()
     {
         $posts = Post::factory()->count(5)->create();

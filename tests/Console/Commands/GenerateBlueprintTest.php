@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 use Statamic\Facades\Blueprint;
 use Statamic\Fields\Blueprint as FieldsBlueprint;
 use StatamicRadPack\Runway\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class GenerateBlueprintTest extends TestCase
 {
@@ -22,7 +23,7 @@ class GenerateBlueprintTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_blueprint()
     {
         Schema::shouldReceive('dropIfExists')->times(7);
@@ -125,7 +126,7 @@ class GenerateBlueprintTest extends TestCase
             ->assertExitCode(0);
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_resource_with_column_that_can_not_be_matched_to_a_fieldtype()
     {
         Schema::shouldReceive('dropIfExists')->times(7);

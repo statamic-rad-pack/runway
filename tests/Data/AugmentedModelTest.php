@@ -7,10 +7,11 @@ use StatamicRadPack\Runway\Data\AugmentedModel;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class AugmentedModelTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_gets_values()
     {
         TestTime::freeze('Y-m-d H:i:s', '2020-01-01 13:46:12');
@@ -43,7 +44,7 @@ class AugmentedModelTest extends TestCase
         $this->assertEquals('John Doe', $augmented->get('author_id')->value()['name']->value());
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_nested_values()
     {
         $post = Post::factory()->create([
@@ -61,7 +62,7 @@ class AugmentedModelTest extends TestCase
         $this->assertEquals('<p>This is a <strong>great</strong> post! You should <em>read</em> it.</p>', trim($augmented->get('values')->value()['alt_body']->value()));
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_value_from_model_accessor()
     {
         $post = Post::factory()->create();
@@ -71,7 +72,7 @@ class AugmentedModelTest extends TestCase
         $this->assertEquals('This is an excerpt.', $augmented->get('excerpt')->value());
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_value_from_appended_attribute()
     {
         $post = Post::factory()->create();

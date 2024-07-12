@@ -7,10 +7,11 @@ use Statamic\Facades\User;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ResourcePolicyTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function can_view_resource()
     {
         $resource = Runway::findResource('post');
@@ -21,7 +22,7 @@ class ResourcePolicyTest extends TestCase
         $this->assertTrue($user->can('view', $resource));
     }
 
-    /** @test */
+    #[Test]
     public function can_view_resource_with_model()
     {
         $resource = Runway::findResource('post');
@@ -32,7 +33,7 @@ class ResourcePolicyTest extends TestCase
         $this->assertTrue($user->can('view', [$resource, new Post]));
     }
 
-    /** @test */
+    #[Test]
     public function can_create_resource()
     {
         $resource = Runway::findResource('post');
@@ -53,7 +54,7 @@ class ResourcePolicyTest extends TestCase
         $this->assertTrue($user->can('edit', $resource));
     }
 
-    /** @test */
+    #[Test]
     public function can_edit_resource_with_model()
     {
         $resource = Runway::findResource('post');
@@ -74,7 +75,7 @@ class ResourcePolicyTest extends TestCase
         $this->assertTrue($user->can('delete', $resource));
     }
 
-    /** @test */
+    #[Test]
     public function can_delete_resource_with_model()
     {
         $resource = Runway::findResource('post');

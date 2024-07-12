@@ -6,6 +6,7 @@ use Statamic\Actions\Action;
 use Statamic\Facades\User;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ResourceActionControllerTest extends TestCase
 {
@@ -16,7 +17,7 @@ class ResourceActionControllerTest extends TestCase
         FooAction::register();
     }
 
-    /** @test */
+    #[Test]
     public function can_run_action()
     {
         $post = Post::factory()->create();
@@ -36,7 +37,7 @@ class ResourceActionControllerTest extends TestCase
         $this->assertTrue(FooAction::$hasRun);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_bulk_actions_list()
     {
         $post = Post::factory()->create();

@@ -14,18 +14,19 @@ use StatamicRadPack\Runway\Actions\DuplicateModel;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class DuplicateModelTest extends TestCase
 {
     use PreventsSavingStacheItemsToDisk;
 
-    /** @test */
+    #[Test]
     public function it_returns_title()
     {
         $this->assertEquals('Duplicate', DuplicateModel::title());
     }
 
-    /** @test */
+    #[Test]
     public function is_visible_to_eloquent_model()
     {
         $visibleTo = (new DuplicateModel())->visibleTo(Post::factory()->create());
@@ -33,7 +34,7 @@ class DuplicateModelTest extends TestCase
         $this->assertTrue($visibleTo);
     }
 
-    /** @test */
+    #[Test]
     public function is_not_visible_to_eloquent_model_when_resource_is_read_only()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.read_only', true);
@@ -45,7 +46,7 @@ class DuplicateModelTest extends TestCase
         $this->assertFalse($visibleTo);
     }
 
-    /** @test */
+    #[Test]
     public function is_not_visible_to_eloquent_model_when_blueprint_is_hidden()
     {
         $blueprint = Blueprint::find('runway::post');
@@ -57,7 +58,7 @@ class DuplicateModelTest extends TestCase
         $this->assertFalse($visibleTo);
     }
 
-    /** @test */
+    #[Test]
     public function is_not_visible_to_eloquent_model_without_a_runway_resource()
     {
         $model = new class extends Model
@@ -70,7 +71,7 @@ class DuplicateModelTest extends TestCase
         $this->assertFalse($visibleTo);
     }
 
-    /** @test */
+    #[Test]
     public function is_not_visible_to_entry()
     {
         Collection::make('posts')->save();
@@ -82,7 +83,7 @@ class DuplicateModelTest extends TestCase
         $this->assertFalse($visibleTo);
     }
 
-    /** @test */
+    #[Test]
     public function is_visible_to_eloquent_models_in_bulk()
     {
         $posts = Post::factory()->count(3)->create();
@@ -92,7 +93,7 @@ class DuplicateModelTest extends TestCase
         $this->assertTrue($visibleToBulk);
     }
 
-    /** @test */
+    #[Test]
     public function is_not_visible_to_entries_in_bulk()
     {
         Collection::make('posts')->save();
@@ -108,7 +109,7 @@ class DuplicateModelTest extends TestCase
         $this->assertFalse($visibleToBulk);
     }
 
-    /** @test */
+    #[Test]
     public function super_user_is_authorized()
     {
         $user = User::make()->makeSuper()->save();
@@ -118,7 +119,7 @@ class DuplicateModelTest extends TestCase
         $this->assertTrue($authorize);
     }
 
-    /** @test */
+    #[Test]
     public function user_with_permission_is_authorized()
     {
         Role::make('editor')->addPermission('create post')->save();
@@ -132,7 +133,7 @@ class DuplicateModelTest extends TestCase
         Role::find('editor')->delete();
     }
 
-    /** @test */
+    #[Test]
     public function user_without_permission_is_not_authorized()
     {
         $user = User::make()->save();
@@ -142,7 +143,7 @@ class DuplicateModelTest extends TestCase
         $this->assertFalse($authorize);
     }
 
-    /** @test */
+    #[Test]
     public function it_duplicates_models()
     {
         $post = Post::factory()->create(['title' => 'Hello World']);

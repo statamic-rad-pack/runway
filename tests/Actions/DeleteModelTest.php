@@ -13,18 +13,19 @@ use StatamicRadPack\Runway\Actions\DeleteModel;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class DeleteModelTest extends TestCase
 {
     use PreventsSavingStacheItemsToDisk;
 
-    /** @test */
+    #[Test]
     public function it_returns_title()
     {
         $this->assertEquals('Delete', DeleteModel::title());
     }
 
-    /** @test */
+    #[Test]
     public function is_visible_to_eloquent_model()
     {
         $visibleTo = (new DeleteModel())->visibleTo(Post::factory()->create());
@@ -32,7 +33,7 @@ class DeleteModelTest extends TestCase
         $this->assertTrue($visibleTo);
     }
 
-    /** @test */
+    #[Test]
     public function is_not_visible_to_eloquent_model_when_resource_is_read_only()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.read_only', true);
@@ -43,7 +44,7 @@ class DeleteModelTest extends TestCase
         $this->assertFalse($visibleTo);
     }
 
-    /** @test */
+    #[Test]
     public function is_not_visible_to_eloquent_model_without_a_runway_resource()
     {
         $model = new class extends Model
@@ -56,7 +57,7 @@ class DeleteModelTest extends TestCase
         $this->assertFalse($visibleTo);
     }
 
-    /** @test */
+    #[Test]
     public function is_not_visible_to_entry()
     {
         Collection::make('posts')->save();
@@ -68,7 +69,7 @@ class DeleteModelTest extends TestCase
         $this->assertFalse($visibleTo);
     }
 
-    /** @test */
+    #[Test]
     public function is_visible_to_eloquent_models_in_bulk()
     {
         $posts = Post::factory()->count(3)->create();
@@ -78,7 +79,7 @@ class DeleteModelTest extends TestCase
         $this->assertTrue($visibleToBulk);
     }
 
-    /** @test */
+    #[Test]
     public function is_not_visible_to_entries_in_bulk()
     {
         Collection::make('posts')->save();
@@ -94,7 +95,7 @@ class DeleteModelTest extends TestCase
         $this->assertFalse($visibleToBulk);
     }
 
-    /** @test */
+    #[Test]
     public function super_user_is_authorized()
     {
         $user = User::make()->makeSuper()->save();
@@ -104,7 +105,7 @@ class DeleteModelTest extends TestCase
         $this->assertTrue($authorize);
     }
 
-    /** @test */
+    #[Test]
     public function user_with_permission_is_authorized()
     {
         Role::make('editor')->addPermission('delete post')->save();
@@ -118,7 +119,7 @@ class DeleteModelTest extends TestCase
         Role::find('editor')->delete();
     }
 
-    /** @test */
+    #[Test]
     public function user_without_permission_is_not_authorized()
     {
         $user = User::make()->save();
@@ -128,7 +129,7 @@ class DeleteModelTest extends TestCase
         $this->assertFalse($authorize);
     }
 
-    /** @test */
+    #[Test]
     public function it_deletes_models()
     {
         $posts = Post::factory()->count(5)->create();

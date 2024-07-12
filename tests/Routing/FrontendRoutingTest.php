@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\Config;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class FrontendRoutingTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function returns_resource_response_for_resource()
     {
         $post = Post::factory()->create();
@@ -23,10 +24,7 @@ class FrontendRoutingTest extends TestCase
             ->assertSee('LAYOUT: layout');
     }
 
-    /**
-     * @test
-     * https://github.com/statamic-rad-pack/runway/pull/302
-     */
+    #[Test]
     public function returns_resource_response_for_resource_with_nested_field()
     {
         $post = Post::factory()->create([
@@ -45,7 +43,7 @@ class FrontendRoutingTest extends TestCase
             ->assertSee('LAYOUT: layout');
     }
 
-    /** @test */
+    #[Test]
     public function returns_resource_response_for_resource_with_custom_template()
     {
         Config::set('runway.resources.'.Post::class.'.template', 'custom');
@@ -63,7 +61,7 @@ class FrontendRoutingTest extends TestCase
             ->assertSee('LAYOUT: layout');
     }
 
-    /** @test */
+    #[Test]
     public function returns_resource_response_for_resource_with_custom_layout()
     {
         Config::set('runway.resources.'.Post::class.'.layout', 'blog-layout');
