@@ -6,6 +6,7 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blink;
 use Statamic\Fields\Field;
 use Statamic\Http\Requests\FilteredRequest;
@@ -34,7 +35,7 @@ class BelongsToFieldtypeTest extends TestCase
             ]));
     }
 
-    /** @test */
+    #[Test]
     public function can_get_index_items()
     {
         Author::factory()->count(10)->create();
@@ -56,7 +57,7 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItemsWithoutPagination->count(), 10);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_index_items_with_title_format()
     {
         $authors = Author::factory()->count(2)->create();
@@ -80,7 +81,7 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItems->last()['title'], 'AUTHOR '.$authors[1]->name);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_index_items_in_order_specified_in_runway_config()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.order_by', 'name');
@@ -101,7 +102,7 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItems->all()[2]['title'], 'Amy Santiago');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_index_items_in_order_from_runway_listing_scope()
     {
         Author::factory()->create(['name' => 'Scully']);
@@ -121,7 +122,7 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItems->all()[2]['title'], 'Amy Santiago');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_index_items_in_order_from_runway_listing_scope_when_user_defines_an_order()
     {
         Author::factory()->create(['name' => 'Scully']);
@@ -141,7 +142,7 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItems->all()[2]['title'], 'Scully');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_index_items_and_search()
     {
         Author::factory()->count(10)->create();
@@ -158,7 +159,7 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItems->first()['id'], $hasselhoff->id);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_index_items_and_search_using_a_search_index()
     {
         Config::set('statamic.search.indexes.test_search_index', [
@@ -185,7 +186,7 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItems->first()['id'], $hasselhoff->id);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_item_array_with_title_format()
     {
         $author = Author::factory()->create();
@@ -204,7 +205,7 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertEquals('AUTHOR '.$author->name, $item->first()['title']);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_pre_process_index()
     {
         $author = Author::factory()->create();
@@ -220,7 +221,7 @@ class BelongsToFieldtypeTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_pre_process_index_with_model_id()
     {
         $author = Author::factory()->create();
@@ -236,7 +237,7 @@ class BelongsToFieldtypeTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_augment_value()
     {
         $author = Author::factory()->create();
@@ -248,13 +249,11 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertEquals($author->name, $augment['name']->value());
     }
 
-    /**
-     * @test
-     *
-     * Under the hood, this tests the `toItemArray` method.
-     */
+    #[Test]
     public function can_get_item_data()
     {
+        // Under the hood, this tests the toItemArray method.
+
         $author = Author::factory()->create();
 
         $getItemData = $this->fieldtype->getItemData($author->id);
@@ -267,7 +266,7 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertArrayNotHasKey('created_at', $getItemData[0]);
     }
 
-    /** @test */
+    #[Test]
     public function gets_graphql_type()
     {
         $toGqlType = $this->fieldtype->toGqlType();

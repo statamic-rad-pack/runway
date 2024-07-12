@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Tests;
 
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blueprint;
 use Statamic\Fields\Blueprint as FieldsBlueprint;
 use StatamicRadPack\Runway\Relationships;
@@ -10,7 +11,7 @@ use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 
 class RelationshipsTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function can_add_models_when_saving_has_many_relationship()
     {
         $author = Author::factory()->create();
@@ -37,7 +38,7 @@ class RelationshipsTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_delete_models_when_saving_has_many_relationship()
     {
         $author = Author::factory()->create();
@@ -67,7 +68,7 @@ class RelationshipsTest extends TestCase
         $this->assertDatabaseHas('posts', ['id' => $posts[2]->id, 'author_id' => $author->id]);
     }
 
-    /** @test */
+    #[Test]
     public function can_update_sort_orders_when_saving_has_many_relationship()
     {
         $author = Author::factory()->create();
@@ -98,7 +99,7 @@ class RelationshipsTest extends TestCase
         $this->assertDatabaseHas('posts', ['id' => $posts[2]->id, 'author_id' => $author->id, 'sort_order' => 1]);
     }
 
-    /** @test */
+    #[Test]
     public function can_add_models_when_saving_belongs_to_many_relationship()
     {
         $author = Author::factory()->create();
@@ -123,7 +124,7 @@ class RelationshipsTest extends TestCase
         $this->assertDatabaseHas('post_author', ['post_id' => $posts[2]->id, 'author_id' => $author->id]);
     }
 
-    /** @test */
+    #[Test]
     public function can_remove_models_when_saving_belongs_to_many_relationship()
     {
         $author = Author::factory()->create();
@@ -151,7 +152,7 @@ class RelationshipsTest extends TestCase
         $this->assertDatabaseHas('post_author', ['post_id' => $posts[2]->id, 'author_id' => $author->id]);
     }
 
-    /** @test */
+    #[Test]
     public function can_update_sort_orders_when_saving_belongs_to_relationship()
     {
         $author = Author::factory()->create();

@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Tests\Tags;
 
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Antlers;
 use Statamic\Facades\Blueprint;
 use Statamic\Fields\Value;
@@ -25,13 +26,13 @@ class RunwayTagTest extends TestCase
             ->setContext([]);
     }
 
-    /** @test */
+    #[Test]
     public function has_been_registered()
     {
         $this->assertTrue(isset(app()['statamic.tags']['runway']));
     }
 
-    /** @test */
+    #[Test]
     public function can_get_models_with_no_parameters()
     {
         $posts = Post::factory()->count(5)->create();
@@ -48,7 +49,7 @@ class RunwayTagTest extends TestCase
         $this->assertEquals((string) $usage[4]['title'], $posts[4]->title);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_models_with_select_parameter()
     {
         $posts = Post::factory()->count(5)->create();
@@ -82,7 +83,7 @@ class RunwayTagTest extends TestCase
         $this->assertEmpty((string) $usage[4]['body']->value());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_models_with_scope_parameter()
     {
         $posts = Post::factory()->count(5)->create();
@@ -103,7 +104,7 @@ class RunwayTagTest extends TestCase
         $this->assertEquals((string) $usage[2]['title']->value(), 'Burger');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_models_with_scope_parameter_and_scope_arguments()
     {
         $posts = Post::factory()->count(5)->create();
@@ -126,7 +127,7 @@ class RunwayTagTest extends TestCase
         $this->assertEquals((string) $usage[0]['title']->value(), 'Apple');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_models_with_scope_parameter_and_scope_arguments_and_multiple_scopes()
     {
         $posts = Post::factory()->count(5)->create();
@@ -149,7 +150,7 @@ class RunwayTagTest extends TestCase
         $this->assertEquals((string) $usage[0]['title']->value(), 'Apple');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_models_with_where_parameter()
     {
         $posts = Post::factory()->count(5)->create();
@@ -166,7 +167,7 @@ class RunwayTagTest extends TestCase
         $this->assertEquals((string) $usage[0]['title']->value(), 'penguin');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_models_with_where_parameter_when_condition_is_on_relationship_field()
     {
         $posts = Post::factory()->count(5)->create();
@@ -188,7 +189,7 @@ class RunwayTagTest extends TestCase
         $this->assertEquals((string) $usage[2]['title']->value(), $posts[3]->title);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_models_with_with_parameter()
     {
         $posts = Post::factory()->count(5)->create();
@@ -208,7 +209,7 @@ class RunwayTagTest extends TestCase
         $this->assertEquals($usage[0]['author']->value()['name']->value(), $posts[0]->author->name);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_models_with_sort_parameter()
     {
         $posts = Post::factory()->count(2)->create();
@@ -228,7 +229,7 @@ class RunwayTagTest extends TestCase
         $this->assertEquals((string) $usage[1]['title'], 'abc');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_models_with_scoping()
     {
         $posts = Post::factory()->count(2)->create();
@@ -248,7 +249,7 @@ class RunwayTagTest extends TestCase
         $this->assertEquals((string) $usage['items'][1]['title'], 'def');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_models_with_limit_parameter()
     {
         $posts = Post::factory()->count(5)->create();
@@ -267,7 +268,7 @@ class RunwayTagTest extends TestCase
         $this->assertFalse(isset($usage[2]));
     }
 
-    /** @test */
+    #[Test]
     public function can_get_models_with_scoping_and_pagination()
     {
         $posts = Post::factory()->count(5)->create();
@@ -290,7 +291,7 @@ class RunwayTagTest extends TestCase
         $this->assertArrayHasKey('no_results', $usage);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_models_and_non_blueprint_columns_are_returned()
     {
         $posts = Post::factory()->count(2)->create();
@@ -308,7 +309,7 @@ class RunwayTagTest extends TestCase
         $this->assertEquals((string) $usage[1]['title']->value(), $posts[1]['title']);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_models_with_studly_case_resource_handle()
     {
         $postBlueprint = Blueprint::find('runway::post');

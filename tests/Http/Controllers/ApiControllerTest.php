@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Tests\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Config;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
@@ -17,7 +18,7 @@ class ApiControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function gets_a_resource_that_exists()
     {
         $posts = Post::factory()->count(2)->create();
@@ -30,7 +31,7 @@ class ApiControllerTest extends TestCase
             ->assertJsonPath('data.1.id', $posts[1]->id);
     }
 
-    /** @test */
+    #[Test]
     public function returns_not_found_on_a_resource_that_doesnt_exist()
     {
         Post::factory()->count(2)->create();
@@ -40,7 +41,7 @@ class ApiControllerTest extends TestCase
             ->assertNotFound();
     }
 
-    /** @test */
+    #[Test]
     public function it_filters_out_unpublished_models()
     {
         $posts = Post::factory()->count(2)->create();
@@ -55,7 +56,7 @@ class ApiControllerTest extends TestCase
             ->assertJsonPath('data.1.id', $posts[1]->id);
     }
 
-    /** @test */
+    #[Test]
     public function paginates_a_resource_list()
     {
         Post::factory()->count(10)->create();
@@ -77,7 +78,7 @@ class ApiControllerTest extends TestCase
             ->assertJsonPath('meta.total', 10);
     }
 
-    /** @test */
+    #[Test]
     public function filters_a_resource_list()
     {
         [$postA, $postB, $postC] = Post::factory()->count(3)->create();
@@ -105,7 +106,7 @@ class ApiControllerTest extends TestCase
             ->assertJsonPath('meta.total', 3);
     }
 
-    /** @test */
+    #[Test]
     public function wont_filter_a_resource_list_on_a_forbidden_filter()
     {
         [$postA, $postB, $postC] = Post::factory()->count(3)->create();
@@ -119,7 +120,7 @@ class ApiControllerTest extends TestCase
             ->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function gets_a_resource_model_that_exists()
     {
         $post = Post::factory()->create();
@@ -132,7 +133,7 @@ class ApiControllerTest extends TestCase
             ->assertJsonPath('data.title', $post->title);
     }
 
-    /** @test */
+    #[Test]
     public function gets_a_resource_model_with_nested_fields()
     {
         $post = Post::factory()->create([
@@ -152,7 +153,7 @@ class ApiControllerTest extends TestCase
 ');
     }
 
-    /** @test */
+    #[Test]
     public function gets_a_resource_model_with_belongs_to_relationship()
     {
         $post = Post::factory()->create();
@@ -166,7 +167,7 @@ class ApiControllerTest extends TestCase
             ->assertJsonPath('data.author_id.name', $post->author->name);
     }
 
-    /** @test */
+    #[Test]
     public function returns_not_found_on_a_model_that_does_not_exist()
     {
         $this
@@ -174,7 +175,7 @@ class ApiControllerTest extends TestCase
             ->assertNotFound();
     }
 
-    /** @test */
+    #[Test]
     public function it_doesnt_return_unpublished_model()
     {
         $post = Post::factory()->unpublished()->create();

@@ -6,6 +6,7 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blink;
 use Statamic\Fields\Field;
 use Statamic\Http\Requests\FilteredRequest;
@@ -34,7 +35,7 @@ class HasManyFieldtypeTest extends TestCase
             ]));
     }
 
-    /** @test */
+    #[Test]
     public function can_get_index_items()
     {
         $author = Author::factory()->create();
@@ -57,7 +58,7 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItemsWithoutPagination->count(), 10);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_index_items_with_title_format()
     {
         $author = Author::factory()->create();
@@ -81,7 +82,7 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItems->last()['title'], $posts[1]->title.' TEST '.now()->format('Y'));
     }
 
-    /** @test */
+    #[Test]
     public function can_get_index_items_in_order_specified_in_runway_config()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.order_by', 'title');
@@ -104,7 +105,7 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItems->all()[2]['title'], 'Richard B');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_index_items_in_order_from_runway_listing_scope()
     {
         Post::factory()->create(['title' => 'Arnold A']);
@@ -124,7 +125,7 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItems->all()[2]['title'], 'Richard B');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_index_items_in_order_from_runway_listing_scope_when_user_defines_an_order()
     {
         Post::factory()->create(['title' => 'Arnold A']);
@@ -144,7 +145,7 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItems->all()[2]['title'], 'Arnold A');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_index_items_and_search()
     {
         $author = Author::factory()->create();
@@ -164,7 +165,7 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItems->last()['title'], $spacePandaPosts[2]->title);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_index_items_and_search_using_a_search_index()
     {
         Config::set('statamic.search.indexes.test_search_index', [
@@ -194,7 +195,7 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItems->last()['title'], $spacePandaPosts[2]->title);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_item_array_with_title_format()
     {
         $author = Author::factory()->create();
@@ -214,7 +215,7 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertEquals($item->last()['title'], $posts[1]->title.' TEST '.now()->format('Y'));
     }
 
-    /** @test */
+    #[Test]
     public function can_get_pre_process_index()
     {
         $author = Author::factory()->create();
@@ -231,7 +232,7 @@ class HasManyFieldtypeTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_augment_value()
     {
         $author = Author::factory()->create();
@@ -248,13 +249,11 @@ class HasManyFieldtypeTest extends TestCase
         $this->assertEquals($posts[0]->title, (string) $augment[0]['title']->value());
     }
 
-    /**
-     * @test
-     *
-     * Under the hood, this tests the `toItemArray` method.
-     */
+    #[Test]
     public function can_get_item_data()
     {
+        // Under the hood, this tests the toItemArray method.
+
         $author = Author::factory()->create();
         $posts = Post::factory()->count(5)->create(['author_id' => $author->id]);
 

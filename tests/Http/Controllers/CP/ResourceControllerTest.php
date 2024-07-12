@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
 
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Config;
 use Statamic\Facades\Role;
@@ -16,7 +17,7 @@ use StatamicRadPack\Runway\Tests\TestCase;
 
 class ResourceControllerTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function get_model_index()
     {
         Post::factory()->count(2)->create();
@@ -33,7 +34,7 @@ class ResourceControllerTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function can_create_resource()
     {
         $user = User::make()->makeSuper()->save();
@@ -44,7 +45,7 @@ class ResourceControllerTest extends TestCase
             ->assertOk();
     }
 
-    /** @test */
+    #[Test]
     public function cant_create_resource_if_resource_is_read_only()
     {
         Config::set('runway.resources.'.Post::class.'.read_only', true);
@@ -59,7 +60,7 @@ class ResourceControllerTest extends TestCase
             ->assertRedirect();
     }
 
-    /** @test */
+    #[Test]
     public function cant_create_resource_when_blueprint_is_hidden()
     {
         $blueprint = Blueprint::find('runway::post');
@@ -76,7 +77,7 @@ class ResourceControllerTest extends TestCase
             ->assertRedirect();
     }
 
-    /** @test */
+    #[Test]
     public function can_store_resource()
     {
         $author = Author::factory()->create();
@@ -99,7 +100,7 @@ class ResourceControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function cant_store_resource_if_resource_is_read_only()
     {
         Config::set('runway.resources.'.Post::class.'.read_only', true);
@@ -124,7 +125,7 @@ class ResourceControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function cant_store_resource_when_blueprint_is_hidden()
     {
         $postBlueprint = Blueprint::find('runway::post');
@@ -151,10 +152,7 @@ class ResourceControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     * https://github.com/statamic-rad-pack/runway/pull/223
-     */
+    #[Test]
     public function can_store_resource_and_ensure_computed_field_isnt_saved_to_database()
     {
         $author = Author::factory()->create();
@@ -178,10 +176,7 @@ class ResourceControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     * https://github.com/statamic-rad-pack/runway/issues/331
-     */
+    #[Test]
     public function can_store_resource_and_ensure_field_isnt_saved_to_database()
     {
         $author = Author::factory()->create();
@@ -205,10 +200,7 @@ class ResourceControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     * https://github.com/statamic-rad-pack/runway/pull/247
-     */
+    #[Test]
     public function can_store_resource_and_ensure_appended_attribute_doesnt_attempt_to_get_saved()
     {
         $author = Author::factory()->create();
@@ -232,10 +224,7 @@ class ResourceControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     * https://github.com/statamic-rad-pack/runway/pull/302
-     */
+    #[Test]
     public function can_store_resource_with_nested_field()
     {
         $author = Author::factory()->create();
@@ -259,10 +248,7 @@ class ResourceControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     * https://github.com/statamic-rad-pack/runway/issues/321
-     */
+    #[Test]
     public function can_store_resource_and_ensure_date_comparison_validation_works()
     {
         $author = Author::factory()->create();
@@ -291,7 +277,7 @@ class ResourceControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function can_edit_resource()
     {
         $post = Post::factory()->create();
@@ -305,7 +291,7 @@ class ResourceControllerTest extends TestCase
             ->assertSee($post->body);
     }
 
-    /** @test */
+    #[Test]
     public function cant_edit_resource_when_it_does_not_exist()
     {
         $user = User::make()->makeSuper()->save();
@@ -317,7 +303,7 @@ class ResourceControllerTest extends TestCase
             ->assertSee('Page Not Found');
     }
 
-    /** @test */
+    #[Test]
     public function can_edit_resource_with_simple_date_field()
     {
         $postBlueprint = Blueprint::find('runway::post');
@@ -356,7 +342,7 @@ class ResourceControllerTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_edit_resource_with_date_field_with_default_format()
     {
         $postBlueprint = Blueprint::find('runway::post');
@@ -396,7 +382,7 @@ class ResourceControllerTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_edit_resource_with_date_field_with_custom_format()
     {
         $postBlueprint = Blueprint::find('runway::post');
@@ -436,10 +422,7 @@ class ResourceControllerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     * https://github.com/statamic-rad-pack/runway/pull/302
-     */
+    #[Test]
     public function can_edit_resource_with_nested_field()
     {
         $post = Post::factory()->create([
@@ -459,7 +442,7 @@ class ResourceControllerTest extends TestCase
             ->assertSee('Im Toby Ziegler, and I work at the White House.');
     }
 
-    /** @test */
+    #[Test]
     public function can_edit_resource_if_resource_is_read_only()
     {
         Config::set('runway.resources.'.Post::class.'.read_only', true);
@@ -477,10 +460,7 @@ class ResourceControllerTest extends TestCase
             ->assertSee($post->body);
     }
 
-    /**
-     * @test
-     * https://github.com/statamic-rad-pack/runway/pull/370
-     */
+    #[Test]
     public function can_edit_resource_with_nested_field_cast_to_object_in_model()
     {
         $post = Post::factory()->create([
@@ -501,7 +481,7 @@ class ResourceControllerTest extends TestCase
             ->assertSee($post->external_links->links[1]->url);
     }
 
-    /** @test */
+    #[Test]
     public function can_edit_resource_if_model_is_user_model()
     {
         Config::set('auth.providers.users.model', UserModel::class);
@@ -527,7 +507,7 @@ class ResourceControllerTest extends TestCase
             ->assertSee('admins');
     }
 
-    /** @test */
+    #[Test]
     public function can_update_resource()
     {
         $post = Post::factory()->create();
@@ -550,7 +530,7 @@ class ResourceControllerTest extends TestCase
         $this->assertEquals($post->title, 'Santa is coming home');
     }
 
-    /** @test */
+    #[Test]
     public function cant_update_resource_if_resource_is_read_only()
     {
         Config::set('runway.resources.'.Post::class.'.read_only', true);
@@ -575,7 +555,7 @@ class ResourceControllerTest extends TestCase
         $this->assertNotSame($post->title, 'Santa is coming home');
     }
 
-    /** @test */
+    #[Test]
     public function can_update_resource_and_ensure_computed_field_isnt_saved_to_database()
     {
         $post = Post::factory()->create();
@@ -599,10 +579,7 @@ class ResourceControllerTest extends TestCase
         $this->assertEquals($post->title, 'Santa is coming home');
     }
 
-    /**
-     *  @test
-     * https://github.com/statamic-rad-pack/runway/issues/331
-     */
+    #[Test]
     public function can_update_resource_and_ensure__field_isnt_saved_to_database()
     {
         $post = Post::factory()->create();
@@ -626,10 +603,7 @@ class ResourceControllerTest extends TestCase
         $this->assertEquals($post->title, 'Santa is coming home');
     }
 
-    /**
-     * @test
-     * https://github.com/statamic-rad-pack/runway/pull/247
-     */
+    #[Test]
     public function can_update_resource_and_ensure_appended_attribute_doesnt_attempt_to_get_saved()
     {
         $post = Post::factory()->create();
@@ -653,10 +627,7 @@ class ResourceControllerTest extends TestCase
         $this->assertEquals($post->title, 'Santa is coming home');
     }
 
-    /**
-     * @test
-     * https://github.com/statamic-rad-pack/runway/pull/302
-     */
+    #[Test]
     public function can_update_resource_with_nested_field()
     {
         $post = Post::factory()->create();
@@ -680,7 +651,7 @@ class ResourceControllerTest extends TestCase
         $this->assertEquals($post->values['alt_title'], 'Claus is venturing out');
     }
 
-    /** @test */
+    #[Test]
     public function can_update_resource_if_model_is_user_model()
     {
         Config::set('auth.providers.users.model', UserModel::class);

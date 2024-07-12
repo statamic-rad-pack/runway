@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Tests\UpdateScripts;
 
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\Test;
 use StatamicRadPack\Runway\Tests\TestCase;
 use StatamicRadPack\Runway\UpdateScripts\ChangePermissionNames;
 
@@ -10,7 +11,7 @@ class ChangePermissionNamesTest extends TestCase
 {
     use RunsUpdateScripts;
 
-    /** @test */
+    #[Test]
     public function it_can_change_permission_names()
     {
         File::ensureDirectoryExists(resource_path('users'));

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
+use PHPUnit\Framework\Attributes\Test;
 use Spatie\TestTime\TestTime;
 use SplFileInfo;
 use Statamic\Facades\Blueprint;
@@ -45,7 +46,7 @@ class GenerateMigrationTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_migrations_for_multiple_resources()
     {
         TestTime::freeze();
@@ -95,7 +96,7 @@ class GenerateMigrationTest extends TestCase
         $this->assertFalse(Schema::hasTable('drinks'));
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_migration_for_single_resource()
     {
         TestTime::freeze();
@@ -136,7 +137,7 @@ class GenerateMigrationTest extends TestCase
         $this->assertFalse(Schema::hasTable('foods'));
     }
 
-    /** @test */
+    #[Test]
     public function cant_generate_migration_where_table_already_exists()
     {
         TestTime::freeze();
@@ -170,7 +171,7 @@ class GenerateMigrationTest extends TestCase
         $this->assertFileDoesNotExist(database_path().'/migrations/'.now()->format('Y_m_d_His').'_create_foods_table.php');
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_migration_and_run_them_afterwards()
     {
         TestTime::freeze();
@@ -201,7 +202,7 @@ class GenerateMigrationTest extends TestCase
         $this->assertTrue(Schema::hasTable('foods'));
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_migration_and_ensure_normal_field_is_correct()
     {
         TestTime::freeze();
@@ -245,7 +246,7 @@ class GenerateMigrationTest extends TestCase
         $this->assertFalse(Schema::hasTable('foods'));
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_migration_and_ensure_max_items_1_field_is_correct()
     {
         TestTime::freeze();
@@ -299,7 +300,7 @@ class GenerateMigrationTest extends TestCase
         $this->assertFalse(Schema::hasTable('foods'));
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_migration_and_ensure_field_is_nullable_if_required_not_set()
     {
         TestTime::freeze();
@@ -334,7 +335,7 @@ class GenerateMigrationTest extends TestCase
         $this->assertFalse(Schema::hasTable('foods'));
     }
 
-    /** @test */
+    #[Test]
     public function can_generate_migration_and_ensure_field_is_not_nullable_if_required_set()
     {
         TestTime::freeze();

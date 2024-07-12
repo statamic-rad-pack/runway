@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Tests\Query\Scopes\Filters;
 
+use PHPUnit\Framework\Attributes\Test;
 use Statamic\Fields\Field;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Query\Scopes\Filters\Fields\Models;
@@ -11,7 +12,7 @@ use StatamicRadPack\Runway\Tests\TestCase;
 
 class ModelsTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_gets_field_items()
     {
         $fieldtype = new BelongsToFieldtype;
@@ -31,7 +32,7 @@ class ModelsTest extends TestCase
         ], $fieldItems['field']['options']);
     }
 
-    /** @test */
+    #[Test]
     public function can_apply_filter_on_normal_column()
     {
         Post::factory()->count(5)->create();
@@ -60,7 +61,7 @@ class ModelsTest extends TestCase
         $this->assertEquals($author->id, $results[2]->author_id);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_badge()
     {
         $fieldtype = new BelongsToFieldtype;
