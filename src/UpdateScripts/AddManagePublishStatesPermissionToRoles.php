@@ -11,7 +11,7 @@ class AddManagePublishStatesPermissionToRoles extends UpdateScript
 {
     public function shouldUpdate($newVersion, $oldVersion)
     {
-        return $this->isUpdatingTo('7.5.4');
+        return $this->isUpdatingTo('7.6.0');
     }
 
     public function update()
