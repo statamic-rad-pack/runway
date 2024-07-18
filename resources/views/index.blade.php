@@ -10,6 +10,12 @@
         @can('configure fields')
             <dropdown-list @if($canCreate) class="mr-2" @endif>
                 <dropdown-item :text="__('Edit Blueprint')" redirect="{{ cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]) }}"></dropdown-item>
+                <inline-actions
+                    item="{{ $resource->handle() }}"
+                    url="{{ cp_route('runway.actions.run', ['resource' => $resource->handle()]) }}"
+                    :actions="{{ $actions }}"
+                ></inline-actions>
+
             </dropdown-list>
         @endcan
 

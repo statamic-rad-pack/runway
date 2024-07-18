@@ -54,6 +54,7 @@ class ResourceController extends CpController
             'canCreate' => User::current()->can('create', $resource)
                 && $resource->hasVisibleBlueprint()
                 && ! $resource->readOnly(),
+            'actions' => Action::for($resource),
         ]);
     }
 
