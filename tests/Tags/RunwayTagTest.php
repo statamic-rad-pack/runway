@@ -354,7 +354,7 @@ class RunwayTagTest extends TestCase
         });
 
         $this->tag->setParameters([]);
-        $usage = $this->tag->wildcard('blog_posts');
+        $this->tag->wildcard('blog_posts');
 
         $this->assertEquals(1, $augmentedCount);
     }
