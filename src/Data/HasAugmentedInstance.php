@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Data;
 
 use Statamic\Contracts\Data\Augmented;
+use Statamic\Support\Traits\Hookable;
 
 /**
  * This trait is a copy of HasAugmentedInstance built into Statamic BUT
@@ -10,6 +11,8 @@ use Statamic\Contracts\Data\Augmented;
  */
 trait HasAugmentedInstance
 {
+    use Hookable;
+
     public function augmentedValue($key)
     {
         return $this->augmented()->get($key);
@@ -39,7 +42,7 @@ trait HasAugmentedInstance
 
     public function augmented()
     {
-        return $this->newAugmentedInstance();
+        return $this->runHooks('augmented', $this->newAugmentedInstance());
     }
 
     abstract public function newAugmentedInstance(): Augmented;
