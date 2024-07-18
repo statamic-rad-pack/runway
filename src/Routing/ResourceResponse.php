@@ -14,9 +14,7 @@ class ResourceResponse implements Responsable
 
     protected $with = [];
 
-    public function __construct(protected $data)
-    {
-    }
+    public function __construct(protected $data) {}
 
     public function toResponse($request)
     {

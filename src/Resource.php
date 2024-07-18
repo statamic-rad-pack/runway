@@ -22,8 +22,7 @@ class Resource
         protected Model $model,
         protected string $name,
         protected Collection $config
-    ) {
-    }
+    ) {}
 
     public function handle(): string
     {
