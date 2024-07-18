@@ -1,5 +1,12 @@
 # Changelog
 
+## v7.7.0 (2024-07-18)
+
+### What's new
+* Added `augmented` hook #560 by @ryanmitchell
+
+
+
 ## v7.6.0 (2024-07-12)
 
 ### What's new
