@@ -42,7 +42,7 @@ class BelongsToFieldtype extends BaseFieldtype
 
         return [
             'type' => GraphQL::type("runway_graphql_types_{$resource->handle()}"),
-            'resolve' => function ($item, $args, $context, ResolveInfo $info) use ($resource) {
+            'resolve' => function ($item, $args, $context, ResolveInfo $info) {
                 if (! $item instanceof Model) {
                     return $item->get($info->fieldName);
                 }
