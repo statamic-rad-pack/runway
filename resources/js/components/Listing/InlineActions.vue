@@ -9,8 +9,11 @@
 
 <script>
 import StatamicInlineActions from '../../../../vendor/statamic/cms/resources/js/components/data-list/InlineActions.vue'
+import HasActions from '../../../../vendor/statamic/cms/resources/js/components/publish/HasActions.js'
 
 export default {
+
+    mixins: [HasActions],
 
     components: {
         StatamicInlineActions
@@ -21,11 +24,5 @@ export default {
         item: { required: true },
         url: String
     },
-
-    methods: {
-        actionCompleted() {
-
-        }
-    }
 }
 </script>
