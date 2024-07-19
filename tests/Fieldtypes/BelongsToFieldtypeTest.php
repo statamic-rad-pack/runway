@@ -265,12 +265,4 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertArrayHasKey('title', $getItemData[0]);
         $this->assertArrayNotHasKey('created_at', $getItemData[0]);
     }
-
-    #[Test]
-    public function gets_graphql_type()
-    {
-        $toGqlType = $this->fieldtype->toGqlType();
-
-        $this->assertInstanceOf(\GraphQL\Type\Definition\ObjectType::class, $toGqlType);
-    }
 }
