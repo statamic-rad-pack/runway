@@ -1,5 +1,12 @@
 # Changelog
 
+## v7.7.1 (2024-07-19)
+
+### What's fixed
+* Fixed error when accessing Runway's fieldtypes via GraphQL #561 #565 by @duncanmcclean
+
+
+
 ## v7.7.0 (2024-07-18)
 
 ### What's new
