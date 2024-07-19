@@ -82,7 +82,7 @@ class HasManyFieldtype extends BaseFieldtype
                     return $item->get($info->fieldName);
                 }
 
-                return $item->getAttribute($info->fieldName);
+                return $item->{$info->fieldName};
             },
         ];
     }
