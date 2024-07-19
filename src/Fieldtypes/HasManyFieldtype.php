@@ -77,7 +77,13 @@ class HasManyFieldtype extends BaseFieldtype
 
         return [
             'type' => GraphQL::listOf(GraphQL::type("runway_graphql_types_{$resource->handle()}")),
-            'resolve' => fn ($model, $args, $context, ResolveInfo $info) => $model->{$info->fieldName},
+            'resolve' => function ($item, $args, $context, ResolveInfo $info) {
+                if (! $item instanceof Model) {
+                    return $item->get($info->fieldName);
+                }
+
+                return $item->getAttribute($info->fieldName);
+            },
         ];
     }
 }
