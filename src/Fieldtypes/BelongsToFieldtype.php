@@ -2,6 +2,8 @@
 
 namespace StatamicRadPack\Runway\Fieldtypes;
 
+use GraphQL\Type\Definition\ResolveInfo;
+use Illuminate\Database\Eloquent\Model;
 use Statamic\Facades\GraphQL;
 use StatamicRadPack\Runway\Runway;
 
@@ -38,6 +40,15 @@ class BelongsToFieldtype extends BaseFieldtype
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        return GraphQL::type("runway_graphql_types_{$resource->handle()}");
+        return [
+            'type' => GraphQL::type("runway_graphql_types_{$resource->handle()}"),
+            'resolve' => function ($item, $args, $context, ResolveInfo $info) {
+                if (! $item instanceof Model) {
+                    return $item->get($info->fieldName);
+                }
+
+                return $item->{$info->fieldName};
+            },
+        ];
     }
 }
