@@ -2,7 +2,6 @@
 
 namespace StatamicRadPack\Runway\GraphQL;
 
-use Statamic\Contracts\GraphQL\ResolvesValues;
 use Statamic\Fields\Field;
 use Statamic\Support\Str;
 use StatamicRadPack\Runway\Resource;
