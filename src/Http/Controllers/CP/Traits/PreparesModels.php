@@ -31,7 +31,12 @@ trait PreparesModels
 
         return $blueprint->fields()->all()
             ->mapWithKeys(function (Field $field) use ($resource, $model) {
-                $value = data_get($model, Str::replace('->', '.', $field->handle()));
+                $value = $model->getAttribute($field->handle());
+
+                if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field)) {
+                    $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
+                    $value = data_get($model, "{$nestedFieldPrefix}.{$key}");
+                }
 
                 // When $value is a Carbon instance, format it with the format defined in the blueprint.
                 if ($value instanceof CarbonInterface) {
@@ -153,6 +158,13 @@ trait PreparesModels
                     && ! $model->hasCast($field->handle(), ['json', 'array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])
                 ) {
                     $processedValue = json_encode($processedValue, JSON_THROW_ON_ERROR);
+                }
+
+                if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field)) {
+                    $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
+                    $model->setAttribute("{$nestedFieldPrefix}->{$key}", $processedValue);
+
+                    return;
                 }
 
                 $model->setAttribute($field->handle(), $processedValue);
