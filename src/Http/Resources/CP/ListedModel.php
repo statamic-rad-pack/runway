@@ -68,7 +68,7 @@ class ListedModel extends JsonResource
                 $value = $this->resource->$relationName;
             }
             // When it's a nested field, we need to get the value from the nested JSON object, using data_get().
-            elseif ($nestedFieldPrefix = $this->runwayResource->nestedFieldPrefix($field)) {
+            elseif ($field && $nestedFieldPrefix = $this->runwayResource->nestedFieldPrefix($field)) {
                 $fieldKey = Str::after($field->handle(), "{$nestedFieldPrefix}_");
                 $value = data_get($this->resource, "{$nestedFieldPrefix}.{$fieldKey}");
             } else {
