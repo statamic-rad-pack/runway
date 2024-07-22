@@ -10,6 +10,7 @@ use Statamic\Fields\Field;
 use Statamic\Fields\Value;
 use Statamic\Statamic;
 use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Support\Json;
 
 class AugmentedModel extends AbstractAugmented
 {
@@ -19,7 +20,7 @@ class AugmentedModel extends AbstractAugmented
 
     protected $supplements;
 
-    protected $nestedFields = [];
+    protected array $nestedFields = [];
 
     public function __construct($model)
     {
@@ -88,10 +89,12 @@ class AugmentedModel extends AbstractAugmented
         $fields = $this->resource->blueprint()->fields()->all();
 
         $this->nestedFields = $fields
-            ->filter(fn (Field $field) => Str::contains($field->handle(), '->'))
-            ->map(fn (Field $field) => Str::before($field->handle(), '->'))
+            ->mapWithKeys(function (Field $field) {
+                return [$field->handle() => $this->resource->nestedFieldPrefix($field)];
+            })
+            ->filter(fn ($prefix) => $prefix)
             ->unique()
-            ->toArray();
+            ->all();
 
         return $fields;
     }
@@ -103,10 +106,6 @@ class AugmentedModel extends AbstractAugmented
 
     protected function getFromData($handle)
     {
-        if (Str::contains($handle, '->')) {
-            $handle = str_replace('->', '.', $handle);
-        }
-
         return $this->supplements->get($handle) ?? data_get($this->data, $handle);
     }
 
@@ -145,22 +144,35 @@ class AugmentedModel extends AbstractAugmented
         );
     }
 
-    private function wrapNestedFields(string $handle): Value
+    private function wrapNestedFields(string $nestedFieldPrefix): Value
     {
         return new Value(
-            function () use ($handle) {
-                $value = $this->getFromData($handle);
+            function () use ($nestedFieldPrefix) {
+                $values = $this->blueprintFields()
+                    ->filter(function (Field $field) use ($nestedFieldPrefix) {
+                        return Str::startsWith($field->handle(), "{$nestedFieldPrefix}_");
+                    })
+                    ->mapWithKeys(function (Field $field) use ($nestedFieldPrefix) {
+                        $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
+                        $value = data_get($this->data, "{$nestedFieldPrefix}.{$key}");
 
-                return collect($value)->map(function ($value, $key) use ($handle) {
+                        if (Json::isJson($value)) {
+                            $value = json_decode((string) $value, true);
+                        }
+
+                        return [$key => $value];
+                    });
+
+                return collect($values)->map(function ($value, $key) use ($nestedFieldPrefix) {
                     return new Value(
                         $value,
-                        $handle,
-                        $this->fieldtype("{$handle}->{$key}"),
+                        $key,
+                        $this->fieldtype("{$nestedFieldPrefix}_{$key}"),
                         $this->data
                     );
                 })->all();
             },
-            $handle,
+            $nestedFieldPrefix,
             null,
             $this->data
         );
