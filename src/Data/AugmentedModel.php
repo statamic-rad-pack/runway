@@ -20,8 +20,6 @@ class AugmentedModel extends AbstractAugmented
 
     protected $supplements;
 
-    protected array $nestedFields = [];
-
     public function __construct($model)
     {
         $this->data = $model;
@@ -86,17 +84,7 @@ class AugmentedModel extends AbstractAugmented
 
     public function blueprintFields(): Collection
     {
-        $fields = $this->resource->blueprint()->fields()->all();
-
-        $this->nestedFields = $fields
-            ->mapWithKeys(function (Field $field) {
-                return [$field->handle() => $this->resource->nestedFieldPrefix($field)];
-            })
-            ->filter(fn ($prefix) => $prefix)
-            ->unique()
-            ->all();
-
-        return $fields;
+        return $this->resource->blueprint()->fields()->all();
     }
 
     protected function eloquentRelationships()
@@ -117,7 +105,7 @@ class AugmentedModel extends AbstractAugmented
             return $value->resolve();
         }
 
-        if (in_array($handle, $this->nestedFields)) {
+        if (in_array($handle, $this->resource->nestedFieldPrefixes())) {
             $value = $this->wrapNestedFields($handle);
 
             return $value->resolve();

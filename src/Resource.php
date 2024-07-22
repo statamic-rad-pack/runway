@@ -171,6 +171,7 @@ class Resource
     public function nestedFieldPrefix(Field $field): ?string
     {
         return collect($this->nestedFieldPrefixes())
+            ->reject(fn ($prefix) => $field->handle() === $prefix)
             ->filter(fn ($prefix) => Str::startsWith($field->handle(), $prefix))
             ->first();
     }

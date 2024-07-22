@@ -6,6 +6,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Statamic\Contracts\Data\Augmented;
 use Statamic\Contracts\Revisions\Revision;
 use Statamic\Fields\Field;
+use Statamic\Fields\Value;
 use Statamic\Fieldtypes\Hidden;
 use Statamic\Fieldtypes\Section;
 use Statamic\GraphQL\ResolvesValues;
@@ -102,7 +103,25 @@ trait HasRunwayResource
             return $this->publishedStatus();
         }
 
-        return $this->traitResolveGqlValue($field);
+        $value = $this->traitResolveGqlValue($field);
+
+        // When it's a nested field, we need to resolve the inner values as well.
+        // We're doing this the same way as the traitResolveGqlValue method.
+        if (in_array($field, $this->runwayResource()->nestedFieldPrefixes())) {
+            $value = collect($value)->map(function ($value) {
+                if ($value instanceof Value) {
+                    $value = $value->value();
+                }
+
+                if ($value instanceof \Statamic\Contracts\Query\Builder) {
+                    $value = $value->get();
+                }
+
+                return $value;
+            });
+        }
+
+        return $value;
     }
 
     public function runwayEditUrl(): string

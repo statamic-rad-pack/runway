@@ -2,12 +2,14 @@
 
 namespace StatamicRadPack\Runway\GraphQL;
 
+use GraphQL\Language\AST\NodeList;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Rebing\GraphQL\Support\Type;
 use Statamic\Facades\GraphQL;
+use Statamic\Fields\Field;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
 
@@ -22,15 +24,15 @@ class ResourceType extends Type
     {
         return $this->resource->blueprint()->fields()->toGql()
             ->merge($this->nonBlueprintFields())
+            ->merge($this->nestedFields())
             ->when($this->resource->hasPublishStates(), function ($collection) {
                 $collection->put('status', ['type' => GraphQL::nonNull(GraphQL::string())]);
                 $collection->put('published', ['type' => GraphQL::nonNull(GraphQL::boolean())]);
             })
+            ->reject(fn ($value, $key) => $this->resource->nestedFieldPrefix(new Field($key, [])))
             ->mapWithKeys(fn ($value, $key) => [
                 Str::replace('_id', '', $key) => $value,
             ])
-            // TODO: Make nested fields work with GraphQL
-            ->reject(fn ($value, $key) => str_contains($key, '->'))
             ->map(function ($arr) {
                 if (is_array($arr)) {
                     $arr['resolve'] ??= $this->resolver();
@@ -83,6 +85,15 @@ class ResourceType extends Type
                 return [$column['name'] => ['type' => $type]];
             })
             ->reject(fn ($item): bool => is_null($item['type']))
-            ->toArray();
+            ->all();
+    }
+
+    protected function nestedFields(): array
+    {
+        return collect($this->resource->nestedFieldPrefixes())->mapWithKeys(function (string $nestedFieldPrefix): array {
+            return [$nestedFieldPrefix => [
+                'type' => GraphQL::type(NestedFieldsType::buildName($this->resource, $nestedFieldPrefix)),
+            ]];
+        })->all();
     }
 }
