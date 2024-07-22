@@ -18,7 +18,7 @@ trait HasAugmentedInstance
         return $this->augmented()->get($key);
     }
 
-    protected function toAugmentedCollectionWithFields($keys, $fields = null)
+    private function toAugmentedCollectionWithFields($keys, $fields = null)
     {
         return $this->augmented()
             ->withRelations($this->defaultAugmentedRelations())
@@ -36,6 +36,16 @@ trait HasAugmentedInstance
         return $this->toAugmentedCollection($keys)->all();
     }
 
+    public function toDeferredAugmentedArray($keys = null)
+    {
+        return $this->toAugmentedCollectionWithFields($keys)->deferredAll();
+    }
+
+    public function toDeferredAugmentedArrayUsingFields($keys, $fields)
+    {
+        return $this->toAugmentedCollectionWithFields($keys, $fields)->deferredAll();
+    }
+
     public function toShallowAugmentedCollection()
     {
         return $this->augmented()->select($this->shallowAugmentedArrayKeys())->withShallowNesting();
@@ -49,16 +59,6 @@ trait HasAugmentedInstance
     public function augmented(): Augmented
     {
         return $this->runHooks('augmented', $this->newAugmentedInstance());
-    }
-
-    public function toDeferredAugmentedArray($keys = null)
-    {
-        return $this->toAugmentedCollectionWithFields($keys)->deferredAll();
-    }
-
-    public function toDeferredAugmentedArrayUsingFields($keys, $fields)
-    {
-        return $this->toAugmentedCollectionWithFields($keys, $fields)->deferredAll();
     }
 
     abstract public function newAugmentedInstance(): Augmented;
