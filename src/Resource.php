@@ -163,6 +163,18 @@ class Resource
         return $column;
     }
 
+    public function nestedFieldPrefixes(): array
+    {
+        return $this->config->get('nested_field_prefixes', []);
+    }
+
+    public function nestedFieldPrefix(Field $field): ?string
+    {
+        return collect($this->nestedFieldPrefixes())
+            ->filter(fn ($prefix) => Str::startsWith($field->handle(), $prefix))
+            ->first();
+    }
+
     /**
      * Maps Eloquent relationships to their respective blueprint fields.
      */
