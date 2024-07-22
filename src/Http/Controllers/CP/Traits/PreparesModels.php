@@ -33,6 +33,7 @@ trait PreparesModels
             ->mapWithKeys(function (Field $field) use ($resource, $model) {
                 $value = $model->getAttribute($field->handle());
 
+                // When it's a nested field, we need to get the value from the nested JSON object, using data_get().
                 if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field)) {
                     $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
                     $value = data_get($model, "{$nestedFieldPrefix}.{$key}");
@@ -160,6 +161,8 @@ trait PreparesModels
                     $processedValue = json_encode($processedValue, JSON_THROW_ON_ERROR);
                 }
 
+                // When it's a nested field, we need to set the value on the nested JSON object.
+                // Otherwise, it'll attempt to set the model's "root" attributes.
                 if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field)) {
                     $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
                     $model->setAttribute("{$nestedFieldPrefix}->{$key}", $processedValue);
