@@ -133,7 +133,7 @@ public function boot()
 
 ## Actions
 
-Runway supports using [Statamic Actions](https://statamic.dev/extending/actions#content) to preform tasks on your models.
+Runway supports using [Statamic Actions](https://statamic.dev/extending/actions#content) to perform tasks on your models.
 
 You may register your own custom actions, as per the Statamic documentation. If you wish to only show an action on one of your models, you can filter it down in the `visibleTo` method.
 
