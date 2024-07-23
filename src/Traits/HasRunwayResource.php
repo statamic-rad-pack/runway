@@ -12,7 +12,6 @@ use Statamic\Fieldtypes\Section;
 use Statamic\GraphQL\ResolvesValues;
 use Statamic\Revisions\Revisable;
 use Statamic\Support\Arr;
-use Statamic\Support\Str;
 use Statamic\Support\Traits\FluentlyGetsAndSets;
 use StatamicRadPack\Runway\Data\AugmentedModel;
 use StatamicRadPack\Runway\Data\HasAugmentedInstance;
@@ -203,8 +202,9 @@ trait HasRunwayResource
             ->reject(fn (Field $field) => $field->fieldtype() instanceof Section)
             ->reject(fn (Field $field) => $field->visibility() === 'computed')
             ->reject(fn (Field $field) => $field->get('save', true) === false)
+            ->reject(fn (Field $field) => $this->runwayResource()->nestedFieldPrefix($field))
             ->mapWithKeys(function (Field $field) {
-                $handle = Str::before($field->handle(), '->');
+                $handle = $field->handle();
 
                 if ($field->fieldtype() instanceof HasManyFieldtype) {
                     return [$handle => Arr::get($this->runwayRelationships, $handle, [])];
@@ -212,6 +212,11 @@ trait HasRunwayResource
 
                 return [$handle => $this->getAttribute($field->handle())];
             })
+            ->merge(
+                collect($this->runwayResource()->nestedFieldPrefixes())->mapWithKeys(function ($nestedFieldPrefix) {
+                    return [$nestedFieldPrefix => $this->getAttribute($nestedFieldPrefix)];
+                })
+            )
             ->all();
 
         return [
