@@ -105,7 +105,7 @@ class AugmentedModel extends AbstractAugmented
             return $value->resolve();
         }
 
-        if (in_array($handle, $this->resource->nestedFieldPrefixes())) {
+        if ($this->resource->nestedFieldPrefixes()->contains($handle)) {
             $value = $this->wrapNestedFields($handle);
 
             return $value->resolve();

@@ -20,7 +20,7 @@ class ApiResource extends JsonResource
     {
         $keys = [
             ...$this->blueprintFields->map->handle()->all(),
-            ...$this->resource->runwayResource()->nestedFieldPrefixes(),
+            ...$this->resource->runwayResource()->nestedFieldPrefixes()->all(),
         ];
 
         $augmentedArray = $this->resource

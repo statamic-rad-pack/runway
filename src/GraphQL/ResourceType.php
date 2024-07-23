@@ -89,10 +89,8 @@ class ResourceType extends Type
 
     protected function nestedFields(): array
     {
-        return collect($this->resource->nestedFieldPrefixes())->mapWithKeys(function (string $nestedFieldPrefix): array {
-            return [$nestedFieldPrefix => [
-                'type' => GraphQL::type(NestedFieldsType::buildName($this->resource, $nestedFieldPrefix)),
-            ]];
-        })->all();
+        return $this->resource->nestedFieldPrefixes()->mapWithKeys(fn (string $nestedFieldPrefix) => [
+            $nestedFieldPrefix => ['type' => GraphQL::type(NestedFieldsType::buildName($this->resource, $nestedFieldPrefix))],
+        ])->all();
     }
 }

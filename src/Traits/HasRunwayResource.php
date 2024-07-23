@@ -106,7 +106,7 @@ trait HasRunwayResource
 
         // When it's a nested field, we need to resolve the inner values as well.
         // We're doing this the same way as the traitResolveGqlValue method.
-        if (in_array($field, $this->runwayResource()->nestedFieldPrefixes())) {
+        if ($this->runwayResource()->nestedFieldPrefixes()->contains($field)) {
             $value = collect($value)->map(function ($value) {
                 if ($value instanceof Value) {
                     $value = $value->value();
@@ -212,11 +212,9 @@ trait HasRunwayResource
 
                 return [$handle => $this->getAttribute($field->handle())];
             })
-            ->merge(
-                collect($this->runwayResource()->nestedFieldPrefixes())->mapWithKeys(function ($nestedFieldPrefix) {
-                    return [$nestedFieldPrefix => $this->getAttribute($nestedFieldPrefix)];
-                })
-            )
+            ->merge($this->runwayResource()->nestedFieldPrefixes()->mapWithKeys(fn ($nestedFieldPrefix) => [
+                $nestedFieldPrefix => $this->getAttribute($nestedFieldPrefix),
+            ]))
             ->all();
 
         return [

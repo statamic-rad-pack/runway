@@ -215,9 +215,7 @@ class ServiceProvider extends AddonServiceProvider
                 $this->app->bind("runway_graphql_types_{$resource->handle()}", fn () => new \StatamicRadPack\Runway\GraphQL\ResourceType($resource));
                 GraphQL::addType("runway_graphql_types_{$resource->handle()}");
 
-                collect($resource->nestedFieldPrefixes())->each(function (string $nestedFieldPrefix) use ($resource) {
-                    GraphQL::addType(new NestedFieldsType($resource, $nestedFieldPrefix));
-                });
+                $resource->nestedFieldPrefixes()->each(fn (string $nestedFieldPrefix) => GraphQL::addType(new NestedFieldsType($resource, $nestedFieldPrefix)));
             })
             ->filter
             ->graphqlEnabled()
