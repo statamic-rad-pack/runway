@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Rebing\GraphQL\Support\Type;
 use Statamic\Facades\GraphQL;
-use Statamic\Fields\Field;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
 
