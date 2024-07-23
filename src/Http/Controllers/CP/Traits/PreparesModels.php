@@ -34,7 +34,7 @@ trait PreparesModels
                 $value = $model->getAttribute($field->handle());
 
                 // When it's a nested field, we need to get the value from the nested JSON object, using data_get().
-                if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field)) {
+                if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field->handle())) {
                     $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
                     $value = data_get($model, "{$nestedFieldPrefix}.{$key}");
                 }
@@ -155,7 +155,7 @@ trait PreparesModels
                 // When $processedValue is null and there's no cast set on the model, we should JSON encode it.
                 if (
                     is_array($processedValue)
-                    && ! $resource->nestedFieldPrefix($field)
+                    && ! $resource->nestedFieldPrefix($field->handle())
                     && ! $model->hasCast($field->handle(), ['json', 'array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])
                 ) {
                     $processedValue = json_encode($processedValue, JSON_THROW_ON_ERROR);
@@ -163,7 +163,7 @@ trait PreparesModels
 
                 // When it's a nested field, we need to set the value on the nested JSON object.
                 // Otherwise, it'll attempt to set the model's "root" attributes.
-                if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field)) {
+                if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field->handle())) {
                     $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
                     $model->setAttribute("{$nestedFieldPrefix}->{$key}", $processedValue);
 

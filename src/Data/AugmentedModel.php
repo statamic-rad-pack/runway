@@ -144,10 +144,6 @@ class AugmentedModel extends AbstractAugmented
                         $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
                         $value = data_get($this->data, "{$nestedFieldPrefix}.{$key}");
 
-                        if (Json::isJson($value)) {
-                            $value = json_decode((string) $value, true);
-                        }
-
                         return [$key => $value];
                     });
 

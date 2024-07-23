@@ -224,7 +224,7 @@ class GenerateMigration extends Command
 
         $columns = collect($fields)
             ->map(function (Field $field) use ($resource) {
-                if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field)) {
+                if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field->handle())) {
                     return [
                         'name' => $nestedFieldPrefix,
                         'type' => 'json',

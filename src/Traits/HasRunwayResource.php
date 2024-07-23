@@ -202,7 +202,7 @@ trait HasRunwayResource
             ->reject(fn (Field $field) => $field->fieldtype() instanceof Section)
             ->reject(fn (Field $field) => $field->visibility() === 'computed')
             ->reject(fn (Field $field) => $field->get('save', true) === false)
-            ->reject(fn (Field $field) => $this->runwayResource()->nestedFieldPrefix($field))
+            ->reject(fn (Field $field) => $this->runwayResource()->nestedFieldPrefix($field->handle()))
             ->mapWithKeys(function (Field $field) {
                 $handle = $field->handle();
 

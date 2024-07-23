@@ -168,11 +168,11 @@ class Resource
         return collect($this->config->get('nested_field_prefixes'));
     }
 
-    public function nestedFieldPrefix(Field $field): ?string
+    public function nestedFieldPrefix(string $field): ?string
     {
         return $this->nestedFieldPrefixes()
-            ->reject(fn ($prefix) => $field->handle() === $prefix)
-            ->filter(fn ($prefix) => Str::startsWith($field->handle(), $prefix))
+            ->reject(fn ($prefix) => $field === $prefix)
+            ->filter(fn ($prefix) => Str::startsWith($field, $prefix))
             ->first();
     }
 

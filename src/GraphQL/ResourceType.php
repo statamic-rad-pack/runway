@@ -28,7 +28,7 @@ class ResourceType extends Type
                 $collection->put('status', ['type' => GraphQL::nonNull(GraphQL::string())]);
                 $collection->put('published', ['type' => GraphQL::nonNull(GraphQL::boolean())]);
             })
-            ->reject(fn ($value, $key) => $this->resource->nestedFieldPrefix(new Field($key, [])))
+            ->reject(fn ($value, $key) => $this->resource->nestedFieldPrefix($key))
             ->mapWithKeys(fn ($value, $key) => [
                 Str::replace('_id', '', $key) => $value,
             ])
