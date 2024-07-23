@@ -70,4 +70,4 @@ BlogPost::class => [
 
 ---
 
-[You may also view a diff of changes between v4.x and v5.0](https://github.com/statamic-rad-pack/runway/compare/6.x...7.x)
+[You may also view a diff of changes between v6.x and v7.0](https://github.com/statamic-rad-pack/runway/compare/6.x...7.x)
