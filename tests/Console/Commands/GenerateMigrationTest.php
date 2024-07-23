@@ -25,8 +25,8 @@ class GenerateMigrationTest extends TestCase
 
         Config::set('runway', [
             'resources' => [
-                Food::class => ['handle' => 'food'],
-                Drink::class => ['handle' => 'drink'],
+                Food::class => ['handle' => 'food', 'nested_field_prefixes' => ['metadata']],
+                Drink::class => ['handle' => 'drink', 'nested_field_prefixes' => ['metadata']],
             ],
         ]);
 
@@ -56,12 +56,12 @@ class GenerateMigrationTest extends TestCase
 
         $foodBlueprint = Blueprint::makeFromFields([
             'name' => ['type' => 'text', 'validate' => 'required'],
-            'metadata->calories' => ['type' => 'integer', 'validate' => 'required'],
+            'metadata_calories' => ['type' => 'integer', 'validate' => 'required'],
         ]);
 
         $drinkBlueprint = Blueprint::makeFromFields([
             'name' => ['type' => 'text', 'validate' => 'required'],
-            'metadata->calories' => ['type' => 'integer', 'validate' => 'required'],
+            'metadata_calories' => ['type' => 'integer', 'validate' => 'required'],
         ]);
 
         Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint);
@@ -106,7 +106,7 @@ class GenerateMigrationTest extends TestCase
 
         $foodBlueprint = Blueprint::makeFromFields([
             'name' => ['type' => 'text', 'validate' => 'required'],
-            'metadata->calories' => ['type' => 'integer', 'validate' => 'required'],
+            'metadata_calories' => ['type' => 'integer', 'validate' => 'required'],
         ]);
 
         Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint);
@@ -147,7 +147,7 @@ class GenerateMigrationTest extends TestCase
 
         $foodBlueprint = Blueprint::makeFromFields([
             'name' => ['type' => 'text', 'validate' => 'required'],
-            'metadata->calories' => ['type' => 'integer', 'validate' => 'required'],
+            'metadata_calories' => ['type' => 'integer', 'validate' => 'required'],
         ]);
 
         Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint);
@@ -181,7 +181,7 @@ class GenerateMigrationTest extends TestCase
 
         $foodBlueprint = Blueprint::makeFromFields([
             'name' => ['type' => 'text', 'validate' => 'required'],
-            'metadata->calories' => ['type' => 'integer', 'validate' => 'required'],
+            'metadata_calories' => ['type' => 'integer', 'validate' => 'required'],
         ]);
 
         Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint);
@@ -377,7 +377,7 @@ class Food extends Model
 
     protected $table = 'foods';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'metadata'];
 }
 
 class Drink extends Model
@@ -386,5 +386,5 @@ class Drink extends Model
 
     protected $table = 'drinks';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'metadata'];
 }
