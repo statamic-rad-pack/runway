@@ -98,4 +98,4 @@ If you were using the Table mode on any of your Has Many fields, you should swit
 
 ---
 
-[You may also view a diff of changes between v4.x and v5.0](https://github.com/statamic-rad-pack/runway/compare/5.x...6.x)
+[You may also view a diff of changes between v5.x and v6.0](https://github.com/statamic-rad-pack/runway/compare/5.x...6.x)
