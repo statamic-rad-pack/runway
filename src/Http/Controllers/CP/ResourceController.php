@@ -129,7 +129,7 @@ class ResourceController extends CpController
         $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $model)->first();
 
         if (! $model) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException;
         }
 
         $model = $model->fromWorkingCopy();
