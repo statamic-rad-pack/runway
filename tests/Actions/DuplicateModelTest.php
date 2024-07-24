@@ -29,7 +29,7 @@ class DuplicateModelTest extends TestCase
     #[Test]
     public function is_visible_to_eloquent_model()
     {
-        $visibleTo = (new DuplicateModel())->visibleTo(Post::factory()->create());
+        $visibleTo = (new DuplicateModel)->visibleTo(Post::factory()->create());
 
         $this->assertTrue($visibleTo);
     }
@@ -41,7 +41,7 @@ class DuplicateModelTest extends TestCase
 
         Runway::discoverResources();
 
-        $visibleTo = (new DuplicateModel())->visibleTo(Post::factory()->create());
+        $visibleTo = (new DuplicateModel)->visibleTo(Post::factory()->create());
 
         $this->assertFalse($visibleTo);
     }
@@ -53,7 +53,7 @@ class DuplicateModelTest extends TestCase
 
         Blueprint::shouldReceive('find')->with('runway::post')->andReturn($blueprint->setHidden(true));
 
-        $visibleTo = (new DuplicateModel())->visibleTo(Post::factory()->create());
+        $visibleTo = (new DuplicateModel)->visibleTo(Post::factory()->create());
 
         $this->assertFalse($visibleTo);
     }
@@ -66,7 +66,7 @@ class DuplicateModelTest extends TestCase
             protected $table = 'posts';
         };
 
-        $visibleTo = (new DuplicateModel())->visibleTo(new $model);
+        $visibleTo = (new DuplicateModel)->visibleTo(new $model);
 
         $this->assertFalse($visibleTo);
     }
@@ -76,7 +76,7 @@ class DuplicateModelTest extends TestCase
     {
         Collection::make('posts')->save();
 
-        $visibleTo = (new DuplicateModel())->visibleTo(
+        $visibleTo = (new DuplicateModel)->visibleTo(
             tap(Entry::make()->collection('posts')->slug('hello-world'))->save()
         );
 
@@ -88,7 +88,7 @@ class DuplicateModelTest extends TestCase
     {
         $posts = Post::factory()->count(3)->create();
 
-        $visibleToBulk = (new DuplicateModel())->visibleToBulk($posts);
+        $visibleToBulk = (new DuplicateModel)->visibleToBulk($posts);
 
         $this->assertTrue($visibleToBulk);
     }
@@ -104,7 +104,7 @@ class DuplicateModelTest extends TestCase
             tap(Entry::make()->collection('posts')->slug('bye-bye'))->save(),
         ]);
 
-        $visibleToBulk = (new DuplicateModel())->visibleToBulk($entries);
+        $visibleToBulk = (new DuplicateModel)->visibleToBulk($entries);
 
         $this->assertFalse($visibleToBulk);
     }
@@ -114,7 +114,7 @@ class DuplicateModelTest extends TestCase
     {
         $user = User::make()->makeSuper()->save();
 
-        $authorize = (new DuplicateModel())->authorize($user, Post::factory()->create());
+        $authorize = (new DuplicateModel)->authorize($user, Post::factory()->create());
 
         $this->assertTrue($authorize);
     }
@@ -126,7 +126,7 @@ class DuplicateModelTest extends TestCase
 
         $user = User::make()->assignRole('editor')->save();
 
-        $authorize = (new DuplicateModel())->authorize($user, Post::factory()->create());
+        $authorize = (new DuplicateModel)->authorize($user, Post::factory()->create());
 
         $this->assertTrue($authorize);
 
@@ -138,7 +138,7 @@ class DuplicateModelTest extends TestCase
     {
         $user = User::make()->save();
 
-        $authorize = (new DuplicateModel())->authorize($user, Post::factory()->create());
+        $authorize = (new DuplicateModel)->authorize($user, Post::factory()->create());
 
         $this->assertFalse($authorize);
     }
