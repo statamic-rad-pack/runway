@@ -1,5 +1,13 @@
 # Changelog
 
+## v7.7.2 (2024-07-24)
+
+### What's fixed
+* Added missing methods to Runway's `HasAugmentedInstance` trait #567 by @simonworkhouse
+* Fixed issues when the field handle isn't the same as the relationship name #570 by @duncanmcclean
+
+
+
 ## v7.7.1 (2024-07-19)
 
 ### What's fixed
