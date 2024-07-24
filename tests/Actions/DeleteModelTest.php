@@ -28,7 +28,7 @@ class DeleteModelTest extends TestCase
     #[Test]
     public function is_visible_to_eloquent_model()
     {
-        $visibleTo = (new DeleteModel)->visibleTo(Post::factory()->create());
+        $visibleTo = (new DeleteModel())->visibleTo(Post::factory()->create());
 
         $this->assertTrue($visibleTo);
     }
@@ -39,7 +39,7 @@ class DeleteModelTest extends TestCase
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.read_only', true);
         Runway::discoverResources();
 
-        $visibleTo = (new DeleteModel)->visibleTo(Post::factory()->create());
+        $visibleTo = (new DeleteModel())->visibleTo(Post::factory()->create());
 
         $this->assertFalse($visibleTo);
     }
@@ -52,7 +52,7 @@ class DeleteModelTest extends TestCase
             protected $table = 'posts';
         };
 
-        $visibleTo = (new DeleteModel)->visibleTo(new $model);
+        $visibleTo = (new DeleteModel())->visibleTo(new $model);
 
         $this->assertFalse($visibleTo);
     }
@@ -62,7 +62,7 @@ class DeleteModelTest extends TestCase
     {
         Collection::make('posts')->save();
 
-        $visibleTo = (new DeleteModel)->visibleTo(
+        $visibleTo = (new DeleteModel())->visibleTo(
             tap(Entry::make()->collection('posts')->slug('hello-world'))->save()
         );
 
@@ -74,7 +74,7 @@ class DeleteModelTest extends TestCase
     {
         $posts = Post::factory()->count(3)->create();
 
-        $visibleToBulk = (new DeleteModel)->visibleToBulk($posts);
+        $visibleToBulk = (new DeleteModel())->visibleToBulk($posts);
 
         $this->assertTrue($visibleToBulk);
     }
@@ -90,7 +90,7 @@ class DeleteModelTest extends TestCase
             tap(Entry::make()->collection('posts')->slug('bye-bye'))->save(),
         ]);
 
-        $visibleToBulk = (new DeleteModel)->visibleToBulk($entries);
+        $visibleToBulk = (new DeleteModel())->visibleToBulk($entries);
 
         $this->assertFalse($visibleToBulk);
     }
@@ -100,7 +100,7 @@ class DeleteModelTest extends TestCase
     {
         $user = User::make()->makeSuper()->save();
 
-        $authorize = (new DeleteModel)->authorize($user, Post::factory()->create());
+        $authorize = (new DeleteModel())->authorize($user, Post::factory()->create());
 
         $this->assertTrue($authorize);
     }
@@ -112,7 +112,7 @@ class DeleteModelTest extends TestCase
 
         $user = User::make()->assignRole('editor')->save();
 
-        $authorize = (new DeleteModel)->authorize($user, Post::factory()->create());
+        $authorize = (new DeleteModel())->authorize($user, Post::factory()->create());
 
         $this->assertTrue($authorize);
 
@@ -124,7 +124,7 @@ class DeleteModelTest extends TestCase
     {
         $user = User::make()->save();
 
-        $authorize = (new DeleteModel)->authorize($user, Post::factory()->create());
+        $authorize = (new DeleteModel())->authorize($user, Post::factory()->create());
 
         $this->assertFalse($authorize);
     }

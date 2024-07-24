@@ -34,7 +34,7 @@ class Relationships
 
                 match (get_class($relationship = $this->model->{$relationshipName}())) {
                     HasMany::class => $this->saveHasManyRelationship($field, $relationship, $this->values[$field->handle()] ?? []),
-                    BelongsToMany::class => $this->saveBelongsToManyRelationship($field, $relationship, $this->values[$field->handle()] ?? []),
+                    BelongsToMany::class => $this->saveBelongsToManyRelationship($field, $relationship,$this->values[$field->handle()] ?? []),
                 };
             });
     }

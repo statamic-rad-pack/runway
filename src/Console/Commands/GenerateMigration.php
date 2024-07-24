@@ -340,7 +340,7 @@ class GenerateMigration extends Command
         $rules = '@PSR2,@PhpCsFixer';
 
         Process::path(base_path())->run(
-            (new PhpExecutableFinder)->find().
+            (new PhpExecutableFinder())->find().
             ' /'.Path::makeRelative(__DIR__.'/../../../php-cs-fixer.phar').
             ' fix '.$migrationPath.' --rules='.$rules
         );

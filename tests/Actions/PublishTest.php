@@ -27,7 +27,7 @@ class PublishTest extends TestCase
     #[Test]
     public function is_visible_to_eloquent_model()
     {
-        $visibleTo = (new Publish)->context([])->visibleTo(Post::factory()->unpublished()->create());
+        $visibleTo = (new Publish())->context([])->visibleTo(Post::factory()->unpublished()->create());
 
         $this->assertTrue($visibleTo);
     }
@@ -35,7 +35,7 @@ class PublishTest extends TestCase
     #[Test]
     public function is_not_visible_to_published_eloquent_model()
     {
-        $visibleTo = (new Publish)->context([])->visibleTo(Post::factory()->create());
+        $visibleTo = (new Publish())->context([])->visibleTo(Post::factory()->create());
 
         $this->assertFalse($visibleTo);
     }
@@ -46,7 +46,7 @@ class PublishTest extends TestCase
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.read_only', true);
         Runway::discoverResources();
 
-        $visibleTo = (new Publish)->context([])->visibleTo(Post::factory()->unpublished()->create());
+        $visibleTo = (new Publish())->context([])->visibleTo(Post::factory()->unpublished()->create());
 
         $this->assertFalse($visibleTo);
     }
@@ -56,7 +56,7 @@ class PublishTest extends TestCase
     {
         Collection::make('posts')->save();
 
-        $visibleTo = (new Publish)->context([])->visibleTo(
+        $visibleTo = (new Publish())->context([])->visibleTo(
             tap(Entry::make()->collection('posts')->slug('hello-world'))->save()
         );
 
@@ -68,7 +68,7 @@ class PublishTest extends TestCase
     {
         $posts = Post::factory()->count(3)->unpublished()->create();
 
-        $visibleToBulk = (new Publish)->context([])->visibleToBulk($posts);
+        $visibleToBulk = (new Publish())->context([])->visibleToBulk($posts);
 
         $this->assertTrue($visibleToBulk);
     }
@@ -80,7 +80,7 @@ class PublishTest extends TestCase
 
         Entry::make()->collection('posts')->slug('hello-world')->save();
 
-        $visibleTo = (new Publish)->context([])->visibleToBulk(Entry::all());
+        $visibleTo = (new Publish())->context([])->visibleToBulk(Entry::all());
 
         $this->assertFalse($visibleTo);
     }
@@ -91,7 +91,7 @@ class PublishTest extends TestCase
         $posts = Post::factory()->count(3)->unpublished()->create();
         $posts->first()->update(['published' => true]);
 
-        $visibleToBulk = (new Publish)->context([])->visibleToBulk($posts);
+        $visibleToBulk = (new Publish())->context([])->visibleToBulk($posts);
 
         $this->assertFalse($visibleToBulk);
     }
@@ -101,7 +101,7 @@ class PublishTest extends TestCase
     {
         $user = User::make()->makeSuper()->save();
 
-        $authorize = (new Publish)->authorize($user, Post::factory()->create());
+        $authorize = (new Publish())->authorize($user, Post::factory()->create());
 
         $this->assertTrue($authorize);
     }
@@ -113,7 +113,7 @@ class PublishTest extends TestCase
 
         $user = User::make()->assignRole('editor')->save();
 
-        $authorize = (new Publish)->authorize($user, Post::factory()->create());
+        $authorize = (new Publish())->authorize($user, Post::factory()->create());
 
         $this->assertTrue($authorize);
 
@@ -125,7 +125,7 @@ class PublishTest extends TestCase
     {
         $user = User::make()->save();
 
-        $authorize = (new Publish)->authorize($user, Post::factory()->create());
+        $authorize = (new Publish())->authorize($user, Post::factory()->create());
 
         $this->assertFalse($authorize);
     }

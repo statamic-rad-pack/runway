@@ -26,7 +26,7 @@ class HasManyFieldtypeTest extends TestCase
     {
         parent::setUp();
 
-        $this->fieldtype = tap(new HasManyFieldtype)
+        $this->fieldtype = tap(new HasManyFieldtype())
             ->setField(new Field('posts', [
                 'mode' => 'stack',
                 'resource' => 'post',
@@ -72,7 +72,7 @@ class HasManyFieldtypeTest extends TestCase
             'title_format' => '{{ title }} TEST {{ created_at format="Y" }}',
         ]));
 
-        $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest);
+        $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest());
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Paginator);

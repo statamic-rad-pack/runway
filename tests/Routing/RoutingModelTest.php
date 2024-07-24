@@ -77,7 +77,7 @@ class RoutingModelTest extends TestCase
 
         $routingModel = new RoutingModel($post);
 
-        $response = $routingModel->toResponse(new Request);
+        $response = $routingModel->toResponse(new Request());
 
         $this->assertInstanceOf(Response::class, $response);
         $this->assertStringContainsString("<h1>{$post->title}</h1>", $response->getContent());

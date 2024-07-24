@@ -26,7 +26,7 @@ class Runway
 
                 $resource = new Resource(
                     handle: $handle,
-                    model: $model instanceof Model ? $model : new $model,
+                    model: $model instanceof Model ? $model : new $model(),
                     name: $config['name'] ?? Str::title($handle),
                     config: $config,
                 );
@@ -36,7 +36,7 @@ class Runway
             ->filter()
             ->toArray();
 
-        return new static;
+        return new static();
     }
 
     public static function allResources(): Collection
