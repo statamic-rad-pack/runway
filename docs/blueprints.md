@@ -77,32 +77,44 @@ Runway provides two fieldtypes to let you manage Eloquent Relationships within S
 
 To find out more about Runway's fieldtypes, check out the [Fieldtypes](/fieldtypes) page.
 
-<!--
 ## Nesting fields inside JSON columns
 
-To avoid creating a migration for every new field you add to a blueprint, fields can be stored within JSON columns. Simply use `->` within the field handle, like `values->excerpt`.
+To avoid needing to create a migration for every new field you add to a blueprint, fields can be stored within JSON columns.
 
-Your table will need to have a suitable column:
+To do this, you'll first need to configure the JSON column under the `nested_field_prefixes` key in your `config/runway.php` config file.
 
 ```php
-$table->json('values')->nullable();
+'resources' => [
+    Order::class => [
+        'nested_field_prefixes' => [ // [tl! ++]
+            'address', // [tl! ++]
+        ], // [tl! ++]
+    ],
+],
 ```
 
-And the cast defined on the model:
+Then, when you're adding fields to your blueprint, simply prefix the column name, like shown below, and Runway will be smart enough to read/write from your JSON column. 🧠
+
+```yaml
+-
+  handle: address_street_name # Represents the street_name key, in the address column.
+  field:
+    type: text
+    display: 'Street Name'
+```
+
+:::note Heads up!
+In order for Nested Fields to work, you'll need to define a cast for the JSON column in your Eloquent model.
 
 ```php
 protected function casts(): array
 {
     return [
-        'values' => 'array', // or 'json', AsArrayObject::class
+        'address' => 'array', // or 'json', AsArrayObject::class
     ];
 }
 ```
-
-:::note Note!
-Nested Fields aren't currently available in GraphQL.
 :::
--->
 
 ## Generating migrations from your blueprints
 

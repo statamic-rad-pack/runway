@@ -6,12 +6,12 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Statamic\Contracts\Data\Augmented;
 use Statamic\Contracts\Revisions\Revision;
 use Statamic\Fields\Field;
+use Statamic\Fields\Value;
 use Statamic\Fieldtypes\Hidden;
 use Statamic\Fieldtypes\Section;
 use Statamic\GraphQL\ResolvesValues;
 use Statamic\Revisions\Revisable;
 use Statamic\Support\Arr;
-use Statamic\Support\Str;
 use Statamic\Support\Traits\FluentlyGetsAndSets;
 use StatamicRadPack\Runway\Data\AugmentedModel;
 use StatamicRadPack\Runway\Data\HasAugmentedInstance;
@@ -102,7 +102,25 @@ trait HasRunwayResource
             return $this->publishedStatus();
         }
 
-        return $this->traitResolveGqlValue($field);
+        $value = $this->traitResolveGqlValue($field);
+
+        // When it's a nested field, we need to resolve the inner values as well.
+        // We're handling this in the same way that the traitResolveGqlValue method does.
+        if ($this->runwayResource()->nestedFieldPrefixes()->contains($field)) {
+            $value = collect($value)->map(function ($value) {
+                if ($value instanceof Value) {
+                    $value = $value->value();
+                }
+
+                if ($value instanceof \Statamic\Contracts\Query\Builder) {
+                    $value = $value->get();
+                }
+
+                return $value;
+            });
+        }
+
+        return $value;
     }
 
     public function runwayEditUrl(): string
@@ -184,9 +202,9 @@ trait HasRunwayResource
             ->reject(fn (Field $field) => $field->fieldtype() instanceof Section)
             ->reject(fn (Field $field) => $field->visibility() === 'computed')
             ->reject(fn (Field $field) => $field->get('save', true) === false)
-            ->unique(fn (Field $field) => Str::before($field->handle(), '->'))
+            ->reject(fn (Field $field) => $this->runwayResource()->nestedFieldPrefix($field->handle()))
             ->mapWithKeys(function (Field $field) {
-                $handle = Str::before($field->handle(), '->');
+                $handle = $field->handle();
 
                 if ($field->fieldtype() instanceof HasManyFieldtype) {
                     return [$handle => Arr::get($this->runwayRelationships, $handle, [])];
@@ -194,6 +212,9 @@ trait HasRunwayResource
 
                 return [$handle => $this->getAttribute($handle)];
             })
+            ->merge($this->runwayResource()->nestedFieldPrefixes()->mapWithKeys(fn ($nestedFieldPrefix) => [
+                $nestedFieldPrefix => $this->getAttribute($nestedFieldPrefix),
+            ]))
             ->all();
 
         return [
