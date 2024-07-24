@@ -21,7 +21,7 @@ class RelationshipsTest extends TestCase
 
         Blueprint::shouldReceive('find')
             ->with('runway::author')
-            ->andReturn((new FieldsBlueprint())->setContents([
+            ->andReturn((new FieldsBlueprint)->setContents([
                 'tabs' => [
                     'main' => [
                         'fields' => [
@@ -48,7 +48,7 @@ class RelationshipsTest extends TestCase
 
         Blueprint::shouldReceive('find')
             ->with('runway::author')
-            ->andReturn((new FieldsBlueprint())->setContents([
+            ->andReturn((new FieldsBlueprint)->setContents([
                 'tabs' => [
                     'main' => [
                         'fields' => [
@@ -78,7 +78,7 @@ class RelationshipsTest extends TestCase
 
         Blueprint::shouldReceive('find')
             ->with('runway::author')
-            ->andReturn((new FieldsBlueprint())->setContents([
+            ->andReturn((new FieldsBlueprint)->setContents([
                 'tabs' => [
                     'main' => [
                         'fields' => [
@@ -107,7 +107,7 @@ class RelationshipsTest extends TestCase
 
         Blueprint::shouldReceive('find')
             ->with('runway::author')
-            ->andReturn((new FieldsBlueprint())->setContents([
+            ->andReturn((new FieldsBlueprint)->setContents([
                 'tabs' => [
                     'main' => [
                         'fields' => [
@@ -132,7 +132,7 @@ class RelationshipsTest extends TestCase
 
         Blueprint::shouldReceive('find')
             ->with('runway::author')
-            ->andReturn((new FieldsBlueprint())->setContents([
+            ->andReturn((new FieldsBlueprint)->setContents([
                 'tabs' => [
                     'main' => [
                         'fields' => [
@@ -160,7 +160,7 @@ class RelationshipsTest extends TestCase
 
         Blueprint::shouldReceive('find')
             ->with('runway::author')
-            ->andReturn((new FieldsBlueprint())->setContents([
+            ->andReturn((new FieldsBlueprint)->setContents([
                 'tabs' => [
                     'main' => [
                         'fields' => [
