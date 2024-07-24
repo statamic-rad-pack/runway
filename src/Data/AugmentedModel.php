@@ -19,8 +19,6 @@ class AugmentedModel extends AbstractAugmented
 
     protected $supplements;
 
-    protected $nestedFields = [];
-
     public function __construct($model)
     {
         $this->data = $model;
@@ -85,15 +83,7 @@ class AugmentedModel extends AbstractAugmented
 
     public function blueprintFields(): Collection
     {
-        $fields = $this->resource->blueprint()->fields()->all();
-
-        $this->nestedFields = $fields
-            ->filter(fn (Field $field) => Str::contains($field->handle(), '->'))
-            ->map(fn (Field $field) => Str::before($field->handle(), '->'))
-            ->unique()
-            ->toArray();
-
-        return $fields;
+        return $this->resource->blueprint()->fields()->all();
     }
 
     protected function eloquentRelationships()
@@ -103,10 +93,6 @@ class AugmentedModel extends AbstractAugmented
 
     protected function getFromData($handle)
     {
-        if (Str::contains($handle, '->')) {
-            $handle = str_replace('->', '.', $handle);
-        }
-
         return $this->supplements->get($handle) ?? data_get($this->data, $handle);
     }
 
@@ -118,7 +104,7 @@ class AugmentedModel extends AbstractAugmented
             return $value->resolve();
         }
 
-        if (in_array($handle, $this->nestedFields)) {
+        if ($this->resource->nestedFieldPrefixes()->contains($handle)) {
             $value = $this->wrapNestedFields($handle);
 
             return $value->resolve();
@@ -145,22 +131,31 @@ class AugmentedModel extends AbstractAugmented
         );
     }
 
-    private function wrapNestedFields(string $handle): Value
+    private function wrapNestedFields(string $nestedFieldPrefix): Value
     {
         return new Value(
-            function () use ($handle) {
-                $value = $this->getFromData($handle);
+            function () use ($nestedFieldPrefix) {
+                $values = $this->blueprintFields()
+                    ->filter(function (Field $field) use ($nestedFieldPrefix) {
+                        return Str::startsWith($field->handle(), "{$nestedFieldPrefix}_");
+                    })
+                    ->mapWithKeys(function (Field $field) use ($nestedFieldPrefix) {
+                        $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
+                        $value = data_get($this->data, "{$nestedFieldPrefix}.{$key}");
 
-                return collect($value)->map(function ($value, $key) use ($handle) {
+                        return [$key => $value];
+                    });
+
+                return collect($values)->map(function ($value, $key) use ($nestedFieldPrefix) {
                     return new Value(
                         $value,
-                        $handle,
-                        $this->fieldtype("{$handle}->{$key}"),
+                        $key,
+                        $this->fieldtype("{$nestedFieldPrefix}_{$key}"),
                         $this->data
                     );
                 })->all();
             },
-            $handle,
+            $nestedFieldPrefix,
             null,
             $this->data
         );

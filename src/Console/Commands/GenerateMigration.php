@@ -223,11 +223,10 @@ class GenerateMigration extends Command
             ->all();
 
         $columns = collect($fields)
-            ->map(function (Field $field) {
-                // Pick up on nested fields
-                if (str_contains($field->handle(), '->')) {
+            ->map(function (Field $field) use ($resource) {
+                if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field->handle())) {
                     return [
-                        'name' => Str::before($field->handle(), '->'),
+                        'name' => $nestedFieldPrefix,
                         'type' => 'json',
                         'nullable' => true,
                         'default' => null,

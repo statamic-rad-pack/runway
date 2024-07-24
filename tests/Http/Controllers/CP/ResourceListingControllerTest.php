@@ -278,7 +278,7 @@ class ResourceListingControllerTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->get(cp_route('runway.listing-api', ['resource' => 'post']).'?columns=title,values->alt_title')
+            ->get(cp_route('runway.listing-api', ['resource' => 'post']).'?columns=title,values_alt_title')
             ->assertOk()
             ->assertSee($posts[0]->values['alt_title'])
             ->assertSee($posts[1]->values['alt_title'])

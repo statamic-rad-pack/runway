@@ -35,7 +35,36 @@ php artisan view:clear
 
 ## High impact changes
 
-TODO
+### Changes to Nested Fields
+**Affects apps using nested JSON fields.**
+
+In previous versions of Runway, nested fields were configured using the `->` separator.
+
+However, in Statamic 5, validation around field handles has been tightened up, and `>` is no longer considered a valid character in field handles. 
+
+To work around this, v8 introduces some changes around how nested fields are configured:
+
+1. Instead of using `->` to separate the column name and the JSON key in field handles, you should now use an underscore:
+    ```yaml
+    -
+      handle: address->street_name # [tl! remove]
+      handle: address_street_name # // [tl! add]
+      field:
+        type: text
+        display: 'Street Name'
+   ```
+   
+2. You should also specify the "nested field prefixes" (eg. the JSON column names) in your Runway config file. This will allow Runway to determine which fields are nested.
+
+    ```php
+    Order::class => [
+        'nested_field_prefixes' => [
+            'address',
+        ],
+    ],
+    ```
+   
+As an upside of this new approach, nested fields can now be used with Runway's [GraphQL API](/graphql).
 
 ## Previous upgrade guides
 

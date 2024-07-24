@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway\Http\Resources\CP;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Statamic\Facades\Action;
 use Statamic\Facades\User;
 use Statamic\Fields\Blueprint;
@@ -66,11 +67,12 @@ class ListedModel extends JsonResource
                 $relationName = $this->runwayResource->eloquentRelationships()->get($key);
                 $value = $this->resource->$relationName;
             }
-            // When it's a nested field, get the value from the model using the data_get method.
-            elseif (str_contains($key, '->')) {
-                $value = data_get($this->resource, str_replace('->', '.', $key));
+            // When it's a nested field, we need to get the value from the nested JSON object, using data_get().
+            elseif ($field && $nestedFieldPrefix = $this->runwayResource->nestedFieldPrefix($field->handle())) {
+                $fieldKey = Str::after($field->handle(), "{$nestedFieldPrefix}_");
+                $value = data_get($this->resource, "{$nestedFieldPrefix}.{$fieldKey}");
             } else {
-                $value = $extra[$key] ?? $this->resource->{$key};
+                $value = $extra[$key] ?? $this->resource->getAttribute($key);
             }
 
             if (! $field) {
