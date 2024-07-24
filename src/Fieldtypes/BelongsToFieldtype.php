@@ -19,18 +19,6 @@ class BelongsToFieldtype extends BaseFieldtype
                 'default' => 1,
                 'read_only' => true,
             ],
-            'title_format' => [
-                'display' => __('Title Format'),
-                'instructions' => __('Configure a title format for results. You should use Antlers to pull in field data.'),
-                'type' => 'text',
-                'width' => 50,
-            ],
-            'relationship_name' => [
-                'display' => __('Relationship Name'),
-                'instructions' => __('The name of the Eloquent relationship this field should use. When left blank, Runway will attempt to guess it.'),
-                'type' => 'text',
-                'width' => 50,
-            ],
         ];
 
         return array_merge($config, parent::configFieldItems());
