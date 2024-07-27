@@ -176,6 +176,14 @@ class Resource
             ->mapWithKeys(function (Field $field) {
                 $eloquentRelationship = $field->handle();
 
+                // If the field has a `relationship_name` config key, use that instead.
+                // Sometimes a column name will be different to the relationship name
+                // (the method on the model) so our magic won't be able to figure out what's what.
+                // Eg. standard_parent_id -> parent
+                if ($field->get('relationship_name')) {
+                    return [$field->handle() => $field->get('relationship_name')];
+                }
+
                 // If field handle is `author_id`, strip off the `_id`
                 if (str_contains($eloquentRelationship, '_id')) {
                     $eloquentRelationship = Str::replaceLast('_id', '', $eloquentRelationship);
@@ -184,14 +192,6 @@ class Resource
                 // If field handle contains an underscore, convert the name to camel case
                 if (str_contains($eloquentRelationship, '_')) {
                     $eloquentRelationship = Str::camel($eloquentRelationship);
-                }
-
-                // If the field has a `relationship_name` config key, use that instead.
-                // Sometimes a column name will be different to the relationship name
-                // (the method on the model) so our magic won't be able to figure out what's what.
-                // Eg. standard_parent_id -> parent
-                if ($field->get('relationship_name')) {
-                    $eloquentRelationship = $field->get('relationship_name');
                 }
 
                 return [$field->handle() => $eloquentRelationship];
