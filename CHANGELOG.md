@@ -1,5 +1,14 @@
 # Changelog
 
+## v7.7.3 (2024-07-29)
+
+### What's fixed
+* Fix protected model accessors & model mutators without accessor equivelent #576 by @duncanmcclean
+* Prevented saving of computed relationship fields #575 by @duncanmcclean
+* Fixed explicit `relationship_name` being overwritten in Has Many relationships #574 by @manogi
+
+
+
 ## v7.7.2 (2024-07-24)
 
 ### What's fixed
