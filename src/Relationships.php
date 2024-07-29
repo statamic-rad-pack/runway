@@ -28,6 +28,7 @@ class Relationships
     public function save(): void
     {
         $this->model->runwayResource()->blueprint()->fields()->all()
+            ->reject(fn (Field $field) => $field->visibility() === 'computed' || ! $field->get('save', true))
             ->filter(fn (Field $field) => $field->fieldtype() instanceof HasManyFieldtype)
             ->each(function (Field $field): void {
                 $relationshipName = $this->model->runwayResource()->eloquentRelationships()->get($field->handle());
