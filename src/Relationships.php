@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Statamic\Fields\Field;
+use Statamic\Fieldtypes\Section;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 
 class Relationships
@@ -28,6 +29,7 @@ class Relationships
     public function save(): void
     {
         $this->model->runwayResource()->blueprint()->fields()->all()
+            ->filter(fn (Field $field) => $this->shouldSaveField($field))
             ->filter(fn (Field $field) => $field->fieldtype() instanceof HasManyFieldtype)
             ->each(function (Field $field): void {
                 $relationshipName = $this->model->runwayResource()->eloquentRelationships()->get($field->handle());
@@ -72,5 +74,22 @@ class Relationships
         }
 
         $relationship->sync($values);
+    }
+
+    protected function shouldSaveField(Field $field): bool
+    {
+        if ($field->fieldtype() instanceof Section) {
+            return false;
+        }
+
+        if ($field->visibility() === 'computed') {
+            return false;
+        }
+
+        if ($field->get('save', true) === false) {
+            return false;
+        }
+
+        return true;
     }
 }
