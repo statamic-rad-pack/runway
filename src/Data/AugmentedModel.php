@@ -180,9 +180,13 @@ class AugmentedModel extends AbstractAugmented
             function () use ($handle) {
                 $method = Str::camel($handle);
 
-                $get = $this->data->$method()->get;
+                $attribute = invade($this->data)->$method();
 
-                return $get();
+                if (! $attribute->get) {
+                    return $this->data->getAttribute($handle);
+                }
+
+                return ($attribute->get)();
             },
             $handle,
             $this->fieldtype($handle),
