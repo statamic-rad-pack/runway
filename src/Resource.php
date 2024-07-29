@@ -181,7 +181,7 @@ class Resource
                 // (the method on the model) so our magic won't be able to figure out what's what.
                 // Eg. standard_parent_id -> parent
                 if ($field->get('relationship_name')) {
-                    $eloquentRelationship = $field->get('relationship_name');
+                    return [$field->handle() => $field->get('relationship_name')];
                 }
 
                 // If field handle is `author_id`, strip off the `_id`
