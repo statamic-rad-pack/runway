@@ -29,7 +29,7 @@ class Relationships
     public function save(): void
     {
         $this->model->runwayResource()->blueprint()->fields()->all()
-            ->filter(fn (Field $field) => $this->shouldSaveField($field))
+            ->reject(fn (Field $field) => $field->visibility() === 'computed' || ! $field->get('save', true))
             ->filter(fn (Field $field) => $field->fieldtype() instanceof HasManyFieldtype)
             ->each(function (Field $field): void {
                 $relationshipName = $this->model->runwayResource()->eloquentRelationships()->get($field->handle());
@@ -74,22 +74,5 @@ class Relationships
         }
 
         $relationship->sync($values);
-    }
-
-    protected function shouldSaveField(Field $field): bool
-    {
-        if ($field->fieldtype() instanceof Section) {
-            return false;
-        }
-
-        if ($field->visibility() === 'computed') {
-            return false;
-        }
-
-        if ($field->get('save', true) === false) {
-            return false;
-        }
-
-        return true;
     }
 }
