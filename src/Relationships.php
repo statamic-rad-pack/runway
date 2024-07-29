@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Statamic\Fields\Field;
-use Statamic\Fieldtypes\Section;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 
 class Relationships
