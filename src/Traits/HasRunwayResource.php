@@ -185,10 +185,15 @@ trait HasRunwayResource
             ->reject(fn (Field $field) => $field->visibility() === 'computed')
             ->reject(fn (Field $field) => $field->get('save', true) === false)
             ->mapWithKeys(function (Field $field) {
+                $isJsonField = Str::contains($field->handle(), '->');
                 $handle = Str::before($field->handle(), '->');
 
                 if ($field->fieldtype() instanceof HasManyFieldtype) {
                     return [$handle => Arr::get($this->runwayRelationships, $handle, [])];
+                }
+
+                if ($isJsonField) {
+                    return [$handle => $this->getAttribute($handle)];
                 }
 
                 return [$handle => $this->getAttribute($field->handle())];
