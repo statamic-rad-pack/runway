@@ -130,12 +130,10 @@ class Resource
         }
 
         return $this->listableColumns()
-            ->reject(function ($handle) {
+            ->filter(function ($handle) {
                 $field = $this->blueprint()->field($handle);
 
-                return $field->fieldtype()->indexComponent() === 'relationship'
-                    || $field->type() === 'section'
-                    || $field->handle() === 'published';
+                return in_array($field->type(), ['text', 'textarea', 'slug']);
             })
             ->first();
     }
