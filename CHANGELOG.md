@@ -1,5 +1,13 @@
 # Changelog
 
+## v7.7.4 (2024-08-06)
+
+### What's fixed
+* Fixed nested JSON fields when using revisions #577 by @edalzell
+* Non-text fields shouldn't be used for resource "title fields" anymore #578 #579 by @duncanmcclean
+
+
+
 ## v7.7.3 (2024-07-29)
 
 ### What's fixed
