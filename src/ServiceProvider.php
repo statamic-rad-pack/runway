@@ -198,7 +198,6 @@ class ServiceProvider extends AddonServiceProvider
             if (! app()->runningInConsole()) {
                 Runway::allResources()->each(fn (Resource $resource) => $resource->blueprint());
             }
-
         } catch (QueryException $e) {
             // A QueryException will be thrown when using the Eloquent Driver, where the `blueprints` table is
             // yet to be migrated (for example: during a fresh install). We'll catch the exception here and
