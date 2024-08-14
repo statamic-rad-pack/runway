@@ -21,15 +21,15 @@ class RunwayTag extends Tags
     {
         $from = $resourceHandle ?? $this->params->get(['from', 'in', 'resource']);
 
-        if ($resource = Runway::findResource(Str::studly($from))) {
-            return $resource;
+        try {
+            return Runway::findResource(Str::studly($from));
+        } catch (ResourceNotFound) {
+            try {
+                return Runway::findResource(Str::lower($from));
+            } catch (ResourceNotFound) {
+                return Runway::findResource($from);
+            }
         }
-
-        if ($resource = Runway::findResource(Str::lower($from))) {
-            return $resource;
-        }
-
-        return Runway::findResource($from);
     }
 
     public function wildcard(?string $resourceHandle = null): array
@@ -117,6 +117,8 @@ class RunwayTag extends Tags
 
             $query->orderBy($sortColumn, $sortDirection);
         }
+
+        return $query;
     }
 
     protected function results($query)
