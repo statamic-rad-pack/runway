@@ -17,6 +17,18 @@
         action-url="{{ $actionUrl }}"
         primary-column="{{ $primaryColumn }}"
         :has-publish-states="{{ Statamic\Support\Str::bool($resource->hasPublishStates()) }}"
-    ></resource-view>
+    >
+        <template #twirldown="{ actionCompleted }">
+            @can('configure fields')
+                <dropdown-item :text="__('Edit Blueprint')" redirect="{{ cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]) }}"></dropdown-item>
+            @endcan
+            <data-list-inline-actions
+                item="{{ $resource->handle() }}"
+                url="{{ cp_route('runway.actions.run', ['resource' => $resource->handle()]) }}"
+                :actions="{{ $actions }}"
+                @completed="actionCompleted"
+            ></data-list-inline-actions>
+        </template>
+    </resource-view>
 
 @endsection
