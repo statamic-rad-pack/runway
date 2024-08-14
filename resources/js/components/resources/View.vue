@@ -4,6 +4,10 @@
             <div class="flex items-center">
                 <h1 class="flex-1" v-text="__(title)" />
 
+                <dropdown-list class="rtl:ml-2 ltr:mr-2" v-if="!!this.$scopedSlots.twirldown">
+                    <slot name="twirldown" :actionCompleted="actionCompleted" />
+                </dropdown-list>
+
                 <div>
                     <a v-if="canCreate" class="btn-primary" :href="createUrl" v-text="createLabel" />
                 </div>
@@ -25,8 +29,11 @@
 
 <script>
 import RunwayListing from './Listing.vue'
+import HasActions from '../../../../vendor/statamic/cms/resources/js/components/publish/HasActions'
 
 export default {
+    mixins: [HasActions],
+
     components: {
         RunwayListing,
     },
@@ -44,6 +51,12 @@ export default {
         actionUrl: { type: String, required: true },
         primaryColumn: { type: String, required: true},
         hasPublishStates: { type: Boolean, required: true },
+    },
+
+    methods: {
+        afterActionSuccessfullyCompleted(response) {
+            if (!response.redirect) window.location.reload();
+        },
     },
 }
 </script>
