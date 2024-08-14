@@ -41,22 +41,9 @@ class RunwayTag extends Tags
 
     public function count(): int
     {
-        $resourceHandle = $this->params->get('in');
-        if (! $resourceHandle) {
-            return 0;
-        }
+        $this->resource = $this->parseResource();
 
-        try {
-            $resource = Runway::findResource(
-                $this->params->has('resource') ? Str::studly($this->params->get('resource')) : Str::studly($resourceHandle)
-            );
-        } catch (ResourceNotFound) {
-            $resource = Runway::findResource(
-                $this->params->has('resource') ? Str::lower($this->params->get('resource')) : Str::lower($resourceHandle)
-            );
-        }
-
-        return $resource->model()->query()->count();
+        return $this->query()->count();
     }
 
     protected function query(): Builder
