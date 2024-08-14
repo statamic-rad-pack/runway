@@ -21,7 +21,7 @@ class RelationshipsTest extends TestCase
 
         Blueprint::shouldReceive('find')
             ->with('runway::author')
-            ->andReturn((new FieldsBlueprint())->setContents([
+            ->andReturn((new FieldsBlueprint)->setContents([
                 'tabs' => [
                     'main' => [
                         'fields' => [
@@ -48,7 +48,7 @@ class RelationshipsTest extends TestCase
 
         Blueprint::shouldReceive('find')
             ->with('runway::author')
-            ->andReturn((new FieldsBlueprint())->setContents([
+            ->andReturn((new FieldsBlueprint)->setContents([
                 'tabs' => [
                     'main' => [
                         'fields' => [
@@ -78,7 +78,7 @@ class RelationshipsTest extends TestCase
 
         Blueprint::shouldReceive('find')
             ->with('runway::author')
-            ->andReturn((new FieldsBlueprint())->setContents([
+            ->andReturn((new FieldsBlueprint)->setContents([
                 'tabs' => [
                     'main' => [
                         'fields' => [
@@ -107,7 +107,7 @@ class RelationshipsTest extends TestCase
 
         Blueprint::shouldReceive('find')
             ->with('runway::author')
-            ->andReturn((new FieldsBlueprint())->setContents([
+            ->andReturn((new FieldsBlueprint)->setContents([
                 'tabs' => [
                     'main' => [
                         'fields' => [
@@ -132,7 +132,7 @@ class RelationshipsTest extends TestCase
 
         Blueprint::shouldReceive('find')
             ->with('runway::author')
-            ->andReturn((new FieldsBlueprint())->setContents([
+            ->andReturn((new FieldsBlueprint)->setContents([
                 'tabs' => [
                     'main' => [
                         'fields' => [
@@ -160,7 +160,7 @@ class RelationshipsTest extends TestCase
 
         Blueprint::shouldReceive('find')
             ->with('runway::author')
-            ->andReturn((new FieldsBlueprint())->setContents([
+            ->andReturn((new FieldsBlueprint)->setContents([
                 'tabs' => [
                     'main' => [
                         'fields' => [
@@ -179,5 +179,32 @@ class RelationshipsTest extends TestCase
         $this->assertDatabaseHas('post_author', ['post_id' => $posts[0]->id, 'author_id' => $author->id, 'pivot_sort_order' => 0]);
         $this->assertDatabaseHas('post_author', ['post_id' => $posts[1]->id, 'author_id' => $author->id, 'pivot_sort_order' => 2]);
         $this->assertDatabaseHas('post_author', ['post_id' => $posts[2]->id, 'author_id' => $author->id, 'pivot_sort_order' => 1]);
+    }
+
+    #[Test]
+    public function does_not_attempt_to_save_computed_fields()
+    {
+        $author = Author::factory()->create();
+        $posts = Post::factory()->count(10)->create();
+
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn(new FieldsBlueprint);
+
+        Blueprint::shouldReceive('find')
+            ->with('runway::author')
+            ->andReturn((new FieldsBlueprint)->setContents([
+                'tabs' => [
+                    'main' => [
+                        'fields' => [
+                            ['handle' => 'posts', 'field' => ['type' => 'has_many', 'mode' => 'stack', 'resource' => 'post', 'visibility' => 'computed', 'save' => false]],
+                        ],
+                    ],
+                ],
+            ]));
+
+        Relationships::for($author)->with(['posts' => $posts->pluck('id')->all()])->save();
+
+        $this->assertFalse(
+            $posts->every(fn ($post) => $post->fresh()->author_id === $author->id)
+        );
     }
 }

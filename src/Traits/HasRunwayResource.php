@@ -184,6 +184,7 @@ trait HasRunwayResource
             ->reject(fn (Field $field) => $field->fieldtype() instanceof Section)
             ->reject(fn (Field $field) => $field->visibility() === 'computed')
             ->reject(fn (Field $field) => $field->get('save', true) === false)
+            ->unique(fn (Field $field) => Str::before($field->handle(), '->'))
             ->mapWithKeys(function (Field $field) {
                 $handle = Str::before($field->handle(), '->');
 
@@ -191,7 +192,7 @@ trait HasRunwayResource
                     return [$handle => Arr::get($this->runwayRelationships, $handle, [])];
                 }
 
-                return [$handle => $this->getAttribute($field->handle())];
+                return [$handle => $this->getAttribute($handle)];
             })
             ->all();
 

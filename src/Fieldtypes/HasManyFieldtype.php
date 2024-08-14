@@ -10,6 +10,8 @@ use StatamicRadPack\Runway\Runway;
 
 class HasManyFieldtype extends BaseFieldtype
 {
+    protected $indexComponent = 'relationship';
+
     protected function configFieldItems(): array
     {
         $config = [
@@ -17,12 +19,6 @@ class HasManyFieldtype extends BaseFieldtype
                 'display' => __('Max Items'),
                 'instructions' => __('statamic::messages.max_items_instructions'),
                 'type' => 'integer',
-                'width' => 50,
-            ],
-            'title_format' => [
-                'display' => __('Title Format'),
-                'instructions' => __('Configure a title format for results. You should use Antlers to pull in field data.'),
-                'type' => 'text',
                 'width' => 50,
             ],
             'reorderable' => [
@@ -77,7 +73,13 @@ class HasManyFieldtype extends BaseFieldtype
 
         return [
             'type' => GraphQL::listOf(GraphQL::type("runway_graphql_types_{$resource->handle()}")),
-            'resolve' => fn ($model, $args, $context, ResolveInfo $info) => $model->{$info->fieldName},
+            'resolve' => function ($item, $args, $context, ResolveInfo $info) {
+                if (! $item instanceof Model) {
+                    return $item->get($info->fieldName);
+                }
+
+                return $item->{$info->fieldName};
+            },
         ];
     }
 }

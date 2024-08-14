@@ -25,7 +25,7 @@ class BelongsToFieldtypeTest extends TestCase
     {
         parent::setUp();
 
-        $this->fieldtype = tap(new BelongsToFieldtype())
+        $this->fieldtype = tap(new BelongsToFieldtype)
             ->setField(new Field('author', [
                 'max_items' => 1,
                 'mode' => 'stack',
@@ -71,7 +71,7 @@ class BelongsToFieldtypeTest extends TestCase
             'title_format' => 'AUTHOR {{ name }}',
         ]));
 
-        $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest());
+        $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest);
 
         $this->assertIsObject($getIndexItems);
         $this->assertTrue($getIndexItems instanceof Paginator);
@@ -264,13 +264,5 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertArrayHasKey('id', $getItemData[0]);
         $this->assertArrayHasKey('title', $getItemData[0]);
         $this->assertArrayNotHasKey('created_at', $getItemData[0]);
-    }
-
-    #[Test]
-    public function gets_graphql_type()
-    {
-        $toGqlType = $this->fieldtype->toGqlType();
-
-        $this->assertInstanceOf(\GraphQL\Type\Definition\ObjectType::class, $toGqlType);
     }
 }

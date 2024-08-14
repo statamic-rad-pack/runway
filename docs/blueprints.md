@@ -68,6 +68,15 @@ Width| `integer`                 |
 [YAML](https://statamic.dev/fieldtypes/yaml)| `string`                  |
 [Belongs To](/fieldtypes#belongsto-fieldtype)| `bigInteger`              |Usually `bigInteger` or `integer` but depends on personal preference.
 
+## Eloquent Relationships
+
+Runway provides two fieldtypes to let you manage Eloquent Relationships within Statamic:
+
+* Belongs To
+* Has Many
+
+To find out more about Runway's fieldtypes, check out the [Fieldtypes](/fieldtypes) page.
+
 <!--
 ## Nesting fields inside JSON columns
 

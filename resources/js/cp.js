@@ -1,9 +1,5 @@
-import PublishForm from './components/Publish/PublishForm.vue'
-import InlineActions from './components/Listing/InlineActions.vue'
-import RunwayListing from './components/Listing/RunwayListing.vue'
-import HasManyFieldtypeIndex from '../../vendor/statamic/cms/resources/js/components/fieldtypes/relationship/RelationshipIndexFieldtype.vue'
+import PublishForm from './components/resources/PublishForm.vue'
+import ResourceView from './components/resources/View.vue'
 
 Statamic.$components.register('runway-publish-form', PublishForm)
-Statamic.$components.register('runway-listing', RunwayListing)
-Statamic.$components.register('inline-actions', InlineActions)
-Statamic.$components.register('has_many-fieldtype-index', HasManyFieldtypeIndex)
+Statamic.$components.register('resource-view', ResourceView)

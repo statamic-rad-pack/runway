@@ -130,12 +130,10 @@ class Resource
         }
 
         return $this->listableColumns()
-            ->reject(function ($handle) {
+            ->filter(function ($handle) {
                 $field = $this->blueprint()->field($handle);
 
-                return $field->fieldtype()->indexComponent() === 'relationship'
-                    || $field->type() === 'section'
-                    || $field->handle() === 'published';
+                return in_array($field->type(), ['text', 'textarea', 'slug']);
             })
             ->first();
     }
@@ -181,7 +179,7 @@ class Resource
                 // (the method on the model) so our magic won't be able to figure out what's what.
                 // Eg. standard_parent_id -> parent
                 if ($field->get('relationship_name')) {
-                    $eloquentRelationship = $field->get('relationship_name');
+                    return [$field->handle() => $field->get('relationship_name')];
                 }
 
                 // If field handle is `author_id`, strip off the `_id`

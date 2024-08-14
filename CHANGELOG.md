@@ -1,5 +1,44 @@
 # Changelog
 
+## v7.7.5 (2024-08-09)
+
+### What's fixed
+* Prevent creating blueprint files when running in the console #581 by @BobWez98
+
+
+
+## v7.7.4 (2024-08-06)
+
+### What's fixed
+* Fixed nested JSON fields when using revisions #577 by @edalzell
+* Non-text fields shouldn't be used for resource "title fields" anymore #578 #579 by @duncanmcclean
+
+
+
+## v7.7.3 (2024-07-29)
+
+### What's fixed
+* Fix protected model accessors & model mutators without accessor equivelent #576 by @duncanmcclean
+* Prevented saving of computed relationship fields #575 by @duncanmcclean
+* Fixed explicit `relationship_name` being overwritten in Has Many relationships #574 by @manogi
+
+
+
+## v7.7.2 (2024-07-24)
+
+### What's fixed
+* Added missing methods to Runway's `HasAugmentedInstance` trait #567 by @simonworkhouse
+* Fixed issues when the field handle isn't the same as the relationship name #570 by @duncanmcclean
+
+
+
+## v7.7.1 (2024-07-19)
+
+### What's fixed
+* Fixed error when accessing Runway's fieldtypes via GraphQL #561 #565 by @duncanmcclean
+
+
+
 ## v7.7.0 (2024-07-18)
 
 ### What's new

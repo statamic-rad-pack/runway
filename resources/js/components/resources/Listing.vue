@@ -99,7 +99,7 @@
                             :column-preferences-key="preferencesKey('columns')"
                             @sorted="sorted"
                         >
-                            <template :slot="primaryColumn" slot-scope="{ row: model, value }">
+                            <template :slot="`cell-${primaryColumn}`" slot-scope="{ row: model, value }">
                                 <a class="title-index-field inline-flex items-center" :href="model.edit_url" @click.stop>
                                     <span class="little-dot rtl:ml-2 ltr:mr-2" v-tooltip="getStatusLabel(model)" :class="getStatusClass(model)" v-if="hasPublishStates && ! columnShowing('status')" />
                                     <span v-text="value" />
@@ -110,42 +110,15 @@
                                 <div class="status-index-field select-none" v-tooltip="getStatusTooltip(model)" :class="`status-${model.status}`" v-text="getStatusLabel(model)" />
                             </template>
 
-                            <template
-                                slot="actions"
-                                slot-scope="{ row, index }"
-                            >
-                                <dropdown-list
-                                    v-if="
-                                        canViewRow(row) ||
-                                        canEditRow(row) ||
-                                        row.actions.length
-                                    "
-                                >
-                                    <dropdown-item
-                                        v-if="canViewRow(row)"
-                                        :text="__('View')"
-                                        :redirect="row.permalink"
-                                    />
-
-                                    <dropdown-item
-                                        v-if="canEditRow(row)"
-                                        :text="__('Edit')"
-                                        :redirect="row.edit_url"
-                                    />
-
-                                    <div
-                                        class="divider"
-                                        v-if="
-                                            (canViewRow(row) ||
-                                                canEditRow(row)) &&
-                                            row.actions.length
-                                        "
-                                    />
-
+                            <template slot="actions" slot-scope="{ row: model, index }">
+                                <dropdown-list v-if="(model.viewable && model.permalink) || model.editable || model.actions.length">
+                                    <dropdown-item v-if="model.viewable && model.permalink" :text="__('View')" :external-link="model.permalink" />
+                                    <dropdown-item v-if="model.editable" :text="__('Edit')" :redirect="model.edit_url" />
+                                    <div v-if="((model.viewable && model.permalink) || model.editable) && model.actions.length" class="divider" />
                                     <data-list-inline-actions
-                                        :item="row.id"
+                                        :item="model.id"
                                         :url="actionUrl"
-                                        :actions="row.actions"
+                                        :actions="model.actions"
                                         @started="actionStarted"
                                         @completed="actionCompleted"
                                     />
@@ -154,18 +127,6 @@
                             </template>
                         </data-list-table>
                     </div>
-
-                    <confirmation-modal
-                        v-if="deletingRow !== false"
-                        :title="__('Delete')"
-                        :bodyText="
-                            __('Are you sure you want to delete this item?')
-                        "
-                        :buttonText="__('Delete')"
-                        :danger="true"
-                        @confirm="deleteRow()"
-                        @cancel="cancelDeleteRow"
-                    ></confirmation-modal>
                 </div>
 
                 <data-list-pagination
@@ -182,7 +143,7 @@
 
 <script>
 import Listing from '../../../../vendor/statamic/cms/resources/js/components/Listing.vue'
-import DataListFilters from './DataListFilters.vue'
+import DataListFilters from '../data-list/Filters.vue'
 
 export default {
     mixins: [Listing],
@@ -192,21 +153,16 @@ export default {
     },
 
     props: {
-        listingConfig: Object,
-        initialColumns: Array,
-        actionUrl: String,
-        initialPrimaryColumn: String,
+        resource: String,
+        primaryColumn: String,
         hasPublishStates: Boolean,
     },
 
     data() {
         return {
-            listingKey: 'id',
-            preferencesPrefix: this.listingConfig.preferencesPrefix ?? 'runway',
-            requestUrl: this.listingConfig.requestUrl,
-            columns: this.initialColumns,
-            meta: {},
-            primaryColumn: `cell-${this.initialPrimaryColumn}`,
+            listingKey: 'models',
+            preferencesPrefix: `runway.${this.resource}`,
+            requestUrl: cp_url(`runway/${this.resource}/listing-api`),
             deletingRow: false,
         }
     },
@@ -238,56 +194,6 @@ export default {
 
         columnShowing(column) {
             return this.visibleColumns.find(c => c.field === column);
-        },
-
-        canViewRow(row) {
-            return row.viewable && row.permalink
-        },
-
-        canEditRow(row) {
-            return row.editable
-        },
-
-        confirmDeleteRow(id, index, deleteUrl) {
-            this.visibleColumns = this.columns.filter(
-                (column) => column.visible
-            )
-            this.deletingRow = { id, index, deleteUrl }
-        },
-
-        deleteRow(message) {
-            const id = this.deletingRow.id
-            message = message || __('Deleted')
-
-            this.$axios
-                .delete(this.deletingRow.deleteUrl)
-                .then(() => {
-                    let i = _.indexOf(
-                        this.items,
-                        _.findWhere(this.rows, { id })
-                    )
-                    this.items.splice(i, 1)
-                    this.deletingRow = false
-                    this.$toast.success(message)
-
-                    // location.reload()
-                })
-                .catch((e) => {
-                    this.$toast.error(
-                        e.response
-                            ? e.response.data.message
-                            : __('Something went wrong')
-                    )
-                })
-        },
-
-        cancelDeleteRow() {
-            this.deletingRow = false
-            setTimeout(() => {
-                this.visibleColumns = this.columns.filter(
-                    (column) => column.visible
-                )
-            }, 50)
         },
     },
 }

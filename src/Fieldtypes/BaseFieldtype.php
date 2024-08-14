@@ -59,13 +59,19 @@ class BaseFieldtype extends Relationship
             ],
             'resource' => [
                 'display' => __('Resource'),
-                'instructions' => __("Select the Runway resource you'd like to be selectable from this field."),
+                'instructions' => __('Specify the Runway Resource to be used for this field.'),
                 'type' => 'select',
                 'options' => collect(Runway::allResources())
                     ->mapWithKeys(fn ($resource) => [$resource->handle() => $resource->name()])
                     ->toArray(),
                 'width' => 50,
                 'validate' => 'required',
+            ],
+            'relationship_name' => [
+                'display' => __('Relationship Name'),
+                'instructions' => __('The name of the Eloquent Relationship this field should use. When left empty, Runway will attempt to guess it based on the field handle.'),
+                'type' => 'text',
+                'width' => 50,
             ],
             'create' => [
                 'display' => __('Allow Creating'),
@@ -76,9 +82,15 @@ class BaseFieldtype extends Relationship
             ],
             'with' => [
                 'display' => __('Eager Loaded Relationships'),
-                'instructions' => __('Specify any relationships you wish to be eager loaded when this field is augmented.'),
+                'instructions' => __('Specify any relationship which should be eager loaded when this field is augmented.'),
                 'type' => 'list',
                 'default' => [],
+                'width' => 50,
+            ],
+            'title_format' => [
+                'display' => __('Title Format'),
+                'instructions' => __('Configure the title format used for displaying results in the fieldtype. You can use Antlers to pull in model data.'),
+                'type' => 'text',
                 'width' => 50,
             ],
         ];
