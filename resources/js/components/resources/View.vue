@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import RunwayListing from './Listing/RunwayListing.vue'
+import RunwayListing from './Listing.vue'
 
 export default {
     components: {

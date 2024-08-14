@@ -143,7 +143,7 @@
 
 <script>
 import Listing from '../../../../vendor/statamic/cms/resources/js/components/Listing.vue'
-import DataListFilters from './DataListFilters.vue'
+import DataListFilters from '../data-list/Filters.vue'
 
 export default {
     mixins: [Listing],

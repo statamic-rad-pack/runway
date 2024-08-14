@@ -1,7 +1,5 @@
-import PublishForm from './components/Publish/PublishForm.vue'
-import ResourceView from './components/ResourceView.vue'
-import HasManyFieldtypeIndex from '../../vendor/statamic/cms/resources/js/components/fieldtypes/relationship/RelationshipIndexFieldtype.vue'
+import PublishForm from './components/resources/PublishForm.vue'
+import ResourceView from './components/resources/View.vue'
 
 Statamic.$components.register('runway-publish-form', PublishForm)
 Statamic.$components.register('resource-view', ResourceView)
-Statamic.$components.register('has_many-fieldtype-index', HasManyFieldtypeIndex)
