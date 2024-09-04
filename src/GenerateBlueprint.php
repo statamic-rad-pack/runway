@@ -15,7 +15,7 @@ class GenerateBlueprint
         'bigint' => 'integer',
         'varchar' => 'text',
         'text' => 'textarea',
-//        'json' => 'array',
+        //        'json' => 'array',
         'timestamp' => 'date',
     ];
 
