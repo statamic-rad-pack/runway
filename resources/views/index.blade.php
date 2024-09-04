@@ -10,8 +10,6 @@
         :can-create="{{ Statamic\Support\Str::bool($canCreate) }}"
         create-url="{{ $createUrl }}"
         create-label="{{ $createLabel }}"
-        sort-column="{{ $resource->orderBy() }}"
-        sort-direction="{{ $resource->orderByDirection() }}"
         :columns="{{ $columns->toJson() }}"
         :filters="{{ $filters->toJson() }}"
         action-url="{{ $actionUrl }}"

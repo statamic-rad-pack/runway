@@ -16,8 +16,6 @@
 
         <runway-listing
             :resource="handle"
-            :initial-sort-column="sortColumn"
-            :initial-sort-direction="sortDirection"
             :initial-columns="columns"
             :filters="filters"
             :action-url="actionUrl"
@@ -44,8 +42,6 @@ export default {
         canCreate: { type: Boolean, required: true },
         createUrl: { type: String, required: true },
         createLabel: { type: String, required: true },
-        sortColumn: { type: String, required: true },
-        sortDirection: { type: String, required: true },
         columns: { type: Array, required: true },
         filters: { type: Array, required: true },
         actionUrl: { type: String, required: true },
