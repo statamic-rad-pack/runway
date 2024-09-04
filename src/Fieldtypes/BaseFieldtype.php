@@ -13,6 +13,9 @@ use Statamic\Facades\Blink;
 use Statamic\Facades\Parse;
 use Statamic\Fieldtypes\Relationship;
 use Statamic\Query\Builder as BaseStatamicBuilder;
+use Statamic\Search\Result;
+use StatamicRadPack\Runway\Http\Resources\CP\FieldtypeModel;
+use StatamicRadPack\Runway\Http\Resources\CP\FieldtypeModels;
 use StatamicRadPack\Runway\Query\Scopes\Filters\Fields\Models;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
@@ -123,39 +126,21 @@ class BaseFieldtype extends Relationship
             }
         }, fn ($query) => $query->orderBy($resource->orderBy(), $resource->orderByDirection()));
 
-        $items = $request->boolean('paginate', true)
-            ? $query->paginate()
-            : $query->get();
+        $results = ($paginate = $request->boolean('paginate', true)) ? $query->paginate() : $query->get();
 
-        if ($searchQuery && $resource->hasSearchIndex()) {
-            $items->setCollection($items->getCollection()->map(fn ($item) => $item->getSearchable()->model()));
-        }
+        $items = $results->map(fn ($item) => $item instanceof Result ? $item->getSearchable() : $item);
 
-        $items
-            ->transform(function ($model) use ($resource) {
-                return $resource->listableColumns()
-                    ->mapWithKeys(function ($columnKey) use ($model) {
-                        $value = $model->{$columnKey};
+        return $paginate ? $results->setCollection($items) : $items;
+    }
 
-                        // When $value is an Eloquent Collection, we want to map over each item & process its values.
-                        if ($value instanceof EloquentCollection) {
-                            $value = $value->map(fn ($item) => $this->toItemArray($item))->values()->toArray();
-                        }
+    public function getResourceCollection($request, $items)
+    {
+        $resource = Runway::findResource($this->config('resource'));
 
-                        return [$columnKey => $value];
-                    })
-                    ->merge([
-                        'id' => $model->{$resource->primaryKey()},
-                        'title' => $this->makeTitle($model, $resource),
-                        'status' => $resource->hasPublishStates() ? $model->publishedStatus() : null,
-                        'collection' => ['dated' => false],
-                    ])
-                    ->toArray();
-            });
-
-        return $request->boolean('paginate', true)
-            ? $items
-            : $items->filter()->values();
+        return (new FieldtypeModels($items, $this))
+            ->runwayResource($resource)
+            ->blueprint($resource->blueprint())
+            ->setColumnPreferenceKey("runway.{$resource->handle()}.columns");
     }
 
     public function preProcessIndex($data)
@@ -282,28 +267,13 @@ class BaseFieldtype extends Relationship
     protected function toItemArray($id)
     {
         $resource = Runway::findResource($this->config('resource'));
-
-        if (! $id instanceof Model) {
-            $model = $resource->model()->firstWhere($resource->primaryKey(), $id);
-        } else {
-            $model = $id;
-        }
+        $model = $id instanceof Model ? $id : $resource->model()->firstWhere($resource->primaryKey(), $id);
 
         if (! $model) {
-            return [
-                'id' => $id,
-                'title' => $id,
-                'invalid' => true,
-            ];
+            return $this->invalidItemArray($id);
         }
 
-        return [
-            'id' => $model->getKey(),
-            'reference' => $model->reference(),
-            'status' => $model->publishedStatus(),
-            'title' => $this->makeTitle($model, $resource),
-            'edit_url' => $model->runwayEditUrl(),
-        ];
+        return (new FieldtypeModel($model, $this))->resolve()['data'];
     }
 
     protected function getCreatables()
@@ -316,17 +286,6 @@ class BaseFieldtype extends Relationship
                 'resource' => $resource->handle(),
             ]),
         ]];
-    }
-
-    protected function makeTitle($model, $resource): ?string
-    {
-        if (! $titleFormat = $this->config('title_format')) {
-            $firstListableColumn = $resource->titleField();
-
-            return $model->{$firstListableColumn};
-        }
-
-        return Parse::template($titleFormat, $model);
     }
 
     public function filter()
