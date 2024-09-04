@@ -1,5 +1,23 @@
 # Changelog
 
+## v7.8.0 (2024-08-14)
+
+### What's new
+* Added `{{ runway:count }}` tag #583 by @vJoeyz
+* Resource Actions #564 by @edalzell
+
+### What's improved
+* Tidied up Vue components #585 by @duncanmcclean
+
+
+
+## v7.7.5 (2024-08-09)
+
+### What's fixed
+* Prevent creating blueprint files when running in the console #581 by @BobWez98
+
+
+
 ## v7.7.4 (2024-08-06)
 
 ### What's fixed

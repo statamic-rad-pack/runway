@@ -59,30 +59,6 @@ class HasManyFieldtypeTest extends TestCase
     }
 
     #[Test]
-    public function can_get_index_items_with_title_format()
-    {
-        $author = Author::factory()->create();
-        $posts = Post::factory()->count(2)->create(['author_id' => $author->id]);
-
-        $this->fieldtype->setField(new Field('posts', [
-            'mode' => 'default',
-            'resource' => 'post',
-            'display' => 'Posts',
-            'type' => 'has_many',
-            'title_format' => '{{ title }} TEST {{ created_at format="Y" }}',
-        ]));
-
-        $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest);
-
-        $this->assertIsObject($getIndexItems);
-        $this->assertTrue($getIndexItems instanceof Paginator);
-        $this->assertEquals($getIndexItems->count(), 2);
-
-        $this->assertEquals($getIndexItems->first()['title'], $posts[0]->title.' TEST '.now()->format('Y'));
-        $this->assertEquals($getIndexItems->last()['title'], $posts[1]->title.' TEST '.now()->format('Y'));
-    }
-
-    #[Test]
     public function can_get_index_items_in_order_specified_in_runway_config()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.order_by', 'title');

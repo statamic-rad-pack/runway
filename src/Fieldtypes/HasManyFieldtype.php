@@ -10,6 +10,8 @@ use StatamicRadPack\Runway\Runway;
 
 class HasManyFieldtype extends BaseFieldtype
 {
+    protected $indexComponent = 'relationship';
+
     protected function configFieldItems(): array
     {
         $config = [

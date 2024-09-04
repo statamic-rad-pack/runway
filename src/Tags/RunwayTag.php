@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Tags;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Statamic\Extensions\Pagination\LengthAwarePaginator;
@@ -14,20 +15,40 @@ use StatamicRadPack\Runway\Runway;
 class RunwayTag extends Tags
 {
     protected static $handle = 'runway';
+    protected $resource;
 
-    public function wildcard($resourceHandle = null): array
+    protected function parseResource(?string $resourceHandle = null): Resource
     {
-        try {
-            $resource = Runway::findResource(
-                $this->params->has('resource') ? Str::studly($this->params->get('resource')) : Str::studly($resourceHandle)
-            );
-        } catch (ResourceNotFound) {
-            $resource = Runway::findResource(
-                $this->params->has('resource') ? Str::lower($this->params->get('resource')) : Str::lower($resourceHandle)
-            );
-        }
+        $from = $resourceHandle ?? $this->params->get(['from', 'in', 'resource']);
 
-        $query = $resource->model()->query()
+        try {
+            return Runway::findResource(Str::studly($from));
+        } catch (ResourceNotFound) {
+            try {
+                return Runway::findResource(Str::lower($from));
+            } catch (ResourceNotFound) {
+                return Runway::findResource($from);
+            }
+        }
+    }
+
+    public function wildcard(?string $resourceHandle = null): array
+    {
+        $this->resource = $this->parseResource($resourceHandle);
+
+        return $this->results($this->query());
+    }
+
+    public function count(): int
+    {
+        $this->resource = $this->parseResource();
+
+        return $this->query()->count();
+    }
+
+    protected function query(): Builder
+    {
+        $query = $this->resource->model()->query()
             ->when(
                 $this->params->get('status'),
                 fn ($query, $status) => $query->whereStatus($status),
@@ -36,7 +57,7 @@ class RunwayTag extends Tags
             ->when(
                 $this->params->get('with'),
                 fn ($query) => $query->with(explode('|', (string) $this->params->get('with'))),
-                fn ($query) => $query->with($resource->eagerLoadingRelationships())
+                fn ($query) => $query->with($this->resource->eagerLoadingRelationships())
             );
 
         if ($select = $this->params->get('select')) {
@@ -70,12 +91,12 @@ class RunwayTag extends Tags
             $key = explode(':', (string) $where)[0];
             $value = explode(':', (string) $where)[1];
 
-            if ($resource->eloquentRelationships()->has($key)) {
+            if ($this->resource->eloquentRelationships()->has($key)) {
                 // eloquentRelationships() returns a Collection of keys/values, the keys are the field names
                 // & the values are the Eloquent relationship names. We need to get the relationship name
                 // for the whereHas query.
-                $relationshipName = $resource->eloquentRelationships()->get($key);
-                $relationshipResource = Runway::findResource($resource->blueprint()->field($key)->config()['resource']);
+                $relationshipName = $this->resource->eloquentRelationships()->get($key);
+                $relationshipResource = Runway::findResource($this->resource->blueprint()->field($key)->config()['resource']);
 
                 $query->whereHas($relationshipName, function ($query) use ($value, $relationshipResource) {
                     $query->whereIn($relationshipResource->databaseTable().'.'.$relationshipResource->primaryKey(), Arr::wrap($value));
@@ -97,6 +118,11 @@ class RunwayTag extends Tags
             $query->orderBy($sortColumn, $sortDirection);
         }
 
+        return $query;
+    }
+
+    protected function results($query)
+    {
         if ($this->params->get('paginate') || $this->params->get('limit')) {
             $paginator = $query->paginate($this->params->get('limit'));
 
@@ -114,21 +140,21 @@ class RunwayTag extends Tags
         }
 
         if (! $this->params->has('as')) {
-            return $this->augmentModels($results, $resource);
+            return $this->augmentModels($results);
         }
 
         return [
-            $this->params->get('as') => $this->augmentModels($results, $resource),
+            $this->params->get('as') => $this->augmentModels($results),
             'paginate' => isset($paginator) ? $this->getPaginationData($paginator) : null,
             'no_results' => collect($results)->isEmpty(),
         ];
     }
 
-    protected function augmentModels($query, Resource $resource): array
+    protected function augmentModels($query): array
     {
         return collect($query)
-            ->map(function ($model, $key) use ($resource) {
-                return Blink::once("Runway::Tag::AugmentModels::{$resource->handle()}::{$model->{$resource->primaryKey()}}", function () use ($model) {
+            ->map(function ($model, $key) {
+                return Blink::once("Runway::Tag::AugmentModels::{$this->resource->handle()}::{$model->{$this->resource->primaryKey()}}", function () use ($model) {
                     return $model->toAugmentedArray();
                 });
             })

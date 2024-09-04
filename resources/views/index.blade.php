@@ -1,36 +1,32 @@
-@inject('str', 'Statamic\Support\Str')
 @extends('statamic::layout')
-@section('title', $title)
+@section('title', $resource->name())
 @section('wrapper_class', 'max-w-full')
 
 @section('content')
-    <div class="flex items-center justify-between mb-6">
-        <h1 class="flex-1">{{ $title }}</h1>
 
-        @can('configure fields')
-            <dropdown-list @if($canCreate) class="mr-2" @endif>
-                <dropdown-item :text="__('Edit Blueprint')" redirect="{{ cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]) }}"></dropdown-item>
-            </dropdown-list>
-        @endcan
-
-        @if($canCreate)
-            <a
-                class="btn-primary"
-                href="{{ cp_route('runway.create', ['resource' => $resource->handle()]) }}"
-            >
-                {{ __('Create :resource', [
-                    'resource' => $resource->singular()
-                ]) }}
-            </a>
-        @endif
-    </div>
-
-    <runway-listing
+    <resource-view
+        title="{{ $resource->name() }}"
+        handle="{{ $resource->handle() }}"
+        :can-create="{{ Statamic\Support\Str::bool($canCreate) }}"
+        create-url="{{ $createUrl }}"
+        create-label="{{ $createLabel }}"
+        :columns="{{ $columns->toJson() }}"
         :filters="{{ $filters->toJson() }}"
-        :listing-config='@json($listingConfig)'
-        :initial-columns='@json($columns)'
         action-url="{{ $actionUrl }}"
-        initial-primary-column="{{ $primaryColumn }}"
-        :has-publish-states="{{ $str::bool($hasPublishStates) }}"
-    ></runway-listing>
+        primary-column="{{ $primaryColumn }}"
+        :has-publish-states="{{ Statamic\Support\Str::bool($resource->hasPublishStates()) }}"
+    >
+        <template #twirldown="{ actionCompleted }">
+            @can('configure fields')
+                <dropdown-item :text="__('Edit Blueprint')" redirect="{{ cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]) }}"></dropdown-item>
+            @endcan
+            <data-list-inline-actions
+                item="{{ $resource->handle() }}"
+                url="{{ cp_route('runway.actions.run', ['resource' => $resource->handle()]) }}"
+                :actions="{{ $actions }}"
+                @completed="actionCompleted"
+            ></data-list-inline-actions>
+        </template>
+    </resource-view>
+
 @endsection

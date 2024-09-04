@@ -358,4 +358,20 @@ class RunwayTagTest extends TestCase
 
         $this->assertEquals(1, $augmentedCount);
     }
+
+    #[Test]
+    public function it_can_count_models()
+    {
+        Post::factory()->count(3)->create();
+        Post::factory()->count(2)->create(['title' => 'Foo Bar']);
+
+        $count = $this->tag
+            ->setParameters([
+                'from' => 'post',
+                'where' => 'title:Foo Bar',
+            ])
+            ->count();
+
+        $this->assertEquals(2, $count);
+    }
 }

@@ -129,6 +129,20 @@ As [with the collection tag](https://statamic.dev/tags/collection#scope), you ma
 {{ /runway:post }}
 ```
 
+## Count Tag
+
+When you just want to know how many results you have, you can use the `{{ runway:count }}` tag.
+
+```antlers
+{{ runway:count from="posts" }}
+```
+
+You can use the `where` parameter to filter the results:
+
+```antlers
+{{ runway:count from="posts" where="author_name:duncan" }}
+```
+
 ## Publish State
 
 By default, when you're using Runway's [Publish States](/resources#publish-states) feature, only published models are included. Models can be queried against `published` or `draft` status with conditions on `status` like this:

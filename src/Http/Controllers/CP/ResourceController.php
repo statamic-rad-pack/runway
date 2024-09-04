@@ -25,17 +25,13 @@ class ResourceController extends CpController
 
     public function index(IndexRequest $request, Resource $resource)
     {
-        $listingConfig = [
-            'preferencesPrefix' => "runway.{$resource->handle()}",
-            'requestUrl' => cp_route('runway.listing-api', ['resource' => $resource->handle()]),
-            'listingUrl' => cp_route('runway.index', ['resource' => $resource->handle()]),
-        ];
-
         return view('runway::index', [
-            'title' => $resource->name(),
             'resource' => $resource,
-            'modelCount' => $resource->model()->count(),
-            'primaryColumn' => $this->getPrimaryColumn($resource),
+            'canCreate' => User::current()->can('create', $resource)
+                && $resource->hasVisibleBlueprint()
+                && ! $resource->readOnly(),
+            'createUrl' => cp_route('runway.create', ['resource' => $resource->handle()]),
+            'createLabel' => __('Create :resource', ['resource' => $resource->singular()]),
             'columns' => $resource->blueprint()->columns()
                 ->when($resource->hasPublishStates(), function ($collection) {
                     $collection->put('status', Column::make('status')
@@ -48,12 +44,9 @@ class ResourceController extends CpController
                 ->rejectUnlisted()
                 ->values(),
             'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
-            'listingConfig' => $listingConfig,
             'actionUrl' => cp_route('runway.actions.run', ['resource' => $resource->handle()]),
-            'hasPublishStates' => $resource->hasPublishStates(),
-            'canCreate' => User::current()->can('create', $resource)
-                && $resource->hasVisibleBlueprint()
-                && ! $resource->readOnly(),
+            'primaryColumn' => $this->getPrimaryColumn($resource),
+            'actions' => Action::for($resource),
         ]);
     }
 

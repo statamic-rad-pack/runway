@@ -29,7 +29,7 @@ class ResourceControllerTest extends TestCase
             ->assertOk()
             ->assertViewIs('runway::index')
             ->assertSee([
-                'listing-config',
+                'filters',
                 'columns',
             ]);
     }
