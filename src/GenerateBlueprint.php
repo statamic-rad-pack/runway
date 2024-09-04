@@ -38,7 +38,7 @@ class GenerateBlueprint
                     'handle' => $field['name'],
                     'field' => [
                         'type' => $field['type'],
-                        'display' => (string) Str::of($field['name'])->replace('_', ' ')->title(),
+                        'display' => (string) Str::of($field['name'])->headline(),
                     ],
                 ];
 
