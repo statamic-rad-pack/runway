@@ -58,30 +58,6 @@ class BelongsToFieldtypeTest extends TestCase
     }
 
     #[Test]
-    public function can_get_index_items_with_title_format()
-    {
-        $authors = Author::factory()->count(2)->create();
-
-        $this->fieldtype->setField(new Field('author', [
-            'max_items' => 1,
-            'mode' => 'default',
-            'resource' => 'author',
-            'display' => 'Author',
-            'type' => 'belongs_to',
-            'title_format' => 'AUTHOR {{ name }}',
-        ]));
-
-        $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest);
-
-        $this->assertIsObject($getIndexItems);
-        $this->assertTrue($getIndexItems instanceof Paginator);
-        $this->assertEquals($getIndexItems->count(), 2);
-
-        $this->assertEquals($getIndexItems->first()['title'], 'AUTHOR '.$authors[0]->name);
-        $this->assertEquals($getIndexItems->last()['title'], 'AUTHOR '.$authors[1]->name);
-    }
-
-    #[Test]
     public function can_get_index_items_in_order_specified_in_runway_config()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.order_by', 'name');
@@ -97,9 +73,9 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertTrue($getIndexItems instanceof Collection);
         $this->assertEquals($getIndexItems->count(), 3);
 
-        $this->assertEquals($getIndexItems->all()[0]['title'], 'Scully');
-        $this->assertEquals($getIndexItems->all()[1]['title'], 'Jake Peralta');
-        $this->assertEquals($getIndexItems->all()[2]['title'], 'Amy Santiago');
+        $this->assertEquals($getIndexItems->all()[0]->name, 'Scully');
+        $this->assertEquals($getIndexItems->all()[1]->name, 'Jake Peralta');
+        $this->assertEquals($getIndexItems->all()[2]->name, 'Amy Santiago');
     }
 
     #[Test]
@@ -117,9 +93,9 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertTrue($getIndexItems instanceof Collection);
         $this->assertEquals($getIndexItems->count(), 3);
 
-        $this->assertEquals($getIndexItems->all()[0]['title'], 'Scully');
-        $this->assertEquals($getIndexItems->all()[1]['title'], 'Jake Peralta');
-        $this->assertEquals($getIndexItems->all()[2]['title'], 'Amy Santiago');
+        $this->assertEquals($getIndexItems->all()[0]->name, 'Scully');
+        $this->assertEquals($getIndexItems->all()[1]->name, 'Jake Peralta');
+        $this->assertEquals($getIndexItems->all()[2]->name, 'Amy Santiago');
     }
 
     #[Test]
@@ -137,9 +113,9 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertTrue($getIndexItems instanceof Collection);
         $this->assertEquals($getIndexItems->count(), 3);
 
-        $this->assertEquals($getIndexItems->all()[0]['title'], 'Amy Santiago');
-        $this->assertEquals($getIndexItems->all()[1]['title'], 'Jake Peralta');
-        $this->assertEquals($getIndexItems->all()[2]['title'], 'Scully');
+        $this->assertEquals($getIndexItems->all()[0]->name, 'Amy Santiago');
+        $this->assertEquals($getIndexItems->all()[1]->name, 'Jake Peralta');
+        $this->assertEquals($getIndexItems->all()[2]->name, 'Scully');
     }
 
     #[Test]
