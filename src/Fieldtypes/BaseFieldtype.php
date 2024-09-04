@@ -265,33 +265,18 @@ class BaseFieldtype extends Relationship
     protected function getColumns()
     {
         $resource = Runway::findResource($this->config('resource'));
-        $blueprint = $resource->blueprint();
 
-        return $resource->listableColumns()
-            ->map(function ($columnKey, $index) use ($blueprint) {
-                /** @var \Statamic\Fields\Field $field */
-                $blueprintField = $blueprint->field($columnKey);
-
-                return Column::make()
-                    ->field($blueprintField->handle())
-                    ->label(__($blueprintField->display()))
-                    ->fieldtype($blueprintField->fieldtype()->indexComponent())
-                    ->listable($blueprintField->isListable())
-                    ->defaultVisibility($blueprintField->isVisibleOnListing())
-                    ->visible($blueprintField->isVisibleOnListing())
-                    ->sortable($blueprintField->isSortable())
-                    ->defaultOrder($index + 1);
-            })
+        return $resource->blueprint()->columns()
             ->when($resource->hasPublishStates(), function ($collection) {
-                $collection->push(
-                    Column::make('status')
-                        ->listable(true)
-                        ->visible(true)
-                        ->defaultVisibility(true)
-                        ->sortable(false)
-                );
+                $collection->put('status', Column::make('status')
+                    ->listable(true)
+                    ->visible(true)
+                    ->defaultVisibility(true)
+                    ->sortable(false));
             })
-            ->toArray();
+            ->setPreferred("runway.{$resource->handle()}.columns")
+            ->rejectUnlisted()
+            ->values();
     }
 
     protected function toItemArray($id)
