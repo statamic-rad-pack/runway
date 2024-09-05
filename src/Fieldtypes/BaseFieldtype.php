@@ -4,9 +4,11 @@ namespace StatamicRadPack\Runway\Fieldtypes;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 use Statamic\CP\Column;
 use Statamic\Facades\Blink;
 use Statamic\Fieldtypes\Relationship;
@@ -25,6 +27,7 @@ class BaseFieldtype extends Relationship
     protected $canSearch = true;
     protected $categories = ['relationship'];
     protected $formComponent = 'runway-publish-form';
+    protected $itemComponent = 'runway-related-item';
 
     protected $formComponentProps = [
         'initialReference' => 'reference',
@@ -100,6 +103,37 @@ class BaseFieldtype extends Relationship
     public function icon()
     {
         return File::get(__DIR__.'/../../resources/svg/database.svg');
+    }
+
+    public function preload()
+    {
+        return array_merge(parent::preload(), [
+            'unlinkBehavior' => $this->getUnlinkBehavior(),
+        ]);
+    }
+
+    private function getUnlinkBehavior(): string
+    {
+        if ($this instanceof BelongsToFieldtype) {
+            return 'unlink';
+        }
+
+        $relationshipName = $this->config('relationship_name') ?? $this->field->handle();
+        $relationship = $this->field->parent()->{$relationshipName}();
+
+        if ($relationship instanceof HasMany) {
+            $foreignKey = $relationship->getQualifiedForeignKeyName();
+
+            $foreignTable = explode('.', $foreignKey)[0];
+            $foreignColumn = explode('.', $foreignKey)[1];
+
+            $column = collect(Schema::getColumns($foreignTable))
+                ->first(fn (array $column) => $column['name'] === $foreignColumn);
+
+            return Arr::get($column, 'nullable', false) ? 'unlink' : 'delete';
+        }
+
+        return 'unlink';
     }
 
     public function getIndexItems($request)
