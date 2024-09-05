@@ -144,7 +144,7 @@ class Category extends Model
 
 You should ensure that the field handle matches the name of the Eloquent relationship in your model (the method name).
 
-For more information on templating with the Has Many fieldtype and the config options available, see the [Has Many](#has-many) section.
+For more information on templating with the Has Many fieldtype and the config options available, see the [Has Many](#content-has-many) section.
 
 ## Polymorphic Relationships
 
