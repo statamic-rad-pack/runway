@@ -197,7 +197,7 @@ class RelationshipsTest extends TestCase
     }
 
     #[Test]
-    public function can_update_sort_orders_when_saving_belongs_to_relationship()
+    public function can_update_sort_orders_when_saving_belongs_to_many_relationship()
     {
         $author = Author::factory()->create();
         $posts = Post::factory()->count(3)->create();
