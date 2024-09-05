@@ -135,11 +135,9 @@ class RelationshipsTest extends TestCase
                 ],
             ]));
 
-        Relationships::for($author)->with(['posts' => [
-            $posts[1]->id,
-            $posts[2]->id,
-            $posts[0]->id,
-        ]])->save();
+        Relationships::for($author)
+            ->with(['posts' => [$posts[1]->id, $posts[2]->id, $posts[0]->id]])
+            ->save();
 
         $this->assertDatabaseHas('posts', ['id' => $posts[0]->id, 'author_id' => $author->id, 'sort_order' => 2]);
         $this->assertDatabaseHas('posts', ['id' => $posts[1]->id, 'author_id' => $author->id, 'sort_order' => 0]);
@@ -189,10 +187,9 @@ class RelationshipsTest extends TestCase
                 ],
             ]));
 
-        Relationships::for($author)->with(['pivottedPosts' => [
-            $posts[1]->id,
-            $posts[2]->id,
-        ]])->save();
+        Relationships::for($author)
+            ->with(['pivottedPosts' => [$posts[1]->id, $posts[2]->id]])
+            ->save();
 
         $this->assertDatabaseMissing('post_author', ['post_id' => $posts[0]->id, 'author_id' => $author->id]);
         $this->assertDatabaseHas('post_author', ['post_id' => $posts[1]->id, 'author_id' => $author->id]);
@@ -217,11 +214,9 @@ class RelationshipsTest extends TestCase
                 ],
             ]));
 
-        Relationships::for($author)->with(['pivottedPosts' => [
-            $posts[0]->id,
-            $posts[2]->id,
-            $posts[1]->id,
-        ]])->save();
+        Relationships::for($author)
+            ->with(['posts' => [$posts[0]->id, $posts[2]->id, $posts[1]->id]])
+            ->save();
 
         $this->assertDatabaseHas('post_author', ['post_id' => $posts[0]->id, 'author_id' => $author->id, 'pivot_sort_order' => 0]);
         $this->assertDatabaseHas('post_author', ['post_id' => $posts[1]->id, 'author_id' => $author->id, 'pivot_sort_order' => 2]);
