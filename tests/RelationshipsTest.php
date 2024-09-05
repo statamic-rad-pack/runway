@@ -25,7 +25,7 @@ class RelationshipsTest extends TestCase
                 'tabs' => [
                     'main' => [
                         'fields' => [
-                            ['handle' => 'posts', 'field' => ['type' => 'has_many', 'mode' => 'stack', 'resource' => 'post']],
+                            ['handle' => 'posts', 'field' => ['type' => 'has_many', 'resource' => 'post']],
                         ],
                     ],
                 ],
@@ -52,7 +52,7 @@ class RelationshipsTest extends TestCase
                 'tabs' => [
                     'main' => [
                         'fields' => [
-                            ['handle' => 'posts', 'field' => ['type' => 'has_many', 'mode' => 'stack', 'resource' => 'post']],
+                            ['handle' => 'posts', 'field' => ['type' => 'has_many', 'resource' => 'post']],
                         ],
                     ],
                 ],
@@ -82,7 +82,7 @@ class RelationshipsTest extends TestCase
                 'tabs' => [
                     'main' => [
                         'fields' => [
-                            ['handle' => 'posts', 'field' => ['type' => 'has_many', 'mode' => 'stack', 'resource' => 'post', 'reorderable' => true, 'order_column' => 'sort_order']],
+                            ['handle' => 'posts', 'field' => ['type' => 'has_many', 'resource' => 'post', 'reorderable' => true, 'order_column' => 'sort_order']],
                         ],
                     ],
                 ],
@@ -111,7 +111,7 @@ class RelationshipsTest extends TestCase
                 'tabs' => [
                     'main' => [
                         'fields' => [
-                            ['handle' => 'pivottedPosts', 'field' => ['type' => 'has_many', 'mode' => 'stack', 'resource' => 'post']],
+                            ['handle' => 'pivottedPosts', 'field' => ['type' => 'has_many', 'resource' => 'post']],
                         ],
                     ],
                 ],
@@ -136,7 +136,7 @@ class RelationshipsTest extends TestCase
                 'tabs' => [
                     'main' => [
                         'fields' => [
-                            ['handle' => 'pivottedPosts', 'field' => ['type' => 'has_many', 'mode' => 'stack', 'resource' => 'post']],
+                            ['handle' => 'pivottedPosts', 'field' => ['type' => 'has_many', 'resource' => 'post']],
                         ],
                     ],
                 ],
@@ -164,7 +164,7 @@ class RelationshipsTest extends TestCase
                 'tabs' => [
                     'main' => [
                         'fields' => [
-                            ['handle' => 'pivottedPosts', 'field' => ['type' => 'has_many', 'mode' => 'stack', 'resource' => 'post', 'reorderable' => true, 'order_column' => 'pivot_sort_order']],
+                            ['handle' => 'pivottedPosts', 'field' => ['type' => 'has_many', 'resource' => 'post', 'reorderable' => true, 'order_column' => 'pivot_sort_order']],
                         ],
                     ],
                 ],
@@ -195,7 +195,7 @@ class RelationshipsTest extends TestCase
                 'tabs' => [
                     'main' => [
                         'fields' => [
-                            ['handle' => 'posts', 'field' => ['type' => 'has_many', 'mode' => 'stack', 'resource' => 'post', 'visibility' => 'computed', 'save' => false]],
+                            ['handle' => 'posts', 'field' => ['type' => 'has_many', 'resource' => 'post', 'visibility' => 'computed', 'save' => false]],
                         ],
                     ],
                 ],
