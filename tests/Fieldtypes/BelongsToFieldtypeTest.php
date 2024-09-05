@@ -6,11 +6,13 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blink;
 use Statamic\Fields\Field;
 use Statamic\Http\Requests\FilteredRequest;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
+use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\TestCase;
@@ -33,6 +35,12 @@ class BelongsToFieldtypeTest extends TestCase
                 'display' => 'Author',
                 'type' => 'belongs_to',
             ]));
+    }
+
+    #[Test]
+    public function unlink_behavior_is_unlink()
+    {
+        $this->assertEquals('unlink', $this->fieldtype->preload()['unlinkBehavior']);
     }
 
     #[Test]
