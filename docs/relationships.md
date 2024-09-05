@@ -145,3 +145,7 @@ class Category extends Model
 You should ensure that the field handle matches the name of the Eloquent relationship in your model (the method name).
 
 For more information on templating with the Has Many fieldtype and the config options available, see the [Has Many](#has-many) section.
+
+## Polymorphic Relationships
+
+Runway doesn't currently support Polymorphic relationships out of the box, since they can get pretty complicated. If you need it, please [upvote this feature request](https://github.com/statamic-rad-pack/runway/discussions/245).
