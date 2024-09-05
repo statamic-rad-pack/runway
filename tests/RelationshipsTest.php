@@ -215,7 +215,7 @@ class RelationshipsTest extends TestCase
             ]));
 
         Relationships::for($author)
-            ->with(['posts' => [$posts[0]->id, $posts[2]->id, $posts[1]->id]])
+            ->with(['pivottedPosts' => [$posts[0]->id, $posts[2]->id, $posts[1]->id]])
             ->save();
 
         $this->assertDatabaseHas('post_author', ['post_id' => $posts[0]->id, 'author_id' => $author->id, 'pivot_sort_order' => 0]);
