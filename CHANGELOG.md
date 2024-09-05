@@ -1,5 +1,20 @@
 # Changelog
 
+## v7.9.0 (2024-09-05)
+
+### What's new
+* Improvements around unlinking relationships #582 #595 by @duncanmcclean
+* When adding a new model, Runway will automatically create a blueprint for you, based on the database columns #593 by @duncanmcclean
+
+### What's fixed
+* Fixed sorting in listing tables #587 #591 by @duncanmcclean
+* Fixed an issue where relationship fields weren't showing in the fieldtype selector #588 #592 by @duncanmcclean
+
+### What's removed
+* Removed the `runway:generate-blueprints` command #594 by @duncanmcclean
+
+
+
 ## v7.8.0 (2024-08-14)
 
 ### What's new
