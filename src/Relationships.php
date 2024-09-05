@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Schema;
 use Statamic\Fields\Field;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 
@@ -45,7 +47,10 @@ class Relationships
         $relatedResource = Runway::findResource($field->fieldtype()->config('resource'));
 
         $deleted = $relationship->whereNotIn($relatedResource->primaryKey(), $values)->get()
-            ->each->delete()
+            ->each(fn (Model $model) => match ($this->getUnlinkBehaviorForHasManyRelationship($relationship)) {
+                'unlink' => $model->update([$relationship->getForeignKeyName() => null]),
+                'delete' => $model->delete(),
+            })
             ->map->getKey()
             ->all();
 
@@ -64,6 +69,19 @@ class Relationships
                 ->reject(fn (Model $model, int $index) => $model->getAttribute($orderColumn) === $index)
                 ->each(fn (Model $model, int $index) => $model->update([$orderColumn => $index]));
         }
+    }
+
+    private function getUnlinkBehaviorForHasManyRelationship(HasMany $relationship): string
+    {
+        $foreignKey = $relationship->getQualifiedForeignKeyName();
+
+        $foreignTable = explode('.', $foreignKey)[0];
+        $foreignColumn = explode('.', $foreignKey)[1];
+
+        $column = collect(Schema::getColumns($foreignTable))
+            ->first(fn (array $column) => $column['name'] === $foreignColumn);
+
+        return Arr::get($column, 'nullable') ? 'unlink' : 'delete';
     }
 
     protected function saveBelongsToManyRelationship(Field $field, Relation $relationship, array $values): void
