@@ -2,7 +2,6 @@
 
 namespace StatamicRadPack\Runway\Tests\Fieldtypes;
 
-use GPBMetadata\Google\Api\Auth;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
