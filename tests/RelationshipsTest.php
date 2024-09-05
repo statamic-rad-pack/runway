@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Tests;
 
+use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blueprint;
 use Statamic\Fields\Blueprint as FieldsBlueprint;
@@ -39,10 +40,19 @@ class RelationshipsTest extends TestCase
     }
 
     #[Test]
-    public function can_delete_models_when_saving_has_many_relationship()
+    public function can_unlink_models_when_saving_has_many_relationship_when_relationship_column_is_nullable()
     {
         $author = Author::factory()->create();
         $posts = Post::factory()->count(3)->create(['author_id' => $author->id]);
+
+        Schema::shouldReceive('getColumns')->with('posts')->andReturn([
+            ['name' => 'author_id', 'type' => 'integer', 'nullable' => true],
+        ]);
+
+        // Without this, Schema::getColumnListing() will return null, even though shouldIgnoreMissing() is called. But whatever 🤷‍♂️
+        Schema::shouldReceive('getColumnListing')->with('posts')->andReturn(['published']);
+
+        Schema::shouldIgnoreMissing();
 
         Blueprint::shouldReceive('find')->with('runway::post')->andReturn(new FieldsBlueprint);
 
@@ -58,10 +68,47 @@ class RelationshipsTest extends TestCase
                 ],
             ]));
 
-        Relationships::for($author)->with(['posts' => [
-            $posts[1]->id,
-            $posts[2]->id,
-        ]])->save();
+        Relationships::for($author)
+            ->with(['posts' => [$posts[1]->id, $posts[2]->id]])
+            ->save();
+
+        $this->assertDatabaseHas('posts', ['id' => $posts[0]->id, 'author_id' => null]);
+        $this->assertDatabaseHas('posts', ['id' => $posts[1]->id, 'author_id' => $author->id]);
+        $this->assertDatabaseHas('posts', ['id' => $posts[2]->id, 'author_id' => $author->id]);
+    }
+
+    #[Test]
+    public function can_delete_models_when_saving_has_many_relationship_when_relationship_column_is_not_nullable()
+    {
+        $author = Author::factory()->create();
+        $posts = Post::factory()->count(3)->create(['author_id' => $author->id]);
+
+        Schema::shouldReceive('getColumns')->with('posts')->andReturn([
+            ['name' => 'author_id', 'type' => 'integer', 'nullable' => false],
+        ]);
+
+        // Without this, Schema::getColumnListing() will return null, even though shouldIgnoreMissing() is called. But whatever 🤷‍♂️
+        Schema::shouldReceive('getColumnListing')->with('posts')->andReturn(['published']);
+
+        Schema::shouldIgnoreMissing();
+
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn(new FieldsBlueprint);
+
+        Blueprint::shouldReceive('find')
+            ->with('runway::author')
+            ->andReturn((new FieldsBlueprint)->setContents([
+                'tabs' => [
+                    'main' => [
+                        'fields' => [
+                            ['handle' => 'posts', 'field' => ['type' => 'has_many', 'resource' => 'post']],
+                        ],
+                    ],
+                ],
+            ]));
+
+        Relationships::for($author)
+            ->with(['posts' => [$posts[1]->id, $posts[2]->id]])
+            ->save();
 
         $this->assertDatabaseMissing('posts', ['id' => $posts[0]->id]);
         $this->assertDatabaseHas('posts', ['id' => $posts[1]->id, 'author_id' => $author->id]);
