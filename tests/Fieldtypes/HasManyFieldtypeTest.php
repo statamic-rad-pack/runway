@@ -2,10 +2,12 @@
 
 namespace StatamicRadPack\Runway\Tests\Fieldtypes;
 
+use GPBMetadata\Google\Api\Auth;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blink;
 use Statamic\Fields\Field;
@@ -33,6 +35,58 @@ class HasManyFieldtypeTest extends TestCase
                 'display' => 'Posts',
                 'type' => 'has_many',
             ]));
+    }
+
+    #[Test]
+    public function unlink_behavior_is_unlink_when_relationship_column_is_nullable()
+    {
+        Schema::shouldReceive('getColumns')->with('posts')->andReturn([
+            ['name' => 'author_id', 'type' => 'integer', 'nullable' => true],
+        ]);
+
+        Schema::shouldIgnoreMissing();
+
+        $author = Author::factory()->create();
+
+        $field = new Field('posts', [
+            'mode' => 'stack',
+            'resource' => 'post',
+            'display' => 'Posts',
+            'type' => 'has_many',
+        ]);
+
+        $field->setParent($author);
+
+        $fieldtype = new HasManyFieldtype;
+        $fieldtype->setField($field);
+
+        $this->assertEquals('unlink', $fieldtype->preload()['unlinkBehavior']);
+    }
+
+    #[Test]
+    public function unlink_behavior_is_delete_when_relationship_column_is_not_nullable()
+    {
+        Schema::shouldReceive('getColumns')->with('posts')->andReturn([
+            ['name' => 'author_id', 'type' => 'integer', 'nullable' => false],
+        ]);
+
+        Schema::shouldIgnoreMissing();
+
+        $author = Author::factory()->create();
+
+        $field = new Field('posts', [
+            'mode' => 'stack',
+            'resource' => 'post',
+            'display' => 'Posts',
+            'type' => 'has_many',
+        ]);
+
+        $field->setParent($author);
+
+        $fieldtype = new HasManyFieldtype;
+        $fieldtype->setField($field);
+
+        $this->assertEquals('delete', $fieldtype->preload()['unlinkBehavior']);
     }
 
     #[Test]
