@@ -1,5 +1,12 @@
 # Changelog
 
+## v7.9.1 (2024-09-12)
+
+### What's fixed
+* Add missing `page` variable for Blade templates #584 #590 by @duncanmcclean
+
+
+
 ## v7.9.0 (2024-09-05)
 
 ### What's new
