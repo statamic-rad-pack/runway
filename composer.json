@@ -5,9 +5,7 @@
     "authors": [
         {
             "name": "Duncan McClean",
-            "email": "duncan@doublethree.digital",
-            "homepage": "https://duncanmcclean.com",
-            "role": "Developer"
+            "email": "duncan@statamic.com"
         }
     ],
     "autoload": {
