@@ -114,7 +114,7 @@ class BaseFieldtype extends Relationship
 
     private function getUnlinkBehavior(): string
     {
-        if ($this instanceof BelongsToFieldtype || ! $this->field->parent()) {
+        if (! $this->field->parent() || $this instanceof BelongsToFieldtype) {
             return 'unlink';
         }
 
