@@ -1,5 +1,12 @@
 # Changelog
 
+## v7.9.2 (2024-09-16)
+
+### What's fixed
+* Fixed an error that occurred when creating a model with a Has Many relationship #598 #599 by @BobWez98
+
+
+
 ## v7.9.1 (2024-09-12)
 
 ### What's fixed
