@@ -114,23 +114,20 @@ class BaseFieldtype extends Relationship
 
     private function getUnlinkBehavior(): string
     {
-        if (! $this->field->parent() || $this instanceof BelongsToFieldtype) {
-            return 'unlink';
-        }
+        if ($this->field->parent() instanceof Model && $this instanceof HasManyFieldtype) {
+            $relationshipName = $this->config('relationship_name') ?? $this->field->handle();
+            $relationship = $this->field->parent()->{$relationshipName}();
+            if ($relationship instanceof HasMany) {
+                $foreignKey = $relationship->getQualifiedForeignKeyName();
 
-        $relationshipName = $this->config('relationship_name') ?? $this->field->handle();
-        $relationship = $this->field->parent()->{$relationshipName}();
+                $foreignTable = explode('.', $foreignKey)[0];
+                $foreignColumn = explode('.', $foreignKey)[1];
 
-        if ($relationship instanceof HasMany) {
-            $foreignKey = $relationship->getQualifiedForeignKeyName();
+                $column = collect(Schema::getColumns($foreignTable))
+                    ->first(fn (array $column) => $column['name'] === $foreignColumn);
 
-            $foreignTable = explode('.', $foreignKey)[0];
-            $foreignColumn = explode('.', $foreignKey)[1];
-
-            $column = collect(Schema::getColumns($foreignTable))
-                ->first(fn (array $column) => $column['name'] === $foreignColumn);
-
-            return Arr::get($column, 'nullable', false) ? 'unlink' : 'delete';
+                return Arr::get($column, 'nullable', false) ? 'unlink' : 'delete';
+            }
         }
 
         return 'unlink';
