@@ -1,5 +1,12 @@
 # Changelog
 
+## v7.9.3 (2024-09-17)
+
+### What's fixed
+* Fixed an error with the Has Many fieldtype when used on entries #600 #601 by @duncanmcclean
+
+
+
 ## v7.9.2 (2024-09-16)
 
 ### What's fixed
