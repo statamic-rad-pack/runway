@@ -1,21 +1,40 @@
 ---
-title: Fieldtypes
+title: Relationships
 ---
 
-Runway provides two fieldtypes to let you manage Eloquent Relationships within Statamic:
-
-* Belongs To
-  * Useful for `belongsTo` relationships.
-* Has Many
-  * Useful for `hasMany` & `belongsToMany` relationships. 
-
-You can also use these fieldtypes in Entry & Term blueprints, to relate entries/terms to Eloquent models.
+Relationships are an important part of any web application. Most of your models will be related in some way to other models. Runway provides a way to manage those relationships within Statamic.
 
 ## Belongs To
 
-The **Belongs To** fieldtype allows you to relate to a single Eloquent model.
+Runway provides a dedicated fieldtype to manage [`belongsTo`](https://laravel.com/docs/master/eloquent-relationships#one-to-many-inverse) relationships within Statamic. 
 
-When used on a Runway blueprint, you should ensure that the field handle matches the column name in the database.
+```php
+<?php
+ 
+namespace App\Models;
+ 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+ 
+class Post extends Model
+{
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(Author::class);
+    }
+}
+```
+
+```yaml
+-
+  handle: author_id
+  field:
+    type: belongs_to
+    display: Author
+    resource: author
+```
+
+You should make sure that the field handle matches the column name in the database.
 
 ### Templating
 
@@ -38,19 +57,35 @@ Written by {{ author:first_name }} {{ author:last_name }} ({{ author:location }}
 
 ## Has Many
 
-![Screenshot of the Has Many Fieldtype](/img/runway/has-many-fieldtype.png)
+Runway provides a dedicated fieldtype to manage [`hasMany`](https://laravel.com/docs/master/eloquent-relationships#one-to-many) relationships within Statamic.
 
-The **Has Many** fieldtype allows you to relate to multiple Eloquent models.
+```php
+<?php
+ 
+namespace App\Models;
+ 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+ 
+class Author extends Model
+{
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
+}
+```
 
-When used on a Runway blueprint, you should ensure the field handle matches the name of the Eloquent relationship in your model.
+```yaml
+-
+  handle: posts
+  field:
+    type: has_many
+    display: Posts
+    resource: post
+```
 
-:::note Note!
-Statamic doesn't support camel case field handles, which means that in some cases it may not be possible to match the field handle with the name of the Eloquent relationship.
-
-In such case, you can either:
-* Use snake case for the field handle and Runway will be smart enough to figure out which relationship you're trying to use (for example: the `featured_posts` field handle will be used to relate to the `featuredPosts` relationship).
-* Use the `relationship_name` option to specify the name of the Eloquent relationship.
-:::
+You should ensure that the field handle matches the name of the Eloquent relationship in your model (the method name).
 
 ### Templating
 
@@ -76,3 +111,41 @@ Loop through the models and do anything you want with the data.
 | `title_format`      | Configure the title format used for displaying results in the fieldtype. You can use Antlers to pull in model data.                                                                           |
 | `reorderable`       | Determines whether the models can be reordered. Defaults to `false`.                                                                                                                          |
 | `order_column`      | When reordering is enabled, this determines which column should be used for storing the sort order. When the relationship uses a pivot table, the order column must exist on the pivot table. |
+
+## Belongs To Many
+
+The Has Many fieldtype is also compatible with [`belongsToMany`](https://laravel.com/docs/master/eloquent-relationships#many-to-many) relationships. You can use the Has Many fieldtype on both sides of the relationship.
+
+```php
+<?php
+ 
+namespace App\Models;
+ 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+ 
+class Category extends Model
+{
+    public function posts(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class);
+    }
+}
+```
+
+```yaml
+-
+  handle: posts
+  field:
+    type: has_many
+    display: Posts
+    resource: post
+```
+
+You should ensure that the field handle matches the name of the Eloquent relationship in your model (the method name).
+
+For more information on templating with the Has Many fieldtype and the config options available, see the [Has Many](#content-has-many) section.
+
+## Polymorphic Relationships
+
+Runway doesn't currently support Polymorphic relationships out of the box, since they can get pretty complicated. If you need it, please [upvote this feature request](https://github.com/statamic-rad-pack/runway/discussions/245).

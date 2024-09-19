@@ -36,6 +36,12 @@ class BelongsToFieldtypeTest extends TestCase
     }
 
     #[Test]
+    public function unlink_behavior_is_unlink()
+    {
+        $this->assertEquals('unlink', $this->fieldtype->preload()['unlinkBehavior']);
+    }
+
+    #[Test]
     public function can_get_index_items()
     {
         Author::factory()->count(10)->create();

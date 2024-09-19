@@ -1,5 +1,48 @@
 # Changelog
 
+## v7.9.4 (2024-09-19)
+
+### What's fixed
+* Fix issue in the REST API when using plurals as resource handles #605 by @duncanmcclean
+
+
+
+## v7.9.3 (2024-09-17)
+
+### What's fixed
+* Fixed an error with the Has Many fieldtype when used on entries #600 #601 by @duncanmcclean
+
+
+
+## v7.9.2 (2024-09-16)
+
+### What's fixed
+* Fixed an error that occurred when creating a model with a Has Many relationship #598 #599 by @BobWez98
+
+
+
+## v7.9.1 (2024-09-12)
+
+### What's fixed
+* Add missing `page` variable for Blade templates #584 #590 by @duncanmcclean
+
+
+
+## v7.9.0 (2024-09-05)
+
+### What's new
+* Improvements around unlinking relationships #582 #595 by @duncanmcclean
+* When adding a new model, Runway will automatically create a blueprint for you, based on the database columns #593 by @duncanmcclean
+
+### What's fixed
+* Fixed sorting in listing tables #587 #591 by @duncanmcclean
+* Fixed an issue where relationship fields weren't showing in the fieldtype selector #588 #592 by @duncanmcclean
+
+### What's removed
+* Removed the `runway:generate-blueprints` command #594 by @duncanmcclean
+
+
+
 ## v7.8.0 (2024-08-14)
 
 ### What's new

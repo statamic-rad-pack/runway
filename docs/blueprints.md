@@ -134,26 +134,6 @@ You may also run this same command for all resources pending a migration.
 php please runway:generate-migrations
 ```
 
-## Generating blueprints from your database
-
-If you've already got an Eloquent model setup, Runway can help you turn it into a blueprint!
-
-Before you can generate blueprints, you'll need to have migrated your database already.
-
-As well as having your model setup, you will also need to add the resource(s) to your `config/runway.php` config.
-
-To generate a blueprint for a specific resource:
-
-```
-php please runway:generate-blueprints resource-handle
-```
-
-You may also run this same command for all resources:
-
-```
-php please runway:generate-blueprints
-```
-
 ## Computed Fields
 
 Like Statamic Core, Runway supports the concept of Computed Fields. However, instead of the computed values being part of a callback in your `AppServiceProvider`, they're accessors on your Eloquent model.

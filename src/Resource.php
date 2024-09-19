@@ -54,7 +54,7 @@ class Resource
         $blueprint = Blueprint::find("runway::{$this->handle}");
 
         if (! $blueprint) {
-            $blueprint = Blueprint::make($this->handle)->setNamespace('runway')->save();
+            $blueprint = GenerateBlueprint::generate($this);
         }
 
         return $blueprint;

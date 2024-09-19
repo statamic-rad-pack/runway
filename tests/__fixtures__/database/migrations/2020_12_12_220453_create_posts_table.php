@@ -20,7 +20,7 @@ class CreatePostsTable extends Migration
             $table->longText('body');
             $table->json('values')->nullable();
             $table->json('external_links')->nullable();
-            $table->integer('author_id');
+            $table->integer('author_id')->nullable();
             $table->integer('sort_order')->nullable();
             $table->datetime('start_date')->nullable();
             $table->datetime('end_date')->nullable();
