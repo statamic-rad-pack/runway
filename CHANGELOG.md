@@ -1,5 +1,12 @@
 # Changelog
 
+## v7.9.4 (2024-09-19)
+
+### What's fixed
+* Fix issue in the REST API when using plurals as resource handles #605 by @duncanmcclean
+
+
+
 ## v7.9.3 (2024-09-17)
 
 ### What's fixed
