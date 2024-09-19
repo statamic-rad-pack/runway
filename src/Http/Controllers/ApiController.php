@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Http\Controllers\API\ApiController as StatamicApiController;
+use StatamicRadPack\Runway\Exceptions\ResourceNotFound;
 use StatamicRadPack\Runway\Http\Resources\ApiResource;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
@@ -24,13 +25,8 @@ class ApiController extends StatamicApiController
     {
         $this->abortIfDisabled();
 
-        $this->resourceHandle = Str::singular($resourceHandle);
-
-        $resource = Runway::findResource($this->resourceHandle);
-
-        if (! $resource) {
-            throw new NotFoundHttpException;
-        }
+        $resource = $this->resource($resourceHandle);
+        $this->resourceHandle = $resource->handle();
 
         $results = $this->filterSortAndPaginate($resource->model()->query());
 
@@ -47,13 +43,8 @@ class ApiController extends StatamicApiController
     {
         $this->abortIfDisabled();
 
-        $this->resourceHandle = Str::singular($resourceHandle);
-
-        $resource = Runway::findResource($this->resourceHandle);
-
-        if (! $resource) {
-            throw new NotFoundHttpException;
-        }
+        $resource = $this->resource($resourceHandle);
+        $this->resourceHandle = $resource->handle();
 
         if (! $model = $resource->model()->whereStatus('published')->find($model)) {
             throw new NotFoundHttpException;
@@ -65,6 +56,19 @@ class ApiController extends StatamicApiController
     protected function allowedFilters()
     {
         return FilterAuthorizer::allowedForSubResources('api', $this->resourceConfigKey, Str::plural($this->resourceHandle));
+    }
+
+    private function resource(string $resourceHandle): Resource
+    {
+        try {
+            try {
+                return Runway::findResource($resourceHandle);
+            } catch (ResourceNotFound $e) {
+                return Runway::findResource(Str::singular($resourceHandle));
+            }
+        } catch (ResourceNotFound $e) {
+            throw new NotFoundHttpException;
+        }
     }
 
     private function getFieldsFromBlueprint(Resource $resource): Collection
