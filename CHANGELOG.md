@@ -3,8 +3,8 @@
 ## v7.9.5 (2024-09-24)
 
 ### What's fixed
-* Fixed augmentation on frontend routes #610 by @duncanmcclean
-* Fixed error when removing filters #609 by @duncanmcclean
+* Fixed augmentation on frontend routes #606 #610 by @duncanmcclean
+* Fixed error when removing filters #607 #609 by @duncanmcclean
 
 
 
