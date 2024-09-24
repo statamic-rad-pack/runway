@@ -259,7 +259,7 @@ export default {
         },
 
         removeFieldFilter(handle) {
-            let fields = clone(this.activeFilters.fields);
+            let fields = clone(this.activeFilters['runway-fields']);
 
             delete fields[handle];
 
