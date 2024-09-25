@@ -263,7 +263,11 @@ trait HasRunwayResource
         }
 
         if ($this->runwayResource()->hasPublishStates()) {
-            $this->published(true)->save();
+            $saved = $this->published(true)->save();
+
+            if (! $saved) {
+                return false;
+            }
         }
 
         return $this;
@@ -276,7 +280,11 @@ trait HasRunwayResource
         }
 
         if ($this->runwayResource()->hasPublishStates()) {
-            $this->published(false)->save();
+            $saved = $this->published(false)->save();
+
+            if (! $saved) {
+                return false;
+            }
         }
 
         return $this;

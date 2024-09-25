@@ -44,6 +44,20 @@ class Unpublish extends Action
 
     public function run($models, $values)
     {
-        $models->each(fn ($model) => $model->published(false)->save());
+        $failures = $models->reject(fn ($model) => $model->published(false)->save());
+        $total = $models->count();
+
+        if ($failures->isNotEmpty()) {
+            $success = $total - $failures->count();
+            if ($total === 1) {
+                throw new \Exception(__('Model could not be unpublished'));
+            } elseif ($success === 0) {
+                throw new \Exception(__('Models could not be unpublished'));
+            } else {
+                throw new \Exception(__(':success/:total models were unpublished', ['total' => $total, 'success' => $success]));
+            }
+        }
+
+        return trans_choice('Model unpublished|Models unpublished', $total);
     }
 }

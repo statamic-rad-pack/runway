@@ -44,6 +44,20 @@ class Publish extends Action
 
     public function run($models, $values)
     {
-        $models->each(fn ($model) => $model->published(true)->save());
+        $failures = $models->reject(fn ($model) => $model->published(true)->save());
+        $total = $models->count();
+
+        if ($failures->isNotEmpty()) {
+            $success = $total - $failures->count();
+            if ($total === 1) {
+                throw new \Exception(__('Model could not be published'));
+            } elseif ($success === 0) {
+                throw new \Exception(__('Model could not be published'));
+            } else {
+                throw new \Exception(__(':success/:total models were published', ['total' => $total, 'success' => $success]));
+            }
+        }
+
+        return trans_choice('Model published|Models published', $total);
     }
 }

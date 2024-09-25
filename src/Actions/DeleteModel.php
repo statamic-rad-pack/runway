@@ -61,7 +61,21 @@ class DeleteModel extends Action
 
     public function run($items, $values)
     {
-        $items->each->delete();
+        $failures = $items->reject(fn ($model) => $model->delete());
+        $total = $items->count();
+
+        if ($failures->isNotEmpty()) {
+            $success = $total - $failures->count();
+            if ($total === 1) {
+                throw new \Exception(__('Item could not be deleted'));
+            } elseif ($success === 0) {
+                throw new \Exception(__('Items could not be deleted'));
+            } else {
+                throw new \Exception(__(':success/:total items were deleted', ['total' => $total, 'success' => $success]));
+            }
+        }
+
+        return trans_choice('Item deleted|Items deleted', $total);
     }
 
     public function redirect($items, $values)
