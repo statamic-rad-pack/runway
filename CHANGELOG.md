@@ -1,5 +1,12 @@
 # Changelog
 
+## v7.10.0 (2024-09-25)
+
+### What's improved
+* Improve feedback when action fails #608 by @duncanmcclean
+
+
+
 ## v7.9.5 (2024-09-24)
 
 ### What's fixed
