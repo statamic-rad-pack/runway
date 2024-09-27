@@ -1,5 +1,14 @@
 # Changelog
 
+## v7.10.1 (2024-09-27)
+
+### What's fixed
+* Fixed missing title on fieldtype dropdown options #615 #617 by @duncanmcclean
+* Fixed error when linking related model with publish states #612 #616 by @duncanmcclean
+* Bump minimum version of `statamic/cms` to 5.26.0, to hopefully fix an issue with actions by @duncanmcclean
+
+
+
 ## v7.10.0 (2024-09-25)
 
 ### What's improved
