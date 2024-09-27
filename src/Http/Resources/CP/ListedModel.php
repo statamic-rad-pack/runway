@@ -50,6 +50,7 @@ class ListedModel extends JsonResource
             'editable' => User::current()->can('edit', [$this->runwayResource, $model]),
             'viewable' => User::current()->can('view', [$this->runwayResource, $model]),
             'actions' => Action::for($model, ['resource' => $this->runwayResource->handle()]),
+            'collection' => ['dated' => false],
             $this->merge($this->values()),
         ];
     }
