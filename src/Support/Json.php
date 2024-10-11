@@ -2,8 +2,6 @@
 
 namespace StatamicRadPack\Runway\Support;
 
-use Illuminate\Support\Str;
-
 class Json
 {
     public static function isJson($value): bool
