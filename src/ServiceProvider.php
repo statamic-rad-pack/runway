@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Spatie\ErrorSolutions\Contracts\SolutionProviderRepository;
 use Statamic\API\Middleware\Cache;
+use Statamic\Console\Commands\StaticWarm;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
@@ -22,6 +23,7 @@ use Statamic\Statamic;
 use StatamicRadPack\Runway\Http\Controllers\ApiController;
 use StatamicRadPack\Runway\Ignition\SolutionProviders\TraitMissing;
 use StatamicRadPack\Runway\Policies\ResourcePolicy;
+use StatamicRadPack\Runway\Routing\RunwayUri;
 use StatamicRadPack\Runway\Search\Provider as SearchProvider;
 use StatamicRadPack\Runway\Search\Searchable;
 
@@ -233,6 +235,10 @@ class ServiceProvider extends AddonServiceProvider
         if (Runway::usesRouting()) {
             $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
                 ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
+
+            StaticWarm::hook('additional', function ($urls, $next) {
+                return $next($urls->merge(RunwayUri::select('uri')->pluck('uri')->all()));
+            });
         }
 
         return $this;
