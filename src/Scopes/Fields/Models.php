@@ -1,6 +1,6 @@
 <?php
 
-namespace StatamicRadPack\Runway\Query\Scopes\Filters\Fields;
+namespace StatamicRadPack\Runway\Scopes\Fields;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Statamic\Query\Scopes\Filters\Fields\FieldtypeFilter;
