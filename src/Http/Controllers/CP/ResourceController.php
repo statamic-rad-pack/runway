@@ -46,7 +46,7 @@ class ResourceController extends CpController
             'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
             'actionUrl' => cp_route('runway.actions.run', ['resource' => $resource->handle()]),
             'primaryColumn' => $this->getPrimaryColumn($resource),
-            'actions' => Action::for($resource),
+            'actions' => Action::for($resource, ['view' => 'form']),
         ]);
     }
 
