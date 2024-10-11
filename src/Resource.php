@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use Statamic\Facades\Blink;
 use Statamic\Facades\Search;
 use Statamic\Fields\Blueprint;
 use Statamic\Fields\Field;
@@ -241,7 +242,9 @@ class Resource
 
     public function databaseColumns(): array
     {
-        return Schema::getColumnListing($this->databaseTable());
+        return Blink::once('runway-database-columns-'.$this->databaseTable(), function () {
+            return Schema::getColumnListing($this->databaseTable());
+        });
     }
 
     public function revisionsEnabled(): bool
