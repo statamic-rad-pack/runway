@@ -2,15 +2,21 @@
 
 namespace StatamicRadPack\Runway\Support;
 
+use Illuminate\Support\Str;
+
 class Json
 {
     public static function isJson($value): bool
     {
-        if (is_array($value) || is_object($value) || (is_string($value) && ! str_starts_with($value, '[') && ! str_starts_with($value, '{'))) {
+        if (
+            is_array($value)
+            || is_object($value)
+            || (is_string($value) && ! str_starts_with($value, '[') && ! str_starts_with($value, '{'))
+        ) {
             return false;
         }
 
-        // TODO: when dropping support for php8.2 implement https://www.php.net/manual/en/function.json-validate.php
+        // TODO: Replace this with json_validate when dropping support for PHP 8.2.
         return is_array(json_decode($value, true));
     }
 }
