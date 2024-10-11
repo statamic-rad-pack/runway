@@ -1,5 +1,20 @@
 # Changelog
 
+## v7.11.0 (2024-10-11)
+
+### What's new
+* Runway URIs are now warmed as part of the `static:warm` command #623 by @duncanmcclean
+
+### What's improved
+* Prevented duplicate queries for table columns by @duncanmcclean
+* Minor optimisations around the `isJson` function #619 by @indykoning
+* Tidied up the `ServiceProvider` to take advantage of autoloading #622 by @duncanmcclean
+
+### What's fixed
+* Fixed an issue where the "Published" toggle was disabled for non-super users #621 by @duncanmcclean
+
+
+
 ## v7.10.1 (2024-09-27)
 
 ### What's fixed
