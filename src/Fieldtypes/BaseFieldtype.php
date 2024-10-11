@@ -16,11 +16,11 @@ use Statamic\Query\Builder as BaseStatamicBuilder;
 use Statamic\Search\Result;
 use StatamicRadPack\Runway\Http\Resources\CP\FieldtypeModel;
 use StatamicRadPack\Runway\Http\Resources\CP\FieldtypeModels;
-use StatamicRadPack\Runway\Query\Scopes\Filters\Fields\Models;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Scopes\Fields\Models;
 
-class BaseFieldtype extends Relationship
+abstract class BaseFieldtype extends Relationship
 {
     protected $canEdit = true;
     protected $canCreate = true;

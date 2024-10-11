@@ -1,6 +1,6 @@
 <?php
 
-namespace StatamicRadPack\Runway\Query\Scopes\Filters;
+namespace StatamicRadPack\Runway\Scopes;
 
 use Illuminate\Support\Collection;
 use Statamic\Query\Scopes\Filters\Status as BaseStatusFilter;

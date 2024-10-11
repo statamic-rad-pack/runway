@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
-use Illuminate\Support\Traits\Conditionable;
 use Spatie\ErrorSolutions\Contracts\SolutionProviderRepository;
 use Statamic\API\Middleware\Cache;
 use Statamic\Facades\Blueprint;
@@ -28,46 +27,6 @@ use StatamicRadPack\Runway\Search\Searchable;
 
 class ServiceProvider extends AddonServiceProvider
 {
-    use Conditionable;
-
-    protected $actions = [
-        Actions\DeleteModel::class,
-        Actions\DuplicateModel::class,
-        Actions\Publish::class,
-        Actions\Unpublish::class,
-    ];
-
-    protected $commands = [
-        Console\Commands\GenerateMigration::class,
-        Console\Commands\ListResources::class,
-        Console\Commands\MigrateBlueprints::class,
-        Console\Commands\RebuildUriCache::class,
-    ];
-
-    protected $fieldtypes = [
-        Fieldtypes\BelongsToFieldtype::class,
-        Fieldtypes\HasManyFieldtype::class,
-    ];
-
-    protected $routes = [
-        'cp' => __DIR__.'/../routes/cp.php',
-    ];
-
-    protected $scopes = [
-        Query\Scopes\Filters\Fields::class,
-        Query\Scopes\Filters\Status::class,
-    ];
-
-    protected $tags = [
-        Tags\RunwayTag::class,
-    ];
-
-    protected $updateScripts = [
-        UpdateScripts\ChangePermissionNames::class,
-        UpdateScripts\MigrateBlueprints::class,
-        UpdateScripts\AddManagePublishStatesPermission::class,
-    ];
-
     protected $vite = [
         'publicDirectory' => 'dist',
         'hotFile' => 'vendor/runway/hot',
