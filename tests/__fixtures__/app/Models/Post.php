@@ -71,6 +71,11 @@ class Post extends Model
         );
     }
 
+    public function searchMethod()
+    {
+        return 'This is a value returned from a method';
+    }
+
     protected static function newFactory()
     {
         return PostFactory::new();
