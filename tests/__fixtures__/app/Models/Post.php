@@ -15,7 +15,7 @@ class Post extends Model
     use HasFactory, HasRunwayResource, RunwayRoutes;
 
     protected $fillable = [
-        'title', 'slug', 'body', 'values', 'external_links', 'author_id', 'sort_order', 'published', 'mutated_value'
+        'title', 'slug', 'body', 'values', 'external_links', 'author_id', 'sort_order', 'published', 'mutated_value',
     ];
 
     protected $appends = [
