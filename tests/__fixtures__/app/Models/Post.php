@@ -76,7 +76,7 @@ class Post extends Model
         return Attribute::make(
             set: fn ($value) => str_replace(' is mutated', '', $value),
             get: function ($value, $attributes) {
-                return $value . ' is mutated';
+                return $value.' is mutated';
             }
         );
     }
