@@ -186,7 +186,9 @@ class AugmentedModel extends AbstractAugmented
                     return $this->data->getAttribute($handle);
                 }
 
-                return ($attribute->get)();
+                $attributes = $this->data->getAttributes();
+                $value = isset($attributes[$handle]) ? $attributes[$handle] : null;
+                return ($attribute->get)($value, $attributes);
             },
             $handle,
             $this->fieldtype($handle),
