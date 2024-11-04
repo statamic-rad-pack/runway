@@ -37,7 +37,6 @@ class AugmentedModelTest extends TestCase
         $this->assertEquals('/posts/my-first-post', $augmented->get('url')->value());
         $this->assertEquals('value', $post->getAttributes()['mutated_value']);
         $this->assertEquals('value is mutated', $augmented->get('mutated_value')->value());
-        $this->assertEquals('/posts/my-first-post', $augmented->get('url')->value());
 
         $this->assertIsArray($augmented->get('author')->value());
         $this->assertEquals($author->id, $augmented->get('author')->value()['id']->value());
