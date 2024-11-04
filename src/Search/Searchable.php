@@ -57,6 +57,10 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
 
     public function getSearchValue(string $field)
     {
+        if (method_exists($this->model, $field)) {
+            return $this->model->$field();
+        }
+
         return $this->model->{$field};
     }
 
