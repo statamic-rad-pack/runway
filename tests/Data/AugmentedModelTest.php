@@ -22,7 +22,6 @@ class AugmentedModelTest extends TestCase
             'title' => 'My First Post',
             'slug' => 'my-first-post',
             'body' => 'Blah blah blah...',
-            'mutated_value' => 'Value',
             'author_id' => $author->id,
         ]);
 
@@ -35,7 +34,6 @@ class AugmentedModelTest extends TestCase
         $this->assertEquals('Blah blah blah...', $augmented->get('body')->value());
         $this->assertEquals('2020-01-01 13:46:12', $augmented->get('created_at')->value()->format('Y-m-d H:i:s'));
         $this->assertEquals('/posts/my-first-post', $augmented->get('url')->value());
-        $this->assertEquals('Value is mutated', $augmented->get('mutated_value')->value());
 
         $this->assertIsArray($augmented->get('author')->value());
         $this->assertEquals($author->id, $augmented->get('author')->value()['id']->value());
@@ -82,5 +80,15 @@ class AugmentedModelTest extends TestCase
         $augmented = new AugmentedModel($post);
 
         $this->assertEquals('This is an appended value.', $augmented->get('appended_value')->value());
+    }
+
+    #[Test]
+    public function it_gets_value_from_mutator()
+    {
+        $post = Post::factory()->create(['mutated_value' => 'Foo']);
+
+        $augmented = new AugmentedModel($post);
+
+        $this->assertEquals('Foo is a mutated value.', $augmented->get('mutated_value')->value());
     }
 }

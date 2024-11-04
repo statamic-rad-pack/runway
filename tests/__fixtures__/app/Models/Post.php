@@ -75,7 +75,7 @@ class Post extends Model
     public function mutatedValue(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value, array $attributes) => "{$value} is mutated",
+            get: fn (string $value, array $attributes) => "{$value} is a mutated value.",
         );
     }
 
