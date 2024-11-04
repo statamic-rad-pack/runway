@@ -22,7 +22,7 @@ class AugmentedModelTest extends TestCase
             'title' => 'My First Post',
             'slug' => 'my-first-post',
             'body' => 'Blah blah blah...',
-            'mutated_value' => 'value is mutated',
+            'mutated_value' => 'value',
             'author_id' => $author->id,
         ]);
 
@@ -35,7 +35,6 @@ class AugmentedModelTest extends TestCase
         $this->assertEquals('Blah blah blah...', $augmented->get('body')->value());
         $this->assertEquals('2020-01-01 13:46:12', $augmented->get('created_at')->value()->format('Y-m-d H:i:s'));
         $this->assertEquals('/posts/my-first-post', $augmented->get('url')->value());
-        $this->assertEquals('value', $post->getAttributes()['mutated_value']);
         $this->assertEquals('value is mutated', $augmented->get('mutated_value')->value());
 
         $this->assertIsArray($augmented->get('author')->value());
