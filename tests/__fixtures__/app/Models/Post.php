@@ -9,6 +9,7 @@ use Statamic\Facades\Blink;
 use StatamicRadPack\Runway\Routing\Traits\RunwayRoutes;
 use StatamicRadPack\Runway\Tests\Fixtures\Database\Factories\PostFactory;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
+use function DI\get;
 
 class Post extends Model
 {
@@ -74,9 +75,7 @@ class Post extends Model
     public function mutatedValue(): Attribute
     {
         return Attribute::make(
-            get: function ($value, $attributes) {
-                return $value.' is mutated';
-            }
+            get: fn (string $value, array $attributes) => "{$value} is mutated",
         );
     }
 
