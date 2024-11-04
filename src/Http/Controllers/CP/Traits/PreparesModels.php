@@ -63,20 +63,20 @@ trait PreparesModels
                 }
 
                 if ($field->fieldtype() instanceof HasManyFieldtype) {
-                    // When there are ID's on the model's $runwayRelationships property, use them instead of querying the relationship.
+                    // Use IDs from the model's $runwayRelationships property, if there are any.
                     if (array_key_exists($field->handle(), $model->runwayRelationships)) {
-                        return [$field->handle() => Arr::get($model->runwayRelationships, $field->handle())];
+                        $value = Arr::get($model->runwayRelationships, $field->handle());
                     }
 
-                    $relationshipName = $resource->eloquentRelationships()->get($field->handle());
+                    // When re-ordering is enabled, ensure the models are returned in the correct order.
+                    if ($field->get('reorderable', false)) {
+                        $orderColumn = $field->get('order_column');
+                        $relationshipName = $resource->eloquentRelationships()->get($field->handle());
 
-                    $query = $model->{$relationshipName}();
-
-                    if ($field->get('reorderable')) {
-                        $query->reorder($field->get('order_column'), 'ASC');
+                        $value = $model->{$relationshipName}()
+                            ->reorder($orderColumn, 'ASC')
+                            ->get();
                     }
-
-                    $value = $query->get();
                 }
 
                 return [$field->handle() => $value];
