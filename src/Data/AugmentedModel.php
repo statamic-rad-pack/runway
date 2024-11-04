@@ -9,6 +9,7 @@ use Statamic\Data\AbstractAugmented;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
 use Statamic\Statamic;
+use Statamic\Support\Arr;
 use StatamicRadPack\Runway\Runway;
 
 class AugmentedModel extends AbstractAugmented
@@ -187,9 +188,8 @@ class AugmentedModel extends AbstractAugmented
                 }
 
                 $attributes = $this->data->getAttributes();
-                $value = isset($attributes[$handle]) ? $attributes[$handle] : null;
 
-                return ($attribute->get)($value, $attributes);
+                return ($attribute->get)(Arr::get($attributes, $handle), $attributes);
             },
             $handle,
             $this->fieldtype($handle),
