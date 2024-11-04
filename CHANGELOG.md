@@ -1,5 +1,19 @@
 # Changelog
 
+## v7.12.0 (2024-11-04)
+
+### What's improved
+* Updated the `.gitattributes` file by @duncanmcclean
+
+### What's fixed
+* Fixed an issue where Has Many relationships weren't being resolved #624 #630 by @duncanmcclean
+* Fixed an error when augmenting model mutators #627 #629 by @TheBnl
+* Added a check when getting a search value to see if the model has a method #625 #628 by @ryanmitchell
+* Fixed deprecation error when checking if a value is a JSON string #626 by @indykoning
+* Fixed the incorrect context for resource actions on the listing page by @duncanmcclean
+
+
+
 ## v7.11.0 (2024-10-11)
 
 ### What's new
