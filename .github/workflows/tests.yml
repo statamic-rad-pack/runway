@@ -16,9 +16,13 @@ jobs:
         laravel: [10.*, 11.*]
         stability: [prefer-lowest, prefer-stable]
         os: [ubuntu-latest]
-#        include:
-#          - php: 8.4
-#            stability: prefer-stable
+        include:
+          - php: 8.4
+            laravel: 10.*
+            stability: prefer-stable
+          - php: 8.4
+            laravel: 10.*
+            stability: prefer-stable
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }}
 
