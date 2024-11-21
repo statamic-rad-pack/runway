@@ -22,9 +22,9 @@ jobs:
             stability: prefer-stable
             os: ubuntu-latest
           - php: 8.4
-            laravel: 10.*
+            laravel: 11.*
             stability: prefer-stable
-            os: windows-latest
+            os: ubuntu-latest
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }}
 
