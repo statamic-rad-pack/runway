@@ -12,10 +12,13 @@ jobs:
 
     strategy:
       matrix:
-        php: [8.2, 8.3, 8.4]
+        php: [8.2, 8.3]
         laravel: [10.*, 11.*]
         stability: [prefer-lowest, prefer-stable]
         os: [ubuntu-latest]
+        include:
+          - php: 8.4
+            stability: prefer-stable
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }}
 
