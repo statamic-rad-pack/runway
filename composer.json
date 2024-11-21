@@ -41,7 +41,7 @@
     "require": {
         "php": "^8.2",
         "ajthinking/archetype": "^1.0.3 || ^2.0",
-        "laravel/framework": "^10.25.0 || ^11.0",
+        "laravel/framework": "^10.25.0 || ^11.3",
         "laravel/prompts": "^0.1.17",
         "pixelfear/composer-dist-plugin": "^0.1.5",
         "spatie/ignition": "^1.15",
@@ -52,7 +52,7 @@
         "laravel/pint": "^1.0",
         "spatie/test-time": "^1.2",
         "orchestra/testbench": "^8.0 || ^9.0",
-        "phpunit/phpunit": "^10.0"
+        "phpunit/phpunit": "^10.5.35"
     },
     "config": {
         "optimize-autoloader": true,
