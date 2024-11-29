@@ -27,10 +27,10 @@ Asset Container| `string`/`json`           |
 [Button Group](https://statamic.dev/fieldtypes/button_group)| `string`                  |
 [Checkboxes](https://statamic.dev/fieldtypes/checkboxes)| `json`                    |
 [Code](https://statamic.dev/fieldtypes/code)| `string`                  |
-[Collections](https://statamic.dev/fieldtypes/collections)| `string`/`json`           |If 'Allow multiple' is `1`, column type should be `string`. Otherwise, `json` is what you want.
+[Collections](https://statamic.dev/fieldtypes/collections)| `string`/`json`           |If 'Max items' is `1`, column type should be `string`. Otherwise, `json` is what you want.
 [Color](https://statamic.dev/fieldtypes/color)| `string`                  |
 [Date](https://statamic.dev/fieldtypes/date)| `string`/`range`          |Format is specified field configuration options. Ranges are should be stored as json.
-[Entries](https://statamic.dev/fieldtypes/entries)| `string`/`json`           |If 'Allow multiple' is `1`, column type should be `string`. Otherwise, `json` is what you want.
+[Entries](https://statamic.dev/fieldtypes/entries)| `string`/`json`           |If 'Max items' is `1`, column type should be `string`. Otherwise, `json` is what you want.
 Float| `float`                   |
 [Grid](https://statamic.dev/fieldtypes/grid)| `json`                    |
 [Group](https://statamic.dev/fieldtypes/group)| `json`                    |
