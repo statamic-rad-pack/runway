@@ -1,5 +1,15 @@
 # Changelog
 
+## v7.13.0 (2024-11-29)
+
+### What's new
+* PHP 8.4 Support #633 by @duncanmcclean
+
+### What's improved
+* Docs: Updated settings title in fieldtypes table #636 by @Joel-Jensen
+
+
+
 ## v7.12.0 (2024-11-04)
 
 ### What's improved
