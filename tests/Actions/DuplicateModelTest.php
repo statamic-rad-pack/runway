@@ -156,6 +156,29 @@ class DuplicateModelTest extends TestCase
 
         $duplicate = Post::query()->whereNot('id', $post->id)->first();
 
+        $this->assertEquals('Hello World (Duplicate)', $duplicate->title);
+        $this->assertNotNull($duplicate->start_date);
+        $this->assertFalse($duplicate->published());
+    }
+
+    #[Test]
+    public function only_duplicates_fields_where_duplication_is_enabled()
+    {
+        $blueprint = Blueprint::find('runway::post');
+        $blueprint->ensureFieldHasConfig('start_date', ['duplicate' => false]);
+
+        Blueprint::shouldReceive('find')
+            ->with('runway::post')
+            ->andReturn($blueprint);
+
+        $post = Post::factory()->create(['title' => 'Hello World', 'start_date' => now()]);
+
+        (new DuplicateModel)->run(collect([$post]), []);
+
+        $duplicate = Post::query()->whereNot('id', $post->id)->first();
+
+        $this->assertEquals('Hello World (Duplicate)', $duplicate->title);
+        $this->assertNull($duplicate->start_date);
         $this->assertFalse($duplicate->published());
     }
 }
