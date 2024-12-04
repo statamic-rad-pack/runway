@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use StatamicRadPack\Runway\Http\Controllers\CP\ModelActionController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ModelRevisionsController;
 use StatamicRadPack\Runway\Http\Controllers\CP\PublishedModelsController;
-use StatamicRadPack\Runway\Http\Controllers\CP\ModelActionController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceActionController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceListingController;
