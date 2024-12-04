@@ -72,7 +72,7 @@ class DuplicateModelTest extends TestCase
     }
 
     #[Test]
-    public function is_not_visible_to_entry()
+    public function is_not_visible_to_an_entry()
     {
         Collection::make('posts')->save();
 
