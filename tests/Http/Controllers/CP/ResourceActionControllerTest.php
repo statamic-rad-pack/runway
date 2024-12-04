@@ -20,19 +20,17 @@ class ResourceActionControllerTest extends TestCase
     #[Test]
     public function can_run_action()
     {
-        $post = Post::factory()->create();
-
         $this->assertFalse(FooAction::$hasRun);
 
         $this
             ->actingAs(User::make()->makeSuper()->save())
             ->post('/cp/runway/post/actions', [
-                'action' => 'foo',
-                'selections' => [$post->id],
+                'action' => 'bar',
+                'selections' => ['post'],
                 'values' => [],
             ])
             ->assertOk()
-            ->assertJson(['message' => 'Foo action run!']);
+            ->assertJson(['message' => 'Bar action run!']);
 
         $this->assertTrue(FooAction::$hasRun);
     }
@@ -45,16 +43,16 @@ class ResourceActionControllerTest extends TestCase
         $this
             ->actingAs(User::make()->makeSuper()->save())
             ->post('/cp/runway/post/actions/list', [
-                'selections' => [$post->id],
+                'selections' => ['post'],
             ])
             ->assertOk()
             ->assertJsonPath('0.handle', 'unpublish');
     }
 }
 
-class FooAction extends Action
+class BarAction extends Action
 {
-    protected static $handle = 'foo';
+    protected static $handle = 'bar';
 
     public static bool $hasRun = false;
 
@@ -62,6 +60,6 @@ class FooAction extends Action
     {
         static::$hasRun = true;
 
-        return 'Foo action run!';
+        return 'Bar action run!';
     }
 }
