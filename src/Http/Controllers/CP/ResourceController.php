@@ -44,7 +44,7 @@ class ResourceController extends CpController
                 ->rejectUnlisted()
                 ->values(),
             'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
-            'actionUrl' => cp_route('runway.actions.run', ['resource' => $resource->handle()]),
+            'actionUrl' => cp_route('runway.models.actions.run', ['resource' => $resource->handle()]),
             'primaryColumn' => $this->getPrimaryColumn($resource),
             'actions' => Action::for($resource, ['view' => 'form']),
         ]);

@@ -24,7 +24,7 @@
         create-another-url="{{ cp_route('runway.create', ['resource' => $resource->handle()]) }}"
         initial-listing-url="{{ cp_route('runway.index', ['resource' => $resource->handle()]) }}"
         :initial-item-actions="{{ json_encode($itemActions) }}"
-        item-action-url="{{ cp_route('runway.actions.run', ['resource' => $resource->handle()]) }}"
+        item-action-url="{{ cp_route('runway.models.actions.run', ['resource' => $resource->handle()]) }}"
         :revisions-enabled="{{ $str::bool($revisionsEnabled) }}"
     ></runway-publish-form>
 
