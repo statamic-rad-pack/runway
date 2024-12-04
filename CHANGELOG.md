@@ -1,5 +1,13 @@
 # Changelog
 
+## v7.13.1 (2024-12-04)
+
+### What's fixed
+* Respect "Duplicate" toggle on fields #639 by @duncanmcclean
+* Fixed error when running resource actions #638 by @duncanmcclean
+
+
+
 ## v7.13.0 (2024-11-29)
 
 ### What's new
