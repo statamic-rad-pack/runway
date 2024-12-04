@@ -14,7 +14,6 @@ Route::name('runway.')->prefix('runway')->group(function () {
     Route::get('{resource}/listing-api', [ResourceListingController::class, 'index'])->name('listing-api');
 
     Route::post('{resource}/actions', [ResourceActionController::class, 'run'])->name('actions.run');
-    Route::post('{resource}/actions/list', [ResourceActionController::class, 'bulkActionsList'])->name('actions.bulk');
 
     Route::post('{resource}/models/actions', [ModelActionController::class, 'runAction'])->name('models.actions.run');
     Route::post('{resource}/models/actions/list', [ModelActionController::class, 'bulkActionsList'])->name('models.actions.bulk');

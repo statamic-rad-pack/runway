@@ -34,20 +34,6 @@ class ResourceActionControllerTest extends TestCase
 
         $this->assertTrue(FooAction::$hasRun);
     }
-
-    #[Test]
-    public function can_get_bulk_actions_list()
-    {
-        $post = Post::factory()->create();
-
-        $this
-            ->actingAs(User::make()->makeSuper()->save())
-            ->post('/cp/runway/post/actions/list', [
-                'selections' => ['post'],
-            ])
-            ->assertOk()
-            ->assertJsonPath('0.handle', 'unpublish');
-    }
 }
 
 class BarAction extends Action
