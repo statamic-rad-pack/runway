@@ -14,13 +14,13 @@ class ResourceActionControllerTest extends TestCase
     {
         parent::setUp();
 
-        FooAction::register();
+        BarAction::register();
     }
 
     #[Test]
     public function can_run_action()
     {
-        $this->assertFalse(FooAction::$hasRun);
+        $this->assertFalse(BarAction::$hasRun);
 
         $this
             ->actingAs(User::make()->makeSuper()->save())
@@ -32,7 +32,7 @@ class ResourceActionControllerTest extends TestCase
             ->assertOk()
             ->assertJson(['message' => 'Bar action run!']);
 
-        $this->assertTrue(FooAction::$hasRun);
+        $this->assertTrue(BarAction::$hasRun);
     }
 }
 
