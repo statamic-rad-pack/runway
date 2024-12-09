@@ -1,5 +1,13 @@
 # Changelog
 
+## v7.13.2 (2024-12-09)
+
+### What's fixed
+* Only published models should be returned by augmentation #642 by @duncanmcclean
+* Prevent Belongs To fields being saved as an array in entry data #640 #641 by @duncanmcclean
+
+
+
 ## v7.13.1 (2024-12-04)
 
 ### What's fixed
