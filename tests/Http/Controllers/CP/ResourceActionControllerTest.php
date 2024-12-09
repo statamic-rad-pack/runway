@@ -5,56 +5,39 @@ namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Actions\Action;
 use Statamic\Facades\User;
-use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
 
 class ResourceActionControllerTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
-        FooAction::register();
+        BarAction::register();
     }
 
     #[Test]
     public function can_run_action()
     {
-        $post = Post::factory()->create();
-
-        $this->assertFalse(FooAction::$hasRun);
+        $this->assertFalse(BarAction::$hasRun);
 
         $this
             ->actingAs(User::make()->makeSuper()->save())
             ->post('/cp/runway/post/actions', [
-                'action' => 'foo',
-                'selections' => [$post->id],
+                'action' => 'bar',
+                'selections' => ['post'],
                 'values' => [],
             ])
             ->assertOk()
-            ->assertJson(['message' => 'Foo action run!']);
+            ->assertJson(['message' => 'Bar action run!']);
 
-        $this->assertTrue(FooAction::$hasRun);
-    }
-
-    #[Test]
-    public function can_get_bulk_actions_list()
-    {
-        $post = Post::factory()->create();
-
-        $this
-            ->actingAs(User::make()->makeSuper()->save())
-            ->post('/cp/runway/post/actions/list', [
-                'selections' => [$post->id],
-            ])
-            ->assertOk()
-            ->assertJsonPath('0.handle', 'unpublish');
+        $this->assertTrue(BarAction::$hasRun);
     }
 }
 
-class FooAction extends Action
+class BarAction extends Action
 {
-    protected static $handle = 'foo';
+    protected static $handle = 'bar';
 
     public static bool $hasRun = false;
 
@@ -62,6 +45,6 @@ class FooAction extends Action
     {
         static::$hasRun = true;
 
-        return 'Foo action run!';
+        return 'Bar action run!';
     }
 }

@@ -1,5 +1,84 @@
 # Changelog
 
+## v7.13.2 (2024-12-09)
+
+### What's fixed
+* Only published models should be returned by augmentation #642 by @duncanmcclean
+* Prevent Belongs To fields being saved as an array in entry data #640 #641 by @duncanmcclean
+
+
+
+## v7.13.1 (2024-12-04)
+
+### What's fixed
+* Respect "Duplicate" toggle on fields #639 by @duncanmcclean
+* Fixed error when running resource actions #638 by @duncanmcclean
+
+
+
+## v7.13.0 (2024-11-29)
+
+### What's new
+* PHP 8.4 Support #633 by @duncanmcclean
+
+### What's improved
+* Docs: Updated settings title in fieldtypes table #636 by @Joel-Jensen
+
+
+
+## v7.12.0 (2024-11-04)
+
+### What's improved
+* Updated the `.gitattributes` file by @duncanmcclean
+
+### What's fixed
+* Fixed an issue where Has Many relationships weren't being resolved #624 #630 by @duncanmcclean
+* Fixed an error when augmenting model mutators #627 #629 by @TheBnl
+* Added a check when getting a search value to see if the model has a method #625 #628 by @ryanmitchell
+* Fixed deprecation error when checking if a value is a JSON string #626 by @indykoning
+* Fixed the incorrect context for resource actions on the listing page by @duncanmcclean
+
+
+
+## v7.11.0 (2024-10-11)
+
+### What's new
+* Runway URIs are now warmed as part of the `static:warm` command #623 by @duncanmcclean
+
+### What's improved
+* Prevented duplicate queries for table columns by @duncanmcclean
+* Minor optimisations around the `isJson` function #619 by @indykoning
+* Tidied up the `ServiceProvider` to take advantage of autoloading #622 by @duncanmcclean
+
+### What's fixed
+* Fixed an issue where the "Published" toggle was disabled for non-super users #621 by @duncanmcclean
+
+
+
+## v7.10.1 (2024-09-27)
+
+### What's fixed
+* Fixed missing title on fieldtype dropdown options #615 #617 by @duncanmcclean
+* Fixed error when linking related model with publish states #612 #616 by @duncanmcclean
+* Bump minimum version of `statamic/cms` to 5.26.0, to hopefully fix an issue with actions by @duncanmcclean
+
+
+
+## v7.10.0 (2024-09-25)
+
+### What's improved
+* Improve feedback when action fails #608 by @duncanmcclean
+
+
+
+## v7.9.5 (2024-09-24)
+
+### What's fixed
+* Fixed augmentation on frontend routes #606 #610 by @duncanmcclean
+* Fixed error when removing filters #607 #609 by @duncanmcclean
+
+
+
 ## v7.9.4 (2024-09-19)
 
 ### What's fixed

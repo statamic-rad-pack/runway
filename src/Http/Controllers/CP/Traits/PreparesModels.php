@@ -69,6 +69,8 @@ trait PreparesModels
                 }
 
                 if ($field->fieldtype() instanceof HasManyFieldtype) {
+                    $value = data_get($model, $resource->eloquentRelationships()->get($field->handle()));
+
                     // Use IDs from the model's $runwayRelationships property, if there are any.
                     if (array_key_exists($field->handle(), $model->runwayRelationships)) {
                         $value = Arr::get($model->runwayRelationships, $field->handle());

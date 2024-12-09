@@ -1,6 +1,6 @@
 <?php
 
-namespace StatamicRadPack\Runway\Query\Scopes\Filters;
+namespace StatamicRadPack\Runway\Scopes;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;

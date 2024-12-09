@@ -44,6 +44,7 @@ class SearchableTest extends TestCase
         $this->assertEquals($post->title, $searchable->getSearchValue('title'));
         $this->assertEquals($post->slug, $searchable->getSearchValue('slug'));
         $this->assertEquals($post->id, $searchable->getSearchValue('id'));
+        $this->assertEquals($post->searchMethod(), $searchable->getSearchValue('searchMethod'));
     }
 
     #[Test]

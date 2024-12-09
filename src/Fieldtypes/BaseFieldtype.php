@@ -16,11 +16,11 @@ use Statamic\Query\Builder as BaseStatamicBuilder;
 use Statamic\Search\Result;
 use StatamicRadPack\Runway\Http\Resources\CP\FieldtypeModel;
 use StatamicRadPack\Runway\Http\Resources\CP\FieldtypeModels;
-use StatamicRadPack\Runway\Query\Scopes\Filters\Fields\Models;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Scopes\Fields\Models;
 
-class BaseFieldtype extends Relationship
+abstract class BaseFieldtype extends Relationship
 {
     protected $canEdit = true;
     protected $canCreate = true;
@@ -131,6 +131,15 @@ class BaseFieldtype extends Relationship
         }
 
         return 'unlink';
+    }
+
+    public function process($data)
+    {
+        if ($this->config('max_items') === 1 && ! $this->field->parent() instanceof Model) {
+            return Arr::first($data);
+        }
+
+        return parent::process($data);
     }
 
     public function getIndexItems($request)
@@ -277,6 +286,7 @@ class BaseFieldtype extends Relationship
 
                 return $model;
             })
+            ->when($resource->hasPublishStates(), fn ($collection) => $collection->filter(fn ($model) => $model->published()))
             ->filter();
     }
 

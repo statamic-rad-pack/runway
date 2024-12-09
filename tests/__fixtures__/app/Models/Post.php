@@ -15,7 +15,7 @@ class Post extends Model
     use HasFactory, HasRunwayResource, RunwayRoutes;
 
     protected $fillable = [
-        'title', 'slug', 'body', 'values', 'external_links', 'author_id', 'sort_order', 'published',
+        'title', 'slug', 'body', 'values', 'external_links', 'author_id', 'sort_order', 'published', 'mutated_value',
     ];
 
     protected $appends = [
@@ -69,6 +69,18 @@ class Post extends Model
                 return 'This is an appended value.';
             }
         );
+    }
+
+    public function mutatedValue(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value, array $attributes) => "{$value} is a mutated value.",
+        );
+    }
+
+    public function searchMethod()
+    {
+        return 'This is a value returned from a method';
     }
 
     protected static function newFactory()

@@ -28,7 +28,9 @@ class PostFactory extends Factory
             'slug' => Str::slug($title),
             'body' => implode(' ', $this->faker->paragraphs(10)),
             'author_id' => Author::factory()->create()->id,
+            'start_date' => now(),
             'published' => true,
+            'mutated_value' => 'Foo',
         ];
     }
 

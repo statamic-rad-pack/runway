@@ -26,4 +26,9 @@ class ResourcePolicy
     {
         return User::fromUser($user)->hasPermission("delete {$resource->handle()}");
     }
+
+    public function publish($user, Resource $resource, $model = null)
+    {
+        return User::fromUser($user)->hasPermission("publish {$resource->handle()}");
+    }
 }

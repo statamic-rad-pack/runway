@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
-use Illuminate\Support\Traits\Conditionable;
 use Spatie\ErrorSolutions\Contracts\SolutionProviderRepository;
 use Statamic\API\Middleware\Cache;
+use Statamic\Console\Commands\StaticWarm;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
@@ -24,51 +24,12 @@ use StatamicRadPack\Runway\GraphQL\NestedFieldsType;
 use StatamicRadPack\Runway\Http\Controllers\ApiController;
 use StatamicRadPack\Runway\Ignition\SolutionProviders\TraitMissing;
 use StatamicRadPack\Runway\Policies\ResourcePolicy;
+use StatamicRadPack\Runway\Routing\RunwayUri;
 use StatamicRadPack\Runway\Search\Provider as SearchProvider;
 use StatamicRadPack\Runway\Search\Searchable;
 
 class ServiceProvider extends AddonServiceProvider
 {
-    use Conditionable;
-
-    protected $actions = [
-        Actions\DeleteModel::class,
-        Actions\DuplicateModel::class,
-        Actions\Publish::class,
-        Actions\Unpublish::class,
-    ];
-
-    protected $commands = [
-        Console\Commands\GenerateMigration::class,
-        Console\Commands\ListResources::class,
-        Console\Commands\MigrateBlueprints::class,
-        Console\Commands\RebuildUriCache::class,
-    ];
-
-    protected $fieldtypes = [
-        Fieldtypes\BelongsToFieldtype::class,
-        Fieldtypes\HasManyFieldtype::class,
-    ];
-
-    protected $routes = [
-        'cp' => __DIR__.'/../routes/cp.php',
-    ];
-
-    protected $scopes = [
-        Query\Scopes\Filters\Fields::class,
-        Query\Scopes\Filters\Status::class,
-    ];
-
-    protected $tags = [
-        Tags\RunwayTag::class,
-    ];
-
-    protected $updateScripts = [
-        UpdateScripts\ChangePermissionNames::class,
-        UpdateScripts\MigrateBlueprints::class,
-        UpdateScripts\AddManagePublishStatesPermission::class,
-    ];
-
     protected $vite = [
         'publicDirectory' => 'dist',
         'hotFile' => 'vendor/runway/hot',
@@ -276,6 +237,10 @@ class ServiceProvider extends AddonServiceProvider
         if (Runway::usesRouting()) {
             $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
                 ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
+
+            StaticWarm::hook('additional', function ($urls, $next) {
+                return $next($urls->merge(RunwayUri::select('uri')->pluck('uri')->all()));
+            });
         }
 
         return $this;

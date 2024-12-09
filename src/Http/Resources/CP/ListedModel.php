@@ -44,6 +44,7 @@ class ListedModel extends JsonResource
 
         return [
             'id' => $model->getKey(),
+            'title' => $model->getAttribute($this->runwayResource->titleField()),
             'published' => $this->resource->published(),
             'status' => $this->resource->publishedStatus(),
             'edit_url' => $model->runwayEditUrl(),
@@ -51,6 +52,7 @@ class ListedModel extends JsonResource
             'editable' => User::current()->can('edit', [$this->runwayResource, $model]),
             'viewable' => User::current()->can('view', [$this->runwayResource, $model]),
             'actions' => Action::for($model, ['resource' => $this->runwayResource->handle()]),
+            'collection' => ['dated' => false],
             $this->merge($this->values()),
         ];
     }

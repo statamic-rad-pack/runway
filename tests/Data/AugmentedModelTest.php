@@ -81,4 +81,14 @@ class AugmentedModelTest extends TestCase
 
         $this->assertEquals('This is an appended value.', $augmented->get('appended_value')->value());
     }
+
+    #[Test]
+    public function it_gets_value_from_mutator()
+    {
+        $post = Post::factory()->create(['mutated_value' => 'Foo']);
+
+        $augmented = new AugmentedModel($post);
+
+        $this->assertEquals('Foo is a mutated value.', $augmented->get('mutated_value')->value());
+    }
 }

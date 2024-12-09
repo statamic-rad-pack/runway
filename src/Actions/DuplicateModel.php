@@ -64,7 +64,7 @@ class DuplicateModel extends Action
 
     private function duplicateModel(Model $original, Resource $resource): Model
     {
-        $model = $original->replicate();
+        $model = $original->replicate($resource->blueprint()->fields()->all()->reject->shouldBeDuplicated()->keys()->all());
 
         if ($resource->titleField()) {
             $model->setAttribute($resource->titleField(), $original->getAttribute($resource->titleField()).' (Duplicate)');
