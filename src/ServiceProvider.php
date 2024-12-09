@@ -30,6 +30,10 @@ use StatamicRadPack\Runway\Search\Searchable;
 
 class ServiceProvider extends AddonServiceProvider
 {
+    protected $commands = [
+        Console\Commands\ImportCollection::class,
+    ];
+
     protected $vite = [
         'publicDirectory' => 'dist',
         'hotFile' => 'vendor/runway/hot',
