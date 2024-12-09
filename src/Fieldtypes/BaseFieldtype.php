@@ -133,6 +133,15 @@ abstract class BaseFieldtype extends Relationship
         return 'unlink';
     }
 
+    public function process($data)
+    {
+        if ($this->config('max_items') === 1 && ! $this->field->parent() instanceof Model) {
+            return Arr::first($data);
+        }
+
+        return parent::process($data);
+    }
+
     public function getIndexItems($request)
     {
         $resource = Runway::findResource($this->config('resource'));
