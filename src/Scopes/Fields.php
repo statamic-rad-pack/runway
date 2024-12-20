@@ -2,7 +2,6 @@
 
 namespace StatamicRadPack\Runway\Scopes;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Statamic\Fields\Field;
 use Statamic\Query\Scopes\Filters\Fields as BaseFieldsFilter;
