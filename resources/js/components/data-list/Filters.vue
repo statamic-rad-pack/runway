@@ -24,7 +24,7 @@
                             <field-filter
                                 ref="fieldFilter"
                                 :config="fieldFilter"
-                                :values="activeFilters.fields || {}"
+                                :values="activeFilters['runway-fields'] || {}"
                                 :badges="fieldFilterBadges"
                                 @changed="$emit('changed', {handle: 'runway-fields', values: $event})"
                                 @cleared="creating = false"

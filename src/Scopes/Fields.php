@@ -20,8 +20,10 @@ class Fields extends BaseFieldsFilter
     public function apply($query, $values): void
     {
         $this->getFields()
-            ->filter(fn (Field $field, string $handle) => Arr::has($values, $handle))
-            ->each(function (Field $field, string $handle) use ($query, $values) {
+            ->filter(function ($field, $handle) use ($values) {
+                return isset($values[$handle]);
+            })
+            ->each(function ($field, $handle) use ($query, $values) {
                 $filter = $field->fieldtype()->filter();
                 $values = $filter->fields()->addValues($values[$handle])->process()->values();
                 $filter->apply($query, $handle, $values);
