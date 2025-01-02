@@ -181,6 +181,7 @@ trait HasRunwayResource
     protected function revisionAttributes(): array
     {
         $data = $this->runwayResource()->blueprint()->fields()->setParent($this)->all()
+            ->filter(fn (Field $field) => $field->isRevisable())
             ->reject(fn (Field $field) => $field->fieldtype() instanceof Section)
             ->reject(fn (Field $field) => $field->visibility() === 'computed')
             ->reject(fn (Field $field) => $field->get('save', true) === false)
