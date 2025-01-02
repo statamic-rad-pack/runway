@@ -223,8 +223,7 @@ class ResourceController extends CpController
 
         $resource->blueprint()->fields()->all()
             ->reject(fn (Field $field) => $field->isRevisable())
-            ->keys()
-            ->each(fn (string $fieldHandle) => $dbVersion->setAttribute($fieldHandle, $model->{$fieldHandle}));
+            ->each(fn ($ignore, string $fieldHandle) => $dbVersion->setAttribute($fieldHandle, $model->{$fieldHandle}));
 
         $dbVersion->save();
     }
