@@ -114,8 +114,8 @@ abstract class BaseFieldtype extends Relationship
 
     private function getUnlinkBehavior(): string
     {
-        if ($this->field->parent() instanceof Model && $this instanceof HasManyFieldtype) {
-            $relationshipName = $this->config('relationship_name') ?? $this->field->handle();
+        $relationshipName = $this->config('relationship_name') ?? $this->field->handle();
+        if ($this->field->parent() instanceof Model && $this instanceof HasManyFieldtype && method_exists($this->field->parent(), $relationshipName)) {
             $relationship = $this->field->parent()->{$relationshipName}();
             if ($relationship instanceof HasMany) {
                 $foreignKey = $relationship->getQualifiedForeignKeyName();
