@@ -12,6 +12,8 @@ use Statamic\Facades\Scope;
 use Statamic\Facades\User;
 use Statamic\Fields\Field;
 use Statamic\Http\Controllers\CP\CpController;
+use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
+use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 use StatamicRadPack\Runway\Http\Requests\CP\CreateRequest;
 use StatamicRadPack\Runway\Http\Requests\CP\EditRequest;
 use StatamicRadPack\Runway\Http\Requests\CP\IndexRequest;
@@ -221,10 +223,15 @@ class ResourceController extends CpController
     {
         $dbVersion = $model->fresh();
 
-        $resource->blueprint()->fields()->all()
+        $fields = $resource->blueprint()->fields()->all()
             ->reject(fn (Field $field) => $field->isRevisable())
-            ->each(fn ($ignore, string $fieldHandle) => $dbVersion->setAttribute($fieldHandle, $model->{$fieldHandle}));
+            ->reject(fn (Field $field) => $field->fieldtype() instanceof BelongsToFieldtype)
+            ->reject(fn (Field $field) => $field->fieldtype() instanceof HasManyFieldtype);
 
-        $dbVersion->save();
+        if ($fields->isNotEmpty()) {
+            $fields->each(fn ($ignore, string $fieldHandle) => $dbVersion->setAttribute($fieldHandle, $model->{$fieldHandle}));
+
+            $dbVersion->save();
+        }
     }
 }
