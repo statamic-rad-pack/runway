@@ -42,7 +42,6 @@
         "php": "^8.2",
         "ajthinking/archetype": "^1.0.3 || ^2.0",
         "laravel/framework": "^10.25.0 || ^11.3",
-        "laravel/prompts": "^0.1.17",
         "pixelfear/composer-dist-plugin": "^0.1.5",
         "spatie/ignition": "^1.15",
         "spatie/invade": "^2.1",
