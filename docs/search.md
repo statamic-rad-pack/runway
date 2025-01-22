@@ -8,10 +8,13 @@ Runway integrates with [Statamic's Search functionality](https://statamic.dev/se
 
 ```php
 // config/statamic/search.php
-'myindex' => [
-  'driver' => 'local',
-  'searchables' => ['collection:blog', 'runway:order'],
-]
+
+'indexes' => [
+    'myindex' => [
+        'driver' => 'local',
+        'searchables' => ['collection:blog', 'runway:order'], // [tl! add]
+    ],
+],
 ```
 
 You can scope the resources you'd like to be searchable, using the `runway:{resourceHandle}` syntax. If you'd like everything in Runway to be searchable, you can use`runway:*`.
