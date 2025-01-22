@@ -2,7 +2,7 @@
 title: Search
 ---
 
-Runway integrates with [Statamic's Search functionality](https://statamic.dev/search#overview), allowing you to search your Eloquent models in the Conteol Panel and via the `{{ search:results }}` tag. It's as simple as adjusting your config file.
+Runway integrates with [Statamic's Search functionality](https://statamic.dev/search#overview), allowing you to search your Eloquent models in the Control Panel and via the `{{ search:results }}` tag. It's as simple as adjusting your config file.
 
 ## Configuration
 
