@@ -17,7 +17,7 @@ class CreateRunwayUrisTable extends Migration
             $table->id();
             $table->string('uri');
             $table->string('model_type');
-            $table->bigInteger('model_id');
+            $table->bigInteger('model_id'); // todo: this doesn't if the foreign key is a uuid
             $table->timestamps();
         });
     }

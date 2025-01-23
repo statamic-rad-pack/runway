@@ -25,16 +25,13 @@ class {{ class }} extends Model
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array
      */
-    public function casts(): array
-    {
-        return [
+    protected $casts = [
 {{ casts }}
-        ];
-    }
+    ];
 
     public function getRouteKeyName(): string
     {

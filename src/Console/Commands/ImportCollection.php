@@ -3,20 +3,30 @@
 namespace StatamicRadPack\Runway\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Console\RunsInPlease;
 use Statamic\Contracts\Entries\Collection;
 use Statamic\Facades;
+use Statamic\Fields\Field;
 use Stillat\Proteus\Support\Facades\ConfigWriter;
-use Whoops\Run;
 
 use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\progress;
 use function Laravel\Prompts\select;
 
 class ImportCollection extends Command
 {
     use RunsInPlease;
+
+    private $collection;
+    private $modelName;
+    private $modelClass;
+    private $blueprint;
 
     /**
      * The name and signature of the console command.
@@ -51,68 +61,32 @@ class ImportCollection extends Command
      */
     public function handle()
     {
-        $collection = $this->promptForCollection();
+        $this->collection = $this->promptForCollection();
 
-        $modelName = Str::of($collection->handle())->singular()->title();
+        $this->modelName = Str::of($this->collection->handle())->singular()->title();
+        $this->modelClass = "App\Models\\{$this->modelName}";
 
-        if (class_exists($model = "App\\Models\\{$modelName}") && ! $this->option('force')) {
-            $this->components->error("A [{$model}] model already exists.");
+        if (class_exists($this->modelClass) && ! $this->option('force')) {
+            $this->components->error("A [{$this->modelName}] model already exists.");
 
             return 1;
         }
 
-        // todo: come back and fill in the fillable and casts arrays later
-        // todo: when routing is enabled, add trait to the model
-        $modelContents = Str::of(File::get(__DIR__.'/stubs/model.stub'))
-            ->replace('{{ namespace }}', 'App\Models')
-            ->replace('{{ class }}', $modelName)
-            ->replace('{{ fillable }}', '// TODO')
-            ->replace('{{ casts }}', '// TODO')
-            ->__toString();
+        $this
+            ->copyBlueprint()
+            ->createEloquentModel()
+            ->appendToRunwayConfig()
+            ->createDatabaseMigration()
+            ->importEntries();
 
-        File::put(app_path("Models/{$modelName}.php"), $modelContents);
-
-        ConfigWriter::write(
-            'runway.resources.\\'.str_replace('\\', '\\', $model),
-            array_filter([
-                'handle' => $collection->handle(),
-                'name' => $collection->title(),
-                'published' => true,
-                'revisions' => $collection->revisionsEnabled(),
-                'route' => $collection->route(Facades\Site::default()->handle()),
-                'template' => $collection->template(),
-                'layout' => $collection->layout(),
-                'order_by' => $collection->sortField(),
-                'order_by_direction' => $collection->sortDirection(),
-            ])
-        );
-
-        Facades\Blueprint::make("runway::{$collection->handle()}")
-            ->setContents($collection->entryBlueprint()->contents())
-            ->save();
-
-        $columns = [
-            ['type' => 'uuid'],
-            ['type' => 'string', 'name' => 'title'],
-            ['type' => 'string', 'name' => 'slug'],
-            ['type' => 'boolean', 'name' => 'published'],
-            // todo: blueprint fields
-            ['type' => 'timestamps'],
-        ];
-
-        // todo: generate blueprint
-        // todo: run `php artisan migrate`
-
-        // todo: import entries
-        // todo: prompt user to delete collection and entries
-
-        $this->components->info("The {$collection->title()} collection has been imported.");
+        $this->components->info("The {$this->collection->title()} collection has been imported.");
 
         $this->line('  Next steps:');
 
         $this->components->bulletList([
-            'Replace usage of the {{ collection }} tag in your templates with the {{ runway }} tag.',
-            'Replace Entry fields with the Belongs To / Has Many fieldtypes.',
+            'Replace the {{ collection }} tag with the {{ runway }} tag in your templates.',
+            'If you have any Entry fields pointing to this collection, replace them with the Belong To or Has Many fieldtypes.',
+            "When you're ready, delete the {$this->collection->title()} collection.",
         ]);
     }
 
@@ -146,5 +120,243 @@ class ImportCollection extends Command
         }
 
         return $collection;
+    }
+
+    private function copyBlueprint(): self
+    {
+        $this->blueprint = Facades\Blueprint::make("runway::{$this->collection->handle()}")
+            ->setContents($this->collection->entryBlueprint()->contents())
+            ->ensureField('published', ['type' => 'toggle', 'display' => __('Published')], 'sidebar')
+            ->ensureField('date', ['type' => 'date', 'display' => __('Date')], 'sidebar')
+            ->removeField('parent');
+
+        $this->blueprint->save();
+
+        return $this;
+    }
+
+    private function createEloquentModel(): self
+    {
+        // Casts are different in Laravel 10, so we need to use a different model stub.
+        $modelStub = version_compare(app()->version(), '11.0.0', '>')
+            ? __DIR__.'/stubs/model.stub'
+            : __DIR__.'/stubs/model-l10.stub';
+
+        $modelContents = Str::of(File::get($modelStub))
+            ->replace('{{ namespace }}', 'App\Models')
+            ->replace('{{ class }}', $this->modelName)
+            ->replace('{{ traits }}', $this->collection->routes()->isNotEmpty() ? 'use RunwayRoutes;' : null) // todo
+            ->replace('{{ fillable }}', collect($this->getDatabaseColumns())
+                ->pluck('name')
+                ->filter()
+                ->map(fn ($column) => "'{$column}'")
+                ->join(', '))
+            ->replace('{{ casts }}', collect($this->getDatabaseColumns())
+                ->filter(fn ($column) => in_array($column['type'], ['json', 'boolean', 'datetime', 'date', 'time', 'float', 'integer']))
+                ->map(fn ($column) => "            '{$column['name']}' => '{$column['type']}',")
+                ->join(PHP_EOL))
+            ->__toString();
+
+        File::put(app_path("Models/{$this->modelName}.php"), $modelContents);
+
+        return $this;
+    }
+
+    private function appendToRunwayConfig(): self
+    {
+        ConfigWriter::write(
+            'runway.resources.'.str_replace('\\', '\\', $this->modelClass),
+            array_filter([
+                'handle' => $this->collection->handle(),
+                'name' => $this->collection->title(),
+                'published' => true,
+                'revisions' => $this->collection->revisionsEnabled(),
+                'route' => $this->collection->route(Facades\Site::default()->handle()),
+                'template' => $this->collection->template(),
+                'layout' => $this->collection->layout(),
+                'order_by' => $this->collection->sortField(),
+                'order_by_direction' => $this->collection->sortDirection(),
+            ]),
+        );
+
+        // Ensure the array key is "ModelName::class", and not "'\App\Models\ModelName'".
+        $contents = File::get(config_path('runway.php'));
+
+        $contents = Str::of($contents)
+            ->replace("'App\\Models\\{$this->modelName}' => [", "{$this->modelName}::class => [")
+            ->when(! Str::contains($contents, "use App\Models\\{$this->modelName};"), fn ($contents) => $contents
+                ->replace('return [', 'use App\Models\\'.$this->modelName.';'.PHP_EOL.PHP_EOL.'return [')
+            )
+            ->__toString();
+
+        File::put(config_path('runway.php'), $contents);
+
+        Config::set('runway', require config_path('runway.php'));
+
+        return $this;
+    }
+
+    private function createDatabaseMigration(): self
+    {
+        /** @var Model $model */
+        $model = new $this->modelClass;
+
+        if (Schema::hasTable($model->getTable())) {
+            $this->components->warn("The [{$model->getTable()}] table already exists. Skipping generation of migration.");
+
+            return $this;
+        }
+
+        $migrationContents = Str::of(File::get(__DIR__.'/stubs/migration.stub'))
+            ->replace('{{ table }}', $model->getTable())
+            ->replace('{{ columns }}', collect($this->getDatabaseColumns())->map(function (array $column) {
+                $type = $column['type'];
+
+                $string = "\$table->{$type}";
+
+                isset($column['name'])
+                    ? $string = "{$string}('{$column['name']}')"
+                    : $string = "{$string}()";
+
+                if (isset($column['nullable'])) {
+                    $string = "{$string}->nullable()";
+                }
+
+                if (isset($column['default'])) {
+                    $default = $column['default'];
+
+                    if (is_string($default)) {
+                        $default = "'{$default}'";
+                    }
+
+                    if (is_bool($default)) {
+                        $default = $default ? 'true' : 'false';
+                    }
+
+                    $string = "{$string}->default({$default})";
+                }
+
+                return "            {$string};";
+            })->implode(PHP_EOL))
+            ->__toString();
+
+        File::put(database_path('migrations/'.date('Y_m_d_His')."_create_{$model->getTable()}_table.php"), $migrationContents);
+
+        if (confirm('Would you like to run the migration?')) {
+            Artisan::call('migrate');
+        }
+
+        return $this;
+    }
+
+    private function importEntries(): self
+    {
+        /** @var Model $model */
+        $model = new $this->modelClass;
+
+        if (! Schema::hasTable($model->getTable())) {
+            return $this;
+        }
+
+        if (! confirm('Would you like to import existing entries')) {
+            return $this;
+        }
+
+        $progress = progress(label: 'Importing entries', steps: $this->collection->queryEntries()->count());
+        $progress->start();
+
+        $this->collection->queryEntries()->chunk(100, function ($entries) use ($model, $progress) {
+            $entries->each(function ($entry) use ($model, $progress) {
+                $attributes = $entry->data()
+                    ->only($this->blueprint->fields()->all()->map->handle())
+                    ->merge([
+                        'uuid' => $entry->id(),
+                        'slug' => $entry->slug(),
+                        'published' => $entry->published(),
+                        'updated_at' => $entry->get('updated_at') ?? now(),
+                    ])
+                    ->all();
+
+                $model = $model::find($entry->id()) ?? (new $model);
+                $model->forceFill($attributes)->save();
+
+                $progress->advance();
+            });
+        });
+
+        $progress->finish();
+
+        return $this;
+    }
+
+    private function getDatabaseColumns(): array
+    {
+        return $this->blueprint->fields()->all()
+            ->map(function (Field $field) {
+                return [
+                    'type' => $this->getColumnTypeForField($field),
+                    'name' => $field->handle(),
+                    'nullable' => ! $field->isRequired(),
+                ];
+            })
+            ->prepend(['type' => 'uuid'])
+            ->push(['type' => 'boolean', 'name' => 'published', 'default' => false])
+            ->push(['type' => 'timestamps'])
+            ->values()
+            ->all();
+    }
+
+    private function getColumnTypeForField(Field $field): string
+    {
+        if (in_array($field->type(), ['array', 'checkboxes', 'grid', 'group', 'list', 'replicator', 'table'])) {
+            return 'json';
+        }
+
+        if (
+            $field->get('max_items') &&
+            in_array($field->type(), ['assets', 'asset_container', 'asset_folder', 'collections', 'dictionary', 'entries', 'navs', 'select', 'sites', 'structures', 'taggable', 'taxonomies', 'terms', 'user_groups', 'user_roles', 'users'])
+        ) {
+            return 'json';
+        }
+
+        if (in_array($field->type(), ['html', 'markdown', 'textarea'])) {
+            return 'text';
+        }
+
+        if ($field->type() === 'bard') {
+            return $field->get('save_html')
+                ? 'text'
+                : 'json';
+        }
+
+        if ($field->type() === 'code') {
+            return $field->get('mode_selectable')
+                ? 'json'
+                : 'text';
+        }
+
+        if ($field->type() === 'date') {
+            return $field->get('time_enabled')
+                ? 'datetime'
+                : 'date';
+        }
+
+        if ($field->type() === 'time') {
+            return 'time';
+        }
+
+        if ($field->type() === 'float') {
+            return 'float';
+        }
+
+        if ($field->type() === 'integer') {
+            return 'integer';
+        }
+
+        if ($field->type() === 'boolean') {
+            return 'boolean';
+        }
+
+        return 'string';
     }
 }
