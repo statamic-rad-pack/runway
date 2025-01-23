@@ -59,6 +59,7 @@
 
                     <div>
                         <data-list-filters
+                            ref="filters"
                             :filters="filters"
                             :active-preset="activePreset"
                             :active-preset-payload="activePresetPayload"

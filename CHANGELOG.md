@@ -1,5 +1,20 @@
 # Changelog
 
+## v7.13.4 (2025-01-06)
+
+### What's fixed
+* Removed `laravel/prompts` from composer.json #650 by @duncanmcclean
+* Added a check to ensure relationship method exists before calling it #647 by @duncanmcclean
+
+
+
+## v7.13.3 (2024-12-20)
+
+## What's fixed
+* Fixed listing filters #645 by @duncanmcclean
+
+
+
 ## v7.13.2 (2024-12-09)
 
 ### What's fixed
