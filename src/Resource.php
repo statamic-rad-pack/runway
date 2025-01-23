@@ -66,15 +66,6 @@ class Resource
         return $this->config;
     }
 
-    public function cpIcon(): string
-    {
-        if (! $this->config->has('cp_icon')) {
-            return File::get(__DIR__.'/../resources/svg/database.svg');
-        }
-
-        return $this->config->get('cp_icon');
-    }
-
     public function hidden(): bool
     {
         return $this->config->get('hidden', false);
@@ -290,7 +281,6 @@ class Resource
             'model' => $this->model(),
             'name' => $this->name(),
             'blueprint' => $this->blueprint(),
-            'cp_icon' => $this->cpIcon(),
             'hidden' => $this->hidden(),
             'route' => $this->route(),
             'has_publish_states' => $this->hasPublishStates(),
