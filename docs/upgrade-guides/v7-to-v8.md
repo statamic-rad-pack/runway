@@ -66,6 +66,19 @@ To work around this, v8 introduces some changes around how nested fields are con
    
 As an upside of this new approach, nested fields can now be used with Runway's [GraphQL API](/graphql).
 
+### Removal of the `cp_icon` config option
+
+The `cp_icon` configuration option has been removed in Runway 8, in favour of being able to change the icon using Statamic's [Nav Preferences](https://statamic.dev/preferences#accessing-preferences) feature. 
+
+```php
+'resources' => [
+	\App\Models\Order::class => [
+		'name' => 'Orders',
+        'cp_icon' => 'date', // [tl! --]
+	],
+],
+```
+
 ## Previous upgrade guides
 
 -   [v3.x to v4.0](/upgrade-guides/v3-x-to-v4-0)

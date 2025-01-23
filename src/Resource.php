@@ -4,7 +4,6 @@ namespace StatamicRadPack\Runway;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Facades\Blink;
@@ -64,15 +63,6 @@ class Resource
     public function config(): Collection
     {
         return $this->config;
-    }
-
-    public function cpIcon(): string
-    {
-        if (! $this->config->has('cp_icon')) {
-            return File::get(__DIR__.'/../resources/svg/database.svg');
-        }
-
-        return $this->config->get('cp_icon');
     }
 
     public function hidden(): bool
@@ -290,7 +280,6 @@ class Resource
             'model' => $this->model(),
             'name' => $this->name(),
             'blueprint' => $this->blueprint(),
-            'cp_icon' => $this->cpIcon(),
             'hidden' => $this->hidden(),
             'route' => $this->route(),
             'has_publish_states' => $this->hasPublishStates(),

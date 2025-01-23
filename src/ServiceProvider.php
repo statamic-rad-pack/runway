@@ -142,7 +142,6 @@ class ServiceProvider extends AddonServiceProvider
                 ->each(function (Resource $resource) use (&$nav) {
                     $nav->create($resource->name())
                         ->section('Content')
-                        ->icon($resource->cpIcon())
                         ->route('runway.index', ['resource' => $resource->handle()])
                         ->can('view', $resource);
                 });

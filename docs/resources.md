@@ -79,21 +79,6 @@ If you’d like to hide the CP Nav Item that’s registered for this model, just
 
 > Bear in mind, this will just hide the Nav Item for the CP interface, it won’t actually get rid of the routes being registered. If someone knows where to look, they could still use the CP to manage your models (they could guess the URL).
 
-### Control Panel Icon
-
-You should set `icon` to the name of the icon you’d like to use instead.
-
-Alternatively, if the icon you want isn’t [included in Statamic](https://github.com/statamic/cms/tree/3.1/resources/svg), you can also pass an inline SVG.
-
-```php
-'resources' => [
-	\App\Models\Order::class => [
-		'name' => 'Orders',
-        'cp_icon' => 'date',
-	],
-],
-```
-
 ### Route
 
 If you want to take advantage of Runway’s front-end routing abilities, you can pass in a `route` to enable it.
