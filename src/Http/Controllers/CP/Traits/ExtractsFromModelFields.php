@@ -17,7 +17,7 @@ trait ExtractsFromModelFields
         $fields = $blueprint
             ->fields()
             ->setParent($model)
-            ->addValues($values->all())
+            ->addValues($values->toArray())
             ->preProcess();
 
         $values = $fields->values()->merge([
