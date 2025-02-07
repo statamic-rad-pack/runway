@@ -1,5 +1,12 @@
 # Changelog
 
+## v7.14.0 (2025-02-07)
+
+### What's new
+* A status indicator is now shown on the publish form #657 by @duncanmcclean
+
+
+
 ## v7.13.5 (2025-02-07)
 
 ### What's fixed
