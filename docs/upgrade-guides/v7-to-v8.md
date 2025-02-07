@@ -66,6 +66,8 @@ To work around this, v8 introduces some changes around how nested fields are con
    
 As an upside of this new approach, nested fields can now be used with Runway's [GraphQL API](/graphql).
 
+## Low impact changes
+
 ### Removal of the `cp_icon` config option
 
 The `cp_icon` configuration option has been removed in Runway 8, in favour of being able to change the icon using Statamic's [Nav Preferences](https://statamic.dev/preferences#accessing-preferences) feature. 
@@ -78,6 +80,10 @@ The `cp_icon` configuration option has been removed in Runway 8, in favour of be
 	],
 ],
 ```
+
+### Generate Migrations command has been removed
+
+The `runway:generate-migrations` command has been removed in favour of the new `runway:import-collection` command which handles the entire process of generating Eloquent models, database migrations and importing entries.
 
 ## Previous upgrade guides
 
