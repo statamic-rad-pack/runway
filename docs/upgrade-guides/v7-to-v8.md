@@ -48,7 +48,7 @@ To work around this, v8 introduces some changes around how nested fields are con
     ```yaml
     -
       handle: address->street_name # [tl! remove]
-      handle: address_street_name # // [tl! add]
+      handle: address_street_name # [tl! add]
       field:
         type: text
         display: 'Street Name'
