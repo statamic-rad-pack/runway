@@ -18,7 +18,7 @@
         initial-permalink="{{ $permalink }}"
         :initial-is-working-copy="{{ $str::bool($hasWorkingCopy) }}"
         :initial-read-only="{{ $str::bool($readOnly) }}"
-        :initial-status="{{ $str::bool($status) }}"
+        initial-status="{{ $status }}"
         :breadcrumbs="{{ $breadcrumbs->toJson() }}"
         :can-edit-blueprint="{{ Auth::user()->can('configure fields') ? 'true' : 'false' }}"
         :can-manage-publish-state="{{ $str::bool($canManagePublishState) }}"
