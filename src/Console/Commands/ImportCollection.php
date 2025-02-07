@@ -4,7 +4,6 @@ namespace StatamicRadPack\Runway\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
@@ -12,8 +11,8 @@ use Illuminate\Support\Str;
 use Statamic\Console\RunsInPlease;
 use Statamic\Contracts\Entries\Collection;
 use Statamic\Facades;
-use Statamic\Fields\Field;
 use Statamic\Facades\YAML;
+use Statamic\Fields\Field;
 use StatamicRadPack\Runway\Runway;
 use Stillat\Proteus\Support\Facades\ConfigWriter;
 
