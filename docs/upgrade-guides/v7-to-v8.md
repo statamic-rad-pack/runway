@@ -75,7 +75,7 @@ The `cp_icon` configuration option has been removed in Runway 8, in favour of be
 ```php
 'resources' => [
 	\App\Models\Order::class => [
-		'name' => 'Orders',
+        'name' => 'Orders',
         'cp_icon' => 'date', // [tl! --]
 	],
 ],
