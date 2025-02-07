@@ -4,7 +4,8 @@
 
         <div class="flex items-center mb-6">
             <h1 class="flex-1">
-                <div class="flex items-center">
+                <div class="flex items-baseline">
+                    <span v-if="! isCreating && resourced.has_publish_states" class="little-dot rtl:ml-2 ltr:mr-2 -top-1" :class="initialStatus" v-tooltip="__(initialStatus)" />
                     <span v-html="$options.filters.striptags(title)" />
                 </div>
             </h1>
@@ -244,6 +245,7 @@ export default {
         isCreating: Boolean,
         isInline: Boolean,
         initialReadOnly: Boolean,
+        initialStatus: Boolean,
         initialPermalink: String,
         revisionsEnabled: Boolean,
         canEditBlueprint: Boolean,
