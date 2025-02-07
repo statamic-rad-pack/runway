@@ -39,13 +39,13 @@
         }
     },
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "ajthinking/archetype": "^1.0.3 || ^2.0",
-        "laravel/framework": "^10.25.0 || ^11.3",
+        "laravel/framework": "^11.3 || ^12.0",
         "pixelfear/composer-dist-plugin": "^0.1.5",
         "spatie/ignition": "^1.15",
         "spatie/invade": "^2.1",
-        "statamic/cms": "^5.41",
+        "statamic/cms": "^6.0",
         "stillat/proteus": "^4.0"
     },
     "require-dev": {
