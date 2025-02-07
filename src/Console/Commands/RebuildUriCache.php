@@ -22,7 +22,7 @@ class RebuildUriCache extends Command
      *
      * @var string
      */
-    protected $signature = 'statamic:runway:rebuild-uris
+    protected $signature = 'runway:rebuild-uris
         { --force : Force rebuilding of the URI cache. }';
 
     /**

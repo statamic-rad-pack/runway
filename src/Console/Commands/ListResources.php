@@ -16,7 +16,7 @@ class ListResources extends Command
      *
      * @var string
      */
-    protected $signature = 'statamic:runway:resources';
+    protected $signature = 'runway:resources';
 
     /**
      * The console command description.
