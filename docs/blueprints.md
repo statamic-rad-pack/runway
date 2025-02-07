@@ -18,56 +18,57 @@ Runway supports pretty much ALL fieldtypes available in Statamic, including Bard
 
 For simplicity, here's a table matching Statamic's Core fieldtypes with the correct column types:
 
-**Fieldtype**| **Column Type**           |**Notes**
------|---------------------------|-----
-[Array](https://statamic.dev/fieldtypes/array)| `json`                    |
-Asset Container| `string`/`json`           |
-[Assets](https://statamic.dev/fieldtypes/assets)| `string`/`json`           |
-[Bard](https://statamic.dev/fieldtypes/bard)| `string`/`json`           |If 'Display HTML' is `true`, then Bard will save as a `string`.
-[Button Group](https://statamic.dev/fieldtypes/button_group)| `string`                  |
-[Checkboxes](https://statamic.dev/fieldtypes/checkboxes)| `json`                    |
-[Code](https://statamic.dev/fieldtypes/code)| `string`                  |
-[Collections](https://statamic.dev/fieldtypes/collections)| `string`/`json`           |If 'Max items' is `1`, column type should be `string`. Otherwise, `json` is what you want.
-[Color](https://statamic.dev/fieldtypes/color)| `string`                  |
-[Date](https://statamic.dev/fieldtypes/date)| `string`/`range`          |Format is specified field configuration options. Ranges are should be stored as json.
-[Entries](https://statamic.dev/fieldtypes/entries)| `string`/`json`           |If 'Max items' is `1`, column type should be `string`. Otherwise, `json` is what you want.
-Float| `float`                   |
-[Grid](https://statamic.dev/fieldtypes/grid)| `json`                    |
-[Group](https://statamic.dev/fieldtypes/group)| `json`                    |
-[Hidden](https://statamic.dev/fieldtypes/hidden)| `string`                  |
-[HTML](https://statamic.dev/fieldtypes/html)| -                         |UI only
-[Icon](https://statamic.dev/fieldtypes/icon)| `string`                  |
-[Integer](https://statamic.dev/fieldtypes/integer)| `integer`                 |
-[Link](https://statamic.dev/fieldtypes/link)| `json`                    |
-[List](https://statamic.dev/fieldtypes/list)| `json`                    |
-[Markdown](https://statamic.dev/fieldtypes/markdown)| `string`                  |
-[Navs](https://statamic.dev/fieldtypes/navs)| `string`/`json`           |
-[Radio](https://statamic.dev/fieldtypes/radio)| `string`                  |
-[Range](https://statamic.dev/fieldtypes/range)| `string`                  |
-[Replicator](https://statamic.dev/fieldtypes/replicator)| `json`                    |
-[Revealer](https://statamic.dev/fieldtypes/revealer)| -                         |UI only
-[Section](https://statamic.dev/fieldtypes/section)| -                         |UI only
+**Fieldtype**| **Column Type**          |**Notes**
+-----|--------------------------|-----
+[Array](https://statamic.dev/fieldtypes/array)| `json`                   |
+Asset Container| `string`/`json`          |
+[Assets](https://statamic.dev/fieldtypes/assets)| `string`/`json`          |
+[Bard](https://statamic.dev/fieldtypes/bard)| `string`/`json`          |If 'Display HTML' is `true`, then Bard will save as a `string`.
+[Button Group](https://statamic.dev/fieldtypes/button_group)| `string`                 |
+[Checkboxes](https://statamic.dev/fieldtypes/checkboxes)| `json`                   |
+[Code](https://statamic.dev/fieldtypes/code)| `string`                 |
+[Collections](https://statamic.dev/fieldtypes/collections)| `string`/`json`          |If 'Max items' is `1`, column type should be `string`. Otherwise, `json` is what you want.
+[Color](https://statamic.dev/fieldtypes/color)| `string`                 |
+[Date](https://statamic.dev/fieldtypes/date)| `string`/`range`         |Format is specified field configuration options. Ranges are should be stored as json.
+[Dictionary](https://statamic.dev/fieldtypes/dictionary)|`string`/`json`           |If 'Max items' is `1`, column type should be `string`. Otherwise, `json` is what you want.
+[Entries](https://statamic.dev/fieldtypes/entries)| `string`/`json`          |If 'Max items' is `1`, column type should be `string`. Otherwise, `json` is what you want.
+[Form](https://statamic.dev/fieldtypes/form)| `string`/`json`          |If 'Max items' is `1`, column type should be `string`. Otherwise, `json` is what you want.
+[Grid](https://statamic.dev/fieldtypes/grid)| `json`                   |
+[Group](https://statamic.dev/fieldtypes/group)| `json`                   |
+[Hidden](https://statamic.dev/fieldtypes/hidden)| `string`                 |
+[HTML](https://statamic.dev/fieldtypes/html)| -                        |UI only
+[Icon](https://statamic.dev/fieldtypes/icon)| `string`                 |
+[Integer](https://statamic.dev/fieldtypes/integer)| `integer`                |
+[Link](https://statamic.dev/fieldtypes/link)| `json`                   |
+[List](https://statamic.dev/fieldtypes/list)| `json`                   |
+[Markdown](https://statamic.dev/fieldtypes/markdown)| `string`                 |
+[Navs](https://statamic.dev/fieldtypes/navs)| `string`/`json`          |
+[Radio](https://statamic.dev/fieldtypes/radio)| `string`                 |
+[Range](https://statamic.dev/fieldtypes/range)| `string`                 |
+[Replicator](https://statamic.dev/fieldtypes/replicator)| `json`                   |
+[Revealer](https://statamic.dev/fieldtypes/revealer)| -                        |UI only
+[Section](https://statamic.dev/fieldtypes/section)| -                        |UI only
 [Select](https://statamic.dev/fieldtypes/select)| `string`/`integer`/`json` |
-[Sites](https://statamic.dev/fieldtypes/sites)| `string`/`json`           |
-[Slug](https://statamic.dev/fieldtypes/slug)| `string`                  |
-[Structures](https://statamic.dev/fieldtypes/structures)| `json`                    |
-[Table](https://statamic.dev/fieldtypes/table)| `json`                    |
-[Tags](https://statamic.dev/fieldtypes/tags)| `json`                    |
-[Taxonomies](https://statamic.dev/fieldtypes/taxonomies)| `string`/`json`           |
-[Template](https://statamic.dev/fieldtypes/template)| `string`                  |
-[Terms](https://statamic.dev/fieldtypes/terms)| `string`/`json`           |
-[Text](https://statamic.dev/fieldtypes/text)| `string`                  |
-[Textarea](https://statamic.dev/fieldtypes/textarea)| `string`                  |
-[Time](https://statamic.dev/fieldtypes/time)| `string`                  |
-[Toggle](https://statamic.dev/fieldtypes/toggle)| `boolean`                 |
-[User Groups](https://statamic.dev/fieldtypes/user-groups)| `string`/`json`           |When the resource is the `User` model, you don't need to create a column for this fieldtype.
-[User Roles](https://statamic.dev/fieldtypes/user-roles)| `string`/`json`           |When the resource is the `User` model, you don't need to create a column for this fieldtype.
+[Sites](https://statamic.dev/fieldtypes/sites)| `string`/`json`          |
+[Slug](https://statamic.dev/fieldtypes/slug)| `string`                 |
+[Spacer](https://statamic.dev/fieldtypes/spacer)| -                        |UI only
+[Structures](https://statamic.dev/fieldtypes/structures)| `json`                   |
+[Table](https://statamic.dev/fieldtypes/table)| `json`                   |
+[Tags](https://statamic.dev/fieldtypes/tags)| `json`                   |
+[Taxonomies](https://statamic.dev/fieldtypes/taxonomies)| `string`/`json`          |
+[Template](https://statamic.dev/fieldtypes/template)| `string`                 |
+[Terms](https://statamic.dev/fieldtypes/terms)| `string`/`json`          |
+[Text](https://statamic.dev/fieldtypes/text)| `string`                 |
+[Textarea](https://statamic.dev/fieldtypes/textarea)| `string`                 |
+[Time](https://statamic.dev/fieldtypes/time)| `string`                 |
+[Toggle](https://statamic.dev/fieldtypes/toggle)| `boolean`                |
+[User Groups](https://statamic.dev/fieldtypes/user-groups)| `string`/`json`          |When the resource is the `User` model, you don't need to create a column for this fieldtype.
+[User Roles](https://statamic.dev/fieldtypes/user-roles)| `string`/`json`          |When the resource is the `User` model, you don't need to create a column for this fieldtype.
 [Users](https://statamic.dev/fieldtypes/users)| `string`/`integer`/`json` |
-[Video](https://statamic.dev/fieldtypes/video)| `string`                  |
-Width| `integer`                 |
-[YAML](https://statamic.dev/fieldtypes/yaml)| `string`                  |
-[Belongs To](/fieldtypes#belongsto-fieldtype)| `bigInteger`              |Usually `bigInteger` or `integer` but depends on personal preference.
-
+[Video](https://statamic.dev/fieldtypes/video)| `string`                 |
+[Width](https://statamic.dev/fieldtypes/width)| `integer`                |
+[YAML](https://statamic.dev/fieldtypes/yaml)| `string`                 |
+ 
 ## Eloquent Relationships
 
 Runway provides two fieldtypes to let you manage Eloquent Relationships within Statamic:

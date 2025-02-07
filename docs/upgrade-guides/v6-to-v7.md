@@ -66,7 +66,7 @@ BlogPost::class => [
 
 -   [v3.x to v4.0](/upgrade-guides/v3-x-to-v4-0)
 -   [v4.x to v5.0](/upgrade-guides/v4-x-to-v5-0)
--   [v6.x to v6.0](/upgrade-guides/v5-x-to-v6-0)
+-   [v5.x to v6.0](/upgrade-guides/v5-x-to-v6-0)
 
 ---
 
