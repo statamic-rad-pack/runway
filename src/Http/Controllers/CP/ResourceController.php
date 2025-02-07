@@ -155,6 +155,7 @@ class ResourceController extends CpController
             'values' => $values,
             'meta' => $meta,
             'readOnly' => $resource->readOnly(),
+            'status' => $model->publishedStatus(),
             'permalink' => $resource->hasRouting() ? $model->uri() : null,
             'resourceHasRoutes' => $resource->hasRouting(),
             'currentModel' => [
