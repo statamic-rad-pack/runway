@@ -34,7 +34,7 @@ class ImportCollection extends Command
      *
      * @var string
      */
-    protected $signature = 'runway:import-collection
+    protected $signature = 'statamic:runway:import-collection
         { collection? : The handle of the collection to import. }
         { --force : Force overwrite if files already exist }';
 
