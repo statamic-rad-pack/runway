@@ -104,7 +104,7 @@ Then, when you're adding fields to your blueprint, simply prefix the column name
     display: 'Street Name'
 ```
 
-:::note Heads up!
+**Heads up!**
 In order for Nested Fields to work, you'll need to define a cast for the JSON column in your Eloquent model.
 
 ```php
@@ -115,7 +115,6 @@ protected function casts(): array
     ];
 }
 ```
-:::
 
 ## Generating migrations from your blueprints
 
