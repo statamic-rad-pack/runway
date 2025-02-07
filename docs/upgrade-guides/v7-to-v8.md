@@ -83,8 +83,8 @@ The `cp_icon` configuration option has been removed in Runway 8, in favour of be
 
 -   [v3.x to v4.0](/upgrade-guides/v3-x-to-v4-0)
 -   [v4.x to v5.0](/upgrade-guides/v4-x-to-v5-0)
--   [v6.x to v6.0](/upgrade-guides/v5-x-to-v6-0)
--   [v7.x to v8.0](/upgrade-guides/v7-to-v8)
+-   [v5.x to v6.0](/upgrade-guides/v5-x-to-v6-0)
+-   [v6.x to v7.0](/upgrade-guides/v6-to-v7)
 
 ---
 
