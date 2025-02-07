@@ -13,6 +13,8 @@ use Statamic\Console\RunsInPlease;
 use Statamic\Contracts\Entries\Collection;
 use Statamic\Facades;
 use Statamic\Fields\Field;
+use Statamic\Facades\YAML;
+use StatamicRadPack\Runway\Runway;
 use Stillat\Proteus\Support\Facades\ConfigWriter;
 
 use function Laravel\Prompts\confirm;
@@ -124,11 +126,17 @@ class ImportCollection extends Command
 
     private function copyBlueprint(): self
     {
+        $contents = Str::of(YAML::dump($this->collection->entryBlueprint()->contents()))
+            ->replace("- 'new \Statamic\Rules\UniqueEntryValue({collection}, {id}, {site})'", '')
+            ->__toString();
+
         $this->blueprint = Facades\Blueprint::make("runway::{$this->collection->handle()}")
-            ->setContents($this->collection->entryBlueprint()->contents())
-            ->ensureField('published', ['type' => 'toggle', 'display' => __('Published')], 'sidebar')
-            ->ensureField('date', ['type' => 'date', 'display' => __('Date')], 'sidebar')
+            ->setContents(YAML::parse($contents))
             ->removeField('parent');
+
+        if ($this->collection->dated()) {
+            $this->blueprint->ensureField('date', ['type' => 'date', 'display' => __('Date')], 'sidebar');
+        }
 
         $this->blueprint->save();
 
@@ -145,7 +153,7 @@ class ImportCollection extends Command
         $modelContents = Str::of(File::get($modelStub))
             ->replace('{{ namespace }}', 'App\Models')
             ->replace('{{ class }}', $this->modelName)
-            ->replace('{{ traits }}', $this->collection->routes()->isNotEmpty() ? 'use RunwayRoutes;' : null) // todo
+            ->replace('{{ traits }}', $this->collection->routes()->isNotEmpty() ? 'HasRunwayResource, RunwayRoutes' : 'HasRunwayResource')
             ->replace('{{ fillable }}', collect($this->getDatabaseColumns())
                 ->pluck('name')
                 ->filter()
@@ -158,6 +166,8 @@ class ImportCollection extends Command
             ->__toString();
 
         File::put(app_path("Models/{$this->modelName}.php"), $modelContents);
+
+        spl_autoload('App\Models\\'.$this->modelName);
 
         return $this;
     }
@@ -192,6 +202,8 @@ class ImportCollection extends Command
         File::put(config_path('runway.php'), $contents);
 
         Config::set('runway', require config_path('runway.php'));
+
+        Runway::discoverResources();
 
         return $this;
     }
@@ -243,7 +255,7 @@ class ImportCollection extends Command
         File::put(database_path('migrations/'.date('Y_m_d_His')."_create_{$model->getTable()}_table.php"), $migrationContents);
 
         if (confirm('Would you like to run the migration?')) {
-            Artisan::call('migrate');
+            $this->call('migrate');
         }
 
         return $this;
@@ -262,6 +274,8 @@ class ImportCollection extends Command
             return $this;
         }
 
+        $this->newLine();
+
         $progress = progress(label: 'Importing entries', steps: $this->collection->queryEntries()->count());
         $progress->start();
 
@@ -272,6 +286,7 @@ class ImportCollection extends Command
                     ->merge([
                         'uuid' => $entry->id(),
                         'slug' => $entry->slug(),
+                        'date' => $entry->date(),
                         'published' => $entry->published(),
                         'updated_at' => $entry->get('updated_at') ?? now(),
                     ])

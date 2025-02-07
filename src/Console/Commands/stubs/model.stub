@@ -10,8 +10,7 @@ use StatamicRadPack\Runway\Routing\Traits\RunwayRoutes;
 
 class {{ class }} extends Model
 {
-    use HasFactory, HasRunwayResource, HasUuids;
-    {{ traits }}
+    use HasFactory, HasUuids, {{ traits }};
 
     protected $primaryKey = 'uuid';
 
