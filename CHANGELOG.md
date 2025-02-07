@@ -1,5 +1,12 @@
 # Changelog
 
+## v7.13.5 (2025-02-07)
+
+### What's fixed
+* Prevent error when model can't be found #655 by @duncanmcclean
+
+
+
 ## v7.13.4 (2025-01-06)
 
 ### What's fixed
