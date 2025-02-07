@@ -6,11 +6,11 @@ title: Resources
 
 For each of the Eloquent models you wish to use with Runway, you’ll need to define a ‘resource’.
 
-A resource basically tells Runway about the model and how you’d like it to be configured - which blueprint to use, whether or not it should be manageable in the CP, etc.
+A resource basically tells Runway about the model and how you’d like it to be configured - which blueprint to use, whether it should be manageable in the CP, etc.
 
 ## Defining resources
 
-You can define resources inside of the configuration file published during installation. It’s located in `config/runway.php`.
+You can define resources inside the configuration file published during installation. It’s located in `config/runway.php`.
 
 ```php
 <?php
@@ -57,6 +57,10 @@ class Order extends Model
 ```
 
 Finally, you can start adding fields to your resource's blueprint. To learn more about using Blueprints in Runway, please review the [Blueprints](/blueprints) page.
+
+:::tip Hot Tip
+If you're moving a collection to the database, use the `php please runway:import-collection` command. It'll help you set up everything you need, including moving your entries to the database.
+:::
 
 ## Configuring resources
 
