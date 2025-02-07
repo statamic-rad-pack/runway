@@ -501,6 +501,7 @@ export default {
                         this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 350);
 
                         if (this.publishStatesEnabled) {
+                            this.status = response.data.data.status;
                             this.initialPublished = response.data.data.published;
                         }
 
