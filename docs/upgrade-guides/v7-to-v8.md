@@ -5,7 +5,7 @@ title: 'Upgrade Guide: v7.x to v8.0'
 ## Overview
 
 :::warning Warning
-Please don't upgrade multiple versions at once (eg. from v6 to v8). Please upgrade one step at a time.
+Please don't upgrade multiple major versions at once (eg. from v6 to v8). You should upgrade one major version at a time.
 :::
 
 To get started with the upgrade process, follow the below steps:
