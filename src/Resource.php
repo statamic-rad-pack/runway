@@ -4,7 +4,6 @@ namespace StatamicRadPack\Runway;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Search;
@@ -246,7 +245,7 @@ class Resource
     public function databaseColumns(): array
     {
         return Blink::once('runway-database-columns-'.$this->databaseTable(), function () {
-            return Schema::getColumnListing($this->databaseTable());
+            return $this->model()->getConnection()->getSchemaBuilder()->getColumnListing($this->databaseTable());
         });
     }
 
