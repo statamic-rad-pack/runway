@@ -1,5 +1,13 @@
 # Changelog
 
+## v8.0.1 (2025-02-07)
+
+### What's fixed
+* Improve compatibility with per model database connections #659 by @godismyjudge95
+* Fix attributes returning a collection instead of an array #654 by @kailumworkhouse
+
+
+
 ## v8.0.0 (2025-02-07)
 
 ### Read First 👀
