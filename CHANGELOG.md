@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.1.0 (2025-02-20)
+
+### What's new
+* The `rebuild-uris` command now bypasses global scopes #661 by @godismyjudge95
+
+
+
 ## v8.0.1 (2025-02-17)
 
 ### What's fixed
