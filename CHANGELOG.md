@@ -1,6 +1,6 @@
 # Changelog
 
-## v8.0.1 (2025-02-07)
+## v8.0.1 (2025-02-17)
 
 ### What's fixed
 * Improve compatibility with per model database connections #659 by @godismyjudge95
