@@ -9,6 +9,8 @@ use StatamicRadPack\Runway\Runway;
 
 class Status extends BaseStatusFilter
 {
+    protected static $handle = 'runway-status';
+
     public function visibleTo($key): bool
     {
         return in_array($key, ['runway']) && $this->resource()->hasPublishStates();

@@ -1,5 +1,27 @@
 # Changelog
 
+## v8.1.1 (2025-02-21)
+
+### What's fixed
+* Fixed missing "Status" filter on collections #663 by @duncanmcclean
+
+
+
+## v8.1.0 (2025-02-20)
+
+### What's new
+* The `rebuild-uris` command now bypasses global scopes #661 by @godismyjudge95
+
+
+
+## v8.0.1 (2025-02-17)
+
+### What's fixed
+* Improve compatibility with per model database connections #659 by @godismyjudge95
+* Fix attributes returning a collection instead of an array #654 by @kailumworkhouse
+
+
+
 ## v8.0.0 (2025-02-07)
 
 ### Read First 👀
