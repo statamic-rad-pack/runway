@@ -116,24 +116,6 @@ protected function casts(): array
 }
 ```
 
-## Generating migrations from your blueprints
-
-If you’ve already created a blueprint for your model(s) and still need to do the database side of things, Runway can help!
-
-Runway can automatically generate migrations for your models, based on the fields defined in your blueprint, and their configurations.
-
-To generate a migration for a specific blueprint:
-
-```
-php please runway:generate-migrations resource-handle
-```
-
-You may also run this same command for all resources pending a migration.
-
-```
-php please runway:generate-migrations
-```
-
 ## Computed Fields
 
 Like Statamic Core, Runway supports the concept of Computed Fields. However, instead of the computed values being part of a callback in your `AppServiceProvider`, they're accessors on your Eloquent model.
