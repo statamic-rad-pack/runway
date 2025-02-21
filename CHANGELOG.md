@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.1.2 (2025-02-21)
+
+### What's fixed
+* Reverted "Fix attributes returning a collection instead of an array" #666 by @duncanmcclean
+
+
+
 ## v8.1.1 (2025-02-21)
 
 ### What's fixed
