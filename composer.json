@@ -63,5 +63,5 @@
             "composer/package-versions-deprecated": true
         }
     },
-    "minimum-stability": "alpha"
+    "minimum-stability": "dev"
 }
