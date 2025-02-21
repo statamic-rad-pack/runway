@@ -31,11 +31,12 @@ php artisan view:clear
 
 **4.** Carefully review this upgrade guide for changes which may affect your project.
 
-## High impact changes
+## Dates are now stored in UTC
+##### Likelihood Of Impact: High
 
+Dates in Statamic are now stored as UTC, rather than your application's timezone. 
 
-## Low impact changes
-
+(TODO) More information to come...
 
 ## Previous upgrade guides
 

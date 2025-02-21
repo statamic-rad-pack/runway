@@ -116,6 +116,43 @@ protected function casts(): array
 }
 ```
 
+## Dates
+
+As of Statamic 6, dates are stored in UTC, rather than your application's timezone. 
+
+While we recommend [using `UTC` as your application timezone](https://laravel.com/docs/master/eloquent-mutators#date-casting-and-timezones), if that's not possible, you should add accessors to your Eloquent models so Runway is always dealing with UTC Carbon instances.
+
+```php
+// app/Models/Post.php
+
+public function casts()
+{
+    return [
+        'publish_date' => 'datetime', // [tl! remove]
+    ];
+}
+
+public function date(): Attribute
+{
+    return Attribute::make(
+        get: function ($value) {
+            return Carbon::parse($value, 'UTC');
+        },
+        set: function ($value) {
+            if (! $value instanceof Carbon) {
+                $value = Carbon::parse($value, 'UTC');
+            }
+
+            if ($value->tzName !== 'UTC') {
+                $value = $value->utc();
+            }
+
+            return $value->format('Y-m-d H:i:s');
+        },
+    );
+}
+```
+
 ## Computed Fields
 
 Like Statamic Core, Runway supports the concept of Computed Fields. However, instead of the computed values being part of a callback in your `AppServiceProvider`, they're accessors on your Eloquent model.
