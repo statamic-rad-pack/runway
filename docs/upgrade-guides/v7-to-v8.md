@@ -5,7 +5,7 @@ title: 'Upgrade Guide: v7.x to v8.0'
 ## Overview
 
 :::warning Warning
-Please don't upgrade multiple versions at once (eg. from v6 to v8). Please upgrade one step at a time.
+Please don't upgrade multiple major versions at once (eg. from v6 to v8). You should upgrade one major version at a time.
 :::
 
 To get started with the upgrade process, follow the below steps:
@@ -48,7 +48,7 @@ To work around this, v8 introduces some changes around how nested fields are con
     ```yaml
     -
       handle: address->street_name # [tl! remove]
-      handle: address_street_name # // [tl! add]
+      handle: address_street_name # [tl! add]
       field:
         type: text
         display: 'Street Name'
@@ -75,7 +75,7 @@ The `cp_icon` configuration option has been removed in Runway 8, in favour of be
 ```php
 'resources' => [
 	\App\Models\Order::class => [
-		'name' => 'Orders',
+        'name' => 'Orders',
         'cp_icon' => 'date', // [tl! --]
 	],
 ],

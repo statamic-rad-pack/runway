@@ -104,7 +104,7 @@ Then, when you're adding fields to your blueprint, simply prefix the column name
     display: 'Street Name'
 ```
 
-:::note Heads up!
+**Heads up!**
 In order for Nested Fields to work, you'll need to define a cast for the JSON column in your Eloquent model.
 
 ```php
@@ -114,25 +114,6 @@ protected function casts(): array
         'address' => 'array', // or 'json', AsArrayObject::class
     ];
 }
-```
-:::
-
-## Generating migrations from your blueprints
-
-If you’ve already created a blueprint for your model(s) and still need to do the database side of things, Runway can help!
-
-Runway can automatically generate migrations for your models, based on the fields defined in your blueprint, and their configurations.
-
-To generate a migration for a specific blueprint:
-
-```
-php please runway:generate-migrations resource-handle
-```
-
-You may also run this same command for all resources pending a migration.
-
-```
-php please runway:generate-migrations
 ```
 
 ## Computed Fields
