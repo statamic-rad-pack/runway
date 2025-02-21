@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.1.1 (2025-02-21)
+
+### What's fixed
+* Fixed missing "Status" filter on collections #663 by @duncanmcclean
+
+
+
 ## v8.1.0 (2025-02-20)
 
 ### What's new
