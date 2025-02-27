@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.2.0 (2025-02-27)
+
+### What's new
+* Laravel 12 support #664 by @duncanmcclean
+
+
+
 ## v8.1.2 (2025-02-21)
 
 ### What's fixed
