@@ -62,6 +62,5 @@
             "pixelfear/composer-dist-plugin": true,
             "composer/package-versions-deprecated": true
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
