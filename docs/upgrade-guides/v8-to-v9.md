@@ -31,12 +31,15 @@ php artisan view:clear
 
 **4.** Carefully review this upgrade guide for changes which may affect your project.
 
-## Dates are now stored in UTC
-##### Likelihood Of Impact: High
+## High impact changes
 
-Dates in Statamic are now stored as UTC, rather than your application's timezone. 
+### PHP and Laravel support
+**Affects apps using PHP < 8.2 or Laravel < 11.**
 
-(TODO) More information to come...
+* The minimum version of PHP is now 8.2.
+* The minimum version of Laravel is now 11.
+
+We highly recommend upgrading all the way to Laravel 12 and PHP 8.4.
 
 ## Previous upgrade guides
 
