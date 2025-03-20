@@ -264,7 +264,7 @@ class YourModel extends Model
 	public function scopeRunway($query)
 	{
 	    // Disables ALL global scopes
-		return $query->->withoutGlobalScopes();
+		return $query->withoutGlobalScopes();
 		
 		// Disables a specific global scope
 		return $query->withoutGlobalScope([ActiveScope::class]);
