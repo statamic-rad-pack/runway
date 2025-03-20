@@ -19,8 +19,7 @@ class Provider extends BaseProvider
 
         return collect($resources)->flatMap(function ($handle) {
             return Runway::findResource($handle)
-                ->model()
-                ->query()
+                ->newEloquentQuery()
                 ->whereStatus('published')
                 ->get()
                 ->mapInto(Searchable::class);
