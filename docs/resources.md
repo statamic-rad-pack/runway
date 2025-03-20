@@ -236,6 +236,44 @@ public function visibleTo($item)
 }
 ```
 
+## Queries
+
+Every query made by Runway to your model will call the `runway` query scope. This allows you to easily filter the models returned by Runway.
+
+```php
+class YourModel extends Model
+{
+	public function scopeRunway($query)
+	{
+		return $query->where('something', true);
+	}
+}
+```
+
+If you only want to filter models returned in the Control Panel, see the `runwayListing` and `runwaySearch` scopes documented on the [Control Panel](/control-panel#content-scoping-control-panel-results) page.
+
+### Disabling global scopes
+
+By default, Runway will observe all global scopes registered on your model. However, this might not be ideal if you want to access, for example, soft deleted models in Runway.
+
+You can work around this by calling the `withoutGlobalScopes` method in the `runway` query scope:
+
+```php
+class YourModel extends Model
+{
+	public function scopeRunway($query)
+	{
+	    // Disables ALL global scopes
+		return $query->->withoutGlobalScopes();
+		
+		// Disables a specific global scope
+		return $query->withoutGlobalScope([ActiveScope::class]);
+	}
+}
+```
+
+You can find more information about global scopes on the [Laravel documentation](https://laravel.com/docs/12.x/eloquent#removing-global-scopes).
+
 ## List of Resources
 
 If you're unsure about the handle of a resource, you may want to check it. You may do so with the `php please runway:resources` command which will display a list of Runway Resources.

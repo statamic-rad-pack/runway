@@ -193,7 +193,7 @@ abstract class BaseFieldtype extends Relationship
 
     protected function getIndexQuery($request)
     {
-        $query = $this->resource()->model()->newQuery();
+        $query = $this->resource()->newEloquentQuery();
 
         $query->when($query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
 

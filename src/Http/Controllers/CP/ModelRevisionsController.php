@@ -14,7 +14,7 @@ class ModelRevisionsController extends CpController
 
     public function index(Request $request, Resource $resource, $model)
     {
-        $model = $resource->model()
+        $model = $resource->newEloquentQuery()
             ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
             ->first();
 
@@ -43,7 +43,7 @@ class ModelRevisionsController extends CpController
 
     public function store(Request $request, Resource $resource, $model)
     {
-        $model = $resource->model()
+        $model = $resource->newEloquentQuery()
             ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
             ->first();
 
@@ -57,7 +57,7 @@ class ModelRevisionsController extends CpController
 
     public function show(Request $request, Resource $resource, $model, $revisionId)
     {
-        $model = $resource->model()
+        $model = $resource->newEloquentQuery()
             ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
             ->first();
 
