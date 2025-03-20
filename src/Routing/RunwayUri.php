@@ -11,7 +11,7 @@ class RunwayUri extends Model
 
     public function model(): MorphTo
     {
-        return $this->morphTo();
+        return $this->morphTo()->runway();
     }
 
     public function getTable()

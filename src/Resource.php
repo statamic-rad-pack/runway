@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -31,6 +32,11 @@ class Resource
     public function model(): Model
     {
         return $this->model;
+    }
+
+    public function newEloquentQuery(): Builder
+    {
+        return $this->model->newQuery()->runway();
     }
 
     public function name()

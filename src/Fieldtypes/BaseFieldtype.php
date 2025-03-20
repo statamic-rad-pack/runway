@@ -152,7 +152,7 @@ abstract class BaseFieldtype extends Relationship
     {
         $resource = Runway::findResource($this->config('resource'));
 
-        $query = $resource->model()->newQuery();
+        $query = $resource->newEloquentQuery();
 
         $query->when($query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
 
