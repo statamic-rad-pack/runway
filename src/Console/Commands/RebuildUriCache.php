@@ -69,7 +69,7 @@ class RebuildUriCache extends Command
                     return;
                 }
 
-                $query = $resource->model()->newQuery()->withoutGlobalScopes();
+                $query = $resource->newEloquentQuery()->withoutGlobalScopes();
                 $query->when($query->hasNamedScope('runwayRoutes'), fn ($query) => $query->runwayRoutes());
 
                 if (! $query->exists()) {
