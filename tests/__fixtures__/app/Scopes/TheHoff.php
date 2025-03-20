@@ -9,8 +9,8 @@ class TheHoff extends Scope
     /**
      * Apply the scope.
      *
-     * @param \Statamic\Query\Builder $query
-     * @param array $values
+     * @param  \Statamic\Query\Builder  $query
+     * @param  array  $values
      * @return void
      */
     public function apply($query, $values)
