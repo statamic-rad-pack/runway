@@ -1,5 +1,13 @@
 # Changelog
 
+## v8.3.0 (2025-03-20)
+
+### What's new
+* Added `query_scopes` option to fieldtypes #672 by @duncanmcclean
+* Added `runway` query scope #671 by @duncanmcclean
+
+
+
 ## v8.2.0 (2025-02-27)
 
 ### What's new
