@@ -162,6 +162,16 @@ class ImportCollection extends Command
                 ->filter(fn ($column) => in_array($column['type'], ['json', 'boolean', 'datetime', 'date', 'time', 'float', 'integer']))
                 ->map(fn ($column) => "            '{$column['name']}' => '{$column['type']}',")
                 ->join(PHP_EOL))
+            ->when($this->collection->requiresSlugs(), function ($str) {
+                return $str->replaceLast('}', <<<'PHP'
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+}
+PHP);
+            })
             ->__toString();
 
         File::put(app_path("Models/{$this->modelName}.php"), $modelContents);

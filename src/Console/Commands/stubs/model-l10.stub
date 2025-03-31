@@ -31,9 +31,4 @@ class {{ class }} extends Model
     protected $casts = [
 {{ casts }}
     ];
-
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
-    }
 }
