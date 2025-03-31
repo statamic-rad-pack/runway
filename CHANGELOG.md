@@ -1,5 +1,13 @@
 # Changelog
 
+## v8.3.1 (2025-03-31)
+
+### What's fixed
+* `getRouteKeyName` method will only be added to models when imported collection uses slugs #678 by @duncanmcclean
+* Fixed typo in `resources.md` #674 by @mefenlon
+
+
+
 ## v8.3.0 (2025-03-20)
 
 ### What's new
