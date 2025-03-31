@@ -34,9 +34,4 @@ class {{ class }} extends Model
 {{ casts }}
         ];
     }
-
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
-    }
 }
