@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Traits;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use Statamic\Contracts\Data\Augmented;
 use Statamic\Contracts\Revisions\Revision;
 use Statamic\Fields\Field;
@@ -61,7 +62,8 @@ trait HasRunwayResource
                 return $field->fieldtype() instanceof HasManyFieldtype
                     || $field->fieldtype() instanceof Hidden
                     || $field->fieldtype() instanceof Section
-                    || $field->visibility() === 'computed';
+                    || $field->visibility() === 'computed'
+                    || Str::startsWith($field->handle(), $this->runwayResource()->nestedFieldPrefixes());
             })
             ->each(fn (Field $field) => $query->orWhere($field->handle(), 'LIKE', '%'.$searchQuery.'%'));
     }

@@ -1,5 +1,24 @@
 # Changelog
 
+## v8.4.0 (2025-05-14)
+
+### What's new
+* Require `spatie/laravel-ray` in dev #687 by @duncanmcclean
+
+### What's fixed
+* Fixed error when serializing resources with appended attributes #686 by @duncanmcclean
+* Fixed search on listing table with nested fields #681 by @duncanmcclean
+
+
+
+## v8.3.1 (2025-03-31)
+
+### What's fixed
+* `getRouteKeyName` method will only be added to models when imported collection uses slugs #678 by @duncanmcclean
+* Fixed typo in `resources.md` #674 by @mefenlon
+
+
+
 ## v8.3.0 (2025-03-20)
 
 ### What's new
