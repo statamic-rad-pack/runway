@@ -53,4 +53,12 @@ abstract class TestCase extends AddonTestCase
             Blueprint::setDirectory(__DIR__.'/__fixtures__/resources/blueprints');
         });
     }
+
+    protected function getPackageProviders($app): array
+    {
+        return [
+            ...parent::getPackageProviders($app),
+            \Spatie\LaravelRay\RayServiceProvider::class,
+        ];
+    }
 }
