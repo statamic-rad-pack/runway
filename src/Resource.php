@@ -282,7 +282,7 @@ class Resource
     {
         return [
             'handle' => $this->handle(),
-            'model' => $this->model(),
+            'model' => get_class($this->model()),
             'name' => $this->name(),
             'blueprint' => $this->blueprint(),
             'hidden' => $this->hidden(),
