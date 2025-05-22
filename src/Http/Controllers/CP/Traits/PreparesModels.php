@@ -47,7 +47,7 @@ trait PreparesModels
                 }
 
                 // When $value is a JSON string, we need to decode it.
-                if (Json::isJson($value)) {
+                if (is_string($value) && json_validate($value)) {
                     $value = json_decode((string) $value, true);
                 }
 
