@@ -190,6 +190,25 @@ class RunwayTagTest extends TestCase
     }
 
     #[Test]
+    public function can_get_models_with_where_in_parameter()
+    {
+        $posts = Post::factory()->count(5)->create();
+
+        $posts[0]->update(['slug' => 'foo']);
+        $posts[2]->update(['slug' => 'bar']);
+
+        $this->tag->setParameters([
+            'where_in' => 'slug:foo,bar',
+        ]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertEquals(2, count($usage));
+        $this->assertEquals((string) $usage[0]['slug']->value(), 'foo');
+        $this->assertEquals((string) $usage[1]['slug']->value(), 'bar');
+    }
+
+    #[Test]
     public function can_get_models_with_with_parameter()
     {
         $posts = Post::factory()->count(5)->create();

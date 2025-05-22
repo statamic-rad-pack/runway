@@ -1,5 +1,13 @@
 # Changelog
 
+## v8.5.0 (2025-05-22)
+
+### What's new
+* Added `where_in` parameter to Runway tag #688 by @duncanmcclean
+* Documented usage with Antlers Blade Components by @duncanmcclean
+
+
+
 ## v8.4.0 (2025-05-14)
 
 ### What's new
