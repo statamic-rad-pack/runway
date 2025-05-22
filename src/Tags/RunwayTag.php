@@ -106,6 +106,13 @@ class RunwayTag extends Tags
             }
         }
 
+        if ($this->params->has('where_in') && $whereIn = $this->params->get('where_in')) {
+            $key = explode(':', (string) $whereIn)[0];
+            $value = explode(':', (string) $whereIn)[1];
+
+            $query->whereIn($key, explode(',', $value));
+        }
+
         if ($this->params->has('sort') && ! empty($this->params->get('sort'))) {
             if (Str::contains($this->params->get('sort'), ':')) {
                 $sortColumn = explode(':', (string) $this->params->get('sort'))[0];
