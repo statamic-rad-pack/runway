@@ -2,10 +2,9 @@
 
 namespace StatamicRadPack\Runway;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Search;
@@ -33,6 +32,11 @@ class Resource
     public function model(): Model
     {
         return $this->model;
+    }
+
+    public function newEloquentQuery(): Builder
+    {
+        return $this->model->newQuery()->runway();
     }
 
     public function name()
@@ -64,15 +68,6 @@ class Resource
     public function config(): Collection
     {
         return $this->config;
-    }
-
-    public function cpIcon(): string
-    {
-        if (! $this->config->has('cp_icon')) {
-            return File::get(__DIR__.'/../resources/svg/database.svg');
-        }
-
-        return $this->config->get('cp_icon');
     }
 
     public function hidden(): bool
@@ -162,6 +157,19 @@ class Resource
         return $column;
     }
 
+    public function nestedFieldPrefixes(): Collection
+    {
+        return collect($this->config->get('nested_field_prefixes'));
+    }
+
+    public function nestedFieldPrefix(string $field): ?string
+    {
+        return $this->nestedFieldPrefixes()
+            ->reject(fn ($prefix) => $field === $prefix)
+            ->filter(fn ($prefix) => Str::startsWith($field, $prefix))
+            ->first();
+    }
+
     /**
      * Maps Eloquent relationships to their respective blueprint fields.
      */
@@ -243,7 +251,7 @@ class Resource
     public function databaseColumns(): array
     {
         return Blink::once('runway-database-columns-'.$this->databaseTable(), function () {
-            return Schema::getColumnListing($this->databaseTable());
+            return $this->model()->getConnection()->getSchemaBuilder()->getColumnListing($this->databaseTable());
         });
     }
 
@@ -274,10 +282,9 @@ class Resource
     {
         return [
             'handle' => $this->handle(),
-            'model' => $this->model(),
+            'model' => get_class($this->model()),
             'name' => $this->name(),
             'blueprint' => $this->blueprint(),
-            'cp_icon' => $this->cpIcon(),
             'hidden' => $this->hidden(),
             'route' => $this->route(),
             'has_publish_states' => $this->hasPublishStates(),

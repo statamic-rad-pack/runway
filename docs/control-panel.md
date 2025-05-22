@@ -23,23 +23,6 @@ Technically, you can’t fully disable Runway’s CP feature. However, what you 
 ],
 ```
 
-## Custom Icon for CP Nav Item
-
-Runway has a rather generic icon for resources in the Control Panel Nav. Feel free to change this to something else that better suits your use case (in fact, I’d encourage it).
-
-You can either provide the name of an existing icon [packaged into Statamic Core](https://github.com/statamic/cms/tree/3.1/resources/svg) or inline the SVG as a string.
-
-```php
-// config/runway.php
-
-'resources' => [
-	\App\Models\Order::class => [
-	    'name' => 'Orders',
-	    'cp_icon' => 'date',
-	],
-],
-```
-
 ## Permissions
 
 ![Screenshot of Runway's User Permissions](/img/runway/cp-user-permissions.png)

@@ -6,11 +6,11 @@ title: Resources
 
 For each of the Eloquent models you wish to use with Runway, you’ll need to define a ‘resource’.
 
-A resource basically tells Runway about the model and how you’d like it to be configured - which blueprint to use, whether or not it should be manageable in the CP, etc.
+A resource basically tells Runway about the model and how you’d like it to be configured - which blueprint to use, whether it should be manageable in the CP, etc.
 
 ## Defining resources
 
-You can define resources inside of the configuration file published during installation. It’s located in `config/runway.php`.
+You can define resources inside the configuration file published during installation. It’s located in `config/runway.php`.
 
 ```php
 <?php
@@ -58,6 +58,10 @@ class Order extends Model
 
 Finally, you can start adding fields to your resource's blueprint. To learn more about using Blueprints in Runway, please review the [Blueprints](/blueprints) page.
 
+:::tip Hot Tip
+If you're moving a collection to the database, use the `php please runway:import-collection` command. It'll help you set up everything you need, including moving your entries to the database.
+:::
+
 ## Configuring resources
 
 There’s about a dozen configuration options available for resources, they are all documented below.
@@ -78,21 +82,6 @@ If you’d like to hide the CP Nav Item that’s registered for this model, just
 ```
 
 > Bear in mind, this will just hide the Nav Item for the CP interface, it won’t actually get rid of the routes being registered. If someone knows where to look, they could still use the CP to manage your models (they could guess the URL).
-
-### Control Panel Icon
-
-You should set `icon` to the name of the icon you’d like to use instead.
-
-Alternatively, if the icon you want isn’t [included in Statamic](https://github.com/statamic/cms/tree/3.1/resources/svg), you can also pass an inline SVG.
-
-```php
-'resources' => [
-	\App\Models\Order::class => [
-		'name' => 'Orders',
-        'cp_icon' => 'date',
-	],
-],
-```
 
 ### Route
 
@@ -246,6 +235,44 @@ public function visibleTo($item)
     return $item instanceof Order;
 }
 ```
+
+## Queries
+
+Every query made by Runway to your model will call the `runway` query scope. This allows you to easily filter the models returned by Runway.
+
+```php
+class YourModel extends Model
+{
+	public function scopeRunway($query)
+	{
+		return $query->where('something', true);
+	}
+}
+```
+
+If you only want to filter models returned in the Control Panel, see the `runwayListing` and `runwaySearch` scopes documented on the [Control Panel](/control-panel#content-scoping-control-panel-results) page.
+
+### Disabling global scopes
+
+By default, Runway will observe all global scopes registered on your model. However, this might not be ideal if you want to access, for example, soft deleted models in Runway.
+
+You can work around this by calling the `withoutGlobalScopes` method in the `runway` query scope:
+
+```php
+class YourModel extends Model
+{
+	public function scopeRunway($query)
+	{
+	    // Disables ALL global scopes
+		return $query->withoutGlobalScopes();
+		
+		// Disables a specific global scope
+		return $query->withoutGlobalScope([ActiveScope::class]);
+	}
+}
+```
+
+You can find more information about global scopes on the [Laravel documentation](https://laravel.com/docs/12.x/eloquent#removing-global-scopes).
 
 ## List of Resources
 

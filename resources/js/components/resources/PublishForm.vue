@@ -4,7 +4,8 @@
 
         <div class="flex items-center mb-6">
             <h1 class="flex-1">
-                <div class="flex items-center">
+                <div class="flex items-baseline">
+                    <span v-if="! isCreating && resource.has_publish_states" class="little-dot rtl:ml-2 ltr:mr-2 -top-1" :class="status" v-tooltip="__(status)" />
                     <span v-html="$options.filters.striptags(title)" />
                 </div>
             </h1>
@@ -244,6 +245,7 @@ export default {
         isCreating: Boolean,
         isInline: Boolean,
         initialReadOnly: Boolean,
+        initialStatus: String,
         initialPermalink: String,
         revisionsEnabled: Boolean,
         canEditBlueprint: Boolean,
@@ -260,6 +262,7 @@ export default {
             trackDirtyState: true,
             blueprint: this.initialBlueprint,
             title: this.initialTitle,
+            status: this.initialStatus,
             values: _.clone(this.initialValues),
             meta: _.clone(this.initialMeta),
             isWorkingCopy: this.initialIsWorkingCopy,
@@ -447,6 +450,7 @@ export default {
                     return this.$toast.error(__(`Couldn't save entry`));
                 }
                 this.title = response.data.data.title;
+                this.status = response.data.data.published;
                 this.isWorkingCopy = true;
                 if (!this.revisionsEnabled) this.permalink = response.data.data.permalink;
                 if (!this.isCreating) this.$toast.success(__('Saved'));
@@ -497,6 +501,7 @@ export default {
                         this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 350);
 
                         if (this.publishStatesEnabled) {
+                            this.status = response.data.data.status;
                             this.initialPublished = response.data.data.published;
                         }
 

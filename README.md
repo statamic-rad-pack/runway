@@ -88,6 +88,21 @@ If you don't like GraphQL and would prefer plain old REST, you can do that too. 
 ],
 ```
 
+### Search
+
+Runway integrates with Statamic's [Search](https://statamic.dev/search) feature, allowing you to search your Eloquent models in the Control Panel and via the `{{ search:results }}` tag. It's just as simple as adjusting your config file.
+
+```php
+// config/statamic/search.php
+
+'indexes' => [
+    'myindex' => [
+        'driver' => 'local',
+        'searchables' => ['collection:blog', 'runway:order'],
+    ],
+],
+```
+
 ## Support
 
 If you find a bug, have some question or have a feature request, please open a [GitHub Issue or Discussion](https://github.com/duncanmcclean/runway/issues/new/choose).

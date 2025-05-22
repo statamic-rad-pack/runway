@@ -20,6 +20,7 @@ use Statamic\Facades\Search;
 use Statamic\Http\Middleware\RequireStatamicPro;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
+use StatamicRadPack\Runway\GraphQL\NestedFieldsType;
 use StatamicRadPack\Runway\Http\Controllers\ApiController;
 use StatamicRadPack\Runway\Ignition\SolutionProviders\TraitMissing;
 use StatamicRadPack\Runway\Policies\ResourcePolicy;
@@ -141,7 +142,6 @@ class ServiceProvider extends AddonServiceProvider
                 ->each(function (Resource $resource) use (&$nav) {
                     $nav->create($resource->name())
                         ->section('Content')
-                        ->icon($resource->cpIcon())
                         ->route('runway.index', ['resource' => $resource->handle()])
                         ->can('view', $resource);
                 });
@@ -174,8 +174,9 @@ class ServiceProvider extends AddonServiceProvider
         Runway::allResources()
             ->each(function (Resource $resource) {
                 $this->app->bind("runway_graphql_types_{$resource->handle()}", fn () => new \StatamicRadPack\Runway\GraphQL\ResourceType($resource));
-
                 GraphQL::addType("runway_graphql_types_{$resource->handle()}");
+
+                $resource->nestedFieldPrefixes()->each(fn (string $nestedFieldPrefix) => GraphQL::addType(new NestedFieldsType($resource, $nestedFieldPrefix)));
             })
             ->filter
             ->graphqlEnabled()

@@ -4,7 +4,7 @@ namespace StatamicRadPack\Runway\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
+use StatamicRadPack\Runway\Resource;
 
 class ApiResource extends JsonResource
 {
@@ -18,18 +18,16 @@ class ApiResource extends JsonResource
      */
     public function toArray($request)
     {
+        $keys = [
+            ...$this->blueprintFields->map->handle()->all(),
+            ...$this->resource->runwayResource()->nestedFieldPrefixes()->all(),
+        ];
+
         $augmentedArray = $this->resource
-            ->toAugmentedCollection($this->blueprintFields->map->handle()->all() ?? [])
+            ->toAugmentedCollection($keys)
             ->withRelations($this->blueprintFields->filter->isRelationship()->keys()->all())
             ->withShallowNesting()
             ->toArray();
-
-        collect($augmentedArray)
-            ->filter(fn ($value, $key) => Str::contains($key, '->'))
-            ->each(function ($value, $key) use (&$augmentedArray) {
-                $augmentedArray[Str::before($key, '->')][Str::after($key, '->')] = $value;
-                unset($augmentedArray[$key]);
-            });
 
         return array_merge($augmentedArray, [
             $this->resource->getKeyName() => $this->resource->getKey(),

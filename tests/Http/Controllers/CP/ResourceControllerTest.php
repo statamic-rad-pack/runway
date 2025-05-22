@@ -237,7 +237,7 @@ class ResourceControllerTest extends TestCase
                 'title' => 'Jingle Bells',
                 'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
-                'values->alt_title' => 'Batman Smells',
+                'values_alt_title' => 'Batman Smells',
                 'author_id' => [$author->id],
             ])
             ->assertOk()
@@ -640,7 +640,7 @@ class ResourceControllerTest extends TestCase
                 'title' => 'Santa is coming home',
                 'slug' => 'santa-is-coming-home',
                 'body' => $post->body,
-                'values->alt_title' => 'Claus is venturing out',
+                'values_alt_title' => 'Claus is venturing out',
                 'author_id' => [$post->author_id],
             ])
             ->assertOk()

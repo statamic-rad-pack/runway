@@ -20,6 +20,9 @@ return [
             'route' => '/posts/{{ slug }}',
             'published' => true,
             'revisions' => true,
+            'nested_field_prefixes' => [
+                'values', 'external_links',
+            ],
         ],
 
         Author::class => [

@@ -38,9 +38,7 @@ class ResourceIndexQuery extends Query
 
     public function resolve($root, $args)
     {
-        $query = $this->resource->model()
-            ->newQuery()
-            ->with($this->resource->eagerLoadingRelationships());
+        $query = $this->resource->newEloquentQuery()->with($this->resource->eagerLoadingRelationships());
 
         $this->filterQuery($query, $args['filter'] ?? []);
         $this->sortQuery($query, $args['sort'] ?? []);

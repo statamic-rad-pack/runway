@@ -17,15 +17,15 @@ tabs:
             field:
               type: textarea
           -
-            handle: values->alt_title
+            handle: values_alt_title
             field:
               type: text
           -
-            handle: values->alt_body
+            handle: values_alt_body
             field:
               type: markdown
           -
-            handle: external_links->links
+            handle: external_links_links
             field:
               type: grid
               fields:

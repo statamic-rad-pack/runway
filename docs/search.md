@@ -2,16 +2,19 @@
 title: Search
 ---
 
-Runway integrates with [Statamic's Search functionality](https://statamic.dev/search#overview), allowing you to search your Eloquent models in the Conteol Panel and via the `{{ search:results }}` tag. It's as simple as adjusting your config file.
+Runway integrates with [Statamic's Search functionality](https://statamic.dev/search#overview), allowing you to search your Eloquent models in the Control Panel and via the `{{ search:results }}` tag. It's as simple as adjusting your config file.
 
 ## Configuration
 
 ```php
 // config/statamic/search.php
-'myindex' => [
-  'driver' => 'local',
-  'searchables' => ['collection:blog', 'runway:order'],
-]
+
+'indexes' => [
+    'myindex' => [
+        'driver' => 'local',
+        'searchables' => ['collection:blog', 'runway:order'], // [tl! add]
+    ],
+],
 ```
 
 You can scope the resources you'd like to be searchable, using the `runway:{resourceHandle}` syntax. If you'd like everything in Runway to be searchable, you can use`runway:*`.

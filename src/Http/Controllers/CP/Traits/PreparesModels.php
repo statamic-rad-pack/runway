@@ -31,7 +31,13 @@ trait PreparesModels
 
         return $blueprint->fields()->all()
             ->mapWithKeys(function (Field $field) use ($resource, $model) {
-                $value = data_get($model, Str::replace('->', '.', $field->handle()));
+                $value = $model->getAttribute($field->handle());
+
+                // When it's a nested field, we need to get the value from the nested JSON object, using data_get().
+                if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field->handle())) {
+                    $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
+                    $value = data_get($model, "{$nestedFieldPrefix}.{$key}");
+                }
 
                 // When $value is a Carbon instance, format it with the format defined in the blueprint.
                 if ($value instanceof CarbonInterface) {
@@ -152,10 +158,19 @@ trait PreparesModels
                 // When $processedValue is null and there's no cast set on the model, we should JSON encode it.
                 if (
                     is_array($processedValue)
-                    && ! str_contains($field->handle(), '->')
+                    && ! $resource->nestedFieldPrefix($field->handle())
                     && ! $model->hasCast($field->handle(), ['json', 'array', 'collection', 'object', 'encrypted:array', 'encrypted:collection', 'encrypted:object'])
                 ) {
                     $processedValue = json_encode($processedValue, JSON_THROW_ON_ERROR);
+                }
+
+                // When it's a nested field, we need to set the value on the nested JSON object.
+                // Otherwise, it'll attempt to set the model's "root" attributes.
+                if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field->handle())) {
+                    $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
+                    $model->setAttribute("{$nestedFieldPrefix}->{$key}", $processedValue);
+
+                    return;
                 }
 
                 $model->setAttribute($field->handle(), $processedValue);

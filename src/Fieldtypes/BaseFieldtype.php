@@ -11,8 +11,10 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Statamic\CP\Column;
 use Statamic\Facades\Blink;
+use Statamic\Facades\Scope;
 use Statamic\Fieldtypes\Relationship;
 use Statamic\Query\Builder as BaseStatamicBuilder;
+use Statamic\Query\Scopes\Filter;
 use Statamic\Search\Result;
 use StatamicRadPack\Runway\Http\Resources\CP\FieldtypeModel;
 use StatamicRadPack\Runway\Http\Resources\CP\FieldtypeModels;
@@ -97,6 +99,16 @@ abstract class BaseFieldtype extends Relationship
                 'type' => 'text',
                 'width' => 50,
             ],
+            'query_scopes' => [
+                'display' => __('Query Scopes'),
+                'instructions' => __('Select which query fields should be applied when retrieving selectable models.'),
+                'type' => 'taggable',
+                'options' => Scope::all()
+                    ->reject(fn ($scope) => $scope instanceof Filter)
+                    ->map->handle()
+                    ->values()
+                    ->all(),
+            ],
         ];
     }
 
@@ -114,9 +126,15 @@ abstract class BaseFieldtype extends Relationship
 
     private function getUnlinkBehavior(): string
     {
-        if ($this->field->parent() instanceof Model && $this instanceof HasManyFieldtype) {
-            $relationshipName = $this->config('relationship_name') ?? $this->field->handle();
+        $relationshipName = $this->config('relationship_name') ?? $this->field->handle();
+
+        if (
+            $this->field->parent() instanceof Model
+            && $this instanceof HasManyFieldtype
+            && method_exists($this->field->parent(), $relationshipName)
+        ) {
             $relationship = $this->field->parent()->{$relationshipName}();
+
             if ($relationship instanceof HasMany) {
                 $foreignKey = $relationship->getQualifiedForeignKeyName();
 
@@ -144,11 +162,9 @@ abstract class BaseFieldtype extends Relationship
 
     public function getIndexItems($request)
     {
-        $resource = Runway::findResource($this->config('resource'));
+        $resource = $this->resource();
 
-        $query = $resource->model()->newQuery();
-
-        $query->when($query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
+        $query = $this->getIndexQuery($request);
 
         $searchQuery = $request->search ?? false;
 
@@ -173,6 +189,17 @@ abstract class BaseFieldtype extends Relationship
         $items = $results->map(fn ($item) => $item instanceof Result ? $item->getSearchable() : $item);
 
         return $paginate ? $results->setCollection($items) : $items;
+    }
+
+    protected function getIndexQuery($request)
+    {
+        $query = $this->resource()->newEloquentQuery();
+
+        $query->when($query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
+
+        $this->applyIndexQueryScopes($query, $request->all());
+
+        return $query;
     }
 
     public function getResourceCollection($request, $items)
@@ -354,5 +381,10 @@ abstract class BaseFieldtype extends Relationship
         }
 
         return $query->runwaySearch($searchQuery);
+    }
+
+    private function resource(): Resource
+    {
+        return Runway::findResource($this->config('resource'));
     }
 }

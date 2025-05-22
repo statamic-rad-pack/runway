@@ -13,6 +13,7 @@ use Statamic\Http\Requests\FilteredRequest;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
+use StatamicRadPack\Runway\Tests\Fixtures\Scopes\TheHoff;
 use StatamicRadPack\Runway\Tests\TestCase;
 
 class BelongsToFieldtypeTest extends TestCase
@@ -122,6 +123,35 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertEquals($getIndexItems->all()[0]->name, 'Amy Santiago');
         $this->assertEquals($getIndexItems->all()[1]->name, 'Jake Peralta');
         $this->assertEquals($getIndexItems->all()[2]->name, 'Scully');
+    }
+
+    #[Test]
+    public function can_get_index_items_with_query_scopes()
+    {
+        TheHoff::register();
+
+        Author::factory()->count(10)->create();
+        $hasselhoff = Author::factory()->create(['name' => 'David Hasselhoff']);
+
+        $fieldtype = tap(new BelongsToFieldtype)
+            ->setField(new Field('author', [
+                'max_items' => 1,
+                'mode' => 'stack',
+                'resource' => 'author',
+                'display' => 'Author',
+                'type' => 'belongs_to',
+                'query_scopes' => ['the_hoff'],
+            ]));
+
+        $getIndexItems = $fieldtype->getIndexItems(
+            new FilteredRequest(['paginate' => true])
+        );
+
+        $this->assertIsObject($getIndexItems);
+        $this->assertTrue($getIndexItems instanceof Paginator);
+        $this->assertEquals($getIndexItems->count(), 1);
+
+        $this->assertEquals($getIndexItems->first()['id'], $hasselhoff->id);
     }
 
     #[Test]

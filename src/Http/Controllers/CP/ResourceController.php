@@ -123,7 +123,7 @@ class ResourceController extends CpController
 
     public function edit(EditRequest $request, Resource $resource, $model)
     {
-        $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $model)->first();
+        $model = $resource->newEloquentQuery()->firstWhere($resource->model()->qualifyColumn($resource->routeKey()), $model);
 
         if (! $model) {
             throw new NotFoundHttpException;
@@ -159,6 +159,7 @@ class ResourceController extends CpController
             'values' => $values,
             'meta' => $meta,
             'readOnly' => $resource->readOnly(),
+            'status' => $model->publishedStatus(),
             'permalink' => $resource->hasRouting() ? $model->uri() : null,
             'resourceHasRoutes' => $resource->hasRouting(),
             'currentModel' => [
@@ -184,7 +185,7 @@ class ResourceController extends CpController
     {
         $resource->blueprint()->fields()->setParent($model)->addValues($request->all())->validator()->validate();
 
-        $model = $resource->model()->where($resource->model()->qualifyColumn($resource->routeKey()), $model)->first();
+        $model = $resource->newEloquentQuery()->firstWhere($resource->model()->qualifyColumn($resource->routeKey()), $model);
         $model = $model->fromWorkingCopy();
 
         $this->prepareModelForSaving($resource, $model, $request);
