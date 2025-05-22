@@ -84,6 +84,15 @@ You can also query Belongs To / Has Many fields using the `where` parameter. Sim
 {{ /runway:post }}
 ```
 
+You can also use the `where_in` parameter to filter by multiple IDs.
+
+```antlers
+{{ runway:post where_in="author_name:duncan,jack" }}
+    <h2>{{ title }}</h2>
+    <p>{{ intro_text }}</p>
+{{ /runway:post }}
+```
+
 ### Eager Loading
 
 If your model has a relationship that you'd like to bring into the template, you may specify the `with` parameter.
