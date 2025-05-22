@@ -198,7 +198,7 @@ Using the Runway tag with pagination is a little more complicated but it’s not
 
 ## Blade
 
-You can even use Runway's tag in Blade views, thanks to Statamic's [Antlers Blade Components](https://statamic.dev/blade#using-antlers-blade-components) feature (available in Statamic 5.36 and above):
+You can even use Runway's tag in Blade views, thanks to Statamic's [Antlers Blade Components](https://statamic.dev/blade#using-antlers-blade-components) feature:
 
 ```blade
 <s:runway:post with="author" limit="15" sort="publish_date:desc">
