@@ -187,6 +187,17 @@ Using the Runway tag with pagination is a little more complicated but it’s not
 {{ /runway:post }}
 ```
 
+## Blade
+
+You can even use Runway's tag in Blade views, thanks to Statamic's [Antlers Blade Components](https://statamic.dev/blade#using-antlers-blade-components) feature (available in Statamic 5.36 and above):
+
+```blade
+<s:runway:post with="author" limit="15" sort="publish_date:desc">
+    <h2>{{ $title }}</h2>
+    <p>{{ $intro_text }}</p>
+</s:runway:post>
+```
+
 ## Augmentation
 
 All the results output from the Runway tag are ‘augmented’, which essentially means everything is the same as you’d expect if you had the same data in an entry.
