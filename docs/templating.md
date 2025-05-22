@@ -84,6 +84,15 @@ You can also query Belongs To / Has Many fields using the `where` parameter. Sim
 {{ /runway:post }}
 ```
 
+You can also use the `where_in` parameter to filter by multiple IDs.
+
+```antlers
+{{ runway:post where_in="author_name:duncan,jack" }}
+    <h2>{{ title }}</h2>
+    <p>{{ intro_text }}</p>
+{{ /runway:post }}
+```
+
 ### Eager Loading
 
 If your model has a relationship that you'd like to bring into the template, you may specify the `with` parameter.
@@ -185,6 +194,17 @@ Using the Runway tag with pagination is a little more complicated but it’s not
         {{ /if }}
     {{ /paginate }}
 {{ /runway:post }}
+```
+
+## Blade
+
+You can even use Runway's tag in Blade views, thanks to Statamic's [Antlers Blade Components](https://statamic.dev/blade#using-antlers-blade-components) feature (available in Statamic 5.36 and above):
+
+```blade
+<s:runway:post with="author" limit="15" sort="publish_date:desc">
+    <h2>{{ $title }}</h2>
+    <p>{{ $intro_text }}</p>
+</s:runway:post>
 ```
 
 ## Augmentation
