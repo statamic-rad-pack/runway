@@ -17,7 +17,7 @@ class CreateRunwayUrisTable extends Migration
             $table->id();
             $table->string('uri');
             $table->string('model_type');
-            $table->string('model_id', 36);
+            $table->bigInteger('model_id');
             $table->timestamps();
         });
     }
