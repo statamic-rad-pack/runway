@@ -190,7 +190,10 @@ PHP);
                 'name' => $this->collection->title(),
                 'published' => true,
                 'revisions' => $this->collection->revisionsEnabled(),
-                'route' => $this->collection->route(Facades\Site::default()->handle()),
+                'route' => Str::of($this->collection->route(Facades\Site::default()->handle()))
+                    ->replace('{parent_uri}/', '')
+                    ->replace('{slug}', '{{ slug }}')
+                    ->__toString(),
                 'template' => $this->collection->template(),
                 'layout' => $this->collection->layout(),
                 'order_by' => $this->collection->sortField(),
