@@ -260,6 +260,10 @@ PHP);
                     $string = "{$string}->default({$default})";
                 }
 
+                if (isset($column['primary'])) {
+                    $string = "{$string}->primary()";
+                }
+
                 return "            {$string};";
             })->implode(PHP_EOL))
             ->__toString();
@@ -326,7 +330,7 @@ PHP);
                     'nullable' => ! $field->isRequired(),
                 ];
             })
-            ->prepend(['type' => 'uuid'])
+            ->prepend(['type' => 'string', 'name' => 'uuid', 'primary' => true])
             ->push(['type' => 'boolean', 'name' => 'published', 'default' => false])
             ->push(['type' => 'timestamps'])
             ->values()
