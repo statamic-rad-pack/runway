@@ -33,9 +33,13 @@ php artisan view:clear
 
 ## High impact changes
 
+### PHP and Laravel support
+**Affects apps using PHP < 8.2 or Laravel < 11.**
 
-## Low impact changes
+* The minimum version of PHP is now 8.2.
+* The minimum version of Laravel is now 11.
 
+We highly recommend upgrading all the way to Laravel 12 and PHP 8.4.
 
 ## Previous upgrade guides
 
