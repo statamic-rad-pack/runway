@@ -23,7 +23,7 @@ class ResourceListingController extends CpController
             abort(403);
         }
 
-        $query = $resource->newEloquentQuery()->with($resource->eagerLoadingRelationships());
+        $query = $resource->newEloquentQueryBuilderWithEagerLoadedRelationships();
 
         $query->when($query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
 

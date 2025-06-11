@@ -39,6 +39,23 @@ class Resource
         return $this->model->newQuery()->runway();
     }
 
+    public function newEloquentQueryBuilderWithEagerLoadedRelationships(): Builder
+    {
+        return $this
+            ->newEloquentQuery()
+            ->with(
+                collect($this->eagerLoadingRelationships())
+                    ->mapWithKeys(function (string $relationship): array {
+                        if ($relationship === 'runwayUri') {
+                            return [$relationship => fn ($query) => null];
+                        }
+
+                        return [$relationship => fn ($query) => $query->runway()];
+                    })
+                    ->all()
+            );
+    }
+
     public function name()
     {
         return $this->name;
@@ -230,7 +247,7 @@ class Resource
     public function hasRouting(): bool
     {
         return ! is_null($this->route())
-            && in_array(\StatamicRadPack\Runway\Routing\Traits\RunwayRoutes::class, class_uses($this->model()));
+            && in_array(\StatamicRadPack\Runway\Routing\Traits\RunwayRoutes::class, class_uses_recursive($this->model()));
     }
 
     public function primaryKey(): string

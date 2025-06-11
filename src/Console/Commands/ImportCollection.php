@@ -185,7 +185,10 @@ PHP);
                 'name' => $this->collection->title(),
                 'published' => true,
                 'revisions' => $this->collection->revisionsEnabled(),
-                'route' => $this->collection->route(Facades\Site::default()->handle()),
+                'route' => Str::of($this->collection->route(Facades\Site::default()->handle()))
+                    ->replace('{parent_uri}/', '')
+                    ->replace('{slug}', '{{ slug }}')
+                    ->__toString(),
                 'template' => $this->collection->template(),
                 'layout' => $this->collection->layout(),
                 'order_by' => $this->collection->sortField(),
@@ -252,6 +255,10 @@ PHP);
                     $string = "{$string}->default({$default})";
                 }
 
+                if (isset($column['primary'])) {
+                    $string = "{$string}->primary()";
+                }
+
                 return "            {$string};";
             })->implode(PHP_EOL))
             ->__toString();
@@ -290,10 +297,12 @@ PHP);
                     ->merge([
                         'uuid' => $entry->id(),
                         'slug' => $entry->slug(),
-                        'date' => $entry->date(),
                         'published' => $entry->published(),
                         'updated_at' => $entry->get('updated_at') ?? now(),
                     ])
+                    ->when($entry->hasDate(), fn ($attributes) => $attributes->merge([
+                        'date' => $entry->date(),
+                    ]))
                     ->all();
 
                 $model = $model::find($entry->id()) ?? (new $model);
@@ -318,7 +327,7 @@ PHP);
                     'nullable' => ! $field->isRequired(),
                 ];
             })
-            ->prepend(['type' => 'uuid'])
+            ->prepend(['type' => 'string', 'name' => 'uuid', 'primary' => true])
             ->push(['type' => 'boolean', 'name' => 'published', 'default' => false])
             ->push(['type' => 'timestamps'])
             ->values()
