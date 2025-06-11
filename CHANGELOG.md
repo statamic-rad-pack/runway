@@ -1,5 +1,15 @@
 # Changelog
 
+## v8.5.1 (2025-06-11)
+
+### What's fixed
+* Collection Importer fixes #696 by @duncanmcclean
+* Prevent errors from PostgreSQL when querying `runway_uris` table #689 #695 by @duncanmcclean
+* `RunwayRoutes` trait check should consider traits on parent classes #691 #694 by @duncanmcclean
+* Use `runway` query scope when fetching related models #692 #693 by @duncanmcclean
+
+
+
 ## v8.5.0 (2025-05-22)
 
 ### What's new
