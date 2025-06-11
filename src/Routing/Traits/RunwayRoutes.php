@@ -10,6 +10,7 @@ use Statamic\Support\Arr;
 use StatamicRadPack\Runway\Routing\Routable;
 use StatamicRadPack\Runway\Routing\RoutingModel;
 use StatamicRadPack\Runway\Routing\RunwayUri;
+use StatamicRadPack\Runway\Routing\MorphOneWithStringKey;
 use StatamicRadPack\Runway\Runway;
 
 trait RunwayRoutes
@@ -66,9 +67,9 @@ trait RunwayRoutes
         return $this->routingModel()->getRouteKey();
     }
 
-    public function runwayUri(): MorphOne
+    public function runwayUri(): MorphOneWithStringKey
     {
-        return $this->morphOne(RunwayUri::class, 'model');
+        return new MorphOneWithStringKey(RunwayUri::query(), $this, 'model_type', 'model_id', $this->getKeyName());
     }
 
     public static function bootRunwayRoutes()
