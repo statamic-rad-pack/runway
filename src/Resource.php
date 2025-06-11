@@ -39,6 +39,23 @@ class Resource
         return $this->model->newQuery()->runway();
     }
 
+    public function newEloquentQueryBuilderWithEagerLoadedRelationships(): Builder
+    {
+        return $this
+            ->newEloquentQuery()
+            ->with(
+                collect($this->eagerLoadingRelationships())
+                    ->mapWithKeys(function (string $relationship): array {
+                        if ($relationship === 'runwayUri') {
+                            return [$relationship => fn ($query) => null];
+                        }
+
+                        return [$relationship => fn ($query) => $query->runway()];
+                    })
+                    ->all()
+            );
+    }
+
     public function name()
     {
         return $this->name;
