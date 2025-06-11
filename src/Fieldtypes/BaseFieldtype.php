@@ -301,7 +301,7 @@ abstract class BaseFieldtype extends Relationship
                     $eagerLoadingRelationships = collect($this->config('with') ?? [])->join(',');
 
                     return Blink::once("Runway::Model::{$this->config('resource')}_{$model}}::{$eagerLoadingRelationships}", function () use ($resource, $model) {
-                        return $resource->model()
+                        return $resource->newEloquentQuery()
                             ->when(
                                 $this->config('with'),
                                 fn ($query) => $query->with(Arr::wrap($this->config('with'))),
