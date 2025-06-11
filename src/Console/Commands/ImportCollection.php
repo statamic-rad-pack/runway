@@ -302,10 +302,12 @@ PHP);
                     ->merge([
                         'uuid' => $entry->id(),
                         'slug' => $entry->slug(),
-                        'date' => $entry->date(),
                         'published' => $entry->published(),
                         'updated_at' => $entry->get('updated_at') ?? now(),
                     ])
+                    ->when($entry->hasDate(), fn ($attributes) => $attributes->merge([
+                        'date' => $entry->date(),
+                    ]))
                     ->all();
 
                 $model = $model::find($entry->id()) ?? (new $model);
