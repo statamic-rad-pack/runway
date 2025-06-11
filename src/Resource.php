@@ -230,7 +230,7 @@ class Resource
     public function hasRouting(): bool
     {
         return ! is_null($this->route())
-            && in_array(\StatamicRadPack\Runway\Routing\Traits\RunwayRoutes::class, class_uses($this->model()));
+            && in_array(\StatamicRadPack\Runway\Routing\Traits\RunwayRoutes::class, class_uses_recursive($this->model()));
     }
 
     public function primaryKey(): string
