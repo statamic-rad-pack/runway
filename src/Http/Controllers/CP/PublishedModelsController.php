@@ -31,6 +31,7 @@ class PublishedModelsController extends CpController
             'data' => array_merge((new ModelResource($model->fresh()))->resolve()['data'], [
                 'values' => $values,
             ]),
+            'saved' => true,
         ];
     }
 
@@ -53,6 +54,7 @@ class PublishedModelsController extends CpController
             'data' => array_merge((new ModelResource($model->fresh()))->resolve()['data'], [
                 'values' => $values,
             ]),
+            'saved' => true,
         ];
     }
 }

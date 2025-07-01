@@ -3,7 +3,6 @@
 namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
 use Illuminate\Support\Facades\DB;
-use Statamic\CP\Breadcrumbs;
 use Statamic\CP\Column;
 use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Facades\Action;
@@ -57,22 +56,19 @@ class ResourceController extends CpController
         $fields = $blueprint->fields();
         $fields = $fields->preProcess();
 
+        $values = $fields->values()->merge([
+            $resource->publishedColumn() => true,
+        ]);
+
         $viewData = [
             'title' => __('Create :resource', ['resource' => $resource->singular()]),
-            'breadcrumbs' => new Breadcrumbs([[
-                'text' => $resource->plural(),
-                'url' => cp_route('runway.index', [
-                    'resource' => $resource->handle(),
-                ]),
-            ]]),
+            'method' => 'post',
+            'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
             'actions' => [
                 'save' => cp_route('runway.store', ['resource' => $resource->handle()]),
             ],
-            'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
             'blueprint' => $blueprint->toPublishArray(),
-            'values' => $fields->values()->merge([
-                $resource->publishedColumn() => true,
-            ])->all(),
+            'values' => $values->all(),
             'meta' => $fields->meta(),
             'resourceHasRoutes' => $resource->hasRouting(),
             'canManagePublishState' => User::current()->can('publish', $resource),
@@ -136,13 +132,7 @@ class ResourceController extends CpController
             'title' => $model->getAttribute($resource->titleField()),
             'reference' => $model->reference(),
             'method' => 'patch',
-            'breadcrumbs' => new Breadcrumbs([[
-                'text' => $resource->plural(),
-                'url' => cp_route('runway.index', [
-                    'resource' => $resource->handle(),
-                ]),
-            ]]),
-            'resource' => $resource,
+            'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
             'actions' => [
                 'save' => $model->runwayUpdateUrl(),
                 'publish' => $model->runwayPublishUrl(),
@@ -166,6 +156,7 @@ class ResourceController extends CpController
                 'edit_url' => $request->url(),
             ],
             'canManagePublishState' => User::current()->can('publish', $resource),
+            'canEditBlueprint' => User::current()->can('configure fields'),
             'itemActions' => Action::for($model, ['resource' => $resource->handle(), 'view' => 'form']),
             'revisionsEnabled' => $resource->revisionsEnabled(),
             'hasWorkingCopy' => $model->hasWorkingCopy(),

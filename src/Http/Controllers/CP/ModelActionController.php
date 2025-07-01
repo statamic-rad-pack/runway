@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Statamic\Facades\Action;
 use Statamic\Http\Controllers\CP\ActionController;
 use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Http\Resources\CP\Model as ModelResource;
 
 class ModelActionController extends ActionController
 {
@@ -34,14 +35,15 @@ class ModelActionController extends ActionController
 
     protected function getItemData($model, $context): array
     {
+        $model = $model->fresh();
+
         $blueprint = $this->resource->blueprint();
 
         [$values] = $this->extractFromFields($model, $this->resource, $blueprint);
 
-        return [
-            'title' => $model->getAttribute($this->resource->titleField()),
-            'values' => array_merge($values, ['id' => $model->getKey()]),
+        return array_merge((new ModelResource($model))->resolve()['data'], [
+            'values' => $values,
             'itemActions' => Action::for($model, $context),
-        ];
+        ]);
     }
 }

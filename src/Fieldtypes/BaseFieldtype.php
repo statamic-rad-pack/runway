@@ -32,20 +32,22 @@ abstract class BaseFieldtype extends Relationship
     protected $itemComponent = 'runway-related-item';
 
     protected $formComponentProps = [
+        'initialActions' => 'actions',
+        'method' => 'method',
+        'resource' => 'resource',
+        'resourceHasRoutes' => 'resourceHasRoutes',
+        'initialTitle' => 'title',
         'initialReference' => 'reference',
+        'initialStatus' => 'status',
         'initialBlueprint' => 'blueprint',
         'initialValues' => 'values',
         'initialMeta' => 'meta',
-        'initialTitle' => 'title',
-        'resource' => 'resource',
-        'breadcrumbs' => 'breadcrumbs',
-        'initialActions' => 'actions',
-        'method' => 'method',
-        'initialReadOnly' => 'readOnly',
         'initialPermalink' => 'permalink',
-        'canManagePublishState' => 'canManagePublishState',
-        'resourceHasRoutes' => 'resourceHasRoutes',
+        'initialIsWorkingCopy' => 'hasWorkingCopy',
         'revisionsEnabled' => 'revisionsEnabled',
+        'initialReadOnly' => 'readOnly',
+        'canEditBlueprint' => 'canEditBlueprint',
+        'canManagePublishState' => 'canManagePublishState',
     ];
 
     protected function configFieldItems(): array
