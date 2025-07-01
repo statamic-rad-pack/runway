@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mb-1.5 last:mb-0">
         <StatamicRelatedItem
             v-bind="$props"
             @removed="removed"
