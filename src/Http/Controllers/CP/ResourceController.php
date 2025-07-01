@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Statamic\CP\Column;
 use Statamic\CP\Navigation\NavItem;
 use Statamic\Exceptions\NotFoundHttpException;
@@ -205,9 +206,10 @@ class ResourceController extends CpController
 
     private function getResourceIcon(Resource $resource): string
     {
-        return Nav::build()->pluck('items')->flatten()
+        $navItem = Nav::build()->pluck('items')->flatten()
             ->filter(fn (NavItem $navItem) => $navItem->url() === cp_route('runway.index', ['resource' => $resource->handle()]))
-            ->first()
-            ?->icon();
+            ->first();
+
+        return $navItem?->icon() ?? File::get(__DIR__.'/../../../../resources/svg/database.svg');
     }
 }
