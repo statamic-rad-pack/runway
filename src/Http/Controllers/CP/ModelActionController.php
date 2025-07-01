@@ -5,8 +5,8 @@ namespace StatamicRadPack\Runway\Http\Controllers\CP;
 use Illuminate\Http\Request;
 use Statamic\Facades\Action;
 use Statamic\Http\Controllers\CP\ActionController;
-use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Http\Resources\CP\Model as ModelResource;
+use StatamicRadPack\Runway\Resource;
 
 class ModelActionController extends ActionController
 {
