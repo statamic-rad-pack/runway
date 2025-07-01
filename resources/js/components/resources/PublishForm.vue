@@ -426,6 +426,12 @@ export default {
         direction() {
             return this.$config.get('direction', 'ltr');
         },
+
+        baseStore() {
+            let pinia = Statamic.$app.config.globalProperties.$pinia;
+
+            return pinia._s.get('base');
+        },
     },
 
     watch: {
@@ -549,25 +555,37 @@ export default {
         },
 
         /**
-         * When creating a new model via the HasMany fieldtype, pre-fill the belongs_to field to the current model.
+         * Automatically populates the belongs_to relationship when creating a new model via the relationship fieldtype.
+         * This method is called when the inline publish form is created.
          */
-        prefillBelongsToField() {
+        populateBelongsToRelationship() {
             this.initialBlueprint.tabs.forEach((tab) => {
                 tab.sections.forEach((section) => {
                     section.fields
+                        .filter((field) => field.type === 'belongs_to')
                         .filter((field) => {
-                            return field.type === 'belongs_to' && field.resource === window.Runway.currentResource;
+                            // Gets the handle of the base reesource from the store reference
+                            // Example: "runway::posts::123" -> "posts"
+                            let baseResource = this.baseStore.reference.split('::')[1];
+
+                            return field.resource === baseResource;
                         })
                         .forEach((field) => {
-                            let alreadyExists = this.values[field.handle].includes(window.Runway.currentModel.id)
+                            let alreadyExists = this.values[field.handle].includes(this.baseStore.values.id);
 
                             if (!alreadyExists) {
-                                this.values[field.handle].push(window.Runway.currentModel.id)
-                                this.meta[field.handle].data = [window.Runway.currentModel]
+                                this.values[field.handle].push(this.baseStore.values.id);
+
+                                this.meta[field.handle].data = [{
+                                    id: this.baseStore.values.id,
+                                    reference: this.baseStore.values.reference,
+                                    title: this.baseStore.values.title,
+                                    edit_url: this.baseStore.values.edit_url,
+                                }];
                             }
-                        })
-                })
-            })
+                        });
+                });
+            });
         },
 
         afterActionSuccessfullyCompleted(response) {
@@ -602,8 +620,8 @@ export default {
     },
 
     created() {
-        if (this.publishContainer.includes('relate-fieldtype-inline')) {
-            this.prefillBelongsToField()
+        if (! this.isRoot) {
+            this.populateBelongsToRelationship();
         }
 
         container = computed(() => this.$refs.container);

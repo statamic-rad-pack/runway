@@ -149,12 +149,6 @@ class ResourceController extends CpController
             'status' => $model->publishedStatus(),
             'permalink' => $resource->hasRouting() ? $model->uri() : null,
             'resourceHasRoutes' => $resource->hasRouting(),
-            'currentModel' => [
-                'id' => $model->getKey(),
-                'reference' => $model->reference(),
-                'title' => $model->{$resource->titleField()},
-                'edit_url' => $request->url(),
-            ],
             'canManagePublishState' => User::current()->can('publish', $resource),
             'canEditBlueprint' => User::current()->can('configure fields'),
             'itemActions' => Action::for($model, ['resource' => $resource->handle(), 'view' => 'form']),

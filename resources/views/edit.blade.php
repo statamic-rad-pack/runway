@@ -27,12 +27,4 @@
         :initial-item-actions="{{ json_encode($itemActions) }}"
         item-action-url="{{ cp_route('runway.models.actions.run', ['resource' => $resource->handle()]) }}"
     ></runway-publish-form>
-
-{{--    TODO: Do away with the window object--}}
-    <script>
-        window.Runway = {
-            currentModel: @json($currentModel),
-            currentResource: "{{ $resource->handle() }}",
-        }
-    </script>
 @endsection
