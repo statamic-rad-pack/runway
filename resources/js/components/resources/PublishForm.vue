@@ -486,6 +486,7 @@ export default {
                     this.status = response.data.data.status;
                     this.isWorkingCopy = true;
                     if (!this.revisionsEnabled) this.permalink = response.data.data.permalink;
+                    if (!this.isCreating) this.$toast.success(__('Saved'));
 
                     let nextAction = this.quickSave || this.afterSaveOption;
 
@@ -620,11 +621,13 @@ export default {
     },
 
     created() {
+        window.history.replaceState({}, document.title, document.location.href.replace('created=true', ''));
+
+        container = computed(() => this.$refs.container);
+
         if (! this.isRoot) {
             this.populateBelongsToRelationship();
         }
-
-        container = computed(() => this.$refs.container);
     },
 
     unmounted() {
