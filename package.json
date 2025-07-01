@@ -1,10 +1,16 @@
 {
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "prettier:format": "prettier --write \"**/*.{js,ts,jsx,tsx,cjs,cts,mjs,mts,vue,blade.php,antlers.html,css}\"",
+        "prettier:check": "prettier --check \"**/*.{js,ts,jsx,tsx,cjs,cts,mjs,mts,vue,blade.php,antlers.html,css}\""
     },
     "dependencies": {
         "striptags": "^3.2.0",
+        "prettier": "^3.4.2",
+        "prettier-plugin-antlers": "^2.0.5",
+        "prettier-plugin-blade": "^2.1.19",
+        "prettier-plugin-tailwindcss": "^0.6.11",
         "vite-svg-loader": "^5.1.0"
     },
     "devDependencies": {
