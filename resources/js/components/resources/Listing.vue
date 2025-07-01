@@ -57,7 +57,7 @@ export default {
             items: null,
             page: null,
             perPage: null,
-        }
+        };
     },
 
     methods: {
@@ -67,5 +67,5 @@ export default {
             this.perPage = parameters.perPage;
         },
     },
-}
+};
 </script>

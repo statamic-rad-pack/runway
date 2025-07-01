@@ -12,7 +12,12 @@
                 <Dropdown placement="left-start" class="me-2">
                     <DropdownMenu>
                         <DropdownLabel :text="__('Actions')" />
-                        <DropdownItem v-if="canEditBlueprint" :text="__('Edit Blueprint')" icon="blueprint-edit" :href="blueprintUrl" />
+                        <DropdownItem
+                            v-if="canEditBlueprint"
+                            :text="__('Edit Blueprint')"
+                            icon="blueprint-edit"
+                            :href="blueprintUrl"
+                        />
                         <DropdownSeparator v-if="canEditBlueprint && actions.length" />
                         <DropdownItem
                             v-for="action in actions"
@@ -73,7 +78,7 @@ export default {
         blueprintUrl: { type: String, required: true },
         canEditBlueprint: { type: Boolean, required: true },
         hasPublishStates: { type: Boolean, required: true },
-        titleColumn: { type: String, required: true},
+        titleColumn: { type: String, required: true },
     },
-}
+};
 </script>

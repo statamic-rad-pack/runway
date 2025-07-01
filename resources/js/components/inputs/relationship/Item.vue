@@ -1,9 +1,6 @@
 <template>
     <div class="mb-1.5 last:mb-0">
-        <StatamicRelatedItem
-            v-bind="$props"
-            @removed="removed"
-        />
+        <StatamicRelatedItem v-bind="$props" @removed="removed" />
 
         <ConfirmationModal
             v-if="showDeletionConfirmationModel"
@@ -11,7 +8,10 @@
             :body-text="__('Unlinking this model will result in it being deleted. Are you sure you want to do this?')"
             :button-text="__('Delete')"
             :danger="true"
-            @confirm="showDeletionConfirmationModel = false; $emit('removed')"
+            @confirm="
+                showDeletionConfirmationModel = false;
+                $emit('removed');
+            "
             @cancel="showDeletionConfirmationModel = false"
         />
     </div>
@@ -49,7 +49,7 @@ export default {
     data() {
         return {
             showDeletionConfirmationModel: false,
-        }
+        };
     },
 
     computed: {
@@ -57,7 +57,7 @@ export default {
             let fieldtypeMeta = data_get(this.store.meta, this.$parent.$parent.fieldPathKeys.join('.'));
 
             return fieldtypeMeta.unlinkBehavior;
-        }
+        },
     },
 
     methods: {
@@ -69,6 +69,6 @@ export default {
 
             this.$emit('removed');
         },
-    }
-}
+    },
+};
 </script>

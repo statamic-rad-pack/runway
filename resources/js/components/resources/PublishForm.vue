@@ -21,7 +21,12 @@
                         <Button icon="ui/dots" variant="ghost" />
                     </template>
                     <DropdownMenu>
-                        <DropdownItem :text="__('Edit Blueprint')" icon="blueprint-edit" v-if="canEditBlueprint" :href="actions.editBlueprint" />
+                        <DropdownItem
+                            :text="__('Edit Blueprint')"
+                            icon="blueprint-edit"
+                            v-if="canEditBlueprint"
+                            :href="actions.editBlueprint"
+                        />
                         <DropdownSeparator v-if="canEditBlueprint && itemActions.length" />
                         <DropdownItem
                             v-for="action in itemActions"
@@ -36,7 +41,7 @@
             </ItemActions>
 
             <div class="text-2xs me-4 flex pt-px text-gray-600" v-if="readOnly">
-                <svg-icon name="light/lock" class="me-1 -mt-1 w-4" /> {{ __('Read Only') }}
+                <svg-icon name="light/lock" class="-mt-1 me-1 w-4" /> {{ __('Read Only') }}
             </div>
 
             <div class="flex items-center gap-3">
@@ -322,7 +327,7 @@ export default {
             saveKeyBinding: null,
             quickSaveKeyBinding: null,
             quickSave: false,
-        }
+        };
     },
 
     computed: {
@@ -343,7 +348,7 @@ export default {
         },
 
         somethingIsLoading() {
-            return ! this.$progress.isComplete();
+            return !this.$progress.isComplete();
         },
 
         canSave() {
@@ -363,7 +368,7 @@ export default {
         },
 
         published() {
-            if (! this.publishStatesEnabled) return false;
+            if (!this.publishStatesEnabled) return false;
 
             return this.values[this.resource.published_column];
         },
@@ -386,14 +391,14 @@ export default {
 
         publishButtonText() {
             if (this.canManagePublishState) {
-                return `${__('Publish')}…`
+                return `${__('Publish')}…`;
             }
 
-            return `${__('Create Revision')}…`
+            return `${__('Create Revision')}…`;
         },
 
         saveText() {
-            switch(true) {
+            switch (true) {
                 case this.revisionsEnabled:
                     return __('Save Changes');
                 case this.isUnpublishing:
@@ -401,26 +406,24 @@ export default {
                 case this.publishStatesEnabled && this.isDraft:
                     return __('Save Draft');
                 default:
-                    return this.publishStatesEnabled
-                        ? __('Save & Publish')
-                        : __('Save');
+                    return this.publishStatesEnabled ? __('Save & Publish') : __('Save');
             }
         },
 
         isUnpublishing() {
-            if (! this.publishStatesEnabled) return false;
+            if (!this.publishStatesEnabled) return false;
 
-            return this.initialPublished && ! this.published && ! this.isCreating;
+            return this.initialPublished && !this.published && !this.isCreating;
         },
 
         isDraft() {
-            if (! this.publishStatesEnabled) return false;
+            if (!this.publishStatesEnabled) return false;
 
-            return ! this.published;
+            return !this.published;
         },
 
         afterSaveOption() {
-            return this.getPreference('after_save')
+            return this.getPreference('after_save');
         },
 
         direction() {
@@ -436,7 +439,7 @@ export default {
 
     watch: {
         saving(saving) {
-            this.$progress.loading(`${this.publishContainer}-runway-publish-form`, saving)
+            this.$progress.loading(`${this.publishContainer}-runway-publish-form`, saving);
         },
 
         title(title) {
@@ -542,7 +545,7 @@ export default {
             this.trackDirtyState = false;
             this.values = this.resetValuesFromResponse(response.data.data.values);
             this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 350);
-            this.permalink = response.data.data.permalink
+            this.permalink = response.data.data.permalink;
             this.$nextTick(() => this.$emit('saved', response));
         },
 
@@ -552,7 +555,7 @@ export default {
         },
 
         setFieldValue(handle, value) {
-            this.$refs.container.setFieldValue(handle, value)
+            this.$refs.container.setFieldValue(handle, value);
         },
 
         /**
@@ -577,12 +580,14 @@ export default {
                             if (!alreadyExists) {
                                 this.values[field.handle].push(this.baseStore.values.id);
 
-                                this.meta[field.handle].data = [{
-                                    id: this.baseStore.values.id,
-                                    reference: this.baseStore.values.reference,
-                                    title: this.baseStore.values.title,
-                                    edit_url: this.baseStore.values.edit_url,
-                                }];
+                                this.meta[field.handle].data = [
+                                    {
+                                        id: this.baseStore.values.id,
+                                        reference: this.baseStore.values.reference,
+                                        title: this.baseStore.values.title,
+                                        edit_url: this.baseStore.values.edit_url,
+                                    },
+                                ];
                             }
                         });
                 });
@@ -606,13 +611,13 @@ export default {
     },
 
     mounted() {
-        this.saveKeyBinding = this.$keys.bindGlobal(['mod+return'], e => {
+        this.saveKeyBinding = this.$keys.bindGlobal(['mod+return'], (e) => {
             e.preventDefault();
             if (this.confirmingPublish) return;
             this.save();
         });
 
-        this.quickSaveKeyBinding = this.$keys.bindGlobal(['mod+s'], e => {
+        this.quickSaveKeyBinding = this.$keys.bindGlobal(['mod+s'], (e) => {
             e.preventDefault();
             if (this.confirmingPublish) return;
             this.quickSave = true;
@@ -625,7 +630,7 @@ export default {
 
         container = computed(() => this.$refs.container);
 
-        if (! this.isRoot) {
+        if (!this.isRoot) {
             this.populateBelongsToRelationship();
         }
     },
@@ -638,5 +643,5 @@ export default {
         this.saveKeyBinding.destroy();
         this.quickSaveKeyBinding.destroy();
     },
-}
+};
 </script>

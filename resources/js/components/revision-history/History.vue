@@ -15,4 +15,3 @@ export default {
     mixins: [RevisionHistory],
 };
 </script>
-
