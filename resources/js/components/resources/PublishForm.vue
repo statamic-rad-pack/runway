@@ -90,7 +90,7 @@
             <PublishComponents />
 
             <PublishTabs>
-                <template #actions>
+                <template v-if="resourceHasRoutes || publishStatesEnabled || revisionsEnabled" #actions>
                     <div class="space-y-6">
                         <!-- Visit URL Buttons -->
                         <div v-if="resourceHasRoutes">
@@ -107,7 +107,7 @@
                         </div>
 
                         <!-- Published Switch -->
-                        <Panel class="flex justify-between px-5 py-3" v-if="publishStatesEnabled && !revisionsEnabled">
+                        <Panel v-if="publishStatesEnabled && !revisionsEnabled" class="flex justify-between px-5 py-3">
                             <Heading :text="__('Published')" />
                             <Switch
                                 :model-value="published"
