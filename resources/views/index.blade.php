@@ -1,32 +1,21 @@
 @extends('statamic::layout')
 @section('title', $resource->name())
-@section('wrapper_class', 'max-w-full')
 
 @section('content')
-
-    <resource-view
+    <runway-resource-view
         title="{{ $resource->name() }}"
         handle="{{ $resource->handle() }}"
         :can-create="{{ Statamic\Support\Str::bool($canCreate) }}"
-        create-url="{{ $createUrl }}"
-        create-label="{{ $createLabel }}"
+        create-url="{{ cp_route('runway.create', ['resource' => $resource->handle()]) }}"
+        create-label="{{ __('Create :resource', ['resource' => $resource->singular()]) }}"
         :columns="{{ $columns->toJson() }}"
         :filters="{{ $filters->toJson() }}"
-        action-url="{{ $actionUrl }}"
-        primary-column="{{ $primaryColumn }}"
-        :has-publish-states="{{ Statamic\Support\Str::bool($resource->hasPublishStates()) }}"
-    >
-        <template #twirldown="{ actionCompleted }">
-            @can('configure fields')
-                <dropdown-item :text="__('Edit Blueprint')" redirect="{{ cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]) }}"></dropdown-item>
-            @endcan
-            <data-list-inline-actions
-                item="{{ $resource->handle() }}"
-                url="{{ cp_route('runway.actions.run', ['resource' => $resource->handle()]) }}"
-                :actions="{{ $actions }}"
-                @completed="actionCompleted"
-            ></data-list-inline-actions>
-        </template>
-    </resource-view>
-
+        :actions="{{ $actions->toJson() }}"
+        action-url="{{ cp_route('runway.actions.run', ['resource' => $resource->handle()]) }}"
+        models-action-url="{{ cp_route('runway.models.actions.run', ['resource' => $resource->handle()]) }}"
+        blueprint-url="{{ cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]) }}"
+        :can-edit-blueprint="{{ Statamic\Support\Str::bool($canEditBlueprint) }}"
+        :has-publish-states="{{ Statamic\Support\Str::bool($hasPublishStates) }}"
+        title-column="{{ $titleColumn }}"
+    ></runway-resource-view>
 @endsection

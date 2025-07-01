@@ -25,28 +25,29 @@ class ResourceController extends CpController
 
     public function index(IndexRequest $request, Resource $resource)
     {
+        $columns = $resource->blueprint()->columns()
+            ->when($resource->hasPublishStates(), function ($collection) {
+                $collection->put('status', Column::make('status')
+                    ->listable(true)
+                    ->visible(true)
+                    ->defaultVisibility(true)
+                    ->sortable(false));
+            })
+            ->setPreferred("runway.{$resource->handle()}.columns")
+            ->rejectUnlisted()
+            ->values();
+
         return view('runway::index', [
             'resource' => $resource,
+            'columns' => $columns,
+            'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
             'canCreate' => User::current()->can('create', $resource)
                 && $resource->hasVisibleBlueprint()
                 && ! $resource->readOnly(),
-            'createUrl' => cp_route('runway.create', ['resource' => $resource->handle()]),
-            'createLabel' => __('Create :resource', ['resource' => $resource->singular()]),
-            'columns' => $resource->blueprint()->columns()
-                ->when($resource->hasPublishStates(), function ($collection) {
-                    $collection->put('status', Column::make('status')
-                        ->listable(true)
-                        ->visible(true)
-                        ->defaultVisibility(true)
-                        ->sortable(false));
-                })
-                ->setPreferred("runway.{$resource->handle()}.columns")
-                ->rejectUnlisted()
-                ->values(),
-            'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
-            'actionUrl' => cp_route('runway.models.actions.run', ['resource' => $resource->handle()]),
-            'primaryColumn' => $this->getPrimaryColumn($resource),
+            'canEditBlueprint' => User::current()->can('configure fields'),
+            'hasPublishStates' => $resource->hasPublishStates(),
             'actions' => Action::for($resource, ['view' => 'form']),
+            'titleColumn' => $this->getTitleColumn($resource),
         ]);
     }
 

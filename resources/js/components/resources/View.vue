@@ -1,38 +1,60 @@
 <template>
     <div>
-        <header class="mb-6">
-            <div class="flex items-center">
-                <h1 class="flex-1" v-text="__(title)" />
+        <Header :title="__(title)" icon="collections">
+            <ItemActions
+                :url="actionUrl"
+                :actions="actions"
+                :item="handle"
+                @started="actionStarted"
+                @completed="actionCompleted"
+                v-slot="{ actions }"
+            >
+                <Dropdown placement="left-start" class="me-2">
+                    <DropdownMenu>
+                        <DropdownLabel :text="__('Actions')" />
+                        <DropdownItem v-if="canEditBlueprint" :text="__('Edit Blueprint')" icon="blueprint-edit" :href="blueprintUrl" />
+                        <DropdownSeparator v-if="canEditBlueprint && actions.length" />
+                        <DropdownItem
+                            v-for="action in actions"
+                            :key="action.handle"
+                            :text="__(action.title)"
+                            :icon="action.icon"
+                            :variant="action.dangerous ? 'destructive' : 'default'"
+                            @click="action.run"
+                        />
+                    </DropdownMenu>
+                </Dropdown>
+            </ItemActions>
 
-                <dropdown-list class="rtl:ml-2 ltr:mr-2" v-if="!!this.$scopedSlots.twirldown">
-                    <slot name="twirldown" :actionCompleted="actionCompleted" />
-                </dropdown-list>
+            <Button v-if="canCreate" variant="primary" :text="createLabel" :href="createUrl" />
+        </Header>
 
-                <div>
-                    <a v-if="canCreate" class="btn-primary" :href="createUrl" v-text="createLabel" />
-                </div>
-            </div>
-        </header>
-
-        <runway-listing
+        <RunwayListing
             :resource="handle"
-            :initial-columns="columns"
-            :filters="filters"
-            :action-url="actionUrl"
-            :primary-column="primaryColumn"
-            :has-publish-states="hasPublishStates"
-        ></runway-listing>
+            :columns
+            :filters
+            :action-url="modelsActionUrl"
+            :title-column
+            :has-publish-states
+        />
     </div>
 </template>
 
 <script>
-import RunwayListing from './Listing.vue'
-import HasActions from '../../../../vendor/statamic/cms/resources/js/components/publish/HasActions'
+import ItemActions from '@statamic/components/actions/ItemActions.vue';
+import { Header, Dropdown, DropdownMenu, DropdownLabel, DropdownItem, DropdownSeparator, Button } from '@statamic/ui';
+import RunwayListing from './Listing.vue';
 
 export default {
-    mixins: [HasActions],
-
     components: {
+        ItemActions,
+        Header,
+        Dropdown,
+        DropdownMenu,
+        DropdownLabel,
+        DropdownItem,
+        DropdownSeparator,
+        Button,
         RunwayListing,
     },
 
@@ -44,15 +66,13 @@ export default {
         createLabel: { type: String, required: true },
         columns: { type: Array, required: true },
         filters: { type: Array, required: true },
+        actions: { type: Array, required: true },
         actionUrl: { type: String, required: true },
-        primaryColumn: { type: String, required: true},
+        modelsActionUrl: { type: String, required: true },
+        blueprintUrl: { type: String, required: true },
+        canEditBlueprint: { type: Boolean, required: true },
         hasPublishStates: { type: Boolean, required: true },
-    },
-
-    methods: {
-        afterActionSuccessfullyCompleted(response) {
-            if (!response.redirect) window.location.reload();
-        },
+        titleColumn: { type: String, required: true},
     },
 }
 </script>
