@@ -24,6 +24,7 @@
                 v-if="model.viewable && model.permalink"
                 :text="__('Visit URL')"
                 :href="model.permalink"
+                target="_blank"
                 icon="eye"
             />
             <DropdownItem v-if="model.editable" :text="__('Edit')" :href="model.edit_url" icon="edit" />
