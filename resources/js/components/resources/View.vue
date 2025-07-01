@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header :title="__(title)" icon="collections">
+        <Header :title="__(title)" :icon>
             <ItemActions
                 :url="actionUrl"
                 :actions="actions"
@@ -59,6 +59,7 @@ export default {
     },
 
     props: {
+        icon: { type: String, required: true },
         title: { type: String, required: true },
         handle: { type: String, required: true },
         canCreate: { type: Boolean, required: true },

@@ -3,6 +3,7 @@
 
 @section('content')
     <runway-resource-view
+        icon="{{ $icon }}"
         title="{{ $resource->name() }}"
         handle="{{ $resource->handle() }}"
         :can-create="{{ Statamic\Support\Str::bool($canCreate) }}"
