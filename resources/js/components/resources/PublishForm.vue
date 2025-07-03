@@ -81,11 +81,10 @@
             :name="publishContainer"
             :reference="initialReference"
             :blueprint="blueprint"
-            :values="values"
+            v-model="values"
             :meta="meta"
             :errors="errors"
             :track-dirty-state="trackDirtyState"
-            @updated="values = $event"
         >
             <PublishComponents />
 
@@ -210,7 +209,6 @@ import PublishActions from './PublishActions.vue';
 import SaveButtonOptions from '@statamic/components/publish/SaveButtonOptions.vue';
 import RevisionHistory from '../revision-history/History.vue';
 import HasPreferences from '@statamic/components/data-list/HasPreferences.js';
-import HasHiddenFields from '@statamic/components/publish/HasHiddenFields.js';
 import HasActions from '@statamic/components/publish/HasActions.js';
 import striptags from 'striptags';
 import clone from '@statamic/util/clone.js';
@@ -246,7 +244,7 @@ let errors = ref({});
 let container = null;
 
 export default {
-    mixins: [HasPreferences, HasHiddenFields, HasActions],
+    mixins: [HasPreferences, HasActions],
 
     components: {
         Button,
@@ -308,6 +306,7 @@ export default {
             title: this.initialTitle,
             status: this.initialStatus,
             values: clone(this.initialValues),
+            visibleValues: {},
             meta: clone(this.initialMeta),
             isWorkingCopy: this.initialIsWorkingCopy,
             state: 'new',
@@ -468,7 +467,7 @@ export default {
                         container: this.$refs.container,
                         storeName: this.publishContainer,
                     }),
-                    new Request(this.actions.save, this.method, this.visibleValues),
+                    new Request(this.actions.save, this.method),
                     new AfterSaveHooks('runway', {
                         resource: this.resource,
                         reference: this.initialReference,
