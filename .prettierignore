@@ -1,9 +1,0 @@
-node_modules
-dist/
-vendor/
-/vendor
-.git
-**/.git
-tests
-package-lock.json
-composer.lock
