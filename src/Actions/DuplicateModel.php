@@ -12,6 +12,8 @@ class DuplicateModel extends Action
 {
     private $newItems;
 
+    protected $icon = 'duplicate';
+
     public static function title()
     {
         return __('Duplicate');

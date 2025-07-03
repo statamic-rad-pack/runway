@@ -4,21 +4,13 @@
         "build": "vite build"
     },
     "dependencies": {
-        "@floating-ui/dom": "^1.2.7",
-        "@shopify/draggable": "^1.0.0-beta.8",
-        "axios": "^0.21.1",
-        "cross-env": "^7.0.2",
-        "marked": "^5.1.0",
-        "qs": "^6.11.0",
-        "tree-helper": "^1.4.14",
-        "underscore": "^1.13.6",
-        "uniqid": "^5.2.0",
-        "vue": "^2.6.11",
-        "vue-draggable-nested-tree": "^3.0.0-beta3"
+        "striptags": "^3.2.0",
+        "vite-svg-loader": "^5.1.0"
     },
     "devDependencies": {
-        "@vitejs/plugin-vue2": "^2.2.0",
-        "laravel-vite-plugin": "^0.7.4",
-        "vite": "^4.1.4"
+        "@vitejs/plugin-vue": "^5.2.3",
+        "laravel-vite-plugin": "^1.2.0",
+        "vite": "^6.3.4",
+        "vite-plugin-externals": "^0.6.2"
     }
 }
