@@ -567,7 +567,7 @@ export default {
                     section.fields
                         .filter((field) => field.type === 'belongs_to')
                         .filter((field) => {
-                            // Gets the handle of the base reesource from the store reference
+                            // Gets the handle of the base resource from the store reference
                             // Example: "runway::posts::123" -> "posts"
                             let baseResource = this.baseStore.reference.split('::')[1];
 
