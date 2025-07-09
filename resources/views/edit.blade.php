@@ -1,38 +1,30 @@
+@use(Statamic\CP\Breadcrumbs\Breadcrumbs)
 @inject('str', 'Statamic\Support\Str')
 @extends('statamic::layout')
-@section('title', $breadcrumbs->title($title))
-@section('wrapper_class', 'max-w-3xl')
+@section('title', Breadcrumbs::title($title))
 
 @section('content')
     <runway-publish-form
         publish-container="base"
-        :initial-actions='@json($actions)'
-        method="patch"
-        :resource='@json($resource->toArray())'
+        :initial-actions="{{ json_encode($actions) }}"
+        method="{{ $method }}"
+        :resource="{{ json_encode($resource->toArray()) }}"
         :resource-has-routes="{{ $str::bool($resourceHasRoutes) }}"
         initial-title="{{ $title }}"
         initial-reference="{{ $reference }}"
-        :initial-blueprint='@json($blueprint)'
-        :initial-values='@json($values)'
-        :initial-meta='@json($meta)'
+        initial-status="{{ $status }}"
+        :initial-blueprint="{{ json_encode($blueprint) }}"
+        :initial-values="{{ json_encode($values) }}"
+        :initial-meta="{{ json_encode($meta) }}"
         initial-permalink="{{ $permalink }}"
         :initial-is-working-copy="{{ $str::bool($hasWorkingCopy) }}"
+        :revisions-enabled="{{ $str::bool($revisionsEnabled) }}"
         :initial-read-only="{{ $str::bool($readOnly) }}"
-        initial-status="{{ $status }}"
-        :breadcrumbs="{{ $breadcrumbs->toJson() }}"
-        :can-edit-blueprint="{{ Auth::user()->can('configure fields') ? 'true' : 'false' }}"
+        :can-edit-blueprint="{{ $str::bool($canEditBlueprint) }}"
         :can-manage-publish-state="{{ $str::bool($canManagePublishState) }}"
         create-another-url="{{ cp_route('runway.create', ['resource' => $resource->handle()]) }}"
         initial-listing-url="{{ cp_route('runway.index', ['resource' => $resource->handle()]) }}"
         :initial-item-actions="{{ json_encode($itemActions) }}"
         item-action-url="{{ cp_route('runway.models.actions.run', ['resource' => $resource->handle()]) }}"
-        :revisions-enabled="{{ $str::bool($revisionsEnabled) }}"
     ></runway-publish-form>
-
-    <script>
-        window.Runway = {
-            currentModel: @json($currentModel),
-            currentResource: "{{ $resource->handle() }}",
-        }
-    </script>
 @endsection

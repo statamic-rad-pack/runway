@@ -1,4 +1,4 @@
-name: Lint PHP code style issues
+name: Lint code style issues
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - '**.php'
 
 jobs:
-  lint-php-code-styling:
+  lint-code-styling:
     runs-on: ubuntu-latest
 
     steps:

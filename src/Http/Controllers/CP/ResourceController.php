@@ -3,10 +3,12 @@
 namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
 use Illuminate\Support\Facades\DB;
-use Statamic\CP\Breadcrumbs;
+use Illuminate\Support\Facades\File;
 use Statamic\CP\Column;
+use Statamic\CP\Navigation\NavItem;
 use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Facades\Action;
+use Statamic\Facades\CP\Nav;
 use Statamic\Facades\Scope;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
@@ -25,28 +27,30 @@ class ResourceController extends CpController
 
     public function index(IndexRequest $request, Resource $resource)
     {
+        $columns = $resource->blueprint()->columns()
+            ->when($resource->hasPublishStates(), function ($collection) {
+                $collection->put('status', Column::make('status')
+                    ->listable(true)
+                    ->visible(true)
+                    ->defaultVisibility(true)
+                    ->sortable(false));
+            })
+            ->setPreferred("runway.{$resource->handle()}.columns")
+            ->rejectUnlisted()
+            ->values();
+
         return view('runway::index', [
+            'icon' => $this->getResourceIcon($resource),
             'resource' => $resource,
+            'columns' => $columns,
+            'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
             'canCreate' => User::current()->can('create', $resource)
                 && $resource->hasVisibleBlueprint()
                 && ! $resource->readOnly(),
-            'createUrl' => cp_route('runway.create', ['resource' => $resource->handle()]),
-            'createLabel' => __('Create :resource', ['resource' => $resource->singular()]),
-            'columns' => $resource->blueprint()->columns()
-                ->when($resource->hasPublishStates(), function ($collection) {
-                    $collection->put('status', Column::make('status')
-                        ->listable(true)
-                        ->visible(true)
-                        ->defaultVisibility(true)
-                        ->sortable(false));
-                })
-                ->setPreferred("runway.{$resource->handle()}.columns")
-                ->rejectUnlisted()
-                ->values(),
-            'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
-            'actionUrl' => cp_route('runway.models.actions.run', ['resource' => $resource->handle()]),
-            'primaryColumn' => $this->getPrimaryColumn($resource),
+            'canEditBlueprint' => User::current()->can('configure fields'),
+            'hasPublishStates' => $resource->hasPublishStates(),
             'actions' => Action::for($resource, ['view' => 'form']),
+            'titleColumn' => $this->getTitleColumn($resource),
         ]);
     }
 
@@ -56,22 +60,19 @@ class ResourceController extends CpController
         $fields = $blueprint->fields();
         $fields = $fields->preProcess();
 
+        $values = $fields->values()->merge([
+            $resource->publishedColumn() => true,
+        ]);
+
         $viewData = [
             'title' => __('Create :resource', ['resource' => $resource->singular()]),
-            'breadcrumbs' => new Breadcrumbs([[
-                'text' => $resource->plural(),
-                'url' => cp_route('runway.index', [
-                    'resource' => $resource->handle(),
-                ]),
-            ]]),
+            'method' => 'post',
+            'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
             'actions' => [
                 'save' => cp_route('runway.store', ['resource' => $resource->handle()]),
             ],
-            'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
             'blueprint' => $blueprint->toPublishArray(),
-            'values' => $fields->values()->merge([
-                $resource->publishedColumn() => true,
-            ])->all(),
+            'values' => $values->all(),
             'meta' => $fields->meta(),
             'resourceHasRoutes' => $resource->hasRouting(),
             'canManagePublishState' => User::current()->can('publish', $resource),
@@ -135,13 +136,7 @@ class ResourceController extends CpController
             'title' => $model->getAttribute($resource->titleField()),
             'reference' => $model->reference(),
             'method' => 'patch',
-            'breadcrumbs' => new Breadcrumbs([[
-                'text' => $resource->plural(),
-                'url' => cp_route('runway.index', [
-                    'resource' => $resource->handle(),
-                ]),
-            ]]),
-            'resource' => $resource,
+            'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
             'actions' => [
                 'save' => $model->runwayUpdateUrl(),
                 'publish' => $model->runwayPublishUrl(),
@@ -158,13 +153,8 @@ class ResourceController extends CpController
             'status' => $model->publishedStatus(),
             'permalink' => $resource->hasRouting() ? $model->uri() : null,
             'resourceHasRoutes' => $resource->hasRouting(),
-            'currentModel' => [
-                'id' => $model->getKey(),
-                'reference' => $model->reference(),
-                'title' => $model->{$resource->titleField()},
-                'edit_url' => $request->url(),
-            ],
             'canManagePublishState' => User::current()->can('publish', $resource),
+            'canEditBlueprint' => User::current()->can('configure fields'),
             'itemActions' => Action::for($model, ['resource' => $resource->handle(), 'view' => 'form']),
             'revisionsEnabled' => $resource->revisionsEnabled(),
             'hasWorkingCopy' => $model->hasWorkingCopy(),
@@ -212,5 +202,14 @@ class ResourceController extends CpController
             ]),
             'saved' => $saved,
         ];
+    }
+
+    private function getResourceIcon(Resource $resource): string
+    {
+        $navItem = Nav::build()->pluck('items')->flatten()
+            ->filter(fn (NavItem $navItem) => $navItem->url() === cp_route('runway.index', ['resource' => $resource->handle()]))
+            ->first();
+
+        return $navItem?->icon() ?? File::get(__DIR__.'/../../../../resources/svg/database.svg');
     }
 }
