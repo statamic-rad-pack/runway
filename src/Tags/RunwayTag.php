@@ -102,7 +102,7 @@ class RunwayTag extends Tags
                     $query->whereIn($relationshipResource->databaseTable().'.'.$relationshipResource->primaryKey(), Arr::wrap($value));
                 });
             } else {
-                $query->where($key, $value);
+                $query->where($this->resource->model()->getColumnForField($key), $value);
             }
         }
 
@@ -110,7 +110,7 @@ class RunwayTag extends Tags
             $key = explode(':', (string) $whereIn)[0];
             $value = explode(':', (string) $whereIn)[1];
 
-            $query->whereIn($key, explode(',', $value));
+            $query->whereIn($this->resource->model()->getColumnForField($key), explode(',', $value));
         }
 
         if ($this->params->has('sort') && ! empty($this->params->get('sort'))) {
@@ -122,7 +122,7 @@ class RunwayTag extends Tags
                 $sortDirection = 'asc';
             }
 
-            $query->orderBy($sortColumn, $sortDirection);
+            $query->orderBy($this->resource->model()->getColumnForField($sortColumn), $sortDirection);
         }
 
         return $query;
