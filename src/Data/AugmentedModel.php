@@ -105,8 +105,14 @@ class AugmentedModel extends AbstractAugmented
             return $value->resolve();
         }
 
-        if ($this->resource->nestedFieldPrefixes()->contains($handle)) {
+        if ($this->isNestedFieldPrefix($handle)) {
             $value = $this->wrapNestedFields($handle);
+
+            return $value->resolve();
+        }
+
+        if ($this->isNestedField($handle)) {
+            $value = $this->wrapNestedField($handle);
 
             return $value->resolve();
         }
@@ -130,6 +136,11 @@ class AugmentedModel extends AbstractAugmented
             $this->fieldtype($relatedField),
             $this->data
         );
+    }
+
+    private function isNestedFieldPrefix(string $handle): bool
+    {
+        return $this->resource->nestedFieldPrefixes()->contains($handle);
     }
 
     private function wrapNestedFields(string $nestedFieldPrefix): Value
@@ -158,6 +169,32 @@ class AugmentedModel extends AbstractAugmented
             },
             $nestedFieldPrefix,
             null,
+            $this->data
+        );
+    }
+
+    private function isNestedField(string $handle): bool
+    {
+        foreach ($this->resource->nestedFieldPrefixes() as $nestedFieldPrefix) {
+            if (Str::startsWith($handle, "{$nestedFieldPrefix}_")) {
+                return $this->blueprintFields()->has($handle);
+            }
+        }
+
+        return false;
+    }
+
+    private function wrapNestedField(string $handle): Value
+    {
+        $nestedFieldPrefix = Str::before($handle, '_');
+        $key = Str::after($handle, "{$nestedFieldPrefix}_");
+
+        $value = data_get($this->data, "{$nestedFieldPrefix}.{$key}");
+
+        return new Value(
+            $value,
+            $handle,
+            $this->fieldtype($handle),
             $this->data
         );
     }
