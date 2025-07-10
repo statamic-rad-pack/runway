@@ -64,7 +64,7 @@ class AugmentedModelTest extends TestCase
     }
 
     #[Test]
-    public function it_gets_nested_values_via_nested_field_handles()
+    public function it_gets_nested_values_via_nested_field_handle()
     {
         $post = Post::factory()->create([
             'values' => [
