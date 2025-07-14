@@ -1,3 +1,29 @@
+<script setup>
+import { StatusIndicator, DropdownItem, Listing } from '@statamic/ui';
+import { ref } from 'vue';
+
+const props = defineProps({
+    resource: String,
+    actionUrl: String,
+    columns: Array,
+    filters: Array,
+    titleColumn: String,
+    hasPublishStates: Boolean,
+});
+
+const preferencesPrefix = ref(`runway.${props.resource}`);
+const requestUrl = ref(cp_url(`runway/${props.resource}/listing-api`));
+const items = ref(null);
+const page = ref(null);
+const perPage = ref(null);
+
+function requestComplete({ items: newItems, parameters }) {
+    items.value = newItems;
+    page.value = parameters.page;
+    perPage.value = parameters.perPage;
+}
+</script>
+
 <template>
     <Listing
         ref="listing"
@@ -31,42 +57,3 @@
         </template>
     </Listing>
 </template>
-
-<script>
-import { StatusIndicator, DropdownItem, Listing } from '@statamic/ui';
-
-export default {
-    components: {
-        StatusIndicator,
-        Listing,
-        DropdownItem,
-    },
-
-    props: {
-        resource: String,
-        actionUrl: String,
-        columns: Array,
-        filters: Array,
-        titleColumn: String,
-        hasPublishStates: Boolean,
-    },
-
-    data() {
-        return {
-            preferencesPrefix: `runway.${this.resource}`,
-            requestUrl: cp_url(`runway/${this.resource}/listing-api`),
-            items: null,
-            page: null,
-            perPage: null,
-        };
-    },
-
-    methods: {
-        requestComplete({ items, parameters, activeFilters }) {
-            this.items = items;
-            this.page = parameters.page;
-            this.perPage = parameters.perPage;
-        },
-    },
-};
-</script>

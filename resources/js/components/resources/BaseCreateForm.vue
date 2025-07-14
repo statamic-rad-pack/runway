@@ -1,3 +1,22 @@
+<script setup>
+const props = defineProps({
+    actions: Object,
+    resource: Object,
+    resourceHasRoutes: Boolean,
+    createLabel: String,
+    blueprint: Object,
+    values: Object,
+    meta: Object,
+    canManagePublishState: Boolean,
+    createAnotherUrl: String,
+    listingUrl: String,
+});
+
+function saved(response) {
+    window.location = response.data.data.edit_url + '?created=true';
+}
+</script>
+
 <template>
     <runway-publish-form
         :is-creating="true"
@@ -16,26 +35,3 @@
         @saved="saved"
     ></runway-publish-form>
 </template>
-
-<script>
-export default {
-    props: {
-        actions: Object,
-        resource: Object,
-        resourceHasRoutes: Boolean,
-        createLabel: String,
-        blueprint: Object,
-        values: Object,
-        meta: Object,
-        canManagePublishState: Boolean,
-        createAnotherUrl: String,
-        listingUrl: String,
-    },
-
-    methods: {
-        saved(response) {
-            window.location = response.data.data.edit_url + '?created=true';
-        },
-    },
-};
-</script>

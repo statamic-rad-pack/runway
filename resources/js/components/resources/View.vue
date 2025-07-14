@@ -1,3 +1,27 @@
+<script setup>
+import ItemActions from '@statamic/components/actions/ItemActions.vue';
+import { Header, Dropdown, DropdownMenu, DropdownLabel, DropdownItem, DropdownSeparator, Button } from '@statamic/ui';
+import RunwayListing from './Listing.vue';
+
+const props = defineProps({
+    icon: { type: String, required: true },
+    title: { type: String, required: true },
+    handle: { type: String, required: true },
+    canCreate: { type: Boolean, required: true },
+    createUrl: { type: String, required: true },
+    createLabel: { type: String, required: true },
+    columns: { type: Array, required: true },
+    filters: { type: Array, required: true },
+    actions: { type: Array, required: true },
+    actionUrl: { type: String, required: true },
+    modelsActionUrl: { type: String, required: true },
+    blueprintUrl: { type: String, required: true },
+    canEditBlueprint: { type: Boolean, required: true },
+    hasPublishStates: { type: Boolean, required: true },
+    titleColumn: { type: String, required: true },
+});
+</script>
+
 <template>
     <div>
         <Header :title="__(title)" :icon>
@@ -44,41 +68,3 @@
         />
     </div>
 </template>
-
-<script>
-import ItemActions from '@statamic/components/actions/ItemActions.vue';
-import { Header, Dropdown, DropdownMenu, DropdownLabel, DropdownItem, DropdownSeparator, Button } from '@statamic/ui';
-import RunwayListing from './Listing.vue';
-
-export default {
-    components: {
-        ItemActions,
-        Header,
-        Dropdown,
-        DropdownMenu,
-        DropdownLabel,
-        DropdownItem,
-        DropdownSeparator,
-        Button,
-        RunwayListing,
-    },
-
-    props: {
-        icon: { type: String, required: true },
-        title: { type: String, required: true },
-        handle: { type: String, required: true },
-        canCreate: { type: Boolean, required: true },
-        createUrl: { type: String, required: true },
-        createLabel: { type: String, required: true },
-        columns: { type: Array, required: true },
-        filters: { type: Array, required: true },
-        actions: { type: Array, required: true },
-        actionUrl: { type: String, required: true },
-        modelsActionUrl: { type: String, required: true },
-        blueprintUrl: { type: String, required: true },
-        canEditBlueprint: { type: Boolean, required: true },
-        hasPublishStates: { type: Boolean, required: true },
-        titleColumn: { type: String, required: true },
-    },
-};
-</script>
