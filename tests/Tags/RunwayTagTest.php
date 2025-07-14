@@ -190,6 +190,23 @@ class RunwayTagTest extends TestCase
     }
 
     #[Test]
+    public function can_get_models_with_where_parameter_when_condition_is_on_nested_field()
+    {
+        $posts = Post::factory()->count(5)->create();
+
+        $posts[0]->update(['values' => ['alt_title' => 'penguin']]);
+
+        $this->tag->setParameters([
+            'where' => 'values_alt_title:penguin',
+        ]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertEquals(1, count($usage));
+        $this->assertEquals((string) $usage[0]['values_alt_title']->value(), 'penguin');
+    }
+
+    #[Test]
     public function can_get_models_with_where_in_parameter()
     {
         $posts = Post::factory()->count(5)->create();
@@ -206,6 +223,25 @@ class RunwayTagTest extends TestCase
         $this->assertEquals(2, count($usage));
         $this->assertEquals((string) $usage[0]['slug']->value(), 'foo');
         $this->assertEquals((string) $usage[1]['slug']->value(), 'bar');
+    }
+
+    #[Test]
+    public function can_get_models_with_where_in_parameter_when_condition_is_on_nested_field()
+    {
+        $posts = Post::factory()->count(5)->create();
+
+        $posts[0]->update(['values' => ['alt_title' => 'foo']]);
+        $posts[2]->update(['values' => ['alt_title' => 'bar']]);
+
+        $this->tag->setParameters([
+            'where_in' => 'values_alt_title:foo,bar',
+        ]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertEquals(2, count($usage));
+        $this->assertEquals((string) $usage[0]['values_alt_title']->value(), 'foo');
+        $this->assertEquals((string) $usage[1]['values_alt_title']->value(), 'bar');
     }
 
     #[Test]
@@ -246,6 +282,26 @@ class RunwayTagTest extends TestCase
 
         $this->assertEquals((string) $usage[0]['title'], 'def');
         $this->assertEquals((string) $usage[1]['title'], 'abc');
+    }
+
+    #[Test]
+    public function can_get_models_with_sort_parameter_on_nested_field()
+    {
+        $posts = Post::factory()->count(2)->create();
+
+        $posts[0]->update(['values' => ['alt_title' => 'abc']]);
+        $posts[1]->update(['values' => ['alt_title' => 'def']]);
+
+        $this->tag->setParameters([
+            'sort' => 'values_alt_title:desc',
+        ]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertEquals(2, count($usage));
+
+        $this->assertEquals((string) $usage[0]['values_alt_title'], 'def');
+        $this->assertEquals((string) $usage[1]['values_alt_title'], 'abc');
     }
 
     #[Test]

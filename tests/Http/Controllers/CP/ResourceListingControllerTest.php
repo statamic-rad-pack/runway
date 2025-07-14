@@ -166,6 +166,35 @@ class ResourceListingControllerTest extends TestCase
     }
 
     #[Test]
+    public function listing_rows_can_be_ordered_by_nested_field()
+    {
+        $user = User::make()->makeSuper()->save();
+        $posts = Post::factory()->count(2)->create();
+
+        $posts[0]->update(['values' => ['alt_title' => 'Banana Split']]);
+        $posts[1]->update(['values' => ['alt_title' => 'Apple Pie']]);
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.listing-api', ['resource' => 'post', 'sort' => 'values_alt_title', 'order' => 'asc']))
+            ->assertOk()
+            ->assertJson([
+                'data' => [
+                    [
+                        'title' => $posts[1]->title,
+                        'edit_url' => "http://localhost/cp/runway/post/{$posts[1]->id}",
+                        'id' => $posts[1]->id,
+                    ],
+                    [
+                        'title' => $posts[0]->title,
+                        'edit_url' => "http://localhost/cp/runway/post/{$posts[0]->id}",
+                        'id' => $posts[0]->id,
+                    ],
+                ],
+            ]);
+    }
+
+    #[Test]
     public function can_search()
     {
         $user = User::make()->makeSuper()->save();

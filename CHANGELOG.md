@@ -1,5 +1,13 @@
 # Changelog
 
+## v8.5.2 (2025-07-10)
+
+### What's fixed
+* Fix issues when filtering, sorting and searching nested fields #700 #702 by @duncanmcclean
+* Improve nested field augmentation #698 #701 by @duncanmcclean
+
+
+
 ## v8.5.1 (2025-06-11)
 
 ### What's fixed
