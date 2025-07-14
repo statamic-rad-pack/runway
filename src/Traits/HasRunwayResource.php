@@ -65,7 +65,7 @@ trait HasRunwayResource
                     || $field->visibility() === 'computed'
                     || Str::startsWith($field->handle(), $this->runwayResource()->nestedFieldPrefixes());
             })
-            ->each(fn (Field $field) => $query->orWhere($field->handle(), 'LIKE', '%'.$searchQuery.'%'));
+            ->each(fn (Field $field) => $query->orWhere($this->getColumnForField($field->handle()), 'LIKE', '%'.$searchQuery.'%'));
     }
 
     public function publishedStatus(): ?string
@@ -128,6 +128,20 @@ trait HasRunwayResource
         }
 
         return $value;
+    }
+
+    public function getColumnForField(string $field): string
+    {
+        foreach ($this->runwayResource()->nestedFieldPrefixes() as $nestedFieldPrefix) {
+            if (Str::startsWith($field, "{$nestedFieldPrefix}_")) {
+                $nestedFieldPrefix = Str::before($field, '_');
+                $key = Str::after($field, "{$nestedFieldPrefix}_");
+
+                return "{$nestedFieldPrefix}->{$key}";
+            }
+        }
+
+        return $field;
     }
 
     public function runwayEditUrl(): string
