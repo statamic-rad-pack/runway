@@ -5,6 +5,7 @@ namespace StatamicRadPack\Runway;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -142,6 +143,7 @@ class ServiceProvider extends AddonServiceProvider
                 ->each(function (Resource $resource) use (&$nav) {
                     $nav->create($resource->name())
                         ->section('Content')
+                        ->icon(File::get(__DIR__.'/../resources/svg/database.svg'))
                         ->route('runway.index', ['resource' => $resource->handle()])
                         ->can('view', $resource);
                 });

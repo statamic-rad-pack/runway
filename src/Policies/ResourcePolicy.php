@@ -7,6 +7,15 @@ use StatamicRadPack\Runway\Resource;
 
 class ResourcePolicy
 {
+    public function before($user)
+    {
+        $user = User::fromUser($user);
+
+        if ($user->isSuper()) {
+            return true;
+        }
+    }
+
     public function view($user, Resource $resource, $model = null)
     {
         return User::fromUser($user)->hasPermission("view {$resource->handle()}");
