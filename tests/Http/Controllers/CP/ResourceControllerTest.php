@@ -329,7 +329,7 @@ class ResourceControllerTest extends TestCase
 
         // Seconds aren't enabled, so we shouldn't have any.
         $this->assertEquals(
-            $post->created_at->startOfMinute()->toIso8601ZuluString(),
+            $post->created_at->startOfMinute()->toIso8601ZuluString('millisecond'),
             $response->viewData('values')['created_at']
         );
     }
@@ -367,7 +367,7 @@ class ResourceControllerTest extends TestCase
 
         // Time isn't enabled, so expect the time to be 00:00:00.
         $this->assertEquals(
-            $post->created_at->startOfDay()->toIso8601ZuluString(),
+            $post->created_at->startOfDay()->toIso8601ZuluString('millisecond'),
             $response->viewData('values')['created_at']
         );
     }
@@ -405,7 +405,7 @@ class ResourceControllerTest extends TestCase
 
         // Seconds aren't enabled, so we shouldn't have any.
         $this->assertEquals(
-            $post->created_at->startOfMinute()->toIso8601ZuluString(),
+            $post->created_at->startOfMinute()->toIso8601ZuluString('millisecond'),
             $response->viewData('values')['created_at']
         );
     }
