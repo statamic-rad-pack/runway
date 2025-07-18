@@ -28,7 +28,7 @@ class ApiController extends StatamicApiController
         $resource = $this->resource($resourceHandle);
         $this->resourceHandle = $resource->handle();
 
-        $results = $this->filterSortAndPaginate($resource->model()->query());
+        $results = $this->updateAndPaginate($resource->model()->query());
 
         $results = ApiResource::collection($results);
 
