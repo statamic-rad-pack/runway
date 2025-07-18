@@ -1,5 +1,5 @@
 <script setup>
-import ItemActions from '@statamic/components/actions/ItemActions.vue';
+import ItemActions from '@statamic';
 import { Header, Dropdown, DropdownMenu, DropdownLabel, DropdownItem, DropdownSeparator, Button } from '@statamic/ui';
 import RunwayListing from './Listing.vue';
 
