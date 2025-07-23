@@ -27,7 +27,8 @@ class ResourceController extends CpController
 
     public function index(IndexRequest $request, Resource $resource)
     {
-        $columns = $resource->blueprint()->columns()
+        $columns = $resource->blueprint()
+            ->columns()
             ->when($resource->hasPublishStates(), function ($collection) {
                 $collection->put('status', Column::make('status')
                     ->listable(true)
