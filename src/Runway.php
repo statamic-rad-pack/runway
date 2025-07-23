@@ -66,6 +66,11 @@ class Runway
         return $resource;
     }
 
+    public static function hasResource(string $resourceHandle): bool
+    {
+        return collect(static::$resources)->map->handle()->contains($resourceHandle);
+    }
+
     public static function usesRouting(): bool
     {
         return static::allResources()->filter->hasRouting()->count() >= 1;
