@@ -5,6 +5,7 @@
 
 <runway-resource-widget
     resource="{{ $resource->handle() }}"
+    icon="{{ $icon }}"
     title="{{ $title }}"
     :additional-columns="{{ $columns->toJson() }}"
     :filters="{{ $filters->toJson() }}"

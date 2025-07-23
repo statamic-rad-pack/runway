@@ -13,6 +13,7 @@ import {
 const props = defineProps({
     additionalColumns: Array,
     resource: String,
+    icon: String,
     title: String,
     initialPerPage: {
         type: Number,
@@ -34,12 +35,8 @@ const cols = computed(() => [{ field: props.titleColumn, visible: true }, ...pro
 
 const widgetProps = computed(() => ({
     title: props.title,
-    icon: 'collections', // todo
+    icon: props.icon,
 }));
-
-function columnShowing(column) {
-    return cols.value.find((c) => c.field === column);
-}
 </script>
 
 <template>

@@ -53,6 +53,7 @@ class ResourceWidget extends Widget
         return view('runway::widget', [
             'resource' => $resource,
             'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
+            'icon' => $resource->icon(),
             'title' => $this->config('title', $resource->name()),
             'limit' => $this->config('limit', 5),
             'sortColumn' => $sortColumn,

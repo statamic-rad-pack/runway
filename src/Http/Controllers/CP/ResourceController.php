@@ -41,7 +41,7 @@ class ResourceController extends CpController
             ->values();
 
         return view('runway::index', [
-            'icon' => $this->getResourceIcon($resource),
+            'icon' => $resource->icon(),
             'resource' => $resource,
             'columns' => $columns,
             'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
@@ -203,14 +203,5 @@ class ResourceController extends CpController
             ]),
             'saved' => $saved,
         ];
-    }
-
-    private function getResourceIcon(Resource $resource): string
-    {
-        $navItem = Nav::build()->pluck('items')->flatten()
-            ->filter(fn (NavItem $navItem) => $navItem->url() === cp_route('runway.index', ['resource' => $resource->handle()]))
-            ->first();
-
-        return $navItem?->icon() ?? File::get(__DIR__.'/../../../../resources/svg/database.svg');
     }
 }
