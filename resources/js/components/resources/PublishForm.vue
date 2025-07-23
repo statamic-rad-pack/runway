@@ -238,6 +238,7 @@ import LivePreview from '@statamic/components/ui/LivePreview/LivePreview.vue';
 import { SavePipeline } from 'statamic';
 import { computed, ref } from 'vue';
 const { Pipeline, Request, BeforeSaveHooks, AfterSaveHooks, PipelineStopped } = SavePipeline;
+import { publishContextKey } from '@statamic/ui';
 
 let saving = ref(false);
 let errors = ref({});
@@ -272,6 +273,10 @@ export default {
         Subheading,
         Switch,
         Select,
+    },
+
+    inject: {
+        publishContext: { from: publishContextKey }
     },
 
     props: {
@@ -336,10 +341,6 @@ export default {
 
         errors() {
             return errors.value;
-        },
-
-        store() {
-            return this.$refs.container.store;
         },
 
         formattedTitle() {
@@ -429,10 +430,14 @@ export default {
             return this.$config.get('direction', 'ltr');
         },
 
-        baseStore() {
-            let pinia = Statamic.$app.config.globalProperties.$pinia;
+        baseContainer() {
+            let parentContainer = this.publishContext;
 
-            return pinia._s.get('base');
+            while (parentContainer?.parentContainer) {
+                parentContainer = parentContainer.parentContainer;
+            }
+
+            return parentContainer;
         },
     },
 
@@ -464,8 +469,6 @@ export default {
                     new BeforeSaveHooks('runway', {
                         resource: this.resource,
                         values: this.values,
-                        container: this.$refs.container,
-                        storeName: this.publishContainer,
                     }),
                     new Request(this.actions.save, this.method),
                     new AfterSaveHooks('runway', {
@@ -569,22 +572,22 @@ export default {
                         .filter((field) => {
                             // Gets the handle of the base resource from the store reference
                             // Example: "runway::posts::123" -> "posts"
-                            let baseResource = this.baseStore.reference.split('::')[1];
+                            let baseResource = this.baseContainer.reference.value.split('::')[1];
 
                             return field.resource === baseResource;
                         })
                         .forEach((field) => {
-                            let alreadyExists = this.values[field.handle].includes(this.baseStore.values.id);
+                            let alreadyExists = this.values[field.handle].includes(this.baseContainer.values.value.id);
 
                             if (!alreadyExists) {
-                                this.values[field.handle].push(this.baseStore.values.id);
+                                this.values[field.handle].push(this.baseContainer.values.value.id);
 
                                 this.meta[field.handle].data = [
                                     {
-                                        id: this.baseStore.values.id,
-                                        reference: this.baseStore.values.reference,
-                                        title: this.baseStore.values.title,
-                                        edit_url: this.baseStore.values.edit_url,
+                                        id: this.baseContainer.values.value.id,
+                                        reference: this.baseContainer.reference.value,
+                                        title: this.baseContainer.values.value.title,
+                                        edit_url: this.baseContainer.values.value.edit_url,
                                     },
                                 ];
                             }
@@ -622,16 +625,16 @@ export default {
             this.quickSave = true;
             this.save();
         });
+
+        if (!this.isRoot) {
+            this.populateBelongsToRelationship();
+        }
     },
 
     created() {
         window.history.replaceState({}, document.title, document.location.href.replace('created=true', ''));
 
         container = computed(() => this.$refs.container);
-
-        if (!this.isRoot) {
-            this.populateBelongsToRelationship();
-        }
     },
 
     unmounted() {
