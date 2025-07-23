@@ -180,3 +180,29 @@ class YourModel extends Model
 	}
 }
 ```
+
+## Widget
+
+Runway provides a widget, allowing you to display a list of models from a resource on the Control Panel dashboard. You can configure it in `config/statamic/cp.php`:
+
+```php
+// config/statamic/cp.php
+
+'widgets' => [
+  'getting_started',
+  [ // [tl! focus:start]
+      'type' => 'runway_resource',
+      'resource' => 'product',
+      'limit' => 10,
+  ], // [tl! focus:end]
+],
+
+### Options
+
+* `resource`: The resource's handle **(required)**.
+* `width`: Width of dashboard area as a percentage. Accepts `25`, `33`, `50`, `66`, `75` and `100`.
+* `sites`: Determines the sites in which this widget should be displayed.
+* `limit`: Limit number of entries. Defaults to `5`.
+* `sort`: Sort and order by field name. E.g. `''title:desc''`. Defaults to the resources''s settings.
+* `fields`: An array of field handles to be displayed as columns in the widget.
+* `title`: The title of the widget. Defaults to the resource name.
