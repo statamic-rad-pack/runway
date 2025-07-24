@@ -5,8 +5,11 @@ namespace StatamicRadPack\Runway;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Statamic\CP\Navigation\NavItem;
 use Statamic\Facades\Blink;
+use Statamic\Facades\CP\Nav;
 use Statamic\Facades\Search;
 use Statamic\Fields\Blueprint;
 use Statamic\Fields\Field;
@@ -149,6 +152,15 @@ class Resource
                 return in_array($field->type(), ['text', 'textarea', 'slug']);
             })
             ->first();
+    }
+
+    public function icon(): string
+    {
+        $navItem = Nav::build()->pluck('items')->flatten()
+            ->filter(fn (NavItem $navItem) => $navItem->url() === cp_route('runway.index', ['resource' => $this->handle()]))
+            ->first();
+
+        return $navItem?->icon() ?? File::get(__DIR__.'/../resources/svg/database.svg');
     }
 
     public function hasPublishStates(): bool

@@ -7,6 +7,8 @@ use Statamic\Actions\Action;
 
 class Unpublish extends Action
 {
+    protected $icon = 'eye-slash';
+
     public static function title()
     {
         return __('Unpublish');

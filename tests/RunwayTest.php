@@ -49,4 +49,15 @@ class RunwayTest extends TestCase
         $this->assertTrue($find->model() instanceof Model);
         $this->assertTrue($find->blueprint() instanceof Blueprint);
     }
+
+    #[Test]
+    public function can_check_if_resource_exists()
+    {
+        Runway::discoverResources();
+
+        $this->assertTrue(Runway::hasResource('post'));
+        $this->assertTrue(Runway::hasResource('author'));
+
+        $this->assertFalse(Runway::hasResource('foo'));
+    }
 }
