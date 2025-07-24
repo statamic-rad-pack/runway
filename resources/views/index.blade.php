@@ -14,7 +14,7 @@
         :actions="{{ $actions->toJson() }}"
         action-url="{{ cp_route('runway.actions.run', ['resource' => $resource->handle()]) }}"
         models-action-url="{{ cp_route('runway.models.actions.run', ['resource' => $resource->handle()]) }}"
-        blueprint-url="{{ cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]) }}"
+        blueprint-url="{{ cp_route('blueprints.additional.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]) }}"
         :can-edit-blueprint="{{ Statamic\Support\Str::bool($canEditBlueprint) }}"
         :has-publish-states="{{ Statamic\Support\Str::bool($hasPublishStates) }}"
         title-column="{{ $titleColumn }}"

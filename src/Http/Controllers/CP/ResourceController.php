@@ -145,7 +145,7 @@ class ResourceController extends CpController
                 'revisions' => $model->runwayRevisionsUrl(),
                 'restore' => $model->runwayRestoreRevisionUrl(),
                 'createRevision' => $model->runwayCreateRevisionUrl(),
-                'editBlueprint' => cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]),
+                'editBlueprint' => cp_route('blueprints.additional.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]),
             ],
             'blueprint' => $blueprint->toPublishArray(),
             'values' => $values,
