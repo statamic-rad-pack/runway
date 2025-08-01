@@ -14,27 +14,20 @@ class Runway
 
     public static function discoverResources(): self
     {
-        static::$resources = collect(config('runway.resources'))
+        static::$resources = array_merge(static::$resources, collect(config('runway.resources'))
             ->mapWithKeys(function ($config, $model) {
-                $config = collect($config);
-                $handle = $config->get('handle', Str::snake(class_basename($model)));
+                $resource = static::buildResource($model, $config);
+                $handle = $resource->handle();
 
-                throw_if(
-                    ! in_array(Traits\HasRunwayResource::class, class_uses_recursive($model)),
-                    new TraitMissingException($model),
-                );
-
-                $resource = new Resource(
-                    handle: $handle,
-                    model: $model instanceof Model ? $model : new $model,
-                    name: $config['name'] ?? Str::title($handle),
-                    config: $config,
-                );
+                if (isset(static::$resources[$handle])) {
+                    throw new \InvalidArgumentException("Resource with handle {$resource->handle()} already registered");
+                }
 
                 return [$handle => $resource];
             })
             ->filter()
-            ->toArray();
+            ->toArray()
+        );
 
         return new static;
     }
@@ -62,6 +55,40 @@ class Runway
         if (! $resource) {
             throw new ResourceNotFound($model::class);
         }
+
+        return $resource;
+    }
+
+    public static function registerResource(string $model, array $config): self
+    {
+        $resource = static::buildResource($model, $config);
+        if (isset(static::$resources[$resource->handle()])) {
+            throw new \InvalidArgumentException("Resource with handle {$resource->handle()} already registered");
+        }
+        static::$resources[$resource->handle()] = $resource;
+
+        return new static;
+    }
+
+    /**
+     * @throws TraitMissingException
+     */
+    private static function buildResource(string $model, array $config): Resource
+    {
+        $config = collect($config);
+        $handle = $config->get('handle', Str::snake(class_basename($model)));
+
+        throw_if(
+            ! in_array(Traits\HasRunwayResource::class, class_uses_recursive($model)),
+            new TraitMissingException($model),
+        );
+
+        $resource = new Resource(
+            handle: $handle,
+            model: $model instanceof Model ? $model : new $model,
+            name: $config['name'] ?? Str::title($handle),
+            config: $config,
+        );
 
         return $resource;
     }
