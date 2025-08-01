@@ -93,6 +93,11 @@ class Runway
         return $resource;
     }
 
+    public static function resetResources(): void
+    {
+        self::$resources = [];
+    }
+
     public static function usesRouting(): bool
     {
         return static::allResources()->filter->hasRouting()->count() >= 1;
