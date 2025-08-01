@@ -174,6 +174,8 @@ class BelongsToFieldtypeTest extends TestCase
     #[Test]
     public function can_get_index_items_and_search_using_a_search_index()
     {
+        Runway::resetResources();
+
         Config::set('statamic.search.indexes.test_search_index', [
             'driver' => 'local',
             'searchables' => ['runway:author'],

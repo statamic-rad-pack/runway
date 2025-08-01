@@ -14,8 +14,6 @@ class RunwayTest extends TestCase
     #[Test]
     public function can_discover_and_get_all_resources()
     {
-        Runway::discoverResources();
-
         $all = Runway::allResources()->values();
 
         $this->assertTrue($all instanceof Collection);
@@ -40,8 +38,6 @@ class RunwayTest extends TestCase
     #[Test]
     public function can_find_resource()
     {
-        Runway::discoverResources();
-
         $find = Runway::findResource('author');
 
         $this->assertTrue($find instanceof Resource);

@@ -46,6 +46,8 @@ class FrontendRoutingTest extends TestCase
     #[Test]
     public function returns_resource_response_for_resource_with_custom_template()
     {
+        Runway::resetResources();
+
         Config::set('runway.resources.'.Post::class.'.template', 'custom');
 
         Runway::discoverResources();
@@ -64,6 +66,8 @@ class FrontendRoutingTest extends TestCase
     #[Test]
     public function returns_resource_response_for_resource_with_custom_layout()
     {
+        Runway::resetResources();
+
         Config::set('runway.resources.'.Post::class.'.layout', 'blog-layout');
 
         Runway::discoverResources();

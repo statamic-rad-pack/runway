@@ -43,6 +43,7 @@ class PublishTest extends TestCase
     #[Test]
     public function is_not_visible_to_eloquent_model_when_resource_is_read_only()
     {
+        Runway::resetResources();
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.read_only', true);
         Runway::discoverResources();
 

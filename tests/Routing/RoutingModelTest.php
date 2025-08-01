@@ -100,6 +100,7 @@ class RoutingModelTest extends TestCase
     #[Test]
     public function can_get_template()
     {
+        Runway::resetResources();
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.template', 'posts.show');
         Runway::discoverResources();
 
@@ -114,6 +115,7 @@ class RoutingModelTest extends TestCase
     #[Test]
     public function can_get_layout()
     {
+        Runway::resetResources();
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.layout', 'layouts.post');
         Runway::discoverResources();
 
