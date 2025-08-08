@@ -85,6 +85,18 @@ class RoutingModelTest extends TestCase
     }
 
     #[Test]
+    public function can_get_resource()
+    {
+        Runway::discoverResources();
+
+        $post = Post::factory()->createQuietly();
+
+        $routingModel = new RoutingModel($post);
+
+        $this->assertInstanceOf(\StatamicRadPack\Runway\Resource::class, $routingModel->resource());
+    }
+
+    #[Test]
     public function can_get_template()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.template', 'posts.show');
