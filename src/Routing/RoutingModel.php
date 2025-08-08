@@ -13,7 +13,7 @@ class RoutingModel implements Augmentable, Responsable
 {
     use ContainsSupplementalData, HasAugmentedData;
 
-    public function __construct(public Model $model)
+    public function __construct(protected Model $model)
     {
         $this->supplements = collect();
     }
