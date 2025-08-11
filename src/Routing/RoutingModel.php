@@ -2,13 +2,13 @@
 
 namespace StatamicRadPack\Runway\Routing;
 
-use StatamicRadPack\Runway\Runway;
-use Statamic\Data\HasAugmentedData;
-use StatamicRadPack\Runway\Resource;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Contracts\Data\Augmentable;
 use Statamic\Data\ContainsSupplementalData;
-use Illuminate\Contracts\Support\Responsable;
+use Statamic\Data\HasAugmentedData;
+use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Runway;
 
 class RoutingModel implements Augmentable, Responsable
 {
