@@ -48,8 +48,6 @@ class ResourceControllerTest extends TestCase
     #[Test]
     public function cant_create_resource_if_resource_is_read_only()
     {
-        Runway::resetResources();
-
         Config::set('runway.resources.'.Post::class.'.read_only', true);
 
         Runway::discoverResources();
@@ -105,8 +103,6 @@ class ResourceControllerTest extends TestCase
     #[Test]
     public function cant_store_resource_if_resource_is_read_only()
     {
-        Runway::resetResources();
-
         Config::set('runway.resources.'.Post::class.'.read_only', true);
 
         Runway::discoverResources();
@@ -449,8 +445,6 @@ class ResourceControllerTest extends TestCase
     #[Test]
     public function can_edit_resource_if_resource_is_read_only()
     {
-        Runway::resetResources();
-
         Config::set('runway.resources.'.Post::class.'.read_only', true);
 
         Runway::discoverResources();
@@ -539,8 +533,6 @@ class ResourceControllerTest extends TestCase
     #[Test]
     public function cant_update_resource_if_resource_is_read_only()
     {
-        Runway::resetResources();
-
         Config::set('runway.resources.'.Post::class.'.read_only', true);
 
         Runway::discoverResources();

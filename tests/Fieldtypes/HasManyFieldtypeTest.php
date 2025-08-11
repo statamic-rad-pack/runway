@@ -136,8 +136,6 @@ class HasManyFieldtypeTest extends TestCase
     #[Test]
     public function can_get_index_items_in_order_specified_in_runway_config()
     {
-        Runway::resetResources();
-
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.order_by', 'title');
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.order_by_direction', 'asc');
 
@@ -221,8 +219,6 @@ class HasManyFieldtypeTest extends TestCase
     #[Test]
     public function can_get_index_items_and_search_using_a_search_index()
     {
-        Runway::resetResources();
-
         Config::set('statamic.search.indexes.test_search_index', [
             'driver' => 'local',
             'searchables' => ['runway:post'],

@@ -28,7 +28,6 @@ class ListResourcesTest extends TestCase
     #[Test]
     public function it_outputs_error_when_no_resources_exist()
     {
-        Runway::resetResources();
         Config::set('runway.resources', []);
         Runway::discoverResources();
 

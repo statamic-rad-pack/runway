@@ -8,7 +8,6 @@ use Statamic\Facades\Blueprint;
 use Statamic\Stache\Stores\UsersStore;
 use Statamic\Statamic;
 use Statamic\Testing\AddonTestCase;
-use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\ServiceProvider;
 
 abstract class TestCase extends AddonTestCase
@@ -21,16 +20,10 @@ abstract class TestCase extends AddonTestCase
 
     protected function setUp(): void
     {
-        $this->resetResources();
-
         parent::setUp();
 
         $this->loadMigrationsFrom(__DIR__.'/__fixtures__/database/migrations');
         $this->runLaravelMigrations();
-    }
-
-    protected function resetResources() {
-        Runway::resetResources();
     }
 
     protected function resolveApplicationConfiguration($app)

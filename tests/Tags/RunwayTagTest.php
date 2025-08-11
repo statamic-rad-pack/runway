@@ -390,8 +390,6 @@ class RunwayTagTest extends TestCase
         $postBlueprint = Blueprint::find('runway::post');
         Blueprint::shouldReceive('find')->with('runway::BlogPosts')->andReturn($postBlueprint);
 
-        Runway::resetResources();
-
         Config::set('runway.resources.'.Post::class.'.handle', 'BlogPosts');
 
         Runway::discoverResources();
@@ -416,8 +414,8 @@ class RunwayTagTest extends TestCase
         $postBlueprint = Blueprint::find('runway::post');
         Blueprint::shouldReceive('find')->with('runway::BlogPosts')->andReturn($postBlueprint);
 
-        Runway::resetResources();
         Config::set('runway.resources.'.Post::class.'.handle', 'BlogPosts');
+
         Runway::discoverResources();
 
         $post = Post::factory()->create();

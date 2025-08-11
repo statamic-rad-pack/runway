@@ -13,6 +13,8 @@ class ResourceTest extends TestCase
     #[Test]
     public function can_get_eloquent_relationships_for_belongs_to_field()
     {
+        Runway::discoverResources();
+
         $resource = Runway::findResource('post');
 
         $eloquentRelationships = $resource->eloquentRelationships();
@@ -44,6 +46,8 @@ class ResourceTest extends TestCase
     #[Test]
     public function can_get_eloquent_relationships_for_runway_uri_routing()
     {
+        Runway::discoverResources();
+
         $resource = Runway::findResource('post');
 
         $eloquentRelationships = $resource->eloquentRelationships();
@@ -54,6 +58,8 @@ class ResourceTest extends TestCase
     #[Test]
     public function can_get_eager_loading_relationships()
     {
+        Runway::discoverResources();
+
         $resource = Runway::findResource('post');
 
         $eagerLoadingRelationships = $resource->eagerLoadingRelationships();
@@ -67,8 +73,6 @@ class ResourceTest extends TestCase
     #[Test]
     public function can_get_eager_loading_relationships_from_config()
     {
-        Runway::resetResources();
-
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.with', [
             'author',
         ]);
@@ -87,8 +91,6 @@ class ResourceTest extends TestCase
     #[Test]
     public function can_get_generated_singular()
     {
-        Runway::resetResources();
-
         Runway::discoverResources();
 
         $resource = Runway::findResource('post');
@@ -101,8 +103,6 @@ class ResourceTest extends TestCase
     #[Test]
     public function can_get_configured_singular()
     {
-        Runway::resetResources();
-
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.singular', 'Bibliothek');
 
         Runway::discoverResources();
@@ -117,6 +117,8 @@ class ResourceTest extends TestCase
     #[Test]
     public function can_get_generated_plural()
     {
+        Runway::discoverResources();
+
         $resource = Runway::findResource('post');
 
         $plural = $resource->plural();
@@ -127,8 +129,6 @@ class ResourceTest extends TestCase
     #[Test]
     public function can_get_configured_plural()
     {
-        Runway::resetResources();
-
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.plural', 'Bibliotheken');
 
         Runway::discoverResources();
@@ -213,8 +213,6 @@ class ResourceTest extends TestCase
     #[Test]
     public function can_get_title_field()
     {
-        Runway::resetResources();
-
         $blueprint = Blueprint::make()->setContents([
             'tabs' => [
                 'main' => [
@@ -243,8 +241,6 @@ class ResourceTest extends TestCase
     #[Test]
     public function revisions_can_be_enabled()
     {
-        Runway::resetResources();
-
         Config::set('statamic.editions.pro', true);
         Config::set('statamic.revisions.enabled', true);
 
@@ -261,8 +257,6 @@ class ResourceTest extends TestCase
     #[Test]
     public function revisions_cant_be_enabled_without_revisions_being_enabled_globally()
     {
-        Runway::resetResources();
-
         Config::set('statamic.editions.pro', true);
         Config::set('statamic.revisions.enabled', false);
 
@@ -279,8 +273,6 @@ class ResourceTest extends TestCase
     #[Test]
     public function revisions_cant_be_enabled_without_statamic_pro()
     {
-        Runway::resetResources();
-
         Config::set('statamic.editions.pro', false);
         Config::set('statamic.revisions.enabled', true);
 
@@ -297,8 +289,6 @@ class ResourceTest extends TestCase
     #[Test]
     public function revisions_cant_be_enabled_without_publish_states()
     {
-        Runway::resetResources();
-
         Config::set('statamic.editions.pro', true);
         Config::set('statamic.revisions.enabled', true);
 

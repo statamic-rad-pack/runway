@@ -55,8 +55,6 @@ class ResourceListingControllerTest extends TestCase
     #[Test]
     public function listing_rows_are_ordered_as_per_config()
     {
-        Runway::resetResources();
-
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.order_by', 'id');
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.order_by_direction', 'desc');
 
@@ -247,8 +245,6 @@ class ResourceListingControllerTest extends TestCase
     #[Test]
     public function can_search_using_a_search_index()
     {
-        Runway::resetResources();
-
         Config::set('statamic.search.indexes.test_search_index', [
             'driver' => 'local',
             'searchables' => ['runway:post'],
