@@ -11,10 +11,12 @@ use StatamicRadPack\Runway\Exceptions\TraitMissingException;
 class Runway
 {
     protected static array $resources = [];
+    protected static array $registeredResources = [];
 
     public static function discoverResources(): self
     {
         static::$resources = collect(config('runway.resources'))
+            ->merge(static::$registeredResources)
             ->mapWithKeys(function ($config, $model) {
                 $config = collect($config);
                 $handle = $config->get('handle', Str::snake(class_basename($model)));
@@ -64,6 +66,15 @@ class Runway
         }
 
         return $resource;
+    }
+
+    public static function registerResource(string $model, array $config): self
+    {
+        static::$registeredResources[$model] = $config;
+
+        static::discoverResources();
+
+        return new static;
     }
 
     public static function usesRouting(): bool

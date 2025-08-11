@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Statamic\Contracts\Data\Augmentable;
 use Statamic\Data\ContainsSupplementalData;
 use Statamic\Data\HasAugmentedData;
+use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
 
 class RoutingModel implements Augmentable, Responsable
@@ -51,14 +52,19 @@ class RoutingModel implements Augmentable, Responsable
             ->toResponse($request);
     }
 
+    public function resource(): ?Resource
+    {
+        return Runway::findResourceByModel($this->model);
+    }
+
     public function template(): string
     {
-        return Runway::findResourceByModel($this->model)->template();
+        return $this->resource()->template();
     }
 
     public function layout(): string
     {
-        return Runway::findResourceByModel($this->model)->layout();
+        return $this->resource()->layout();
     }
 
     public function id()
