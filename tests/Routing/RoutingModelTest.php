@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\Test;
+use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Routing\RoutingModel;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
@@ -93,7 +94,7 @@ class RoutingModelTest extends TestCase
 
         $routingModel = new RoutingModel($post);
 
-        $this->assertInstanceOf(\StatamicRadPack\Runway\Resource::class, $routingModel->resource());
+        $this->assertInstanceOf(Resource::class, $routingModel->resource());
     }
 
     #[Test]
