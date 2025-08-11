@@ -176,7 +176,11 @@ abstract class BaseFieldtype extends Relationship
 
         $results = ($paginate = $request->boolean('paginate', true)) ? $query->paginate() : $query->get();
 
-        $items = $results->map(fn ($item) => $item instanceof Result ? $item->getSearchable()->model() : $item);
+        if ($results->search && $this->resource()->hasSearchIndex()) {
+            $results->setCollection($results->getCollection()->map(fn ($item) => $item->getSearchable()->model()));
+        }
+
+        $items = $results->map(fn ($item) => $item instanceof Result ? $item->getSearchable() : $item);
 
         return $paginate ? $results->setCollection($items) : $items;
     }
