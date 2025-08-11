@@ -29,8 +29,7 @@ abstract class TestCase extends AddonTestCase
         $this->runLaravelMigrations();
     }
 
-    protected function resetResources()
-    {
+    protected function resetResources() {
         Runway::resetResources();
     }
 
