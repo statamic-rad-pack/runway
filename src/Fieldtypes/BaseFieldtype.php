@@ -186,7 +186,7 @@ abstract class BaseFieldtype extends Relationship
         $query->when(method_exists($query, 'getQuery') && $query->getQuery()->orders, function ($query) use ($request) {
             if ($orderBy = $request->input('sort')) {
                 // The stack selector always uses `title` as the default sort column, but
-                // the "title field" for the model might be a different column so we need to convert it.
+                // the "title field" for the model might be a different column, so we need to convert it.
                 $sortColumn = $orderBy === 'title' ? $this->resource()->titleField() : $orderBy;
 
                 $query->reorder($sortColumn, $request->input('order'));
