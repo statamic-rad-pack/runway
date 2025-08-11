@@ -12,9 +12,12 @@ use Illuminate\Support\Facades\Schema;
 use Statamic\CP\Column;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Scope;
+use Statamic\Facades\Search;
 use Statamic\Fieldtypes\Relationship;
-use Statamic\Query\Builder as BaseStatamicBuilder;
+use Statamic\Http\Requests\FilteredRequest;
 use Statamic\Query\Scopes\Filter;
+use Statamic\Search\Index;
+use Statamic\Search\QueryBuilder as SearchQueryBuilder;
 use Statamic\Search\Result;
 use StatamicRadPack\Runway\Http\Resources\CP\FieldtypeModel;
 use StatamicRadPack\Runway\Http\Resources\CP\FieldtypeModels;
@@ -101,6 +104,11 @@ abstract class BaseFieldtype extends Relationship
                 'type' => 'text',
                 'width' => 50,
             ],
+            'search_index' => [
+                'display' => __('Search Index'),
+                'instructions' => __('An appropriate search index will be used automatically where possible, but you may define an explicit one.'),
+                'type' => 'text',
+            ],
             'query_scopes' => [
                 'display' => __('Query Scopes'),
                 'instructions' => __('Select which query fields should be applied when retrieving selectable models.'),
@@ -164,44 +172,68 @@ abstract class BaseFieldtype extends Relationship
 
     public function getIndexItems($request)
     {
-        $resource = $this->resource();
-
         $query = $this->getIndexQuery($request);
 
-        $searchQuery = $request->search ?? false;
-
-        $query = $this->applySearch($resource, $query, $searchQuery);
-
-        $query->when(method_exists($query, 'getQuery') && $query->getQuery()->orders, function ($query) use ($request, $resource) {
-            if ($orderBy = $request->input('sort')) {
-                // The stack selector always uses `title` as the default sort column, but
-                // the "title field" for the model might be a different column so we need to convert it.
-                $sortColumn = $orderBy === 'title' ? $resource->titleField() : $orderBy;
-
-                $query->reorder($sortColumn, $request->input('order'));
-            }
-        }, fn ($query) => $query->orderBy($resource->orderBy(), $resource->orderByDirection()));
+        $this->applyOrderingToIndexQuery($query, $request);
 
         $results = ($paginate = $request->boolean('paginate', true)) ? $query->paginate() : $query->get();
 
-        if ($searchQuery && $resource->hasSearchIndex()) {
-            $results->setCollection($results->getCollection()->map(fn ($item) => $item->getSearchable()->model()));
-        }
-
-        $items = $results->map(fn ($item) => $item instanceof Result ? $item->getSearchable() : $item);
+        $items = $results->map(fn ($item) => $item instanceof Result ? $item->getSearchable()->model() : $item);
 
         return $paginate ? $results->setCollection($items) : $items;
     }
 
-    protected function getIndexQuery($request)
+    private function applyOrderingToIndexQuery(Builder|SearchQueryBuilder $query, FilteredRequest $request): void
+    {
+        $query->when(method_exists($query, 'getQuery') && $query->getQuery()->orders, function ($query) use ($request) {
+            if ($orderBy = $request->input('sort')) {
+                // The stack selector always uses `title` as the default sort column, but
+                // the "title field" for the model might be a different column, so we need to convert it.
+                $sortColumn = $orderBy === 'title' ? $this->resource()->titleField() : $orderBy;
+
+                $query->reorder($sortColumn, $request->input('order'));
+            }
+        }, fn ($query) => $query->orderBy($this->resource()->orderBy(), $this->resource()->orderByDirection()));
+    }
+
+    protected function getIndexQuery(FilteredRequest $request): Builder|SearchQueryBuilder
     {
         $query = $this->resource()->newEloquentQuery();
 
-        $query->when($query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
+        $query = $this->toSearchQuery($query, $request);
+
+        $query->when($query instanceof Builder && $query->hasNamedScope('runwayListing'), fn ($query) => $query->runwayListing());
 
         $this->applyIndexQueryScopes($query, $request->all());
 
         return $query;
+    }
+
+    private function toSearchQuery(Builder $query, FilteredRequest $request): Builder|SearchQueryBuilder
+    {
+        if (! $search = $request->search) {
+            return $query;
+        }
+
+        if ($index = $this->getSearchIndex()) {
+            return $index->search($search);
+        }
+
+        return $query->runwaySearch($search);
+    }
+
+    private function getSearchIndex(): ?Index
+    {
+        $index = $this->getExplicitSearchIndex() ?? $this->resource()->searchIndex();
+
+        return $index?->ensureExists();
+    }
+
+    private function getExplicitSearchIndex(): ?Index
+    {
+        return ($explicit = $this->config('search_index'))
+            ? Search::in($explicit)
+            : null;
     }
 
     public function getResourceCollection($request, $items)
@@ -370,19 +402,6 @@ abstract class BaseFieldtype extends Relationship
         $resource = Runway::findResource($this->config('resource'));
 
         return $resource->hasPublishStates();
-    }
-
-    private function applySearch(Resource $resource, Builder $query, string $searchQuery): Builder|BaseStatamicBuilder
-    {
-        if (! $searchQuery) {
-            return $query;
-        }
-
-        if ($resource->hasSearchIndex() && ($index = $resource->searchIndex())) {
-            return $index->ensureExists()->search($searchQuery);
-        }
-
-        return $query->runwaySearch($searchQuery);
     }
 
     private function resource(): Resource

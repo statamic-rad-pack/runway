@@ -1,5 +1,18 @@
 # Changelog
 
+## v8.6.0 (2025-08-11)
+
+### What's new
+* Allow programmatic registration of resources #707 by @Pluuk
+* Update RoutingModel `model` property to be publicly accessible #706 by @jamesmpigott
+
+### What's fixed
+* Fix error when searching via fieldtype #699 #709 by @duncanmcclean
+* Refactor `BaseFieldtype::getIndexItems` #708 by @duncanmcclean
+* Delete `php-cs-fixer.phar` #704 by @duncanmcclean
+
+
+
 ## v8.5.2 (2025-07-10)
 
 ### What's fixed

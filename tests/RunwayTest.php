@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Statamic\Fields\Blueprint;
 use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 
 class RunwayTest extends TestCase
 {
@@ -59,5 +60,20 @@ class RunwayTest extends TestCase
         $this->assertTrue(Runway::hasResource('author'));
 
         $this->assertFalse(Runway::hasResource('foo'));
+    }
+    
+    public function can_register_resource()
+    {
+        config()->set('runway.resources', []);
+
+        Runway::discoverResources();
+
+        $this->assertFalse(Runway::allResources()->has('author'));
+
+        Runway::registerResource(Author::class, [
+            'name' => 'Authors',
+        ]);
+
+        $this->assertTrue(Runway::allResources()->has('author'));
     }
 }
