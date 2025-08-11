@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\Test;
+use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Routing\RoutingModel;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
@@ -82,6 +83,18 @@ class RoutingModelTest extends TestCase
         $this->assertInstanceOf(Response::class, $response);
         $this->assertStringContainsString("<h1>{$post->title}</h1>", $response->getContent());
         $this->assertStringContainsString("<article>{$post->body}</article>", $response->getContent());
+    }
+
+    #[Test]
+    public function can_get_resource()
+    {
+        Runway::discoverResources();
+
+        $post = Post::factory()->createQuietly();
+
+        $routingModel = new RoutingModel($post);
+
+        $this->assertInstanceOf(Resource::class, $routingModel->resource());
     }
 
     #[Test]
