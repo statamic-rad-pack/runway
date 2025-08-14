@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.6.1 (2025-08-14)
+
+### What's fixed
+* Fixed inline actions on edit view #710 #711 by @persteinhorst
+
+
+
 ## v8.6.0 (2025-08-11)
 
 ### What's new
