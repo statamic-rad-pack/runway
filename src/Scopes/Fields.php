@@ -6,10 +6,11 @@ use Illuminate\Support\Collection;
 use Statamic\Fields\Field;
 use Statamic\Query\Scopes\Filters\Fields as BaseFieldsFilter;
 use StatamicRadPack\Runway\Runway;
+use Statamic\Support\Arr;
 
 class Fields extends BaseFieldsFilter
 {
-    protected static $handle = 'runway-fields';
+    protected static $handle = 'runway_fields';
 
     public function visibleTo($key): bool
     {
@@ -22,7 +23,7 @@ class Fields extends BaseFieldsFilter
 
         $this->getFields()
             ->filter(function ($field, $handle) use ($values) {
-                return isset($values[$handle]);
+                return isset($values[$handle]) && $this->isComplete($values[$handle]);
             })
             ->each(function (Field $field) use ($query, $values, $resource) {
                 $filter = $field->fieldtype()->filter();
@@ -43,5 +44,12 @@ class Fields extends BaseFieldsFilter
                     && ! $resource->model()->hasSetMutator($field->handle())
                     && ! $resource->model()->hasAttributeSetMutator($field->handle());
             });
+    }
+
+    private function isComplete(array $values): bool
+    {
+        $values = array_filter($values);
+
+        return Arr::has($values, 'operator') && Arr::has($values, 'value');
     }
 }
