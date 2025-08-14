@@ -11,15 +11,18 @@ class BelongsToFieldtype extends BaseFieldtype
 {
     protected function configFieldItems(): array
     {
-        $config = [
-            'max_items' => [
-                'type' => 'hidden',
-                'default' => 1,
-                'read_only' => true,
+        return [
+            ...parent::configFieldItems(),
+            [
+                'fields' => [
+                    'max_items' => [
+                        'type' => 'integer',
+                        'default' => 1,
+                        'visibility' => 'hidden',
+                    ],
+                ],
             ],
         ];
-
-        return array_merge($config, parent::configFieldItems());
     }
 
     public function toGqlType()
