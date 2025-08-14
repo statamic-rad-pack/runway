@@ -13,9 +13,7 @@ class BelongsToFieldtype extends BaseFieldtype
     {
         $config = [
             'max_items' => [
-                'display' => __('Max Items'),
                 'type' => 'hidden',
-                'width' => 50,
                 'default' => 1,
                 'read_only' => true,
             ],

@@ -70,7 +70,7 @@ abstract class BaseFieldtype extends Relationship
             ],
             'resource' => [
                 'display' => __('Resource'),
-                'instructions' => __('Specify the Runway Resource to be used for this field.'),
+                'instructions' => __('runway::fieldtypes.relationship.config.resource'),
                 'type' => 'select',
                 'options' => collect(Runway::allResources())
                     ->mapWithKeys(fn ($resource) => [$resource->handle() => $resource->name()])
@@ -80,38 +80,38 @@ abstract class BaseFieldtype extends Relationship
             ],
             'relationship_name' => [
                 'display' => __('Relationship Name'),
-                'instructions' => __('The name of the Eloquent Relationship this field should use. When left empty, Runway will attempt to guess it based on the field handle.'),
+                'instructions' => __('runway::fieldtypes.relationship.config.relationship_name'),
                 'type' => 'text',
                 'width' => 50,
             ],
             'create' => [
                 'display' => __('Allow Creating'),
-                'instructions' => __('statamic::fieldtypes.entries.config.create'),
+                'instructions' => __('runway::fieldtypes.relationship.config.create'),
                 'type' => 'toggle',
                 'default' => true,
                 'width' => 50,
             ],
             'with' => [
                 'display' => __('Eager Loaded Relationships'),
-                'instructions' => __('Specify any relationship which should be eager loaded when this field is augmented.'),
+                'instructions' => __('runway::fieldtypes.relationship.config.with'),
                 'type' => 'list',
                 'default' => [],
                 'width' => 50,
             ],
             'title_format' => [
                 'display' => __('Title Format'),
-                'instructions' => __('Configure the title format used for displaying results in the fieldtype. You can use Antlers to pull in model data.'),
+                'instructions' => __('runway::fieldtypes.relationship.config.title_format'),
                 'type' => 'text',
                 'width' => 50,
             ],
             'search_index' => [
                 'display' => __('Search Index'),
-                'instructions' => __('An appropriate search index will be used automatically where possible, but you may define an explicit one.'),
+                'instructions' => __('runway::fieldtypes.relationship.config.search_index'),
                 'type' => 'text',
             ],
             'query_scopes' => [
                 'display' => __('Query Scopes'),
-                'instructions' => __('Select which query fields should be applied when retrieving selectable models.'),
+                'instructions' => __('runway::fieldtypes.relationship.config.query_scopes'),
                 'type' => 'taggable',
                 'options' => Scope::all()
                     ->reject(fn ($scope) => $scope instanceof Filter)

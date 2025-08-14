@@ -23,13 +23,13 @@ class HasManyFieldtype extends BaseFieldtype
             ],
             'reorderable' => [
                 'display' => __('Reorderable?'),
-                'instructions' => __('Can the models be reordered?'),
+                'instructions' => __('runway::fieldtypes.has_many.config.reorderable'),
                 'type' => 'toggle',
                 'width' => 50,
             ],
             'order_column' => [
                 'display' => __('Order Column'),
-                'instructions' => __('Which column should be used to keep track of the order?'),
+                'instructions' => __('runway::fieldtypes.has_many.config.order_column'),
                 'type' => 'text',
                 'width' => 50,
                 'placeholder' => 'sort_order',
