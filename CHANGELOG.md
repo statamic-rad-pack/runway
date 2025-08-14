@@ -6,5 +6,5 @@
 - Updated for Statamic 6 #658 by @duncanmcclean
 - Added `runway_resource` widget
 
-### Breaking changes
+### What's changed
 - Removed PHP 8.2 and Laravel 10 support
