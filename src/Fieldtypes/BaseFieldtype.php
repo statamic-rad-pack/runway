@@ -31,91 +31,107 @@ abstract class BaseFieldtype extends Relationship
     protected $canCreate = true;
     protected $canSearch = true;
     protected $categories = ['relationship'];
+    protected $keywords = ['model', 'eloquent'];
     protected $formComponent = 'runway-publish-form';
     protected $itemComponent = 'runway-related-item';
 
     protected $formComponentProps = [
+        'initialActions' => 'actions',
+        'method' => 'method',
+        'resource' => 'resource',
+        'resourceHasRoutes' => 'resourceHasRoutes',
+        'initialTitle' => 'title',
         'initialReference' => 'reference',
+        'initialStatus' => 'status',
         'initialBlueprint' => 'blueprint',
         'initialValues' => 'values',
         'initialMeta' => 'meta',
-        'initialTitle' => 'title',
-        'resource' => 'resource',
-        'breadcrumbs' => 'breadcrumbs',
-        'initialActions' => 'actions',
-        'method' => 'method',
-        'initialReadOnly' => 'readOnly',
         'initialPermalink' => 'permalink',
-        'canManagePublishState' => 'canManagePublishState',
-        'resourceHasRoutes' => 'resourceHasRoutes',
+        'initialIsWorkingCopy' => 'hasWorkingCopy',
         'revisionsEnabled' => 'revisionsEnabled',
+        'initialReadOnly' => 'readOnly',
+        'canEditBlueprint' => 'canEditBlueprint',
+        'canManagePublishState' => 'canManagePublishState',
     ];
 
     protected function configFieldItems(): array
     {
         return [
-            'mode' => [
-                'display' => __('Mode'),
-                'instructions' => __('statamic::fieldtypes.relationship.config.mode'),
-                'type' => 'radio',
-                'default' => 'default',
-                'options' => [
-                    'default' => __('Stack Selector'),
-                    'select' => __('Select Dropdown'),
-                    'typeahead' => __('Typeahead Field'),
+            [
+                'display' => __('Input Behavior'),
+                'fields' => [
+                    'resource' => [
+                        'display' => __('Resource'),
+                        'instructions' => __('runway::fieldtypes.relationship.config.resource'),
+                        'type' => 'select',
+                        'options' => collect(Runway::allResources())
+                            ->mapWithKeys(fn ($resource) => [$resource->handle() => $resource->name()])
+                            ->toArray(),
+                        'validate' => 'required',
+                        'width' => 50,
+                    ],
+                    'relationship_name' => [
+                        'display' => __('Relationship Name'),
+                        'instructions' => __('runway::fieldtypes.relationship.config.relationship_name'),
+                        'type' => 'text',
+                        'width' => 50,
+                    ],
+                    'search_index' => [
+                        'display' => __('Search Index'),
+                        'instructions' => __('runway::fieldtypes.relationship.config.search_index'),
+                        'type' => 'text',
+                        'width' => 50,
+                    ],
+                    'query_scopes' => [
+                        'display' => __('Query Scopes'),
+                        'instructions' => __('runway::fieldtypes.relationship.config.query_scopes'),
+                        'type' => 'taggable',
+                        'width' => 50,
+                        'options' => Scope::all()
+                            ->reject(fn ($scope) => $scope instanceof Filter)
+                            ->map->handle()
+                            ->values()
+                            ->all(),
+                    ],
+                    'with' => [
+                        'display' => __('Eager Loaded Relationships'),
+                        'instructions' => __('runway::fieldtypes.relationship.config.with'),
+                        'type' => 'list',
+                        'default' => [],
+                        'width' => 50,
+                    ],
+                    'title_format' => [
+                        'display' => __('Title Format'),
+                        'instructions' => __('runway::fieldtypes.relationship.config.title_format'),
+                        'type' => 'text',
+                        'width' => 50,
+                    ],
                 ],
-                'width' => 50,
             ],
-            'resource' => [
-                'display' => __('Resource'),
-                'instructions' => __('Specify the Runway Resource to be used for this field.'),
-                'type' => 'select',
-                'options' => collect(Runway::allResources())
-                    ->mapWithKeys(fn ($resource) => [$resource->handle() => $resource->name()])
-                    ->toArray(),
-                'width' => 50,
-                'validate' => 'required',
-            ],
-            'relationship_name' => [
-                'display' => __('Relationship Name'),
-                'instructions' => __('The name of the Eloquent Relationship this field should use. When left empty, Runway will attempt to guess it based on the field handle.'),
-                'type' => 'text',
-                'width' => 50,
-            ],
-            'create' => [
-                'display' => __('Allow Creating'),
-                'instructions' => __('statamic::fieldtypes.entries.config.create'),
-                'type' => 'toggle',
-                'default' => true,
-                'width' => 50,
-            ],
-            'with' => [
-                'display' => __('Eager Loaded Relationships'),
-                'instructions' => __('Specify any relationship which should be eager loaded when this field is augmented.'),
-                'type' => 'list',
-                'default' => [],
-                'width' => 50,
-            ],
-            'title_format' => [
-                'display' => __('Title Format'),
-                'instructions' => __('Configure the title format used for displaying results in the fieldtype. You can use Antlers to pull in model data.'),
-                'type' => 'text',
-                'width' => 50,
-            ],
-            'search_index' => [
-                'display' => __('Search Index'),
-                'instructions' => __('An appropriate search index will be used automatically where possible, but you may define an explicit one.'),
-                'type' => 'text',
-            ],
-            'query_scopes' => [
-                'display' => __('Query Scopes'),
-                'instructions' => __('Select which query fields should be applied when retrieving selectable models.'),
-                'type' => 'taggable',
-                'options' => Scope::all()
-                    ->reject(fn ($scope) => $scope instanceof Filter)
-                    ->map->handle()
-                    ->values()
-                    ->all(),
+            [
+                'display' => __('Appearance'),
+                'fields' => [
+                    'mode' => [
+                        'display' => __('UI Mode'),
+                        'instructions' => __('statamic::fieldtypes.relationship.config.mode'),
+                        'type' => 'radio',
+                        'default' => 'default',
+                        'options' => [
+                            'default' => __('Stack Selector'),
+                            'select' => __('Select Dropdown'),
+                            'typeahead' => __('Typeahead Field'),
+                        ],
+                    ],
+                    'create' => [
+                        'display' => __('Allow Creating'),
+                        'instructions' => __('runway::fieldtypes.relationship.config.create'),
+                        'type' => 'toggle',
+                        'default' => true,
+                        'if' => [
+                            'mode' => 'default',
+                        ],
+                    ],
+                ],
             ],
         ];
     }

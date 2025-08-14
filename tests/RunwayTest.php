@@ -52,6 +52,16 @@ class RunwayTest extends TestCase
     }
 
     #[Test]
+    public function can_check_if_resource_exists()
+    {
+        Runway::discoverResources();
+
+        $this->assertTrue(Runway::hasResource('post'));
+        $this->assertTrue(Runway::hasResource('author'));
+
+        $this->assertFalse(Runway::hasResource('foo'));
+    }
+
     public function can_register_resource()
     {
         config()->set('runway.resources', []);

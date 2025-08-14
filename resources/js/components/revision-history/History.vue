@@ -1,11 +1,11 @@
 <script>
 /**
- * This component extends the RevisionHistory component included in Statamic Core,
- * allowing us to import our own version of the Revision component.
+ * This component extends the revision-history/History component in Statamic, so
+ * we can import our own version of the Revision component.
  */
 
 import Revision from './Revision.vue';
-import RevisionHistory from '../../../../vendor/statamic/cms/resources/js/components/revision-history/History.vue';
+import RevisionHistory from '@statamic/components/revision-history/History.vue';
 
 export default {
     components: {
@@ -15,4 +15,3 @@ export default {
     mixins: [RevisionHistory],
 };
 </script>
-

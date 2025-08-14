@@ -8,12 +8,51 @@ use Illuminate\Support\Arr;
 use Statamic\Facades\GraphQL;
 use StatamicRadPack\Runway\Runway;
 
+use function Statamic\trans as __;
+
 class HasManyFieldtype extends BaseFieldtype
 {
     protected $indexComponent = 'relationship';
 
     protected function configFieldItems(): array
     {
+        return [
+            [
+                'display' => __('Input Behavior'),
+                'fields' => [
+                    ...parent::configFieldItems()[0]['fields'],
+                    'reorderable' => [
+                        'display' => __('Reorderable?'),
+                        'instructions' => __('runway::fieldtypes.has_many.config.reorderable'),
+                        'type' => 'toggle',
+                        'width' => 50,
+                    ],
+                    'order_column' => [
+                        'display' => __('Order Column'),
+                        'instructions' => __('runway::fieldtypes.has_many.config.order_column'),
+                        'type' => 'text',
+                        'width' => 50,
+                        'placeholder' => 'sort_order',
+                        'if' => [
+                            'reorderable' => true,
+                        ],
+                    ],
+                ],
+            ],
+            parent::configFieldItems()[1],
+            [
+                'display' => __('Boundaries & Limits'),
+                'fields' => [
+                    'max_items' => [
+                        'display' => __('Max Items'),
+                        'instructions' => __('statamic::messages.max_items_instructions'),
+                        'min' => 1,
+                        'type' => 'integer',
+                    ],
+                ],
+            ],
+        ];
+
         $config = [
             'max_items' => [
                 'display' => __('Max Items'),
@@ -23,13 +62,13 @@ class HasManyFieldtype extends BaseFieldtype
             ],
             'reorderable' => [
                 'display' => __('Reorderable?'),
-                'instructions' => __('Can the models be reordered?'),
+                'instructions' => __('runway::fieldtypes.has_many.config.reorderable'),
                 'type' => 'toggle',
                 'width' => 50,
             ],
             'order_column' => [
                 'display' => __('Order Column'),
-                'instructions' => __('Which column should be used to keep track of the order?'),
+                'instructions' => __('runway::fieldtypes.has_many.config.order_column'),
                 'type' => 'text',
                 'width' => 50,
                 'placeholder' => 'sort_order',

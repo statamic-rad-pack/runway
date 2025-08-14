@@ -261,14 +261,8 @@ class ResourceControllerTest extends TestCase
                 'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
                 'author_id' => [$author->id],
-                'start_date' => [
-                    'date' => '2023-09-01',
-                    'time' => '00:00',
-                ],
-                'end_date' => [
-                    'date' => '2023-08-01',
-                    'time' => '00:00',
-                ],
+                'start_date' => '2025-09-01T00:00:00.000Z',
+                'end_date' => '2023-08-01T00:00:00.000Z',
             ])
             ->assertSessionHasErrors('start_date');
 
@@ -299,8 +293,7 @@ class ResourceControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->get(cp_route('runway.edit', ['resource' => 'post', 'model' => 12345]))
-            ->assertNotFound()
-            ->assertSee('Page Not Found');
+            ->assertNotFound();
     }
 
     #[Test]
@@ -333,11 +326,9 @@ class ResourceControllerTest extends TestCase
             ]))
             ->assertOk();
 
+        // Seconds aren't enabled, so we shouldn't have any.
         $this->assertEquals(
-            [
-                'date' => $post->created_at->format('Y-m-d'),
-                'time' => null,
-            ],
+            $post->created_at->startOfMinute()->toIso8601ZuluString('millisecond'),
             $response->viewData('values')['created_at']
         );
     }
@@ -373,11 +364,9 @@ class ResourceControllerTest extends TestCase
             ]))
             ->assertOk();
 
+        // Time isn't enabled, so expect the time to be 00:00:00.
         $this->assertEquals(
-            [
-                'date' => $post->created_at->format('Y-m-d'),
-                'time' => null,
-            ],
+            $post->created_at->startOfDay()->toIso8601ZuluString('millisecond'),
             $response->viewData('values')['created_at']
         );
     }
@@ -413,11 +402,9 @@ class ResourceControllerTest extends TestCase
             ]))
             ->assertOk();
 
+        // Seconds aren't enabled, so we shouldn't have any.
         $this->assertEquals(
-            [
-                'date' => $post->created_at->format('Y-m-d'),
-                'time' => $post->created_at->format('H:i'),
-            ],
+            $post->created_at->startOfMinute()->toIso8601ZuluString('millisecond'),
             $response->viewData('values')['created_at']
         );
     }

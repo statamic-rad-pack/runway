@@ -1,198 +1,188 @@
 <template>
     <div>
-        <breadcrumb v-if="breadcrumbs" :url="breadcrumbs[0].url" :title="breadcrumbs[0].text" />
+        <Header>
+            <template #title>
+                <StatusIndicator v-if="publishStatesEnabled && !isCreating" :status />
+                {{ formattedTitle }}
+            </template>
 
-        <div class="flex items-center mb-6">
-            <h1 class="flex-1">
-                <div class="flex items-baseline">
-                    <span v-if="! isCreating && resource.has_publish_states" class="little-dot rtl:ml-2 ltr:mr-2 -top-1" :class="status" v-tooltip="__(status)" />
-                    <span v-html="$options.filters.striptags(title)" />
-                </div>
-            </h1>
+            <ItemActions
+                v-if="!isCreating && hasItemActions"
+                :item="values.id"
+                :url="itemActionUrl"
+                :actions="itemActions"
+                :is-dirty="isDirty"
+                @started="actionStarted"
+                @completed="actionCompleted"
+                v-slot="{ actions: itemActions }"
+            >
+                <Dropdown v-if="canEditBlueprint || hasItemActions">
+                    <template #trigger>
+                        <Button icon="ui/dots" variant="ghost" />
+                    </template>
+                    <DropdownMenu>
+                        <DropdownItem
+                            :text="__('Edit Blueprint')"
+                            icon="blueprint-edit"
+                            v-if="canEditBlueprint"
+                            :href="actions.editBlueprint"
+                        />
+                        <DropdownSeparator v-if="canEditBlueprint && itemActions.length" />
+                        <DropdownItem
+                            v-for="action in itemActions"
+                            :key="action.handle"
+                            :text="__(action.title)"
+                            :icon="action.icon"
+                            :variant="action.dangerous ? 'destructive' : 'default'"
+                            @click="action.run"
+                        />
+                    </DropdownMenu>
+                </Dropdown>
+            </ItemActions>
 
-            <dropdown-list class="rtl:ml-4 ltr:mr-4">
-                <dropdown-item v-if="canEditBlueprint" :text="__('Edit Blueprint')" :redirect="actions.editBlueprint" />
-                <li class="divider" />
-                <data-list-inline-actions
-                    v-if="!isCreating"
-                    :item="values.id"
-                    :url="itemActionUrl"
-                    :actions="itemActions"
-                    :is-dirty="isDirty"
-                    @started="actionStarted"
-                    @completed="actionCompleted"
-                />
-            </dropdown-list>
-
-            <div class="pt-px text-2xs text-gray-600 flex rtl:ml-4 ltr:mr-4" v-if="readOnly">
-                <svg-icon name="light/lock" class="w-4 rtl:ml-1 ltr:mr-1 -mt-1" /> {{ __('Read Only') }}
+            <div class="text-2xs me-4 flex pt-px text-gray-600" v-if="readOnly">
+                <svg-icon name="light/lock" class="-mt-1 me-1 w-4" /> {{ __('Read Only') }}
             </div>
 
-            <div v-if="!readOnly" class="hidden md:flex items-center">
+            <div class="flex items-center gap-3">
                 <save-button-options
                     v-if="!readOnly"
                     :show-options="!revisionsEnabled && !isInline"
-                    :button-class="saveButtonClass"
                     :preferences-prefix="preferencesPrefix"
                 >
-                    <button
-                        :class="saveButtonClass"
+                    <Button
                         :disabled="!canSave"
+                        :variant="!revisionsEnabled ? 'primary' : 'default'"
                         @click.prevent="save"
                         v-text="saveText"
-                    >
-                    </button>
+                    />
                 </save-button-options>
 
-                <button
+                <save-button-options
                     v-if="revisionsEnabled && !isCreating"
-                    class="rtl:mr-4 ltr:ml-4 btn-primary flex items-center"
-                    :disabled="!canPublish"
-                    @click="confirmingPublish = true"
-                    v-text="this.publishButtonText"
-                />
+                    :show-options="!isInline"
+                    :preferences-prefix="preferencesPrefix"
+                >
+                    <Button
+                        variant="primary"
+                        :disabled="!canPublish"
+                        @click="confirmingPublish = true"
+                        :text="publishButtonText"
+                    />
+                </save-button-options>
             </div>
 
             <slot name="action-buttons-right" />
-        </div>
+        </Header>
 
-        <publish-container
+        <PublishContainer
+            v-if="blueprint"
             ref="container"
             :name="publishContainer"
-            :blueprint="blueprint"
-            :values="values"
             :reference="initialReference"
+            :blueprint="blueprint"
+            v-model="values"
             :meta="meta"
             :errors="errors"
-            @updated="values = $event"
+            :track-dirty-state="trackDirtyState"
         >
-            <div>
-                <component
-                    v-for="component in components"
-                    :key="component.id"
-                    :is="component.name"
-                    :container="container"
-                    v-bind="component.props"
-                    v-on="component.events"
-                />
+            <PublishComponents />
 
-                <publish-tabs
-                    :read-only="readOnly"
-                    :enable-sidebar="sidebarEnabled"
-                    @updated="setFieldValue"
-                    @meta-updated="setFieldMeta"
-                    @focus="$refs.container.$emit('focus', $event)"
-                    @blur="$refs.container.$emit('blur', $event)"
-                >
-                    <template #actions="{ shouldShowSidebar }">
-                        <div class="card p-0 mb-5">
-                            <div v-if="resourceHasRoutes">
-                                <div class="p-3 flex items-center space-x-2" v-if="showVisitUrlButton">
-                                    <a
-                                        class="flex items-center justify-center btn w-full"
-                                        v-if="showVisitUrlButton"
-                                        :href="permalink"
-                                        target="_blank">
-                                        <svg-icon name="light/external-link" class="w-4 h-4 rtl:ml-2 ltr:mr-2 shrink-0" />
-                                        <span>{{ __('Visit URL') }}</span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div v-if="publishStatesEnabled && !revisionsEnabled">
-                                <div
-                                    class="flex items-center justify-between px-4 py-2"
-                                    :class="{ 'border-t dark:border-dark-900': resourceHasRoutes && permalink }"
-                                >
-                                    <label v-text="__('Published')" class="publish-field-label font-medium" />
-                                    <toggle-input :value="published" :read-only="!canManagePublishState" @input="setFieldValue(resource.published_column, $event)" />
-                                </div>
-                            </div>
-
-                            <div
-                                v-if="revisionsEnabled && !isCreating"
-                                class="p-4"
-                                :class="{ 'border-t dark:border-dark-900': showVisitUrlButton }"
-                            >
-                                <label class="publish-field-label font-medium mb-2" v-text="__('Revisions')"/>
-                                <div class="mb-1 flex items-center" v-if="published">
-                                    <span class="text-green-600 w-6 text-center">&check;</span>
-                                    <span class="text-2xs" v-text="__('Model has a published version')"></span>
-                                </div>
-                                <div class="mb-1 flex items-center" v-else>
-                                    <span class="text-orange w-6 text-center">!</span>
-                                    <span class="text-2xs" v-text="__('Model has not been published')"></span>
-                                </div>
-                                <div class="mb-1 flex items-center" v-if="!isWorkingCopy && published">
-                                    <span class="text-green-600 w-6 text-center">&check;</span>
-                                    <span class="text-2xs" v-text="__('This is the published version')"></span>
-                                </div>
-                                <div class="mb-1 flex items-center" v-if="isDirty">
-                                    <span class="text-orange w-6 text-center">!</span>
-                                    <span class="text-2xs" v-text="__('Unsaved changes')"></span>
-                                </div>
-                                <button
-                                    class="flex items-center justify-center mt-4 btn-flat px-2 w-full"
-                                    v-if="!isCreating && revisionsEnabled"
-                                    @click="showRevisionHistory = true">
-                                    <svg-icon name="light/history" class="h-4 w-4 rtl:ml-2 ltr:mr-2" />
-                                    <span>{{ __('View History') }}</span>
-                                </button>
+            <PublishTabs>
+                <template v-if="resourceHasRoutes || publishStatesEnabled || revisionsEnabled" #actions>
+                    <div class="space-y-6">
+                        <!-- Visit URL Buttons -->
+                        <div v-if="resourceHasRoutes">
+                            <div class="flex flex-wrap gap-4" v-if="showVisitUrlButton">
+                                <Button
+                                    :href="permalink"
+                                    :text="__('Visit URL')"
+                                    class="flex-1"
+                                    icon="external-link"
+                                    target="_blank"
+                                    v-if="showVisitUrlButton"
+                                />
                             </div>
                         </div>
-                    </template>
-                </publish-tabs>
-            </div>
 
-            <template v-slot:buttons>
-                <button
+                        <!-- Published Switch -->
+                        <Panel v-if="publishStatesEnabled && !revisionsEnabled" class="flex justify-between px-5 py-3">
+                            <Heading :text="__('Published')" />
+                            <Switch
+                                :model-value="published"
+                                :read-only="!canManagePublishState"
+                                @update:model-value="setFieldValue('published', $event)"
+                            />
+                        </Panel>
+
+                        <!-- Revisions -->
+                        <Panel v-if="revisionsEnabled && !isCreating">
+                            <PanelHeader class="flex items-center justify-between">
+                                <Heading :text="__('Revisions')" />
+                                <Button
+                                    @click="showRevisionHistory = true"
+                                    icon="history"
+                                    :text="__('View History')"
+                                    size="xs"
+                                    class="-me-4"
+                                />
+                            </PanelHeader>
+                            <Card class="space-y-2">
+                                <Subheading v-if="published" class="flex items-center gap-2">
+                                    <Icon name="checkmark" class="text-green-600" />
+                                    {{ __('Model has a published version') }}
+                                </Subheading>
+                                <Subheading v-else class="flex items-center gap-2 text-yellow-600">
+                                    <Icon name="warning-diamond" />
+                                    {{ __('Model has not been published') }}
+                                </Subheading>
+                                <Subheading v-if="!isWorkingCopy && published" class="flex items-center gap-2">
+                                    <Icon name="checkmark" class="text-green-600" />
+                                    {{ __('This is the published version') }}
+                                </Subheading>
+                                <Subheading v-if="isDirty" class="flex items-center gap-2 text-yellow-600">
+                                    <Icon name="warning-diamond" />
+                                    {{ __('Unsaved changes') }}
+                                </Subheading>
+                            </Card>
+                        </Panel>
+                    </div>
+                </template>
+            </PublishTabs>
+
+            <template #buttons>
+                <Button
                     v-if="!readOnly"
-                    class="rtl:mr-4 ltr:ml-4"
-                    :class="saveButtonClass"
+                    size="sm"
+                    :variant="revisionsEnabled ? 'default' : 'primary'"
                     :disabled="!canSave"
                     @click.prevent="save"
-                    v-text="saveText">
-                </button>
+                    :text="saveText"
+                ></Button>
 
-                <button
-                    v-if="revisionsEnabled && !isCreating"
-                    class="rtl:mr-4 ltr:ml-4 btn-primary flex items-center"
+                <Button
+                    v-if="revisionsEnabled"
+                    size="sm"
+                    variant="primary"
                     :disabled="!canPublish"
-                    @click="confirmingPublish = true">
-                    <span v-text="this.publishButtonText" />
-                    <svg-icon name="micro/chevron-down-xs" class="rtl:mr-2 ltr:ml-2 w-2" />
-                </button>
+                    @click="confirmingPublish = true"
+                    :text="publishButtonText"
+                />
             </template>
-        </publish-container>
+        </PublishContainer>
 
-        <div class="md:hidden mt-6 flex items-center">
-            <button
-                v-if="!readOnly"
-                class="btn-lg"
-                :class="{
-                    'btn-primary w-full': ! revisionsEnabled,
-                    'btn w-1/2 rtl:ml-4 ltr:mr-4': revisionsEnabled,
-                }"
-                :disabled="!canSave"
-                @click.prevent="save"
-                v-text="__(revisionsEnabled ? 'Save Changes' : 'Save')" />
-
-            <button
-                v-if="revisionsEnabled"
-                class="rtl:mr-2 ltr:ml-2 btn btn-lg justify-center btn-primary flex items-center w-1/2"
-                :disabled="!canPublish"
-                @click="confirmingPublish = true">
-                <span v-text="this.publishButtonText" />
-                <svg-icon name="micro/chevron-down-xs" class="rtl:mr-2 ltr:ml-2 w-2" />
-            </button>
-        </div>
-
-        <stack name="revision-history" v-if="showRevisionHistory" @closed="showRevisionHistory = false" :narrow="true">
+        <stack
+            name="revision-history"
+            v-if="showRevisionHistory"
+            @closed="showRevisionHistory = false"
+            :narrow="true"
+            v-slot="{ close }"
+        >
             <revision-history
-                slot-scope="{ close }"
                 :index-url="actions.revisions"
                 :restore-url="actions.restore"
                 :reference="initialReference"
+                :can-restore-revisions="!readOnly"
                 @closed="close"
             />
         </stack>
@@ -201,34 +191,93 @@
             v-if="confirmingPublish"
             :actions="actions"
             :published="published"
-            :resource-handle="resource.handle"
+            :collection="collectionHandle"
             :reference="initialReference"
             :publish-container="publishContainer"
             :can-manage-publish-state="canManagePublishState"
             @closed="confirmingPublish = false"
             @saving="saving = true"
             @saved="publishActionCompleted"
+            @failed="publishActionFailed"
         />
     </div>
 </template>
 
 <script>
-import axios from 'axios'
-import SaveButtonOptions from '../../../../vendor/statamic/cms/resources/js/components/publish/SaveButtonOptions.vue'
-import HasPreferences from '../../../../vendor/statamic/cms/resources/js/components/data-list/HasPreferences.js'
-import HasHiddenFields from '../../../../vendor/statamic/cms/resources/js/components/publish/HasHiddenFields.js'
-import HasActions from '../../../../vendor/statamic/cms/resources/js/components/publish/HasActions.js'
-import RevisionHistory from '../revision-history/History.vue'
-import PublishActions from './PublishActions.vue'
+import { ItemActions } from 'statamic';
+import PublishActions from './PublishActions.vue';
+import SaveButtonOptions from '@statamic/components/publish/SaveButtonOptions.vue';
+import RevisionHistory from '../revision-history/History.vue';
+import HasPreferences from '@statamic/components/data-list/HasPreferences.js';
+import HasActions from '@statamic/components/publish/HasActions.js';
+import striptags from 'striptags';
+import clone from '@statamic/util/clone.js';
+import {
+    Button,
+    Card,
+    CardPanel,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownSeparator,
+    Header,
+    Heading,
+    Icon,
+    Panel,
+    PanelHeader,
+    StatusIndicator,
+    Subheading,
+    Switch,
+    Select,
+} from '@statamic/ui';
+import PublishContainer from '@statamic/components/ui/Publish/Container.vue';
+import PublishTabs from '@statamic/components/ui/Publish/Tabs.vue';
+import PublishComponents from '@statamic/components/ui/Publish/Components.vue';
+import LocalizationsCard from '@statamic/components/ui/Publish/Localizations.vue';
+import LivePreview from '@statamic/components/ui/LivePreview/LivePreview.vue';
+import { SavePipeline } from 'statamic';
+import { computed, ref } from 'vue';
+const { Pipeline, Request, BeforeSaveHooks, AfterSaveHooks, PipelineStopped } = SavePipeline;
+import { publishContextKey } from '@statamic/ui';
+
+let saving = ref(false);
+let errors = ref({});
+let container = null;
 
 export default {
+    mixins: [HasPreferences, HasActions],
+
     components: {
-        SaveButtonOptions,
-        RevisionHistory,
+        Button,
+        Card,
+        CardPanel,
+        Dropdown,
+        DropdownItem,
+        DropdownMenu,
+        DropdownSeparator,
+        Header,
+        Heading,
+        Icon,
+        ItemActions,
+        LivePreview,
+        LocalizationsCard,
+        Panel,
+        PanelHeader,
         PublishActions,
+        PublishComponents,
+        PublishContainer,
+        PublishTabs,
+        RevisionHistory,
+        SaveButtonOptions,
+        StatusIndicator,
+        Subheading,
+        Switch,
+        Select,
     },
 
-    mixins: [HasPreferences, HasHiddenFields, HasActions],
+    inject: {
+        publishContext: { from: publishContextKey }
+    },
 
     props: {
         publishContainer: String,
@@ -239,7 +288,6 @@ export default {
         initialTitle: String,
         initialIsWorkingCopy: Boolean,
         resource: Object,
-        breadcrumbs: Array,
         initialActions: Object,
         method: String,
         isCreating: Boolean,
@@ -258,16 +306,14 @@ export default {
     data() {
         return {
             actions: this.initialActions,
-            saving: false,
             trackDirtyState: true,
             blueprint: this.initialBlueprint,
             title: this.initialTitle,
             status: this.initialStatus,
-            values: _.clone(this.initialValues),
-            meta: _.clone(this.initialMeta),
+            values: clone(this.initialValues),
+            visibleValues: {},
+            meta: clone(this.initialMeta),
             isWorkingCopy: this.initialIsWorkingCopy,
-            error: null,
-            errors: {},
             state: 'new',
             revisionMessage: null,
             showRevisionHistory: null,
@@ -285,12 +331,24 @@ export default {
             saveKeyBinding: null,
             quickSaveKeyBinding: null,
             quickSave: false,
-        }
+        };
     },
 
     computed: {
+        saving() {
+            return saving.value;
+        },
+
+        errors() {
+            return errors.value;
+        },
+
+        formattedTitle() {
+            return striptags(__(this.title));
+        },
+
         somethingIsLoading() {
-            return ! this.$progress.isComplete();
+            return !this.$progress.isComplete();
         },
 
         canSave() {
@@ -310,7 +368,7 @@ export default {
         },
 
         published() {
-            if (! this.publishStatesEnabled) return false;
+            if (!this.publishStatesEnabled) return false;
 
             return this.values[this.resource.published_column];
         },
@@ -333,14 +391,14 @@ export default {
 
         publishButtonText() {
             if (this.canManagePublishState) {
-                return `${__('Publish')}…`
+                return `${__('Publish')}…`;
             }
 
-            return `${__('Create Revision')}…`
+            return `${__('Create Revision')}…`;
         },
 
         saveText() {
-            switch(true) {
+            switch (true) {
                 case this.revisionsEnabled:
                     return __('Save Changes');
                 case this.isUnpublishing:
@@ -348,138 +406,94 @@ export default {
                 case this.publishStatesEnabled && this.isDraft:
                     return __('Save Draft');
                 default:
-                    return this.publishStatesEnabled
-                        ? __('Save & Publish')
-                        : __('Save');
+                    return this.publishStatesEnabled ? __('Save & Publish') : __('Save');
             }
         },
 
         isUnpublishing() {
-            if (! this.publishStatesEnabled) return false;
+            if (!this.publishStatesEnabled) return false;
 
-            return this.initialPublished && ! this.published && ! this.isCreating;
+            return this.initialPublished && !this.published && !this.isCreating;
         },
 
         isDraft() {
-            if (! this.publishStatesEnabled) return false;
+            if (!this.publishStatesEnabled) return false;
 
-            return ! this.published;
-        },
-
-        saveButtonClass() {
-            return {
-                'btn': this.revisionsEnabled,
-                'btn-primary': this.isCreating || !this.revisionsEnabled,
-            };
+            return !this.published;
         },
 
         afterSaveOption() {
-            return this.getPreference('after_save')
+            return this.getPreference('after_save');
         },
 
         direction() {
             return this.$config.get('direction', 'ltr');
         },
 
-        sidebarEnabled() {
-            let hasSidebarTab = this.blueprint.tabs.filter((tab) => tab.handle === 'sidebar').length > 0
+        baseContainer() {
+            let parentContainer = this.publishContext;
 
-            return this.resourceHasRoutes || this.publishStatesEnabled || hasSidebarTab
+            while (parentContainer?.parentContainer) {
+                parentContainer = parentContainer.parentContainer;
+            }
+
+            return parentContainer;
         },
     },
 
     watch: {
         saving(saving) {
-            this.$progress.loading(`runway-publish-form`, saving)
+            this.$progress.loading(`${this.publishContainer}-runway-publish-form`, saving);
         },
 
         title(title) {
             if (this.isBase) {
                 const arrow = this.direction === 'ltr' ? '‹' : '›';
-                document.title = `${title} ${arrow} ${this.breadcrumbs[0].text} ${arrow} ${__('Statamic')}`;
+                const parts = document.title.split(arrow);
+
+                document.title = `${title} ${arrow} ${parts[1]?.trim()}`;
             }
         },
     },
 
     methods: {
-        clearErrors() {
-            this.error = null
-            this.errors = {}
-        },
-
         save() {
-            if (! this.canSave) {
+            if (!this.canSave) {
                 this.quickSave = false;
                 return;
             }
 
-            this.saving = true;
-            this.clearErrors();
-
-            setTimeout(() => this.runBeforeSaveHook(), 151); // 150ms is the debounce time for fieldtype updates
-        },
-
-        runBeforeSaveHook() {
-            this.$refs.container.saving();
-
-            Statamic.$hooks.run('runway.saving', {
-                resource: this.resource,
-                values: this.values,
-                container: this.$refs.container,
-                storeName: this.publishContainer,
-            })
-                .then(this.performSaveRequest)
-                .catch(error => {
-                    this.saving = false;
-                    this.$toast.error(error || 'Something went wrong');
-                });
-        },
-
-        performSaveRequest() {
-            // Once the hook has completed, we need to make the actual request.
-            // We build the payload here because the before hook may have modified values.
-            const payload = { ...this.visibleValues};
-
-            axios({
-                method: this.method,
-                url: this.actions.save,
-                data: payload,
-            }).then(response => {
-                this.saving = false;
-                if (! response.data.saved) {
-                    return this.$toast.error(__(`Couldn't save entry`));
-                }
-                this.title = response.data.data.title;
-                this.status = response.data.data.published;
-                this.isWorkingCopy = true;
-                if (!this.revisionsEnabled) this.permalink = response.data.data.permalink;
-                if (!this.isCreating) this.$toast.success(__('Saved'));
-                this.$refs.container.saved();
-                this.runAfterSaveHook(response);
-            }).catch(error => this.handleAxiosError(error));
-        },
-
-        runAfterSaveHook(response) {
-            // Once the save request has completed, we want to run the "after" hook.
-            // Devs can do what they need and we'll wait for them, but they can't cancel anything.
-            Statamic.$hooks
-                .run('runway.saved', {
-                    resource: this.resource,
-                    reference: this.initialReference,
-                    response
-                })
-                .then(() => {
+            new Pipeline()
+                .provide({ container, errors, saving })
+                .through([
+                    new BeforeSaveHooks('runway', {
+                        resource: this.resource,
+                        values: this.values,
+                    }),
+                    new Request(this.actions.save, this.method),
+                    new AfterSaveHooks('runway', {
+                        resource: this.resource,
+                        reference: this.initialReference,
+                    }),
+                ])
+                .then((response) => {
                     // If revisions are enabled, just emit event.
                     if (this.revisionsEnabled) {
-                        clearTimeout(this.trackDirtyStateTimeout)
-                        this.trackDirtyState = false
+                        clearTimeout(this.trackDirtyStateTimeout);
+                        this.trackDirtyState = false;
                         this.values = this.resetValuesFromResponse(response.data.data.values);
-                        this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 350)
+                        this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 500);
                         this.$nextTick(() => this.$emit('saved', response));
                         return;
                     }
 
-                    let nextAction = this.quickSave ? 'continue_editing' : this.afterSaveOption;
+                    this.title = response.data.data.title;
+                    this.status = response.data.data.status;
+                    this.isWorkingCopy = true;
+                    if (!this.revisionsEnabled) this.permalink = response.data.data.permalink;
+                    if (!this.isCreating) this.$toast.success(__('Saved'));
+
+                    let nextAction = this.quickSave || this.afterSaveOption;
 
                     // If the user has opted to create another entry, redirect them to create page.
                     if (!this.isInline && nextAction === 'create_another') {
@@ -497,43 +511,24 @@ export default {
                     else {
                         clearTimeout(this.trackDirtyStateTimeout);
                         this.trackDirtyState = false;
-                        this.values = this.resetValuesFromResponse(response.data.data.values);
-                        this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 350);
-
-                        if (this.publishStatesEnabled) {
-                            this.status = response.data.data.status;
-                            this.initialPublished = response.data.data.published;
-                        }
-
+                        this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 500);
+                        this.initialPublished = response.data.data.published;
                         this.$nextTick(() => this.$emit('saved', response));
-
-                        if (!this.isInline && this.isCreating) {
-                            window.location = response.data.data.edit_url + '?created=true';
-                        }
                     }
 
                     this.quickSave = false;
-                }).catch(e => console.error(e));
+                })
+                .catch((e) => {
+                    if (!(e instanceof PipelineStopped)) {
+                        this.$toast.error(__('Something went wrong'));
+                        console.error(e);
+                    }
+                });
         },
 
         confirmPublish() {
             if (this.canPublish) {
                 this.confirmingPublish = true;
-            }
-        },
-
-        handleAxiosError(e) {
-            this.saving = false;
-            if (e.response && e.response.status === 422) {
-                const { message, errors } = e.response.data;
-                this.error = message;
-                this.errors = errors;
-                this.$toast.error(message);
-                this.$reveal.invalid();
-            } else if (e.response) {
-                this.$toast.error(e.response.data.message);
-            } else {
-                this.$toast.error(e || 'Something went wrong');
             }
         },
 
@@ -547,46 +542,58 @@ export default {
             this.isWorkingCopy = isWorkingCopy;
             this.confirmingPublish = false;
             this.title = response.data.data.title;
+            this.status = response.data.data.status;
             clearTimeout(this.trackDirtyStateTimeout);
             this.trackDirtyState = false;
             this.values = this.resetValuesFromResponse(response.data.data.values);
             this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 350);
-            this.permalink = response.data.data.permalink
+            this.permalink = response.data.data.permalink;
             this.$nextTick(() => this.$emit('saved', response));
         },
 
-        setFieldValue(handle, value) {
-            this.$refs.container.setFieldValue(handle, value)
+        publishActionFailed() {
+            this.confirmPublish = false;
+            this.saving = false;
         },
 
-        setFieldMeta(handle, value) {
-            this.$store.dispatch(`publish/${this.publishContainer}/setFieldMeta`, {
-                handle,
-                value,
-                user: Statamic.user.id,
-            })
+        setFieldValue(handle, value) {
+            this.$refs.container.setFieldValue(handle, value);
         },
 
         /**
-         * When creating a new model via the HasMany fieldtype, pre-fill the belongs_to field to the current model.
+         * Automatically populates the belongs_to relationship when creating a new model via the relationship fieldtype.
+         * This method is called when the inline publish form is created.
          */
-        prefillBelongsToField() {
+        populateBelongsToRelationship() {
             this.initialBlueprint.tabs.forEach((tab) => {
                 tab.sections.forEach((section) => {
                     section.fields
+                        .filter((field) => field.type === 'belongs_to')
                         .filter((field) => {
-                            return field.type === 'belongs_to' && field.resource === window.Runway.currentResource;
+                            // Gets the handle of the base resource from the store reference
+                            // Example: "runway::posts::123" -> "posts"
+                            let baseResource = this.baseContainer.reference.value.split('::')[1];
+
+                            return field.resource === baseResource;
                         })
                         .forEach((field) => {
-                            let alreadyExists = this.values[field.handle].includes(window.Runway.currentModel.id)
+                            let alreadyExists = this.values[field.handle].includes(this.baseContainer.values.value.id);
 
                             if (!alreadyExists) {
-                                this.values[field.handle].push(window.Runway.currentModel.id)
-                                this.meta[field.handle].data = [window.Runway.currentModel]
+                                this.values[field.handle].push(this.baseContainer.values.value.id);
+
+                                this.meta[field.handle].data = [
+                                    {
+                                        id: this.baseContainer.values.value.id,
+                                        reference: this.baseContainer.reference.value,
+                                        title: this.baseContainer.values.value.title,
+                                        edit_url: this.baseContainer.values.value.edit_url,
+                                    },
+                                ];
                             }
-                        })
-                })
-            })
+                        });
+                });
+            });
         },
 
         afterActionSuccessfullyCompleted(response) {
@@ -606,24 +613,28 @@ export default {
     },
 
     mounted() {
-        this.saveKeyBinding = this.$keys.bindGlobal(['mod+return'], e => {
+        this.saveKeyBinding = this.$keys.bindGlobal(['mod+return'], (e) => {
             e.preventDefault();
             if (this.confirmingPublish) return;
             this.save();
         });
 
-        this.quickSaveKeyBinding = this.$keys.bindGlobal(['mod+s'], e => {
+        this.quickSaveKeyBinding = this.$keys.bindGlobal(['mod+s'], (e) => {
             e.preventDefault();
             if (this.confirmingPublish) return;
             this.quickSave = true;
             this.save();
         });
+
+        if (!this.isRoot) {
+            this.populateBelongsToRelationship();
+        }
     },
 
     created() {
-        if (this.publishContainer.includes('relate-fieldtype-inline')) {
-            this.prefillBelongsToField()
-        }
+        window.history.replaceState({}, document.title, document.location.href.replace('created=true', ''));
+
+        container = computed(() => this.$refs.container);
     },
 
     unmounted() {
@@ -634,5 +645,5 @@ export default {
         this.saveKeyBinding.destroy();
         this.quickSaveKeyBinding.destroy();
     },
-}
+};
 </script>

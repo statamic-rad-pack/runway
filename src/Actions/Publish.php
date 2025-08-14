@@ -7,6 +7,8 @@ use Statamic\Actions\Action;
 
 class Publish extends Action
 {
+    protected $icon = 'eye';
+
     public static function title()
     {
         return __('Publish');
