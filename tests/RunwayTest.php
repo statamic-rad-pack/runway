@@ -61,7 +61,7 @@ class RunwayTest extends TestCase
 
         $this->assertFalse(Runway::hasResource('foo'));
     }
-    
+
     public function can_register_resource()
     {
         config()->set('runway.resources', []);

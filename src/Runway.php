@@ -72,7 +72,7 @@ class Runway
     {
         return collect(static::$resources)->map->handle()->contains($resourceHandle);
     }
-    
+
     public static function registerResource(string $model, array $config): self
     {
         static::$registeredResources[$model] = $config;

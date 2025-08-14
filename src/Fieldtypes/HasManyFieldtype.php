@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Statamic\Facades\GraphQL;
 use StatamicRadPack\Runway\Runway;
+
 use function Statamic\trans as __;
 
 class HasManyFieldtype extends BaseFieldtype
