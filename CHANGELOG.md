@@ -7,4 +7,4 @@
 - Added `runway_resource` widget
 
 ### What's changed
-- Removed PHP 8.2 and Laravel 10 support
+- Dropped support for PHP 8.2 and Laravel 10
