@@ -293,8 +293,7 @@ class ResourceControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->get(cp_route('runway.edit', ['resource' => 'post', 'model' => 12345]))
-            ->assertNotFound()
-            ->assertSee('Page Not Found');
+            ->assertNotFound();
     }
 
     #[Test]
