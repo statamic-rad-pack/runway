@@ -1,6 +1,6 @@
 # Changelog
 
-## v9.0.0-alpha.1 (2025-08-xx)
+## v9.0.0 (2025-08-xx)
 
 ### What's new
 - Updated for Statamic 6 #658 by @duncanmcclean
