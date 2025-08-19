@@ -204,14 +204,13 @@
 </template>
 
 <script>
-import { ItemActions } from 'statamic';
-import PublishActions from './PublishActions.vue';
-import SaveButtonOptions from '@statamic/components/publish/SaveButtonOptions.vue';
-import RevisionHistory from '../revision-history/History.vue';
-import HasPreferences from '@statamic/components/data-list/HasPreferences.js';
-import HasActions from '@statamic/components/publish/HasActions.js';
-import striptags from 'striptags';
-import clone from '@statamic/util/clone.js';
+import {
+    ItemActions,
+    SaveButtonOptions,
+    HasPreferences,
+    HasActions,
+    clone
+} from '@statamic/cms';
 import {
     Button,
     Card,
@@ -229,16 +228,18 @@ import {
     Subheading,
     Switch,
     Select,
-} from '@statamic/ui';
-import PublishContainer from '@statamic/components/ui/Publish/Container.vue';
-import PublishTabs from '@statamic/components/ui/Publish/Tabs.vue';
-import PublishComponents from '@statamic/components/ui/Publish/Components.vue';
-import LocalizationsCard from '@statamic/components/ui/Publish/Localizations.vue';
-import LivePreview from '@statamic/components/ui/LivePreview/LivePreview.vue';
-import { SavePipeline } from 'statamic';
+    PublishContainer,
+    PublishTabs,
+    PublishComponents,
+    PublishLocalizations as LocalizationsCard,
+    LivePreview,
+    publishContextKey,
+} from '@statamic/cms/ui';
+import { Pipeline, Request, BeforeSaveHooks, AfterSaveHooks, PipelineStopped } from '@statamic/cms/save-pipeline';
+import PublishActions from './PublishActions.vue';
+import RevisionHistory from '../revision-history/History.vue';
+import striptags from 'striptags';
 import { computed, ref } from 'vue';
-const { Pipeline, Request, BeforeSaveHooks, AfterSaveHooks, PipelineStopped } = SavePipeline;
-import { publishContextKey } from '@statamic/ui';
 
 let saving = ref(false);
 let errors = ref({});
@@ -565,6 +566,8 @@ export default {
          * This method is called when the inline publish form is created.
          */
         populateBelongsToRelationship() {
+            if (! this.baseContainer) return;
+
             this.initialBlueprint.tabs.forEach((tab) => {
                 tab.sections.forEach((section) => {
                     section.fields

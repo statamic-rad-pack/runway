@@ -1,6 +1,6 @@
 <script setup>
-import { ItemActions } from 'statamic';
-import { Header, Dropdown, DropdownMenu, DropdownLabel, DropdownItem, DropdownSeparator, Button } from '@statamic/ui';
+import { ItemActions } from '@statamic/cms';
+import { Header, Dropdown, DropdownMenu, DropdownLabel, DropdownItem, DropdownSeparator, Button } from '@statamic/cms/ui';
 import RunwayListing from './Listing.vue';
 
 const props = defineProps({

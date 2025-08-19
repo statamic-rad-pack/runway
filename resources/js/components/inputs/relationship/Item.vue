@@ -4,11 +4,11 @@
  * Before doing that, we want to show a confirmation modal to the user.
  */
 
-import ConfirmationModal from '@statamic/components/modals/ConfirmationModal.vue';
-import StatamicRelatedItem from '@statamic/components/inputs/relationship/Item.vue';
-import { inject, ref, computed, getCurrentInstance } from 'vue'
+import { ConfirmationModal, RelatedItem as StatamicRelatedItem } from '@statamic/cms';
+import { injectPublishContext } from '@statamic/cms/ui';
+import { ref, computed, getCurrentInstance } from 'vue'
 
-const store = inject('store');
+const { meta } = injectPublishContext();
 const instance = getCurrentInstance();
 
 const emit = defineEmits(['removed']);
@@ -30,7 +30,7 @@ const showDeletionConfirmationModel = ref(false);
 const unlinkBehavior = computed(() => {
     const storeKey = instance.parent.parent.props.fieldPathKeys?.join('.') || instance.parent.parent.props.handle;
 
-    return data_get(store.meta, storeKey)?.unlinkBehavior;
+    return data_get(meta, storeKey)?.unlinkBehavior;
 });
 
 function removed() {

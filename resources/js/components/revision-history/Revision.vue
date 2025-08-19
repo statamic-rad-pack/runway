@@ -77,10 +77,8 @@
 </template>
 
 <script>
-import RestoreRevision from '@statamic/components/revision-history/Restore.vue';
-import RevisionPreview from '@statamic/components/revision-history/Preview.vue';
-import { DateFormatter } from 'statamic';
-import { Subheading, Badge } from '@statamic/ui';
+import { DateFormatter, RestoreRevision, RevisionPreview } from '@statamic/cms';
+import { Subheading, Badge } from '@statamic/cms/ui';
 
 export default {
     components: {
