@@ -204,13 +204,8 @@
 </template>
 
 <script>
-import {
-    ItemActions,
-    SaveButtonOptions,
-    HasPreferences,
-    HasActions,
-    clone
-} from '@statamic/cms';
+import { ItemActions } from '@statamic/cms';
+import { SaveButtonOptions, HasPreferences, HasActions, clone, resetValuesFromResponse } from '@statamic/cms/temporary';
 import {
     Button,
     Card,
@@ -482,7 +477,7 @@ export default {
                     if (this.revisionsEnabled) {
                         clearTimeout(this.trackDirtyStateTimeout);
                         this.trackDirtyState = false;
-                        this.values = this.resetValuesFromResponse(response.data.data.values);
+                        this.values = resetValuesFromResponse(response.data.data.values);
                         this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 500);
                         this.$nextTick(() => this.$emit('saved', response));
                         return;

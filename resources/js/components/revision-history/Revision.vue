@@ -77,7 +77,8 @@
 </template>
 
 <script>
-import { DateFormatter, RestoreRevision, RevisionPreview } from '@statamic/cms';
+import { DateFormatter } from '@statamic/cms';
+import { RestoreRevision, RevisionPreview } from '@statamic/cms/temporary';
 import { Subheading, Badge } from '@statamic/cms/ui';
 
 export default {
