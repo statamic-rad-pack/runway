@@ -64,7 +64,7 @@ trait HasRunwayResource
                     || $field->fieldtype() instanceof Hidden
                     || $field->fieldtype() instanceof Section
                     || $field->visibility() === 'computed'
-                    || !Schema::hasColumn($this->getTable(), $field->handle())
+                    || ! Schema::hasColumn($this->getTable(), $field->handle())
                     || Str::startsWith($field->handle(), $this->runwayResource()->nestedFieldPrefixes());
             })
             ->each(fn (Field $field) => $query->orWhere($this->getColumnForField($field->handle()), 'LIKE', '%'.$searchQuery.'%'));
