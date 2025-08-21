@@ -59,14 +59,8 @@ trait HasRunwayResource
     public function scopeRunwaySearch(Builder $query, string $searchQuery)
     {
         $this->runwayResource()->blueprint()->fields()->all()
-            ->reject(function (Field $field) {
-                return $field->fieldtype() instanceof HasManyFieldtype
-                    || $field->fieldtype() instanceof Hidden
-                    || $field->fieldtype() instanceof Section
-                    || $field->visibility() === 'computed'
-                    || ! Schema::hasColumn($this->getTable(), $field->handle())
-                    || Str::startsWith($field->handle(), $this->runwayResource()->nestedFieldPrefixes());
-            })
+            ->filter(fn (Field $field) => Schema::hasColumn($this->getTable(), $field->handle()))
+            ->reject(fn (Field $field) => $field->visibility() === 'computed')
             ->each(fn (Field $field) => $query->orWhere($this->getColumnForField($field->handle()), 'LIKE', '%'.$searchQuery.'%'));
     }
 
