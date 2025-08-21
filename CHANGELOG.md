@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.6.2 (2025-08-21)
+
+### What's fixed
+* Added column existence check to `runwaySearch` query scope #714 by @kevinmeijer97
+
+
+
 ## v8.6.1 (2025-08-14)
 
 ### What's fixed
