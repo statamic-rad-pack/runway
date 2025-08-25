@@ -171,7 +171,7 @@ PHP);
 
         File::put(app_path("Models/{$this->modelName}.php"), $modelContents);
 
-        spl_autoload('App\Models\\'.$this->modelName);
+        require_once app_path("Models/{$this->modelName}.php");
 
         return $this;
     }
