@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.6.3 (2025-08-25)
+
+### What's fixed
+* Fix `runway:import-collection` command on Ubuntu #715 by @duncanmcclean
+
+
+
 ## v8.6.2 (2025-08-21)
 
 ### What's fixed
