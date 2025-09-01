@@ -35,6 +35,17 @@ class ResourceControllerTest extends TestCase
     }
 
     #[Test]
+    public function cant_get_model_index_when_resource_doesnt_exist()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.index', ['resource' => 'foo']))
+            ->assertNotFound();
+    }
+
+    #[Test]
     public function can_create_resource()
     {
         $user = User::make()->makeSuper()->save();

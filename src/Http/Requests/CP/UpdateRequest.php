@@ -9,14 +9,12 @@ class UpdateRequest extends FormRequest
 {
     public function authorize()
     {
-        $resource = $this->route('resource');
+        $model = $this->route('model');
 
-        if ($resource->readOnly()) {
+        if ($model->runwayResource()->readOnly()) {
             return false;
         }
 
-        $model = $resource->model()->find($this->model);
-
-        return User::current()->can('edit', [$resource, $model]);
+        return User::current()->can('edit', [$model->runwayResource(), $model]);
     }
 }

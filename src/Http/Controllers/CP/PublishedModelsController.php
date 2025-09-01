@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
@@ -12,12 +13,8 @@ class PublishedModelsController extends CpController
 {
     use Traits\ExtractsFromModelFields;
 
-    public function store(Request $request, Resource $resource, $model)
+    public function store(Request $request, Resource $resource, Model $model)
     {
-        $model = $resource->newEloquentQuery()
-            ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
-            ->first();
-
         $model = $model->publish([
             'message' => $request->message,
             'user' => User::fromUser($request->user()),
@@ -35,12 +32,8 @@ class PublishedModelsController extends CpController
         ];
     }
 
-    public function destroy(Request $request, Resource $resource, $model)
+    public function destroy(Request $request, Resource $resource, Model $model)
     {
-        $model = $resource->newEloquentQuery()
-            ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
-            ->first();
-
         $model = $model->unpublish([
             'message' => $request->message,
             'user' => User::fromUser($request->user()),

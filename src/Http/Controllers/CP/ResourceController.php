@@ -2,9 +2,9 @@
 
 namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Statamic\CP\Column;
-use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Facades\Action;
 use Statamic\Facades\Scope;
 use Statamic\Facades\User;
@@ -116,14 +116,8 @@ class ResourceController extends CpController
         ];
     }
 
-    public function edit(EditRequest $request, Resource $resource, $model)
+    public function edit(EditRequest $request, Resource $resource, Model $model)
     {
-        $model = $resource->newEloquentQuery()->firstWhere($resource->model()->qualifyColumn($resource->routeKey()), $model);
-
-        if (! $model) {
-            throw new NotFoundHttpException;
-        }
-
         $model = $model->fromWorkingCopy();
 
         $blueprint = $resource->blueprint();
@@ -165,11 +159,10 @@ class ResourceController extends CpController
         return view('runway::edit', $viewData);
     }
 
-    public function update(UpdateRequest $request, Resource $resource, $model)
+    public function update(UpdateRequest $request, Resource $resource, Model $model)
     {
         $resource->blueprint()->fields()->setParent($model)->addValues($request->all())->validator()->validate();
 
-        $model = $resource->newEloquentQuery()->firstWhere($resource->model()->qualifyColumn($resource->routeKey()), $model);
         $model = $model->fromWorkingCopy();
 
         $this->prepareModelForSaving($resource, $model, $request);
