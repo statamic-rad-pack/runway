@@ -29,67 +29,73 @@ trait PreparesModels
         );
 
         return $blueprint->fields()->all()
-            ->mapWithKeys(function (Field $field) use ($resource, $model) {
-                $value = $model->getAttribute($field->handle());
+            ->mapWithKeys(fn (Field $field) => [$field->handle() => $this->resolveFieldValue($resource, $model, $field)]);
+    }
 
-                // When it's a nested field, we need to get the value from the nested JSON object, using data_get().
-                if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field->handle())) {
-                    $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
-                    $value = data_get($model, "{$nestedFieldPrefix}.{$key}");
-                }
+    protected function resolveFieldValue(Resource $resource, Model $model, Field $field): mixed
+    {
+        // When the resource is a User model, handle the special role and group fields.
+        if ($this->isUserResource($resource)) {
+            if ($field->handle() === 'roles') {
+                return DB::table(config('statamic.users.tables.role_user'))
+                    ->where('user_id', $model->getKey())
+                    ->pluck('role_id')
+                    ->all();
+            }
 
-                // When $value is a Carbon instance, format it with the format defined in the blueprint.
-                if ($value instanceof CarbonInterface) {
-                    $format = $field->get('format', 'Y-m-d H:i');
+            if ($field->handle() === 'groups') {
+                return DB::table(config('statamic.users.tables.group_user'))
+                    ->where('user_id', $model->getKey())
+                    ->pluck('group_id')
+                    ->all();
+            }
+        }
 
-                    $value = $value->format($format);
-                }
+        // todo: refactor
+        if ($field->fieldtype() instanceof HasManyFieldtype) {
+            $results = $model->{$resource->eloquentRelationships()->get($field->handle())}()
+                ->runway()
+                ->get();
 
-                // When $value is a JSON string, we need to decode it.
-                if (is_string($value) && json_validate($value)) {
-                    $value = json_decode((string) $value, true);
-                }
+            // Use IDs from the model's $runwayRelationships property, if there are any.
+            if (array_key_exists($field->handle(), $model->runwayRelationships)) {
+                $results = Arr::get($model->runwayRelationships, $field->handle());
+            }
 
-                // When the resource is a User model, handle the special role & group fields.
-                if ($this->isUserResource($resource)) {
-                    if ($field->handle() === 'roles') {
-                        $value = DB::table(config('statamic.users.tables.role_user'))
-                            ->where('user_id', $model->getKey())
-                            ->pluck('role_id')
-                            ->all();
-                    }
+            // When re-ordering is enabled, ensure the models are returned in the correct order.
+            if ($field->get('reorderable', false)) {
+                $orderColumn = $field->get('order_column');
+                $relationshipName = $resource->eloquentRelationships()->get($field->handle());
 
-                    if ($field->handle() === 'groups') {
-                        $value = DB::table(config('statamic.users.tables.group_user'))
-                            ->where('user_id', $model->getKey())
-                            ->pluck('group_id')
-                            ->all();
-                    }
-                }
+                $results = $model->{$relationshipName}()
+                    ->reorder($orderColumn, 'ASC')
+                    ->get();
+            }
 
-                if ($field->fieldtype() instanceof HasManyFieldtype) {
-                    $value = $model->{$resource->eloquentRelationships()->get($field->handle())}()
-                        ->runway()
-                        ->get();
+            return $results;
+        }
 
-                    // Use IDs from the model's $runwayRelationships property, if there are any.
-                    if (array_key_exists($field->handle(), $model->runwayRelationships)) {
-                        $value = Arr::get($model->runwayRelationships, $field->handle());
-                    }
+        $value = $model->getAttribute($field->handle());
 
-                    // When re-ordering is enabled, ensure the models are returned in the correct order.
-                    if ($field->get('reorderable', false)) {
-                        $orderColumn = $field->get('order_column');
-                        $relationshipName = $resource->eloquentRelationships()->get($field->handle());
+        // When it's a nested field, we need to get the value from the nested JSON object, using data_get().
+        if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field->handle())) {
+            $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
+            $value = data_get($model, "{$nestedFieldPrefix}.{$key}");
+        }
 
-                        $value = $model->{$relationshipName}()
-                            ->reorder($orderColumn, 'ASC')
-                            ->get();
-                    }
-                }
+        // When $value is a Carbon instance, format it with the format defined in the blueprint.
+        if ($value instanceof CarbonInterface) {
+            $format = $field->get('format', 'Y-m-d H:i');
 
-                return [$field->handle() => $value];
-            });
+            $value = $value->format($format);
+        }
+
+        // When $value is a JSON string, we need to decode it.
+        if (is_string($value) && json_validate($value)) {
+            $value = json_decode((string) $value, true);
+        }
+
+        return $value;
     }
 
     protected function prepareModelForSaving(Resource $resource, Model &$model, Request $request): void
