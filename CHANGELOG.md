@@ -1,6 +1,6 @@
 # Changelog
 
-## v9.0.0-beta.2 (2025-09-01)
+## v9.0.0-alpha.2 (2025-09-01)
 
 ### What's changed
 - Publish form optimisations #720 by @duncanmcclean
