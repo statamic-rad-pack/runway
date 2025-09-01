@@ -14,7 +14,6 @@ use Statamic\Support\Arr;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 use StatamicRadPack\Runway\Resource;
-use StatamicRadPack\Runway\Support\Json;
 
 trait PreparesModels
 {
