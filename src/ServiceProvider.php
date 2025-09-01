@@ -93,6 +93,11 @@ class ServiceProvider extends AddonServiceProvider
                 return $value;
             }
 
+            throw_unless(
+                Runway::hasResource($value),
+                new NotFoundHttpException("Runway resource [$value] not found.")
+            );
+
             return Runway::findResource($value);
         });
 
