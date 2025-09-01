@@ -241,12 +241,17 @@ public function visibleTo($item)
 Every query made by Runway to your model will call the `runway` query scope. This allows you to easily filter the models returned by Runway.
 
 ```php
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
 class YourModel extends Model
 {
-	public function scopeRunway($query)
+    #[Scope] // [tl! focus:start]
+	protected function runway(Builder $query): void
 	{
-		return $query->where('something', true);
-	}
+		$query->where('something', true);
+	} // [tl! focus:end]
 }
 ```
 
@@ -259,16 +264,21 @@ By default, Runway will observe all global scopes registered on your model. Howe
 You can work around this by calling the `withoutGlobalScopes` method in the `runway` query scope:
 
 ```php
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
 class YourModel extends Model
 {
-	public function scopeRunway($query)
+    #[Scope] // [tl! focus:start]
+	protected function runway(Builder $query): void
 	{
-	    // Disables ALL global scopes
-		return $query->withoutGlobalScopes();
+		// Disables ALL global scopes
+		$query->withoutGlobalScopes();
 		
 		// Disables a specific global scope
-		return $query->withoutGlobalScope([ActiveScope::class]);
-	}
+		$query->withoutGlobalScope([ActiveScope::class]);
+	} // [tl! focus:end]
 }
 ```
 
