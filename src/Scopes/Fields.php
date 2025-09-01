@@ -5,8 +5,8 @@ namespace StatamicRadPack\Runway\Scopes;
 use Illuminate\Support\Collection;
 use Statamic\Fields\Field;
 use Statamic\Query\Scopes\Filters\Fields as BaseFieldsFilter;
-use StatamicRadPack\Runway\Runway;
 use Statamic\Support\Arr;
+use StatamicRadPack\Runway\Runway;
 
 class Fields extends BaseFieldsFilter
 {
