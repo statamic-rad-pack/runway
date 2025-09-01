@@ -2,22 +2,19 @@
 
 namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
-use StatamicRadPack\Runway\Http\Resources\CP\Model;
+use StatamicRadPack\Runway\Http\Resources\CP\Model as ModelResource;
 use StatamicRadPack\Runway\Resource;
 
 class ModelRevisionsController extends CpController
 {
     use Traits\ExtractsFromModelFields;
 
-    public function index(Request $request, Resource $resource, $model)
+    public function index(Request $request, Resource $resource, Model $model)
     {
-        $model = $resource->newEloquentQuery()
-            ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
-            ->first();
-
         $revisions = $model
             ->revisions()
             ->reverse()
@@ -41,26 +38,18 @@ class ModelRevisionsController extends CpController
             })->reverse()->values();
     }
 
-    public function store(Request $request, Resource $resource, $model)
+    public function store(Request $request, Resource $resource, Model $model)
     {
-        $model = $resource->newEloquentQuery()
-            ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
-            ->first();
-
         $model->createRevision([
             'message' => $request->message,
             'user' => User::fromUser($request->user()),
         ]);
 
-        return new Model($model);
+        return new ModelResource($model);
     }
 
-    public function show(Request $request, Resource $resource, $model, $revisionId)
+    public function show(Request $request, Resource $resource, Model $model, $revisionId)
     {
-        $model = $resource->newEloquentQuery()
-            ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
-            ->first();
-
         $revision = $model->revision($revisionId);
         $model = $model->makeFromRevision($revision);
 
@@ -91,7 +80,7 @@ class ModelRevisionsController extends CpController
         ];
     }
 
-    protected function workingCopy($model)
+    protected function workingCopy(Model $model)
     {
         if ($model->published()) {
             return $model->workingCopy();

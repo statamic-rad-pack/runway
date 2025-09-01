@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Spatie\ErrorSolutions\Contracts\SolutionProviderRepository;
 use Statamic\API\Middleware\Cache;
 use Statamic\Console\Commands\StaticWarm;
+use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
@@ -93,6 +94,22 @@ class ServiceProvider extends AddonServiceProvider
             }
 
             return Runway::findResource($value);
+        });
+
+        Route::bind('model', function ($value) {
+            if (! Statamic::isCpRoute()) {
+                return $value;
+            }
+
+            $resource = request()->route('resource');
+            $model = $resource?->newEloquentQuery()->firstWhere($resource->model()->qualifyColumn($resource->routeKey()), $value);
+
+            throw_unless(
+                $model,
+                new NotFoundHttpException("Model [$value] for resource [{$resource->handle()}] not found.")
+            );
+
+            return $model;
         });
 
         return $this;

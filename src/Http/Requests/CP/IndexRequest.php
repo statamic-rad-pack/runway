@@ -9,8 +9,6 @@ class IndexRequest extends FormRequest
 {
     public function authorize()
     {
-        $resource = $this->route('resource');
-
-        return User::current()->can('view', $resource);
+        return User::current()->can('view', $this->route('resource'));
     }
 }
