@@ -26,7 +26,8 @@
     "extra": {
         "statamic": {
             "name": "Runway",
-            "description": "Eloquently manage your database models in Statamic."
+            "description": "Eloquently manage your database models in Statamic.",
+            "developer": "Statamic Rad Pack"
         },
         "laravel": {
             "providers": [
