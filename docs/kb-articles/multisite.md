@@ -13,12 +13,14 @@ However, there is an easy way to scope the model results you get to only those r
 ```php
 // app/Models/Post.php
 
-use Statamic\Facades\Site;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 
-public function scopeRunwayListing($query)
+#[Scope] // [tl! focus:start]
+protected function runwayListing(Builder $query): void
 {
     $query->where('site', Site::selected()->handle());
-}
+} // [tl! focus:end]
 ```
 
 3. Now, when you go to your model's listing page, the returned results should relate to the currently selected site.

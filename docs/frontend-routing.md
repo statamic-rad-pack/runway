@@ -93,12 +93,17 @@ When configuring front-end routing in an application with existing models, you s
 If you wish to limit the models being "cached" by the `runway:rebuild-uris` command, you may add the `runwayRoutes` query scope to your model:
 
 ```php
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
 class Product extends Model
 {
-	public function scopeRunwayRoutes($query)
+    #[Scope] // [tl! focus:start]
+	protected function scopeRunwayRoutes(Builder $query): void
 	{
-		return $query->where('is_public', true);
-	}
+		$query->where('is_public', true);
+	} // [tl! focus:end]
 }
 ```
 

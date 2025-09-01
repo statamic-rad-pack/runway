@@ -37,10 +37,14 @@ If you've defined a scope on your Eloquent model and you want to filter by that 
 ```php
 // app/Models/Post.php
 
-public function scopeFood($query)
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
+
+#[Scope] // [tl! focus:start]
+protected function food(Builder $query): void
 {
     $query->whereIn('title', ['Pasta', 'Apple', 'Burger']);
-}
+} // [tl! focus:end]
 ```
 
 ```antlers

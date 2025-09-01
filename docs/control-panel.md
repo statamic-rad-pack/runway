@@ -158,12 +158,17 @@ public function visibleTo($key)
 If you don't want to return everything, you may add a scope (`runwayListing`) to limit the returned results.
 
 ```php
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
 class YourModel extends Model
 {
-	public function scopeRunwayListing($query)
+    #[Scope] // [tl! focus:start]
+	protected function runwayListing(Builder $query): void
 	{
-		return $query->where('something', true);
-	}
+		$query->where('something', true);
+	} // [tl! focus:end]
 }
 ```
 
@@ -172,12 +177,17 @@ class YourModel extends Model
 On top of scoping your Control Panel results, you may also scope how Runway searches your models. To do this, you may specify a `runwaySearch` scope.
 
 ```php
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
 class YourModel extends Model
 {
-	public function scopeRunwaySearch($query, $searchString)
+    #[Scope] // [tl! focus:start]
+	protected function runwaySearch(Builder $query): void
 	{
 		// Your own search logic
-	}
+	} // [tl! focus:end]
 }
 ```
 
