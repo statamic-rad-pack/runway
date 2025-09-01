@@ -41,6 +41,20 @@ php artisan view:clear
 
 We highly recommend upgrading all the way to Laravel 12 and PHP 8.4.
 
+## Medium impact changes
+
+### `runway:rebuild-uri-cache` no longer removes global query scopes
+
+The `runway:rebuild-uri-cache` command no longer removes global query scopes when querying models. If you were relying on this behaviour, you may remove global scopes using the `runwayRoutes` query scope:
+
+```php
+#[Scope]
+public function runwayRoutes($query)
+{
+    return $query->withoutGlobalScopes();
+}
+```
+
 ## Previous upgrade guides
 
 -   [v3.x to v4.0](/upgrade-guides/v3-x-to-v4-0)
