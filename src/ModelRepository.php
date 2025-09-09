@@ -1,10 +1,11 @@
 <?php
 
-namespace StatamicRadPack\Runway\Routing;
+namespace StatamicRadPack\Runway;
 
 use Illuminate\Support\Arr;
+use StatamicRadPack\Runway\Routing\RunwayUri;
 
-class ResourceRoutingRepository
+class ModelRepository
 {
     protected $substitutionsById = [];
     protected $substitutionsByUri = [];

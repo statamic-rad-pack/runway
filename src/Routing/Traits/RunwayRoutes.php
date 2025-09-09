@@ -7,8 +7,8 @@ use Illuminate\Support\Str;
 use Statamic\Facades\Antlers;
 use Statamic\StaticCaching\Cacher;
 use Statamic\Support\Arr;
+use StatamicRadPack\Runway\ModelRepository;
 use StatamicRadPack\Runway\Routing\MorphOneWithStringKey;
-use StatamicRadPack\Runway\Routing\ResourceRoutingRepository;
 use StatamicRadPack\Runway\Routing\Routable;
 use StatamicRadPack\Runway\Routing\RoutingModel;
 use StatamicRadPack\Runway\Routing\RunwayUri;
@@ -135,8 +135,8 @@ trait RunwayRoutes
         ]));
     }
 
-    public function repository(): ResourceRoutingRepository
+    public function repository(): ModelRepository
     {
-        return app(ResourceRoutingRepository::class);
+        return app(ModelRepository::class);
     }
 }
