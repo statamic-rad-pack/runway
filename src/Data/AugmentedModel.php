@@ -152,6 +152,10 @@ class AugmentedModel extends AbstractAugmented
                         $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
                         $value = data_get($this->data, "{$nestedFieldPrefix}.{$key}");
 
+                        if ($this->data->hasSupplement($field->handle())) {
+                            $value = $this->data->getSupplement($field->handle());
+                        }
+
                         return [$key => $value];
                     });
 
@@ -187,6 +191,10 @@ class AugmentedModel extends AbstractAugmented
         $key = Str::after($handle, "{$nestedFieldPrefix}_");
 
         $value = data_get($this->data, "{$nestedFieldPrefix}.{$key}");
+
+        if ($this->data->hasSupplement($handle)) {
+            $value = $this->data->getSupplement($handle);
+        }
 
         return new Value(
             $value,
