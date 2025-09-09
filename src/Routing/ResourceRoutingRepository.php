@@ -2,6 +2,8 @@
 
 namespace StatamicRadPack\Runway\Routing;
 
+use Illuminate\Support\Arr;
+
 class ResourceRoutingRepository
 {
     protected $substitutionsById = [];
@@ -9,13 +11,16 @@ class ResourceRoutingRepository
 
     public function findByUri(string $uri)
     {
-        $runwayUri = RunwayUri::where('uri', $uri)->first();
-
-        if (! $runwayUri) {
-            return null;
+        if ($substitute = Arr::get($this->substitutionsByUri, $uri)) {
+            return $substitute?->routingModel();
         }
 
-        $model = $this->substitutionsById[$runwayUri->model->reference()] ?? $runwayUri->model;
+        $runwayUri = RunwayUri::firstWhere('uri', $uri);
+        $model = $runwayUri?->model;
+
+        if (! $runwayUri || ! $model) {
+            return null;
+        }
 
         if ($model->runwayResource()->hasPublishStates() && $model->publishedStatus() !== 'published') {
             return null;
@@ -32,6 +37,8 @@ class ResourceRoutingRepository
 
     public function applySubstitutions($items)
     {
-        throw new \Exception('Method not implemented. Models are substitited in findByUri.');
+        return $items->map(function ($item) {
+            return $this->substitutionsById[$item->reference()] ?? $item;
+        });
     }
 }

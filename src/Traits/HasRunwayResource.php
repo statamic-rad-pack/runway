@@ -20,6 +20,7 @@ use StatamicRadPack\Runway\Data\HasAugmentedInstance;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 use StatamicRadPack\Runway\Relationships;
 use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Routing\ResourceRoutingRepository;
 use StatamicRadPack\Runway\Runway;
 
 trait HasRunwayResource
@@ -54,6 +55,10 @@ trait HasRunwayResource
 
     public function scopeRunway(Builder $query)
     {
+        $query->afterQuery(function ($models) {
+            return app(ResourceRoutingRepository::class)->applySubstitutions($models);
+        });
+
         return $query;
     }
 
