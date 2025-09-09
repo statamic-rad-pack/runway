@@ -23,7 +23,10 @@ class ModelRepository
             return null;
         }
 
-        if ($model->runwayResource()->hasPublishStates() && $model->publishedStatus() !== 'published') {
+        if (
+            $model->runwayResource()->hasPublishStates()
+            && $model->publishedStatus() !== 'published'
+        ) {
             return null;
         }
 
