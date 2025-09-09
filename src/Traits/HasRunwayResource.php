@@ -55,10 +55,6 @@ trait HasRunwayResource
 
     public function scopeRunway(Builder $query)
     {
-        $query->afterQuery(function ($models) {
-            return app(ResourceRoutingRepository::class)->applySubstitutions($models);
-        });
-
         return $query;
     }
 

@@ -17,6 +17,7 @@ use Statamic\Statamic;
 use StatamicRadPack\Runway\Exceptions\PublishedColumnMissingException;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
+use StatamicRadPack\Runway\Routing\ResourceRoutingRepository;
 
 class Resource
 {
@@ -39,7 +40,11 @@ class Resource
 
     public function newEloquentQuery(): Builder
     {
-        return $this->model->newQuery()->runway();
+        return $this->model->newQuery()
+            ->runway()
+            ->afterQuery(function ($models) {
+                return app(ResourceRoutingRepository::class)->applySubstitutions($models);
+            });
     }
 
     public function newEloquentQueryBuilderWithEagerLoadedRelationships(): Builder
