@@ -24,8 +24,7 @@ use StatamicRadPack\Runway\Runway;
 
 trait HasRunwayResource
 {
-    use ContainsSupplementalData;
-    use FluentlyGetsAndSets, HasAugmentedInstance, Revisable;
+    use ContainsSupplementalData, FluentlyGetsAndSets, HasAugmentedInstance, Revisable;
     use ResolvesValues {
         resolveGqlValue as traitResolveGqlValue;
     }

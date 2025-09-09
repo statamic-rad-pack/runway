@@ -258,10 +258,10 @@ class ServiceProvider extends AddonServiceProvider
     protected function bootDataRepository(): self
     {
         if (Runway::usesRouting()) {
-            $this->app->singleton(\StatamicRadPack\Runway\ModelRepository::class);
+            $this->app->singleton(ModelRepository::class);
 
             $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
-                ->setRepository('runway-resources', \StatamicRadPack\Runway\ModelRepository::class);
+                ->setRepository('runway-resources', ModelRepository::class);
 
             StaticWarm::hook('additional', function ($urls, $next) {
                 return $next($urls->merge(RunwayUri::select('uri')->pluck('uri')->all()));
