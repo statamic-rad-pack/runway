@@ -307,10 +307,13 @@ class Resource
         return $this->searchIndex() !== null;
     }
 
-    // todo: make this a real config option
-    public function previewTargets()
+    public function previewTargets(): Collection
     {
-        return collect($this->defaultPreviewTargets());
+        $targets = $this->config()->get('preview_targets', $this->defaultPreviewTargets());
+
+        return collect($targets)->map(function ($target) {
+            return $target + ['refresh' => $target['refresh'] ?? true];
+        });
     }
 
     private function defaultPreviewTargets(): array
