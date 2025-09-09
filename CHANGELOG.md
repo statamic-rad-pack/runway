@@ -1,5 +1,13 @@
 # Changelog
 
+## v9.0.0-alpha.3 (2025-09-09)
+
+### What's new
+- Live Preview support #721 by @duncanmcclean
+- The Runway tag now uses the `runway` query scope #722 by @duncanmcclean
+
+
+
 ## v9.0.0-alpha.2 (2025-09-01)
 
 ### What's changed
