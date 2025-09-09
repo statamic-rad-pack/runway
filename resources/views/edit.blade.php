@@ -26,5 +26,7 @@
         initial-listing-url="{{ cp_route('runway.index', ['resource' => $resource->handle()]) }}"
         :initial-item-actions="{{ json_encode($itemActions) }}"
         item-action-url="{{ cp_route('runway.models.actions.run', ['resource' => $resource->handle()]) }}"
+        live-preview-url="{{ $livePreviewUrl }}"
+        :preview-targets="{{ json_encode($previewTargets) }}"
     ></runway-publish-form>
 @endsection

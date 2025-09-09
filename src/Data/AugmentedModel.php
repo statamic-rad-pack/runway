@@ -94,7 +94,9 @@ class AugmentedModel extends AbstractAugmented
 
     protected function getFromData($handle)
     {
-        return $this->supplements->get($handle) ?? data_get($this->data, $handle);
+        // todo: can this be more like the original?
+
+        return $this->supplements->get($handle) ?? data_get($this->data->supplements(), $handle) ?? data_get($this->data, $handle);
     }
 
     public function get($handle): Value

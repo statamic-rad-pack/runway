@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Contracts\Data\Augmented;
 use Statamic\Contracts\Revisions\Revision;
+use Statamic\Data\ContainsSupplementalData;
+use Statamic\Facades\Antlers;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
 use Statamic\Fieldtypes\Section;
@@ -19,10 +21,12 @@ use StatamicRadPack\Runway\Data\HasAugmentedInstance;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 use StatamicRadPack\Runway\Relationships;
 use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Routing\ResourceRoutingRepository;
 use StatamicRadPack\Runway\Runway;
 
 trait HasRunwayResource
 {
+    use ContainsSupplementalData;
     use FluentlyGetsAndSets, HasAugmentedInstance, Revisable;
     use ResolvesValues {
         resolveGqlValue as traitResolveGqlValue;
@@ -150,6 +154,18 @@ trait HasRunwayResource
     public function runwayUpdateUrl(): string
     {
         return cp_route('runway.update', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
+
+    public function livePreviewUrl(): ?string
+    {
+        if (! $this->runwayResource()->hasRouting()) {
+            return null;
+        }
+
+        return cp_route('runway.preview.edit', [
             'resource' => $this->runwayResource()->handle(),
             'model' => $this->{$this->runwayResource()->routeKey()},
         ]);
@@ -337,5 +353,38 @@ trait HasRunwayResource
     public function updateLastModified($user = false): self
     {
         return $this;
+    }
+
+    // todo: move into the other trait?
+    public function previewTargets()
+    {
+        return $this->runwayResource()->previewTargets()->map(function ($target) {
+            return [
+                'label' => $target['label'],
+                'format' => $target['format'],
+                'url' => $this->resolvePreviewTargetUrl($target['format']),
+            ];
+        });
+    }
+
+    private function resolvePreviewTargetUrl($format)
+    {
+        if (! \Statamic\Support\Str::contains($format, '{{')) {
+            $format = preg_replace_callback('/{\s*([a-zA-Z0-9_\-\:\.]+)\s*}/', function ($match) {
+                return "{{ {$match[1]} }}";
+            }, $format);
+        }
+
+        return (string) Antlers::parse($format, array_merge($this->routeData(), [
+            'config' => config()->all(),
+            'uri' => $this->uri(),
+            'url' => $this->url(),
+            'permalink' => $this->absoluteUrl(),
+        ]));
+    }
+
+    public function repository()
+    {
+        return app(ResourceRoutingRepository::class);
     }
 }

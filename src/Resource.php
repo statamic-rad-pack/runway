@@ -307,6 +307,23 @@ class Resource
         return $this->searchIndex() !== null;
     }
 
+    // todo: make this a real config option
+    public function previewTargets()
+    {
+        return collect($this->defaultPreviewTargets());
+    }
+
+    private function defaultPreviewTargets(): array
+    {
+        return [
+            [
+                'label' => 'Model',
+                'format' => '{permalink}',
+                'refresh' => true,
+            ],
+        ];
+    }
+
     public function toArray(): array
     {
         return [

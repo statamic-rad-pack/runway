@@ -258,6 +258,8 @@ class ServiceProvider extends AddonServiceProvider
     protected function bootDataRepository(): self
     {
         if (Runway::usesRouting()) {
+            $this->app->singleton(Routing\ResourceRoutingRepository::class);
+
             $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
                 ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
 

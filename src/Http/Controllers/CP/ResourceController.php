@@ -150,6 +150,8 @@ class ResourceController extends CpController
             'itemActions' => Action::for($model, ['resource' => $resource->handle(), 'view' => 'form']),
             'revisionsEnabled' => $resource->revisionsEnabled(),
             'hasWorkingCopy' => $model->hasWorkingCopy(),
+            'livePreviewUrl' => $model->livePreviewUrl(),
+            'previewTargets' => $resource->previewTargets()->all(),
         ];
 
         if ($request->wantsJson()) {
