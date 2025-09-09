@@ -39,7 +39,11 @@ class Resource
 
     public function newEloquentQuery(): Builder
     {
-        return $this->model->newQuery()->runway();
+        return $this->model->newQuery()
+            ->runway()
+            ->afterQuery(function ($models) {
+                return app(ModelRepository::class)->applySubstitutions($models);
+            });
     }
 
     public function newEloquentQueryBuilderWithEagerLoadedRelationships(): Builder
@@ -305,6 +309,26 @@ class Resource
     public function hasSearchIndex()
     {
         return $this->searchIndex() !== null;
+    }
+
+    public function previewTargets(): Collection
+    {
+        $targets = $this->config()->get('preview_targets', $this->defaultPreviewTargets());
+
+        return collect($targets)->map(function ($target) {
+            return $target + ['refresh' => $target['refresh'] ?? true];
+        });
+    }
+
+    private function defaultPreviewTargets(): array
+    {
+        return [
+            [
+                'label' => 'Model',
+                'format' => '{permalink}',
+                'refresh' => true,
+            ],
+        ];
     }
 
     public function toArray(): array

@@ -86,89 +86,104 @@
             :errors="errors"
             :track-dirty-state="trackDirtyState"
         >
-            <PublishComponents />
+            <LivePreview
+                :enabled="isPreviewing"
+                :url="livePreviewUrl"
+                :targets="previewTargets"
+                @opened="openLivePreview"
+                @closed="closeLivePreview"
+            >
+                <PublishComponents />
 
-            <PublishTabs>
-                <template v-if="resourceHasRoutes || publishStatesEnabled || revisionsEnabled" #actions>
-                    <div class="space-y-6">
-                        <!-- Visit URL Buttons -->
-                        <div v-if="resourceHasRoutes">
-                            <div class="flex flex-wrap gap-4" v-if="showVisitUrlButton">
-                                <Button
-                                    :href="permalink"
-                                    :text="__('Visit URL')"
-                                    class="flex-1"
-                                    icon="external-link"
-                                    target="_blank"
-                                    v-if="showVisitUrlButton"
-                                />
+                <PublishTabs>
+                    <template v-if="resourceHasRoutes || publishStatesEnabled || revisionsEnabled" #actions>
+                        <div class="space-y-6">
+                            <!-- Visit URL Buttons -->
+                            <div v-if="resourceHasRoutes">
+                                <div class="flex flex-wrap gap-4" v-if="showLivePreviewButton || showVisitUrlButton">
+                                    <Button
+                                        :text="__('Live Preview')"
+                                        class="flex-1"
+                                        icon="live-preview"
+                                        @click="openLivePreview"
+                                        v-if="showLivePreviewButton"
+                                    />
+                                    <Button
+                                        :href="permalink"
+                                        :text="__('Visit URL')"
+                                        class="flex-1"
+                                        icon="external-link"
+                                        target="_blank"
+                                        v-if="showVisitUrlButton"
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Published Switch -->
-                        <Panel v-if="publishStatesEnabled && !revisionsEnabled" class="flex justify-between px-5 py-3">
-                            <Heading :text="__('Published')" />
-                            <Switch
-                                :model-value="published"
-                                :read-only="!canManagePublishState"
-                                @update:model-value="setFieldValue('published', $event)"
-                            />
-                        </Panel>
-
-                        <!-- Revisions -->
-                        <Panel v-if="revisionsEnabled && !isCreating">
-                            <PanelHeader class="flex items-center justify-between">
-                                <Heading :text="__('Revisions')" />
-                                <Button
-                                    @click="showRevisionHistory = true"
-                                    icon="history"
-                                    :text="__('View History')"
-                                    size="xs"
-                                    class="-me-4"
+                            <!-- Published Switch -->
+                            <Panel v-if="publishStatesEnabled && !revisionsEnabled" class="flex justify-between px-5 py-3">
+                                <Heading :text="__('Published')" />
+                                <Switch
+                                    :model-value="published"
+                                    :read-only="!canManagePublishState"
+                                    @update:model-value="setFieldValue('published', $event)"
                                 />
-                            </PanelHeader>
-                            <Card class="space-y-2">
-                                <Subheading v-if="published" class="flex items-center gap-2">
-                                    <Icon name="checkmark" class="text-green-600" />
-                                    {{ __('Model has a published version') }}
-                                </Subheading>
-                                <Subheading v-else class="flex items-center gap-2 text-yellow-600">
-                                    <Icon name="warning-diamond" />
-                                    {{ __('Model has not been published') }}
-                                </Subheading>
-                                <Subheading v-if="!isWorkingCopy && published" class="flex items-center gap-2">
-                                    <Icon name="checkmark" class="text-green-600" />
-                                    {{ __('This is the published version') }}
-                                </Subheading>
-                                <Subheading v-if="isDirty" class="flex items-center gap-2 text-yellow-600">
-                                    <Icon name="warning-diamond" />
-                                    {{ __('Unsaved changes') }}
-                                </Subheading>
-                            </Card>
-                        </Panel>
-                    </div>
+                            </Panel>
+
+                            <!-- Revisions -->
+                            <Panel v-if="revisionsEnabled && !isCreating">
+                                <PanelHeader class="flex items-center justify-between">
+                                    <Heading :text="__('Revisions')" />
+                                    <Button
+                                        @click="showRevisionHistory = true"
+                                        icon="history"
+                                        :text="__('View History')"
+                                        size="xs"
+                                        class="-me-4"
+                                    />
+                                </PanelHeader>
+                                <Card class="space-y-2">
+                                    <Subheading v-if="published" class="flex items-center gap-2">
+                                        <Icon name="checkmark" class="text-green-600" />
+                                        {{ __('Model has a published version') }}
+                                    </Subheading>
+                                    <Subheading v-else class="flex items-center gap-2 text-yellow-600">
+                                        <Icon name="warning-diamond" />
+                                        {{ __('Model has not been published') }}
+                                    </Subheading>
+                                    <Subheading v-if="!isWorkingCopy && published" class="flex items-center gap-2">
+                                        <Icon name="checkmark" class="text-green-600" />
+                                        {{ __('This is the published version') }}
+                                    </Subheading>
+                                    <Subheading v-if="isDirty" class="flex items-center gap-2 text-yellow-600">
+                                        <Icon name="warning-diamond" />
+                                        {{ __('Unsaved changes') }}
+                                    </Subheading>
+                                </Card>
+                            </Panel>
+                        </div>
+                    </template>
+                </PublishTabs>
+
+                <template #buttons>
+                    <Button
+                        v-if="!readOnly"
+                        size="sm"
+                        :variant="revisionsEnabled ? 'default' : 'primary'"
+                        :disabled="!canSave"
+                        @click.prevent="save"
+                        :text="saveText"
+                    ></Button>
+
+                    <Button
+                        v-if="revisionsEnabled"
+                        size="sm"
+                        variant="primary"
+                        :disabled="!canPublish"
+                        @click="confirmingPublish = true"
+                        :text="publishButtonText"
+                    />
                 </template>
-            </PublishTabs>
-
-            <template #buttons>
-                <Button
-                    v-if="!readOnly"
-                    size="sm"
-                    :variant="revisionsEnabled ? 'default' : 'primary'"
-                    :disabled="!canSave"
-                    @click.prevent="save"
-                    :text="saveText"
-                ></Button>
-
-                <Button
-                    v-if="revisionsEnabled"
-                    size="sm"
-                    variant="primary"
-                    :disabled="!canPublish"
-                    @click="confirmingPublish = true"
-                    :text="publishButtonText"
-                />
-            </template>
+            </LivePreview>
         </PublishContainer>
 
         <stack
@@ -297,6 +312,8 @@ export default {
         createAnotherUrl: String,
         initialListingUrl: String,
         resourceHasRoutes: Boolean,
+        livePreviewUrl: String,
+        previewTargets: Array,
     },
 
     data() {
@@ -310,6 +327,8 @@ export default {
             visibleValues: {},
             meta: clone(this.initialMeta),
             isWorkingCopy: this.initialIsWorkingCopy,
+            isPreviewing: false,
+            tabsVisible: true,
             state: 'new',
             revisionMessage: null,
             showRevisionHistory: null,
@@ -371,6 +390,10 @@ export default {
 
         listingUrl() {
             return `${this.initialListingUrl}`;
+        },
+
+        showLivePreviewButton() {
+            return !this.isCreating && this.isBase && this.livePreviewUrl;
         },
 
         showVisitUrlButton() {
@@ -526,6 +549,21 @@ export default {
             if (this.canPublish) {
                 this.confirmingPublish = true;
             }
+        },
+
+        openLivePreview() {
+            this.tabsVisible = false;
+            this.$wait(200)
+                .then(() => {
+                    this.isPreviewing = true;
+                    return this.$wait(300);
+                })
+                .then(() => (this.tabsVisible = true));
+        },
+
+        closeLivePreview() {
+            this.isPreviewing = false;
+            this.tabsVisible = true;
         },
 
         publishActionCompleted({ published, isWorkingCopy, response }) {

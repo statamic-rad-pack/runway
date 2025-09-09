@@ -1,14 +1,13 @@
 <?php
 
-namespace StatamicRadPack\Runway\Tests\Routing;
+namespace StatamicRadPack\Runway\Tests;
 
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Data;
 use StatamicRadPack\Runway\Routing\RoutingModel;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
-use StatamicRadPack\Runway\Tests\TestCase;
 
-class ResourceRoutingRepositoryTest extends TestCase
+class ModelRepositoryTest extends TestCase
 {
     #[Test]
     public function can_find_by_uri()

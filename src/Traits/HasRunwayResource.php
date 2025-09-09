@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Contracts\Data\Augmented;
 use Statamic\Contracts\Revisions\Revision;
+use Statamic\Data\ContainsSupplementalData;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
 use Statamic\Fieldtypes\Section;
@@ -23,7 +24,7 @@ use StatamicRadPack\Runway\Runway;
 
 trait HasRunwayResource
 {
-    use FluentlyGetsAndSets, HasAugmentedInstance, Revisable;
+    use ContainsSupplementalData, FluentlyGetsAndSets, HasAugmentedInstance, Revisable;
     use ResolvesValues {
         resolveGqlValue as traitResolveGqlValue;
     }
@@ -150,6 +151,18 @@ trait HasRunwayResource
     public function runwayUpdateUrl(): string
     {
         return cp_route('runway.update', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
+
+    public function livePreviewUrl(): ?string
+    {
+        if (! $this->runwayResource()->hasRouting()) {
+            return null;
+        }
+
+        return cp_route('runway.preview.edit', [
             'resource' => $this->runwayResource()->handle(),
             'model' => $this->{$this->runwayResource()->routeKey()},
         ]);
