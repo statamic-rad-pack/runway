@@ -48,7 +48,7 @@ class RunwayTag extends Tags
 
     protected function query(): Builder
     {
-        $query = $this->resource->query()
+        $query = $this->resource->newEloquentQuery()
             ->when(
                 $this->params->get('status'),
                 fn ($query, $status) => $query->whereStatus($status),
