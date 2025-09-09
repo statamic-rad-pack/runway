@@ -2,11 +2,13 @@
 
 namespace StatamicRadPack\Runway\Routing\Traits;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Statamic\Facades\Antlers;
 use Statamic\StaticCaching\Cacher;
 use Statamic\Support\Arr;
 use StatamicRadPack\Runway\Routing\MorphOneWithStringKey;
+use StatamicRadPack\Runway\Routing\ResourceRoutingRepository;
 use StatamicRadPack\Runway\Routing\Routable;
 use StatamicRadPack\Runway\Routing\RoutingModel;
 use StatamicRadPack\Runway\Routing\RunwayUri;
@@ -104,5 +106,37 @@ trait RunwayRoutes
                 $model->runwayUri()->delete();
             }
         });
+    }
+
+    public function previewTargets(): Collection
+    {
+        return $this->runwayResource()->previewTargets()->map(function (array $target) {
+            return [
+                'label' => $target['label'],
+                'format' => $target['format'],
+                'url' => $this->resolvePreviewTargetUrl($target['format']),
+            ];
+        });
+    }
+
+    private function resolvePreviewTargetUrl(string $format): string
+    {
+        if (! \Statamic\Support\Str::contains($format, '{{')) {
+            $format = preg_replace_callback('/{\s*([a-zA-Z0-9_\-\:\.]+)\s*}/', function ($match) {
+                return "{{ {$match[1]} }}";
+            }, $format);
+        }
+
+        return (string) Antlers::parse($format, array_merge($this->routeData(), [
+            'config' => config()->all(),
+            'uri' => $this->uri(),
+            'url' => $this->url(),
+            'permalink' => $this->absoluteUrl(),
+        ]));
+    }
+
+    public function repository(): ResourceRoutingRepository
+    {
+        return app(ResourceRoutingRepository::class);
     }
 }
