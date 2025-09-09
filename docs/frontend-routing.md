@@ -125,3 +125,22 @@ By default, Runway will use the `runway_uris` table to store the "URI Cache". If
 
 'uris_table' => 'runway_uris',
 ```
+
+
+## Live Preview
+Statamic's Live Preview gives you the ability to see what your model will look like in real time as you write and edit.
+
+By default, you'll be able to preview your model at your resource's configured route. However, you are free to customize the available preview targets, just like you can with collections.
+
+```php
+// config/runway.php
+
+'preview_targets' => [
+    ['label' => 'Model', 'url' => '{permalink}'],
+    ['label' => 'Index', 'url' => '/products']
+],
+```
+
+You may use the model's variables in the URL, just like defining a route.
+
+You can learn more about preview targets in the [Statamic documentation](https://statamic.dev/live-preview#preview-targets).
