@@ -45,6 +45,22 @@ class AugmentedModelTest extends TestCase
     }
 
     #[Test]
+    public function it_gets_supplemental_values()
+    {
+        $post = Post::factory()->create([
+            'title' => 'My First Post',
+            'body' => 'Blah blah blah...',
+        ]);
+
+        $post->setSupplement('title', 'My Supplemental Title');
+
+        $augmented = new AugmentedModel($post);
+
+        $this->assertEquals('My Supplemental Title', $augmented->get('title')->value()); // Supplemental value
+        $this->assertEquals('Blah blah blah...', $augmented->get('body')->value()); // Non-supplemental value
+    }
+
+    #[Test]
     public function it_gets_nested_values_via_nested_field_prefix()
     {
         $post = Post::factory()->create([
@@ -64,6 +80,27 @@ class AugmentedModelTest extends TestCase
     }
 
     #[Test]
+    public function it_gets_nested_supplemental_values_via_nested_field_prefix()
+    {
+        $post = Post::factory()->create([
+            'values' => [
+                'alt_title' => 'Alternative Title...',
+                'alt_body' => 'This is a **great** post! You should *read* it.',
+            ],
+        ]);
+
+        $post->setSupplement('values_alt_title', 'Supplemental Title...');
+
+        $augmented = new AugmentedModel($post);
+
+        $this->assertIsArray($augmented->get('values')->value());
+
+        // Eg. values:alt_title, values:alt_body
+        $this->assertEquals('Supplemental Title...', $augmented->get('values')->value()['alt_title']->value());
+        $this->assertEquals('<p>This is a <strong>great</strong> post! You should <em>read</em> it.</p>', trim($augmented->get('values')->value()['alt_body']->value()));
+    }
+
+    #[Test]
     public function it_gets_nested_values_via_nested_field_handle()
     {
         $post = Post::factory()->create([
@@ -79,6 +116,27 @@ class AugmentedModelTest extends TestCase
 
         // Eg. values_alt_title, values_alt_body
         $this->assertEquals('Alternative Title...', $augmented->get('values_alt_title')->value());
+        $this->assertEquals('<p>This is a <strong>great</strong> post! You should <em>read</em> it.</p>', trim($augmented->get('values_alt_body')->value()));
+    }
+
+    #[Test]
+    public function it_gets_nested_supplemental_values_via_nested_field_handle()
+    {
+        $post = Post::factory()->create([
+            'values' => [
+                'alt_title' => 'Alternative Title...',
+                'alt_body' => 'This is a **great** post! You should *read* it.',
+            ],
+        ]);
+
+        $post->setSupplement('values_alt_title', 'Supplemental Title...');
+
+        $augmented = new AugmentedModel($post);
+
+        $this->assertIsArray($augmented->get('values')->value());
+
+        // Eg. values_alt_title, values_alt_body
+        $this->assertEquals('Supplemental Title...', $augmented->get('values_alt_title')->value());
         $this->assertEquals('<p>This is a <strong>great</strong> post! You should <em>read</em> it.</p>', trim($augmented->get('values_alt_body')->value()));
     }
 
