@@ -94,7 +94,10 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
 
     public function newAugmentedInstance(): Augmented
     {
-        return (new AugmentedModel($this->model))
-            ->supplement($this->supplements());
+        foreach ($this->supplements as $key => $value) {
+            $this->model->setSupplement($key, $value);
+        }
+
+        return new AugmentedModel($this->model);
     }
 }

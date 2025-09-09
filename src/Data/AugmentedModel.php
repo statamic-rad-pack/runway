@@ -15,23 +15,12 @@ use StatamicRadPack\Runway\Runway;
 class AugmentedModel extends AbstractAugmented
 {
     protected $data;
-
     protected $resource;
 
-    protected $supplements;
-
-    public function __construct($model)
+    public function __construct($data)
     {
-        $this->data = $model;
-        $this->resource = Runway::findResourceByModel($model);
-        $this->supplements = collect();
-    }
-
-    public function supplement(Collection $data)
-    {
-        $this->supplements = $data;
-
-        return $this;
+        $this->data = $data;
+        $this->resource = Runway::findResourceByModel($data);
     }
 
     public function keys()
@@ -94,9 +83,15 @@ class AugmentedModel extends AbstractAugmented
 
     protected function getFromData($handle)
     {
-        // todo: can this be more like the original?
+        $value = $this->data->getAttribute($handle);
 
-        return $this->supplements->get($handle) ?? data_get($this->data->supplements(), $handle) ?? data_get($this->data, $handle);
+        if (method_exists($this->data, 'getSupplement')) {
+            $value = $this->data->hasSupplement($handle)
+                ? $this->data->getSupplement($handle)
+                : $value;
+        }
+
+        return $value;
     }
 
     public function get($handle): Value
