@@ -5,7 +5,7 @@
     },
     "dependencies": {
         "striptags": "^3.2.0",
-        "@statamic/cms": "file:./vendor/statamic/cms/resources/js/package"
+        "@statamic/cms": "file:./vendor/statamic/cms/resources/dist-package"
     },
     "devDependencies": {
         "laravel-vite-plugin": "^1.2.0",
