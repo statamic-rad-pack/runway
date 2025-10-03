@@ -1,7 +1,17 @@
 ---
 title: Introduction
+description: Eloquently manage your Eloquent models in Statamic with Runway.
 table_of_contents: false
 ---
+
+<Columns cols={2}>
+  <Card title="Install" href="/installation">
+    Get up and running with Runway in your Statamic site.
+  </Card>
+  <Card title="Resources" href="/resources">
+    Learn more about Resources, the core concept behind Runway.
+  </Card>
+</Columns>
 
 ## Control Panel integration
 
@@ -55,7 +65,7 @@ If you're a GraphQL fan, you're now able to fetch your models via GraphQL. Runwa
 }
 ```
 
-### REST API
+## REST API
 
 If you don't like GraphQL and would prefer plain old REST, you can do that too. Runway easily integrates with Statamic's REST API.
 
@@ -69,7 +79,7 @@ If you don't like GraphQL and would prefer plain old REST, you can do that too. 
 ],
 ```
 
-### Search
+## Search
 
 Runway integrates with Statamic's [Search](https://statamic.dev/search) feature, allowing you to search your Eloquent models in the Control Panel and via the `{{ search:results }}` tag. It's just as simple as adjusting your config file.
 
