@@ -1,0 +1,92 @@
+{
+    "$schema": "https://mintlify.com/docs.json",
+    "theme": "mint",
+    "name": "Runway",
+    "colors": {
+        "primary": "#6F100B",
+        "light": "#07C983",
+        "dark": "#15803D"
+    },
+    "favicon": "/favicon.png",
+    "navigation": {
+        "tabs": [
+            {
+                "tab": "Documentation",
+                "groups": [
+                    {
+                        "group": "Getting Started",
+                        "pages": [
+                            "index",
+                            "installation",
+                            "upgrade-guides",
+                            "resources"
+                        ]
+                    },
+                    {
+                        "group": "Features",
+                        "pages": [
+                            "blueprints",
+                            "control-panel",
+                            "relationships",
+                            "frontend-routing",
+                            "templating",
+                            "graphql",
+                            "rest-api",
+                            "search",
+                            "revisions"
+                        ]
+                    },
+                    {
+                        "group": "Knowledge Base",
+                        "pages": [
+                            "kb-articles/multisite"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "global": {
+            "anchors": [
+                {
+                    "anchor": "GitHub",
+                    "href": "https://github.com/statamic-rad-pack/runway",
+                    "icon": "github"
+                }
+            ]
+        }
+    },
+    "logo": {
+        "light": "/logo/light.svg",
+        "dark": "/logo/dark.svg"
+    },
+    "navbar": {
+        "links": [
+            {
+                "label": "GitHub",
+                "href": "https://github.com/statamic-rad-pack/runway"
+            }
+        ],
+        "primary": {
+            "type": "button",
+            "label": "Dashboard",
+            "href": "https://dashboard.mintlify.com"
+        }
+    },
+    "contextual": {
+        "options": [
+            "copy",
+            "view",
+            "chatgpt",
+            "claude",
+            "perplexity",
+            "mcp",
+            "cursor",
+            "vscode"
+        ]
+    },
+    "footer": {
+        "socials": {
+            "github": "https://github.com/statamic-rad-pack/runway"
+        }
+    }
+}
