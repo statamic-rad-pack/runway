@@ -1,21 +1,29 @@
 ---
 title: Introduction
-table_of_contents: false
+description: Eloquently manage your Eloquent models in Statamic with Runway.
+"og:image": "/images/social-image.png"
 ---
+
+<Columns cols={2}>
+  <Card title="Install" href="/installation" icon="terminal">
+    Get up and running with Runway in your Statamic site.
+  </Card>
+  <Card title="Resources" href="/resources" icon="database">
+    Learn more about Resources, the core concept behind Runway.
+  </Card>
+</Columns>
 
 ## Control Panel integration
 
 Runway fits right into the Control Panel - enabling you to create, edit and view your models. In most cases, you'll not notice the difference between an entry in the CP and an Eloquent model in the CP.
 
--   [Review documentation](https://runway.duncanmcclean.com/control-panel)
+-   [Review documentation](/control-panel)
 
 ## Front-end routing
 
 Need to show your models on the front-end of your site? No problem - Runway's got that under control. Simply tell Runway the route you'd like to use and it'll serve up the front-end for you.
 
-```php
-// config/runway.php
-
+```php config/runway.php
 return [
     'resources' => [
         \App\Models\Product::class => [
@@ -25,7 +33,7 @@ return [
 ];
 ```
 
--   [Review documentation](https://runway.duncanmcclean.com/frontend-routing)
+-   [Review documentation](/frontend-routing)
 
 ## Antlers templating
 
@@ -57,11 +65,11 @@ If you're a GraphQL fan, you're now able to fetch your models via GraphQL. Runwa
 }
 ```
 
-### REST API
+## REST API
 
 If you don't like GraphQL and would prefer plain old REST, you can do that too. Runway easily integrates with Statamic's REST API.
 
-```php
+```php config/runway.php
 'resources' => [
     'collections' => true,
     // ...
@@ -71,13 +79,11 @@ If you don't like GraphQL and would prefer plain old REST, you can do that too. 
 ],
 ```
 
-### Search
+## Search
 
 Runway integrates with Statamic's [Search](https://statamic.dev/search) feature, allowing you to search your Eloquent models in the Control Panel and via the `{{ search:results }}` tag. It's just as simple as adjusting your config file.
 
-```php
-// config/statamic/search.php
-
+```php config/statamic/search.php
 'indexes' => [
     'myindex' => [
         'driver' => 'local',
@@ -85,18 +91,3 @@ Runway integrates with Statamic's [Search](https://statamic.dev/search) feature,
     ],
 ],
 ```
-
-<div class="not-prose testimonial">
-    <div class="testimonial-body">
-        “With Runway I was able to quickly make a beautiful admin panel that administrators can use. If Runway didn't exist, it would have taken me a week or two to build something that wasn't quite as nice. Thanks for saving me days and days of work Duncan!”
-    </div>
-    <div class="testimonial-person">
-        <a href="https://silentz.co" target="_blank">
-            <img src="/img/testimonials/erin.jpeg">
-            <div>
-                <p>Erin Dalzell</p>
-                <span>Certified Statamic Partner</span>
-            </div>
-        </a>
-    </div>
-</div>

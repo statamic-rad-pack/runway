@@ -1,18 +1,15 @@
 ---
 title: Search
+description: Runway integrates with Statamic's Search feature, allowing you to search your Eloquent models in the Control Panel and via the `{{ search:results }}` tag.
 ---
-
-Runway integrates with [Statamic's Search functionality](https://statamic.dev/search#overview), allowing you to search your Eloquent models in the Control Panel and via the `{{ search:results }}` tag. It's as simple as adjusting your config file.
 
 ## Configuration
 
-```php
-// config/statamic/search.php
-
+```php config/statamic/search.php
 'indexes' => [
     'myindex' => [
         'driver' => 'local',
-        'searchables' => ['collection:blog', 'runway:order'], // [tl! add]
+        'searchables' => ['collection:blog', 'runway:order'], // [!code ++]
     ],
 ],
 ```
@@ -23,7 +20,7 @@ You can scope the resources you'd like to be searchable, using the `runway:{reso
 
 By default, when displaying search results, Runway will use the first listable column as the 'title field'. If you'd like to change this, add the `title_field` option to your resource's config:
 
-```php
+```php config/runway.php
 'resources' => [
 	\App\Models\Order::class => [
 	    'name' => 'Orders',
