@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Statamic\Fields\Field;
+use Statamic\Fieldtypes\Revealer;
 use Statamic\Fieldtypes\Section;
 use Statamic\Support\Arr;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
@@ -181,7 +182,7 @@ trait PreparesModels
 
     protected function shouldSaveField(Field $field): bool
     {
-        if ($field->fieldtype() instanceof Section) {
+        if ($field->fieldtype() instanceof Section || $field->fieldtype() instanceof Revealer) {
             return false;
         }
 
