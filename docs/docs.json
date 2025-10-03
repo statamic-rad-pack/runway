@@ -7,7 +7,7 @@
         "light": "#FF2B20",
         "dark": "#FF2B20"
     },
-    "favicon": "/favicon.png",
+    "favicon": "/images/favicon.png",
     "navigation": {
         "groups": [
             {
@@ -43,16 +43,16 @@
                 ]
             },
             {
-                "group": "Knowledge Base",
+                "group": "Guides",
                 "pages": [
-                    "kb-articles/multisite"
+                    "guides/multisite"
                 ]
             }
         ]
     },
     "logo": {
-        "light": "/logo/light.svg",
-        "dark": "/logo/dark.svg"
+        "light": "/images/logo/light.svg",
+        "dark": "/images/logo/dark.svg"
     },
     "navbar": {
         "links": [
@@ -60,11 +60,6 @@
                 "label": "GitHub",
                 "href": "https://github.com/statamic-rad-pack/runway",
                 "icon": "github"
-            },
-            {
-                "label": "Statamic Marketplace",
-                "href": "https://statamic.com/addons/rad-pack/runway",
-                "icon": "/images/statamic-mark.svg"
             }
         ]
     },
@@ -89,6 +84,10 @@
         {
             "source": "/kb-articles/supported-fieldtypes",
             "destination": "/blueprints"
+        },
+        {
+            "source": "/kb-articles/multisite",
+            "destination": "/guides/multisite"
         },
         {
             "source": "/fieldtypes",

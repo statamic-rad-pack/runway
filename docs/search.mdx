@@ -6,13 +6,11 @@ Runway integrates with [Statamic's Search functionality](https://statamic.dev/se
 
 ## Configuration
 
-```php
-// config/statamic/search.php
-
+```php config/statamic/search.php
 'indexes' => [
     'myindex' => [
         'driver' => 'local',
-        'searchables' => ['collection:blog', 'runway:order'], // [tl! add]
+        'searchables' => ['collection:blog', 'runway:order'], // [!code ++]
     ],
 ],
 ```

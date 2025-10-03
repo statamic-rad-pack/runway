@@ -1,5 +1,5 @@
 ---
-title: 'Upgrade Guide: v7.x to v8.0'
+title: 'Upgrading from v7.x to v8.0'
 sidebarTitle: 'v7.x to v8.0'
 ---
 
@@ -46,8 +46,8 @@ To work around this, v8 introduces some changes around how nested fields are con
 1. Instead of using `->` to separate the column name and the JSON key in field handles, you should now use an underscore:
     ```yaml
     -
-      handle: address->street_name # [tl! remove]
-      handle: address_street_name # [tl! add]
+      handle: address->street_name # [!code --]
+      handle: address_street_name # [!code ++]
       field:
         type: text
         display: 'Street Name'
@@ -75,7 +75,7 @@ The `cp_icon` configuration option has been removed in Runway 8, in favour of be
 'resources' => [
 	\App\Models\Order::class => [
         'name' => 'Orders',
-        'cp_icon' => 'date', // [tl! --]
+        'cp_icon' => 'date', // [!code --]
 	],
 ],
 ```

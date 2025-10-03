@@ -1,5 +1,5 @@
 ---
-title: 'Upgrade Guide: v6.x to v7.0'
+title: 'Upgrading from v6.x to v7.0'
 sidebarTitle: 'v6.x to v7.0'
 ---
 
@@ -53,9 +53,7 @@ For example: in v6, the resource handle for a model named `BlogPost` would have 
 
 If this affects you, you can either update all references to the old resource handle in your blueprints & templates, or manually override the handle of the resource in your Runway config:
 
-```php
-// config/runway.php
-
+```php config/runway.php
 BlogPost::class => [
     'handle' => 'blogpost',
 ],

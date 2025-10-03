@@ -10,9 +10,7 @@ Statamic includes a read-only [GraphQL API](https://statamic.dev/graphql) out of
 
 GraphQL must be enabled for each of the resources you wish to query. It's as simple as adding to your config:
 
-```php
-// config/runway.php
-
+```php config/runway.php
 'resources' => [
     \App\Models\Product::class => [
         'name' => 'Products',

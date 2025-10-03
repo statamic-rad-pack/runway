@@ -13,9 +13,7 @@ Runway fits right into the Control Panel - enabling you to create, edit and view
 
 Need to show your models on the front-end of your site? No problem - Runway's got that under control. Simply tell Runway the route you'd like to use and it'll serve up the front-end for you.
 
-```php
-// config/runway.php
-
+```php config/runway.php
 return [
     'resources' => [
         \App\Models\Product::class => [
@@ -75,9 +73,7 @@ If you don't like GraphQL and would prefer plain old REST, you can do that too. 
 
 Runway integrates with Statamic's [Search](https://statamic.dev/search) feature, allowing you to search your Eloquent models in the Control Panel and via the `{{ search:results }}` tag. It's just as simple as adjusting your config file.
 
-```php
-// config/statamic/search.php
-
+```php config/statamic/search.php
 'indexes' => [
     'myindex' => [
         'driver' => 'local',
