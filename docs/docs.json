@@ -4,8 +4,8 @@
     "name": "Runway",
     "colors": {
         "primary": "#6F100B",
-        "light": "#07C983",
-        "dark": "#15803D"
+        "light": "#FF2B20",
+        "dark": "#FF2B20"
     },
     "favicon": "/favicon.png",
     "navigation": {
@@ -44,16 +44,7 @@
                     }
                 ]
             }
-        ],
-        "global": {
-            "anchors": [
-                {
-                    "anchor": "GitHub",
-                    "href": "https://github.com/statamic-rad-pack/runway",
-                    "icon": "github"
-                }
-            ]
-        }
+        ]
     },
     "logo": {
         "light": "/logo/light.svg",
@@ -63,14 +54,15 @@
         "links": [
             {
                 "label": "GitHub",
-                "href": "https://github.com/statamic-rad-pack/runway"
+                "href": "https://github.com/statamic-rad-pack/runway",
+                "icon": "github"
+            },
+            {
+                "label": "Statamic Marketplace",
+                "href": "https://statamic.com/addons/rad-pack/runway",
+                "icon": "/images/statamic-mark.svg"
             }
-        ],
-        "primary": {
-            "type": "button",
-            "label": "Dashboard",
-            "href": "https://dashboard.mintlify.com"
-        }
+        ]
     },
     "contextual": {
         "options": [
@@ -88,5 +80,15 @@
         "socials": {
             "github": "https://github.com/statamic-rad-pack/runway"
         }
-    }
+    },
+    "redirects": [
+        {
+            "source": "/kb-articles/supported-fieldtypes",
+            "destination": "/blueprints"
+        },
+        {
+            "source": "/fieldtypes",
+            "destination": "/relationships"
+        }
+    ]
 }
