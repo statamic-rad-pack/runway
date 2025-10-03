@@ -1,5 +1,13 @@
 # Changelog
 
+## v8.6.4 (2025-09-03)
+
+### What's fixed
+* Avoid saving revealer fields #727 #729 by @duncanmcclean
+* Fix sorting by nested fields #716 #728 by @duncanmcclean
+
+
+
 ## v8.6.3 (2025-08-25)
 
 ### What's fixed
