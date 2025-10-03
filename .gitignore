@@ -14,3 +14,4 @@ dist
 !dist/.gitkeep
 vite.hot
 .env
+.claude
