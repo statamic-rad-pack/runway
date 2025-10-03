@@ -14,7 +14,7 @@ STATAMIC_REVISIONS_ENABLED=true
 
 Next, make sure to enable Runway's ["publish states" feature](/resources#content-publish-states). This is a prerequisite for using revisions, it provides a way for models to be published or unpublished, much like entries.
 
-```php
+```php config/runway.php
 'resources' => [
     \App\Models\Order::class => [
         'name' => 'Orders',
@@ -26,7 +26,7 @@ Next, make sure to enable Runway's ["publish states" feature](/resources#content
 
 Finally, add the `revisions` config option to your resource's config:
 
-```php
+```php config/runway.php
 'resources' => [
     \App\Models\Order::class => [
         'name' => 'Orders',

@@ -21,7 +21,7 @@ You can scope the resources you'd like to be searchable, using the `runway:{reso
 
 By default, when displaying search results, Runway will use the first listable column as the 'title field'. If you'd like to change this, add the `title_field` option to your resource's config:
 
-```php
+```php config/runway.php
 'resources' => [
 	\App\Models\Order::class => [
 	    'name' => 'Orders',
