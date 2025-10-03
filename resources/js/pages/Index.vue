@@ -1,9 +1,10 @@
 <script setup>
 import { ItemActions } from '@statamic/cms';
 import { Header, Dropdown, DropdownMenu, DropdownLabel, DropdownItem, DropdownSeparator, Button } from '@statamic/cms/ui';
-import RunwayListing from './Listing.vue';
+import RunwayListing from '../components/resources/Listing.vue';
+// import Head from '@/pages/layout/Head.vue';
 
-const props = defineProps({
+defineProps({
     icon: { type: String, required: true },
     title: { type: String, required: true },
     handle: { type: String, required: true },
@@ -24,6 +25,7 @@ const props = defineProps({
 
 <template>
     <div>
+<!--        <Head :title="[__(title)]" />-->
         <Header :title="__(title)" :icon>
             <ItemActions
                 :url="actionUrl"

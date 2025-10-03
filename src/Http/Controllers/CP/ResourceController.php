@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 use Statamic\CP\Column;
 use Statamic\Facades\Action;
 use Statamic\Facades\Scope;
@@ -37,17 +38,23 @@ class ResourceController extends CpController
             ->rejectUnlisted()
             ->values();
 
-        return view('runway::index', [
+        return Inertia::render('Runway/Index', [
             'icon' => $resource->icon(),
-            'resource' => $resource,
-            'columns' => $columns,
-            'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
+            'title' => $resource->name(),
+            'handle' => $resource->handle(),
             'canCreate' => User::current()->can('create', $resource)
                 && $resource->hasVisibleBlueprint()
                 && ! $resource->readOnly(),
+            'createUrl' => cp_route('runway.create', ['resource' => $resource->handle()]),
+            'createLabel' => __('Create :resource', ['resource' => $resource->singular()]),
+            'columns' => $columns,
+            'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
+            'actions' => Action::for($resource, ['view' => 'form']),
+            'actionUrl' => cp_route('runway.actions.run', ['resource' => $resource->handle()]),
+            'modelsActionUrl' => cp_route('runway.models.actions.run', ['resource' => $resource->handle()]),
+            'blueprintUrl' => cp_route('blueprints.additional.edit', ['namespace' => 'runway', 'handle' => $resource->handle()]),
             'canEditBlueprint' => User::current()->can('configure fields'),
             'hasPublishStates' => $resource->hasPublishStates(),
-            'actions' => Action::for($resource, ['view' => 'form']),
             'titleColumn' => $this->getTitleColumn($resource),
         ]);
     }
@@ -65,7 +72,7 @@ class ResourceController extends CpController
         $viewData = [
             'title' => __('Create :resource', ['resource' => $resource->singular()]),
             'method' => 'post',
-            'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
+            'resource' => $resource->toArray(),
             'actions' => [
                 'save' => cp_route('runway.store', ['resource' => $resource->handle()]),
             ],
@@ -73,14 +80,17 @@ class ResourceController extends CpController
             'values' => $values->all(),
             'meta' => $fields->meta(),
             'resourceHasRoutes' => $resource->hasRouting(),
+            'canEditBlueprint' => User::current()->can('configure fields'),
             'canManagePublishState' => User::current()->can('publish', $resource),
+            'createAnotherUrl' => cp_route('runway.create', ['resource' => $resource->handle()]),
+            'listingUrl' => cp_route('runway.index', ['resource' => $resource->handle()]),
         ];
 
         if ($request->wantsJson()) {
             return $viewData;
         }
 
-        return view('runway::create', $viewData);
+        return Inertia::render('Runway/Create', $viewData);
     }
 
     public function store(StoreRequest $request, Resource $resource)
@@ -128,7 +138,7 @@ class ResourceController extends CpController
             'title' => $model->getAttribute($resource->titleField()),
             'reference' => $model->reference(),
             'method' => 'patch',
-            'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
+            'resource' => $resource->toArray(),
             'actions' => [
                 'save' => $model->runwayUpdateUrl(),
                 'publish' => $model->runwayPublishUrl(),
@@ -145,11 +155,14 @@ class ResourceController extends CpController
             'status' => $model->publishedStatus(),
             'permalink' => $resource->hasRouting() ? $model->uri() : null,
             'resourceHasRoutes' => $resource->hasRouting(),
-            'canManagePublishState' => User::current()->can('publish', $resource),
             'canEditBlueprint' => User::current()->can('configure fields'),
+            'canManagePublishState' => User::current()->can('publish', $resource),
             'itemActions' => Action::for($model, ['resource' => $resource->handle(), 'view' => 'form']),
             'revisionsEnabled' => $resource->revisionsEnabled(),
             'hasWorkingCopy' => $model->hasWorkingCopy(),
+            'createAnotherUrl' => cp_route('runway.create', ['resource' => $resource->handle()]),
+            'listingUrl' => cp_route('runway.index', ['resource' => $resource->handle()]),
+            'itemActionUrl' => cp_route('runway.models.actions.run', ['resource' => $resource->handle()]),
             'livePreviewUrl' => $model->livePreviewUrl(),
             'previewTargets' => $resource->previewTargets()->all(),
         ];
@@ -158,7 +171,7 @@ class ResourceController extends CpController
             return $viewData;
         }
 
-        return view('runway::edit', $viewData);
+        return Inertia::render('Runway/Edit', $viewData);
     }
 
     public function update(UpdateRequest $request, Resource $resource, Model $model)

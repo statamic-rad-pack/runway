@@ -18,7 +18,7 @@
             >
                 <Dropdown v-if="canEditBlueprint || hasItemActions">
                     <template #trigger>
-                        <Button icon="ui/dots" variant="ghost" />
+                        <Button icon="dots" variant="ghost" :aria-label="__('Open dropdown menu')" />
                     </template>
                     <DropdownMenu>
                         <DropdownItem
@@ -250,6 +250,7 @@ import PublishActions from './PublishActions.vue';
 import RevisionHistory from '../revision-history/History.vue';
 import striptags from 'striptags';
 import { computed, ref } from 'vue';
+// import { router } from '@inertiajs/vue3';
 
 let saving = ref(false);
 let errors = ref({});
@@ -516,12 +517,12 @@ export default {
 
                     // If the user has opted to create another entry, redirect them to create page.
                     if (!this.isInline && nextAction === 'create_another') {
-                        window.location = this.createAnotherUrl;
+                        this.redirectTo(this.createAnotherUrl);
                     }
 
                     // If the user has opted to go to listing (default/null option), redirect them there.
                     else if (!this.isInline && nextAction === null) {
-                        window.location = this.listingUrl;
+                        this.redirectTo(this.listingUrl);
                     }
 
                     // Otherwise, leave them on the edit form and emit an event. We need to wait until after
@@ -646,6 +647,12 @@ export default {
                 this.itemActions = response.data.itemActions;
             }
         },
+
+        redirectTo(location) {
+            // router.get(location);
+
+            window.location = location; // todo: use inertia router exported by statamic core
+        }
     },
 
     mounted() {
