@@ -9,39 +9,43 @@
     },
     "favicon": "/favicon.png",
     "navigation": {
-        "tabs": [
+        "groups": [
             {
-                "tab": "Documentation",
-                "groups": [
+                "group": "Getting Started",
+                "pages": [
+                    "index",
+                    "installation",
                     {
-                        "group": "Getting Started",
+                        "group": "Upgrade Guides",
                         "pages": [
-                            "index",
-                            "installation",
-                            "upgrade-guides",
-                            "resources"
+                            "upgrade-guides/v7-to-v8",
+                            "upgrade-guides/v6-to-v7",
+                            "upgrade-guides/v5-x-to-v6-0",
+                            "upgrade-guides/v4-x-to-v5-0",
+                            "upgrade-guides/v3-x-to-v4-0"
                         ]
                     },
-                    {
-                        "group": "Features",
-                        "pages": [
-                            "blueprints",
-                            "control-panel",
-                            "relationships",
-                            "frontend-routing",
-                            "templating",
-                            "graphql",
-                            "rest-api",
-                            "search",
-                            "revisions"
-                        ]
-                    },
-                    {
-                        "group": "Knowledge Base",
-                        "pages": [
-                            "kb-articles/multisite"
-                        ]
-                    }
+                    "resources"
+                ]
+            },
+            {
+                "group": "Features",
+                "pages": [
+                    "blueprints",
+                    "control-panel",
+                    "relationships",
+                    "frontend-routing",
+                    "templating",
+                    "graphql",
+                    "rest-api",
+                    "search",
+                    "revisions"
+                ]
+            },
+            {
+                "group": "Knowledge Base",
+                "pages": [
+                    "kb-articles/multisite"
                 ]
             }
         ]
