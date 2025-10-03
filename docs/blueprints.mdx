@@ -68,7 +68,7 @@ Asset Container| `string`/`json`          |
 [Video](https://statamic.dev/fieldtypes/video)| `string`                 |
 [Width](https://statamic.dev/fieldtypes/width)| `integer`                |
 [YAML](https://statamic.dev/fieldtypes/yaml)| `string`                 |
- 
+
 ## Eloquent Relationships
 
 Runway provides two fieldtypes to let you manage Eloquent Relationships within Statamic:
@@ -139,6 +139,4 @@ Then, in your user blueprint, you'd set the field's visibility to "Computed":
 
 ![Field's visibility set to computed](/img/runway/field-visibility-computed.png)
 
-:::note Note!
-It's worth noting, Runway requires any accessors to be `public` functions, otherwise the attributes won't be augmentable.
-:::
+<Note>It's worth noting, Runway requires any accessors to be `public` functions, otherwise the attributes won't be augmentable.</Note>

@@ -58,9 +58,7 @@ class Order extends Model
 
 Finally, you can start adding fields to your resource's blueprint. To learn more about using Blueprints in Runway, please review the [Blueprints](/blueprints) page.
 
-:::tip Hot Tip
-If you're moving a collection to the database, use the `php please runway:import-collection` command. It'll help you set up everything you need, including moving your entries to the database.
-:::
+<Tip>If you're moving a collection to the database, use the `php please runway:import-collection` command. It'll help you set up everything you need, including moving your entries to the database.</Tip>
 
 ## Configuring resources
 
@@ -201,7 +199,7 @@ If you're writing content that you would like to be able to store without publis
 
 By default, it'll use a `published` column in the database to keep track of the model's "status". You're free to change the name of this column as needed.
 
-:::note Note!
+<Note>
 Runway **won't** automatically add this database column for you, you will need to add it yourself:
 
 ```php
@@ -209,7 +207,7 @@ Schema::table('products', function (Blueprint $table) {
     $table->boolean('published');
 });
 ```
-:::
+</Note>
 
 ### Prevent creating new models
 
@@ -265,7 +263,7 @@ class YourModel extends Model
 	{
 	    // Disables ALL global scopes
 		return $query->withoutGlobalScopes();
-		
+
 		// Disables a specific global scope
 		return $query->withoutGlobalScope([ActiveScope::class]);
 	}
