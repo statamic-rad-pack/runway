@@ -129,7 +129,6 @@ trait HasRunwayResource
     {
         foreach ($this->runwayResource()->nestedFieldPrefixes() as $nestedFieldPrefix) {
             if (Str::startsWith($field, "{$nestedFieldPrefix}_")) {
-                $nestedFieldPrefix = Str::before($field, '_');
                 $key = Str::after($field, "{$nestedFieldPrefix}_");
 
                 return "{$nestedFieldPrefix}->{$key}";
