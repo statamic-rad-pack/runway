@@ -11,53 +11,38 @@ A resource basically tells Runway about the model and how you’d like it to be 
 
 ## Defining resources
 
-You can define resources inside the configuration file published during installation. It’s located in `config/runway.php`.
+There are three steps involved in defining a resource:
 
-```php config/runway.php
-<?php
+<Steps>
+    <Step title="Add resource to config file">
+        Add the resource to Runway's config file. The key should be the model, and the value should be an array of configuration options:
 
-return [
+        ```php config/runway.php
+        'resources' => [
+        	\App\Models\Order::class => [
+        		'name' => 'Orders',
+        	],
+        ],
+        ```
+    </Step>
 
-    /*
-    |--------------------------------------------------------------------------
-    | Resources
-    |--------------------------------------------------------------------------
-    |
-    | Configure the resources (models) you'd like to be available in Runway.
-    |
-    */
+    <Step title="Add HasRunwayResource trait">
+        Add the `HasRunwayResource` trait to your Eloquent model:
 
-    'resources' => [
-        //
-    ],
+        ```php app/Models/Order.php
+        use StatamicRadPack\Runway\Traits\HasRunwayResource; // [!code ++]
 
-];
-```
+        class Order extends Model
+        {
+            use HasRunwayResource; // [!code ++]
+        }
+        ```
+    </Step>
 
-There three steps to defining a Runway Resource: first you need to add it to Runway's `resources` array like so:
-
-```php
-'resources' => [
-	\App\Models\Order::class => [
-		'name' => 'Orders',
-	],
-],
-```
-
-Second, you need to add the `HasRunwayResource` trait to your Eloquent model.
-
-```php
-// app/Models/Order.php
-
-use StatamicRadPack\Runway\Traits\HasRunwayResource; // [!code ++]
-
-class Order extends Model
-{
-    use HasRunwayResource; // [!code ++]
-}
-```
-
-Finally, you can start adding fields to your resource's blueprint. To learn more about using Blueprints in Runway, please review the [Blueprints](/blueprints) page.
+    <Step title="Edit the blueprint">
+        Finally, you can start adding fields to your resource's blueprint. To learn more about using Blueprints in Runway, please review the [Blueprints](/blueprints) page.
+    </Step>
+</Steps>
 
 <Tip>If you're moving a collection to the database, use the `php please runway:import-collection` command. It'll help you set up everything you need, including moving your entries to the database.</Tip>
 
