@@ -1,8 +1,9 @@
 ---
 title: Revisions
+description: Revisions are a powerful feature of Statamic that adds an entire publishing workflow to your authoring process.
 ---
 
-Revisions is a powerful feature of Statamic that adds an entire publishing workflow to your authoring process. It allows you to create revisions, review and rollback to previous revisions of your content, and more.
+Statamic's Revisions feature allows you to create revisions (who would have guessed it), review and rollback to previous revisions of your content, and more.
 
 ## Enabling
 
@@ -12,9 +13,9 @@ If you haven't already, you will need to [enable Statamic's revisions feature](h
 STATAMIC_REVISIONS_ENABLED=true
 ```
 
-Next, make sure to enable Runway's ["publish states" feature](https://runway.duncanmcclean.com/resources#content-publish-states). This is a prerequisite for using revisions, it provides a way for models to be published or unpublished, much like entries.
+Next, make sure to enable Runway's ["publish states" feature](/resources#content-publish-states). This is a prerequisite for using revisions, it provides a way for models to be published or unpublished, much like entries.
 
-```php
+```php config/runway.php
 'resources' => [
     \App\Models\Order::class => [
         'name' => 'Orders',
@@ -26,7 +27,7 @@ Next, make sure to enable Runway's ["publish states" feature](https://runway.dun
 
 Finally, add the `revisions` config option to your resource's config:
 
-```php
+```php config/runway.php
 'resources' => [
     \App\Models\Order::class => [
         'name' => 'Orders',
@@ -40,7 +41,7 @@ Now, when you're editing a model in the Control Panel, you'll be able to save us
 
 ## Storing Revisions in the Database
 
-Out of the box, Statamic will store revisions in your project's `storage/statamic/revisions` directory. 
+Out of the box, Statamic will store revisions in your project's `storage/statamic/revisions` directory.
 
 However, if you'd prefer for Statamic to store revisions in the database instead, you can install the official Eloquent Driver and select the "Revisions" repository:
 

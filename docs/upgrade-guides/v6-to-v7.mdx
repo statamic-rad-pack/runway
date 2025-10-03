@@ -1,12 +1,11 @@
 ---
-title: 'Upgrade Guide: v6.x to v7.0'
+title: 'Upgrading from v6.x to v7.0'
+sidebarTitle: 'v6.x to v7.0'
 ---
 
 ## Overview
 
-:::warning Warning
-Please don't upgrade multiple versions at once (eg. from v5 to v7). Please upgrade one step at a time.
-:::
+<Warning>Please don't upgrade multiple versions at once (eg. from v5 to v7). Please upgrade one step at a time.</Warning>
 
 To get started with the upgrade process, follow the below steps:
 
@@ -54,19 +53,11 @@ For example: in v6, the resource handle for a model named `BlogPost` would have 
 
 If this affects you, you can either update all references to the old resource handle in your blueprints & templates, or manually override the handle of the resource in your Runway config:
 
-```php
-// config/runway.php
-
+```php config/runway.php
 BlogPost::class => [
     'handle' => 'blogpost',
 ],
 ```
-
-## Previous upgrade guides
-
--   [v3.x to v4.0](/upgrade-guides/v3-x-to-v4-0)
--   [v4.x to v5.0](/upgrade-guides/v4-x-to-v5-0)
--   [v5.x to v6.0](/upgrade-guides/v5-x-to-v6-0)
 
 ---
 
