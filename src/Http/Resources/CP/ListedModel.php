@@ -51,7 +51,6 @@ class ListedModel extends JsonResource
             'permalink' => $this->runwayResource->hasRouting() ? $model->uri() : null,
             'editable' => User::current()->can('edit', [$this->runwayResource, $model]),
             'viewable' => User::current()->can('view', [$this->runwayResource, $model]),
-            'actions' => Action::for($model, ['resource' => $this->runwayResource->handle()]),
             'collection' => ['dated' => false],
             $this->merge($this->values()),
         ];
