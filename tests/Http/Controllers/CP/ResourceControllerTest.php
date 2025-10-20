@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
 
 use Illuminate\Support\Facades\DB;
+use Inertia\Testing\AssertableInertia as Assert;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Config;
@@ -27,11 +28,12 @@ class ResourceControllerTest extends TestCase
             ->actingAs($user)
             ->get(cp_route('runway.index', ['resource' => 'post']))
             ->assertOk()
-            ->assertViewIs('runway::index')
-            ->assertSee([
-                'filters',
-                'columns',
-            ]);
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('runway::Index')
+                ->has('filters')
+                ->has('columns')
+                ->has('actionUrl')
+            );
     }
 
     #[Test]
@@ -340,7 +342,7 @@ class ResourceControllerTest extends TestCase
         // Seconds aren't enabled, so we shouldn't have any.
         $this->assertEquals(
             $post->created_at->startOfMinute()->toIso8601ZuluString('millisecond'),
-            $response->viewData('values')['created_at']
+            $response->inertiaProps('values')['created_at']
         );
     }
 
@@ -378,7 +380,7 @@ class ResourceControllerTest extends TestCase
         // Time isn't enabled, so expect the time to be 00:00:00.
         $this->assertEquals(
             $post->created_at->startOfDay()->toIso8601ZuluString('millisecond'),
-            $response->viewData('values')['created_at']
+            $response->inertiaProps('values')['created_at']
         );
     }
 
@@ -416,7 +418,7 @@ class ResourceControllerTest extends TestCase
         // Seconds aren't enabled, so we shouldn't have any.
         $this->assertEquals(
             $post->created_at->startOfMinute()->toIso8601ZuluString('millisecond'),
-            $response->viewData('values')['created_at']
+            $response->inertiaProps('values')['created_at']
         );
     }
 
