@@ -7,9 +7,9 @@ import PublishForm from './components/resources/PublishForm.vue';
 import ResourceWidget from './components/resources/Widget.vue';
 
 Statamic.booting(() => {
-    Statamic.$components.register('Pages/Runway/Index', Index);
-    Statamic.$components.register('Pages/Runway/Create', Create);
-    Statamic.$components.register('Pages/Runway/Edit', Edit);
+    Statamic.$inertia.register('runway::Index', Index);
+    Statamic.$inertia.register('runway::Create', Create);
+    Statamic.$inertia.register('runway::Edit', Edit);
 
     Statamic.$components.register('runway-related-item', RelatedItem);
     Statamic.$components.register('runway-publish-form', PublishForm);

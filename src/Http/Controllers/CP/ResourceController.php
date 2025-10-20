@@ -38,7 +38,7 @@ class ResourceController extends CpController
             ->rejectUnlisted()
             ->values();
 
-        return Inertia::render('Runway/Index', [
+        return Inertia::render('runway::Index', [
             'icon' => $resource->icon(),
             'title' => $resource->name(),
             'handle' => $resource->handle(),
@@ -90,7 +90,7 @@ class ResourceController extends CpController
             return $viewData;
         }
 
-        return Inertia::render('Runway/Create', $viewData);
+        return Inertia::render('runway::Create', $viewData);
     }
 
     public function store(StoreRequest $request, Resource $resource)
@@ -171,7 +171,7 @@ class ResourceController extends CpController
             return $viewData;
         }
 
-        return Inertia::render('Runway/Edit', $viewData);
+        return Inertia::render('runway::Edit', $viewData);
     }
 
     public function update(UpdateRequest $request, Resource $resource, Model $model)
