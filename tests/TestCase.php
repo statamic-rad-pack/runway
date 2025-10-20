@@ -58,6 +58,7 @@ abstract class TestCase extends AddonTestCase
     {
         return [
             ...parent::getPackageProviders($app),
+            \Inertia\ServiceProvider::class,
             \Spatie\LaravelRay\RayServiceProvider::class,
         ];
     }
