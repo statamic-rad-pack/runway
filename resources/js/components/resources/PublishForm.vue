@@ -251,7 +251,6 @@ import PublishActions from './PublishActions.vue';
 import RevisionHistory from '../revision-history/History.vue';
 import striptags from 'striptags';
 import { computed, ref } from 'vue';
-// import { router } from '@inertiajs/vue3';
 
 let saving = ref(false);
 let errors = ref({});
