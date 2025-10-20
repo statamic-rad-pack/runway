@@ -46,7 +46,7 @@
         "pixelfear/composer-dist-plugin": "^0.1.5",
         "spatie/ignition": "^1.15",
         "spatie/invade": "^2.1",
-        "statamic/cms": "^6.0",
+        "statamic/cms": "^6.0.0-alpha.13",
         "stillat/proteus": "^4.0"
     },
     "require-dev": {
@@ -64,6 +64,5 @@
             "pixelfear/composer-dist-plugin": true,
             "composer/package-versions-deprecated": true
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
