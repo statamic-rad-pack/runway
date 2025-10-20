@@ -219,6 +219,7 @@
 </template>
 
 <script>
+import { router } from '@statamic/cms/inertia';
 import { ItemActions } from '@statamic/cms';
 import { SaveButtonOptions, HasPreferences, HasActions, clone, resetValuesFromResponse } from '@statamic/cms/temporary';
 import {
@@ -649,9 +650,7 @@ export default {
         },
 
         redirectTo(location) {
-            // router.get(location);
-
-            window.location = location; // todo: use inertia router exported by statamic core
+            router.get(location);
         }
     },
 

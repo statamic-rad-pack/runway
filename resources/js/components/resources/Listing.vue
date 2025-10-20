@@ -1,4 +1,5 @@
 <script setup>
+import { Link } from '@statamic/cms/inertia';
 import { StatusIndicator, DropdownItem, Listing } from '@statamic/cms/ui';
 import { ref } from 'vue';
 
@@ -37,10 +38,10 @@ function requestComplete({ items: newItems, parameters }) {
         @request-completed="requestComplete"
     >
         <template v-slot:[`cell-${titleColumn}`]="{ row: model, isColumnVisible }">
-            <a class="title-index-field" :href="model.edit_url" @click.stop>
+            <Link class="title-index-field" :href="model.edit_url" @click.stop>
                 <StatusIndicator v-if="hasPublishStates && !isColumnVisible('status')" :status="model.status" />
                 <span v-text="model[titleColumn]" />
-            </a>
+            </Link>
         </template>
         <template v-if="hasPublishStates" #cell-status="{ row: model }">
             <StatusIndicator :status="model.status" show-label :show-dot="false" />
