@@ -5,7 +5,6 @@ namespace StatamicRadPack\Runway\Http\Resources\CP;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Statamic\Facades\Action;
 use Statamic\Facades\User;
 use Statamic\Fields\Blueprint;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
