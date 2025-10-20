@@ -1,4 +1,5 @@
 <script setup>
+import { Head } from '@statamic/cms/inertia';
 import PublishForm from '../components/resources/PublishForm.vue';
 
 defineProps([
@@ -28,6 +29,8 @@ defineProps([
 </script>
 
 <template>
+    <Head :title />
+
     <PublishForm
         publish-container="base"
         :initial-actions="actions"

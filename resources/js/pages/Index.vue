@@ -1,8 +1,8 @@
 <script setup>
+import { Head } from '@statamic/cms/inertia';
 import { ItemActions } from '@statamic/cms';
 import { Header, Dropdown, DropdownMenu, DropdownLabel, DropdownItem, DropdownSeparator, Button } from '@statamic/cms/ui';
 import RunwayListing from '../components/resources/Listing.vue';
-// import Head from '@/pages/layout/Head.vue';
 
 defineProps({
     icon: { type: String, required: true },
@@ -24,8 +24,9 @@ defineProps({
 </script>
 
 <template>
+    <Head :title="[__(title)]" />
+
     <div>
-<!--        <Head :title="[__(title)]" />-->
         <Header :title="__(title)" :icon>
             <ItemActions
                 :url="actionUrl"

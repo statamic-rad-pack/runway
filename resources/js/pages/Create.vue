@@ -1,6 +1,6 @@
 <script setup>
 import PublishForm from '../components/resources/PublishForm.vue';
-// import { Head, router } from '@inertiajs/vue3';
+import { Head, router } from '@statamic/cms/inertia';
 
 defineProps([
     'actions',
@@ -17,14 +17,12 @@ defineProps([
 ]);
 
 function saved(response) {
-    // router.get(response.data.data.edit_url + '?created=true');
-
-    window.location = response.data.data.edit_url + '?created=true'; // todo: use inertia router exported by statamic core
+    router.get(response.data.data.edit_url + '?created=true');
 }
 </script>
 
 <template>
-<!--    <Head :title="title" />-->
+    <Head :title="title" />
 
     <PublishForm
         :is-creating="true"
