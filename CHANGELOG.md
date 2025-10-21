@@ -1,5 +1,15 @@
 # Changelog
 
+## v9.0.0-alpha.4 (2025-10-21)
+
+### What's new
+- All pages have been converted to Inertia #731 by @duncanmcclean
+
+### What's fixed
+- Corrected path to `@statamic/cms` npm package by @duncanmcclean
+
+
+
 ## v9.0.0-alpha.3 (2025-09-09)
 
 ### What's new
