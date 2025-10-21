@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.6.5 (2025-10-21)
+
+### What's fixed
+* Fixed `published() on null` error if model is missing #733 by @joshtaylordev
+
+
+
 ## v8.6.4 (2025-09-03)
 
 ### What's fixed
