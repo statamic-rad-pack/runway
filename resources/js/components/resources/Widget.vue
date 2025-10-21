@@ -1,4 +1,5 @@
 <script setup>
+import { Link } from '@statamic/cms/inertia';
 import { computed, ref } from 'vue'
 import {
     Widget,
@@ -67,7 +68,7 @@ const widgetProps = computed(() => ({
                             <template v-slot:[`cell-${titleColumn}`]="{ row: model, isColumnVisible }">
                                 <div class="flex items-center gap-2">
                                     <StatusIndicator v-if="hasPublishStates && !isColumnVisible('status')" :status="model.status" />
-                                    <a :href="model.edit_url" class="line-clamp-1 overflow-hidden text-ellipsis" v-text="model[titleColumn]" />
+                                    <Link :href="model.edit_url" class="line-clamp-1 overflow-hidden text-ellipsis" v-text="model[titleColumn]" />
                                 </div>
                             </template>
                             <template v-if="hasPublishStates" #cell-status="{ row: model }">

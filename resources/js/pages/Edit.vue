@@ -1,0 +1,59 @@
+<script setup>
+import { Head } from '@statamic/cms/inertia';
+import PublishForm from '../components/resources/PublishForm.vue';
+
+defineProps([
+    'actions',
+    'method',
+    'resource',
+    'resourceHasRoutes',
+    'title',
+    'reference',
+    'status',
+    'blueprint',
+    'values',
+    'meta',
+    'permalink',
+    'hasWorkingCopy',
+    'revisionsEnabled',
+    'readOnly',
+    'canEditBlueprint',
+    'canManagePublishState',
+    'createAnotherUrl',
+    'listingUrl',
+    'itemActions',
+    'itemActionUrl',
+    'livePreviewUrl',
+    'previewTargets',
+]);
+</script>
+
+<template>
+    <Head :title />
+
+    <PublishForm
+        publish-container="base"
+        :initial-actions="actions"
+        :method
+        :resource
+        :resource-has-routes
+        :initial-title="title"
+        :initial-reference="reference"
+        :initial-status="status"
+        :initial-blueprint="blueprint"
+        :initial-values="values"
+        :initial-meta="meta"
+        :initial-permalink="permalink"
+        :initial-is-working-copy="hasWorkingCopy"
+        :revisions-enabled
+        :initial-read-only="readOnly"
+        :can-edit-blueprint
+        :can-manage-publish-state
+        :create-another-url
+        :initial-listing-url="listingUrl"
+        :initial-item-actions="itemActions"
+        :item-action-url
+        :live-preview-url
+        :preview-targets
+    />
+</template>

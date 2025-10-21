@@ -18,7 +18,7 @@
             >
                 <Dropdown v-if="canEditBlueprint || hasItemActions">
                     <template #trigger>
-                        <Button icon="ui/dots" variant="ghost" />
+                        <Button icon="dots" variant="ghost" :aria-label="__('Open dropdown menu')" />
                     </template>
                     <DropdownMenu>
                         <DropdownItem
@@ -219,6 +219,7 @@
 </template>
 
 <script>
+import { router } from '@statamic/cms/inertia';
 import { ItemActions } from '@statamic/cms';
 import { SaveButtonOptions, HasPreferences, HasActions, clone, resetValuesFromResponse } from '@statamic/cms/temporary';
 import {
@@ -516,12 +517,12 @@ export default {
 
                     // If the user has opted to create another entry, redirect them to create page.
                     if (!this.isInline && nextAction === 'create_another') {
-                        window.location = this.createAnotherUrl;
+                        this.redirectTo(this.createAnotherUrl);
                     }
 
                     // If the user has opted to go to listing (default/null option), redirect them there.
                     else if (!this.isInline && nextAction === null) {
-                        window.location = this.listingUrl;
+                        this.redirectTo(this.listingUrl);
                     }
 
                     // Otherwise, leave them on the edit form and emit an event. We need to wait until after
@@ -646,6 +647,10 @@ export default {
                 this.itemActions = response.data.itemActions;
             }
         },
+
+        redirectTo(location) {
+            router.get(location);
+        }
     },
 
     mounted() {

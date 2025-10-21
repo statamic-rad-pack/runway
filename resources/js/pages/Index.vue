@@ -1,9 +1,10 @@
 <script setup>
+import { Head } from '@statamic/cms/inertia';
 import { ItemActions } from '@statamic/cms';
 import { Header, Dropdown, DropdownMenu, DropdownLabel, DropdownItem, DropdownSeparator, Button } from '@statamic/cms/ui';
-import RunwayListing from './Listing.vue';
+import RunwayListing from '../components/resources/Listing.vue';
 
-const props = defineProps({
+defineProps({
     icon: { type: String, required: true },
     title: { type: String, required: true },
     handle: { type: String, required: true },
@@ -23,6 +24,8 @@ const props = defineProps({
 </script>
 
 <template>
+    <Head :title="[__(title)]" />
+
     <div>
         <Header :title="__(title)" :icon>
             <ItemActions
