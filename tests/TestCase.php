@@ -52,15 +52,12 @@ abstract class TestCase extends AddonTestCase
         Statamic::booted(function () {
             Blueprint::setDirectory(__DIR__.'/__fixtures__/resources/blueprints');
         });
-
-        $app['config']->set('inertia.testing.ensure_pages_exist', false); // todo: remove once core PR has been merged
     }
 
     protected function getPackageProviders($app): array
     {
         return [
             ...parent::getPackageProviders($app),
-            \Inertia\ServiceProvider::class, // todo: remove once core PR has been merged
             \Spatie\LaravelRay\RayServiceProvider::class,
         ];
     }
