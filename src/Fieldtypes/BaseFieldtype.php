@@ -361,7 +361,7 @@ abstract class BaseFieldtype extends Relationship
 
                 return $model;
             })
-            ->when($resource->hasPublishStates(), fn ($collection) => $collection->filter(fn ($model) => $model->published()))
+            ->when($resource->hasPublishStates(), fn ($collection) => $collection->filter(fn ($model) => $model?->published()))
             ->filter();
     }
 
