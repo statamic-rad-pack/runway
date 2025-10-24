@@ -13,5 +13,5 @@ Statamic.booting(() => {
 
     Statamic.$components.register('runway-related-item', RelatedItem);
     Statamic.$components.register('runway-publish-form', PublishForm);
-    Statamic.$components.register('runway-resource-widget', ResourceWidget);
+    Statamic.$components.register('runway-widget', ResourceWidget);
 });

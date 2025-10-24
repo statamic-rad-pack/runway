@@ -26,8 +26,10 @@ const props = defineProps({
     initialSortDirection: {
         type: String,
     },
-    titleColumn: String, // todo
-    hasPublishStates: Boolean, // todo
+    titleColumn: String,
+    hasPublishStates: Boolean,
+    canCreate: Boolean,
+    listingUrl: String,
 });
 
 const requestUrl = ref(cp_url(`runway/${props.resource}/listing-api`));
@@ -79,7 +81,9 @@ const widgetProps = computed(() => ({
                 </div>
                 <template #actions>
                     <Pagination />
-                    <slot name="actions" />
+                    <ui-button v-if="canCreate" :href="listingUrl">
+                        {{ __('View All') }}
+                    </ui-button>
                 </template>
             </Widget>
         </template>
