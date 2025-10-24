@@ -5,6 +5,7 @@ namespace StatamicRadPack\Runway\Widgets;
 use Statamic\CP\Column;
 use Statamic\Facades\Scope;
 use Statamic\Facades\User;
+use Statamic\Widgets\VueComponent;
 use Statamic\Widgets\Widget;
 use StatamicRadPack\Runway\Http\Controllers\CP\Traits\HasListingColumns;
 use StatamicRadPack\Runway\Resource;
@@ -16,17 +17,14 @@ class ResourceWidget extends Widget
 
     protected static $handle = 'runway_resource';
 
-    /**
-     * The HTML that should be shown in the widget.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function html()
+    public function component()
     {
         $resource = $this->config('resource');
 
         if (! Runway::hasResource($resource)) {
-            return "Error: Resource [$resource] doesn't exist.";
+            return VueComponent::render('dynamic-html-renderer', [
+                'html' => "Error: Resource [$resource] doesn't exist.",
+            ]);
         }
 
         $resource = Runway::findResource($resource);
@@ -50,20 +48,21 @@ class ResourceWidget extends Widget
             ->map(fn ($column) => $column->sortable(false)->visible(true))
             ->values();
 
-        return view('runway::widget', [
-            'resource' => $resource,
-            'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
+        return VueComponent::render('runway-widget', [
+            'resource' => $resource->handle(),
             'icon' => $resource->icon(),
             'title' => $this->config('title', $resource->name()),
-            'limit' => $this->config('limit', 5),
-            'sortColumn' => $sortColumn,
-            'sortDirection' => $sortDirection,
-            'columns' => $columns,
+            'additionalColumns' => $columns,
+            'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
+            'initialSortColumn' => $sortColumn,
+            'initialSortDirection' => $sortDirection,
+            'initialPerPage' => $this->config('limit', 5),
+            'hasPublishStates' => $resource->hasPublishStates(),
+            'titleColumn' => $this->getTitleColumn($resource),
             'canCreate' => User::current()->can('create', $resource)
                 && $resource->hasVisibleBlueprint()
                 && ! $resource->readOnly(),
-            'hasPublishStates' => $resource->hasPublishStates(),
-            'titleColumn' => $this->getTitleColumn($resource),
+            'listingUrl' => cp_route('runway.index', ['resource' => $resource->handle()]),
         ]);
     }
 
