@@ -35,9 +35,9 @@ class FieldtypeModel extends JsonResource
         if (! $titleFormat = $this->fieldtype->config('title_format')) {
             $firstListableColumn = $this->resource->runwayResource()->titleField();
 
-            return $model->getAttribute($firstListableColumn);
+            return $model->augmentedValue($firstListableColumn);
         }
 
-        return Parse::template($titleFormat, $model);
+        return Parse::template($titleFormat, $model->toAugmentedArray());
     }
 }
