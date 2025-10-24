@@ -1,5 +1,5 @@
 <script setup>
-import PublishForm from '../components/resources/PublishForm.vue';
+import PublishForm from '../components/PublishForm.vue';
 import { Head, router } from '@statamic/cms/inertia';
 
 defineProps([

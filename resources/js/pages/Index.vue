@@ -2,7 +2,7 @@
 import { Head } from '@statamic/cms/inertia';
 import { ItemActions } from '@statamic/cms';
 import { Header, Dropdown, DropdownMenu, DropdownLabel, DropdownItem, DropdownSeparator, Button } from '@statamic/cms/ui';
-import RunwayListing from '../components/resources/Listing.vue';
+import RunwayListing from '../components/Listing.vue';
 
 defineProps({
     icon: { type: String, required: true },

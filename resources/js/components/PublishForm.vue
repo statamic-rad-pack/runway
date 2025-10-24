@@ -248,7 +248,7 @@ import {
 } from '@statamic/cms/ui';
 import { Pipeline, Request, BeforeSaveHooks, AfterSaveHooks, PipelineStopped } from '@statamic/cms/save-pipeline';
 import PublishActions from './PublishActions.vue';
-import RevisionHistory from '../revision-history/History.vue';
+import RevisionHistory from './revision-history/History.vue';
 import striptags from 'striptags';
 import { computed, ref } from 'vue';
 

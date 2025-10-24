@@ -3,8 +3,8 @@ import Create from './pages/Create.vue';
 import Edit from './pages/Edit.vue';
 
 import RelatedItem from './components/inputs/relationship/Item.vue';
-import PublishForm from './components/resources/PublishForm.vue';
-import ResourceWidget from './components/resources/Widget.vue';
+import PublishForm from './components/PublishForm.vue';
+import ResourceWidget from './components/Widget.vue';
 
 Statamic.booting(() => {
     Statamic.$inertia.register('runway::Index', Index);

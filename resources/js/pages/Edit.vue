@@ -1,6 +1,6 @@
 <script setup>
 import { Head } from '@statamic/cms/inertia';
-import PublishForm from '../components/resources/PublishForm.vue';
+import PublishForm from '../components/PublishForm.vue';
 
 defineProps([
     'actions',
