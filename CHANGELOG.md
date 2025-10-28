@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.6.6 (2025-10-28)
+
+### What's fixed
+* Use augmented values to make the title #734 by @mmodler
+
+
+
 ## v8.6.5 (2025-10-21)
 
 ### What's fixed
