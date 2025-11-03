@@ -54,6 +54,7 @@ class ResourceResponse implements Responsable
         return (new View)
             ->template($this->data->template())
             ->layout($this->data->layout())
+            ->with($this->with)
             ->cascadeContent($this->data)
             ->render();
     }
