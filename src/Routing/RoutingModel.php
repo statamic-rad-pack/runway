@@ -48,7 +48,7 @@ class RoutingModel implements Augmentable, Responsable
     public function toResponse($request)
     {
         return (new ResourceResponse($this->model))
-            ->with($this->supplements)
+            ->with($this->supplements->all())
             ->toResponse($request);
     }
 
