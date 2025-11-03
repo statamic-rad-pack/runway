@@ -174,6 +174,19 @@ class Resource
         return $column;
     }
 
+    public function defaultPublishState(): ?string
+    {
+        if (! $this->hasPublishStates()) {
+            return null;
+        }
+
+        if ($this->revisionsEnabled()) {
+            return false;
+        }
+
+        return $this->config->get('default_publish_state', 'published') === 'published';
+    }
+
     public function nestedFieldPrefixes(): Collection
     {
         return collect($this->config->get('nested_field_prefixes'));
