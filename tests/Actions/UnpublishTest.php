@@ -109,7 +109,7 @@ class UnpublishTest extends TestCase
     #[Test]
     public function user_with_permission_is_authorized()
     {
-        Role::make('editor')->addPermission('edit post')->save();
+        Role::make('editor')->addPermission('publish post')->save();
 
         $user = User::make()->assignRole('editor')->save();
 
