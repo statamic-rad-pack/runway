@@ -174,7 +174,7 @@ class Resource
         return $column;
     }
 
-    public function defaultPublishState(): ?string
+    public function defaultPublishState(): ?bool
     {
         if (! $this->hasPublishStates()) {
             return null;
