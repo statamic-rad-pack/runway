@@ -1,5 +1,16 @@
 # Changelog
 
+## v8.7.0 (2025-11-04)
+
+### What's new
+* Added `default_publish_state` config option #736 by @duncanmcclean
+
+### What's fixed
+* Publish/unpublish actions should check `publish {resource}` permission #737 by @duncanmcclean
+* Fix error when using nocache tag on Runway route #738 by @duncanmcclean
+
+
+
 ## v8.6.6 (2025-10-28)
 
 ### What's fixed
