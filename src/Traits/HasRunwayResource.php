@@ -196,7 +196,7 @@ trait HasRunwayResource
         return cp_route('runway.revisions.show', [
             'resource' => $this->runwayResource()->handle(),
             'model' => $this->{$this->runwayResource()->routeKey()},
-            'revisionId' => $revision->id(),
+            'revisionId' => $revision->date()->timestamp,
         ]);
     }
 

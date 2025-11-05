@@ -47,7 +47,7 @@ class RestoreModelRevisionController extends TestCase
 
         $this
             ->actingAs(User::make()->id('user-1')->makeSuper()->save())
-            ->post($model->runwayRestoreRevisionUrl(), ['revision' => $revision->id()])
+            ->post($model->runwayRestoreRevisionUrl(), ['revision' => $revision->date()->timestamp])
             ->assertOk()
             ->assertSessionHas('success');
 
