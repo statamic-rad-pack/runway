@@ -64,13 +64,13 @@ class RunwayTag extends Tags
             $query->select(explode(',', (string) $select));
         }
 
-        if ($scopes = $this->params->get('scope')) {
-            $scopes = explode('|', (string) $scopes);
+        if ($queryScopes = $this->params->get('query_scope')) {
+            $queryScopes = explode('|', (string) $queryScopes);
 
-            foreach ($scopes as $scope) {
-                $scopeName = explode(':', $scope)[0];
-                $scopeArguments = isset(explode(':', $scope)[1])
-                    ? explode(',', explode(':', $scope)[1])
+            foreach ($queryScopes as $queryScope) {
+                $scopeName = explode(':', $queryScope)[0];
+                $scopeArguments = isset(explode(':', $queryScope)[1])
+                    ? explode(',', explode(':', $queryScope)[1])
                     : [];
 
                 foreach ($scopeArguments as $key => $scopeArgument) {
