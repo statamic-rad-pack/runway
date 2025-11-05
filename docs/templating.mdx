@@ -47,7 +47,7 @@ protected function food(Builder $query): void
 ```
 
 ```antlers
-{{ runway:post scope="food" }}
+{{ runway:post query_scope="food" }}
 	<h2>{{ title }}</h2>
 	<p>{{ intro_text }}</p>
 {{ /runway:post }}
@@ -56,7 +56,7 @@ protected function food(Builder $query): void
 If you need to you can provide arguments to the scope like so:
 
 ```antlers
-{{ runway:post scope="food:argument" }}
+{{ runway:post query_scope="food:argument" }}
 ```
 
 In the above example, `argument` can either be a string or we'll grab it from 'the context' (the available variables) if we can find it.
@@ -64,7 +64,7 @@ In the above example, `argument` can either be a string or we'll grab it from 't
 You may also provide multiple scopes, if that's something you need...
 
 ```antlers
-{{ runway:post scope="food:argument|fastfood" }}
+{{ runway:post query_scope="food:argument|fastfood" }}
 ```
 
 ### Filtering
