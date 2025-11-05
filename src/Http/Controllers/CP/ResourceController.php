@@ -41,7 +41,7 @@ class ResourceController extends CpController
         return Inertia::render('runway::Index', [
             'icon' => $resource->icon(),
             'title' => $resource->name(),
-            'handle' => $resource->handle(),
+            'resource' => $resource->handle(),
             'canCreate' => User::current()->can('create', $resource)
                 && $resource->hasVisibleBlueprint()
                 && ! $resource->readOnly(),
