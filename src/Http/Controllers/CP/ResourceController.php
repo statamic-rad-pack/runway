@@ -66,7 +66,7 @@ class ResourceController extends CpController
         $fields = $fields->preProcess();
 
         $values = $fields->values()->merge([
-            $resource->publishedColumn() => true,
+            $resource->publishedColumn() => $resource->defaultPublishState(),
         ]);
 
         $viewData = [
