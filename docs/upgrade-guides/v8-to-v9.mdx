@@ -42,6 +42,16 @@ We highly recommend upgrading all the way to Laravel 12 and PHP 8.4.
 
 ## Medium impact changes
 
+### The `scope` parameter on the Runway tag has been renamed
+**Affects app using the `scope` parameter on the Runway tag**
+
+The `scope` parameter on the Runway tag has been renamed to `query_scope` to avoid conflicts with Antlers' own `scope` parameter.
+
+```antlers
+{{ runway:post scope="food" }} {{# [!code --] #}}
+{{ runway:post query_scope="food" }} {{# [!code ++] #}}
+```
+
 ### `runway:rebuild-uri-cache` no longer removes global query scopes
 
 The `runway:rebuild-uri-cache` command no longer removes global query scopes when querying models. If you were relying on this behaviour, you may remove global scopes using the `runwayRoutes` query scope:
