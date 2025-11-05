@@ -47,6 +47,8 @@ abstract class TestCase extends AddonTestCase
             'directory' => __DIR__.'/__fixtures__/users',
         ]);
 
+        $app['config']->set('statamic.stache.stores.revisions.directory', __DIR__.'/__fixtures__/revisions');
+
         $app['config']->set('runway', require (__DIR__.'/__fixtures__/config/runway.php'));
 
         Statamic::booted(function () {
