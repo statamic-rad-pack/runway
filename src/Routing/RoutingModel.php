@@ -6,7 +6,6 @@ use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Contracts\Data\Augmentable;
 use Statamic\Contracts\Data\Augmented;
-use Statamic\Data\AugmentedData;
 use Statamic\Data\ContainsSupplementalData;
 use Statamic\Data\HasAugmentedData;
 use StatamicRadPack\Runway\Data\AugmentedModel;
