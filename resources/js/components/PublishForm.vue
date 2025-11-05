@@ -252,10 +252,6 @@ import RevisionHistory from './revision-history/History.vue';
 import striptags from 'striptags';
 import { computed, ref } from 'vue';
 
-let saving = ref(false);
-let errors = ref({});
-let container = null;
-
 export default {
     mixins: [HasPreferences, HasActions],
 
@@ -347,16 +343,23 @@ export default {
             saveKeyBinding: null,
             quickSaveKeyBinding: null,
             quickSave: false,
+
+            savingRef: ref(false),
+            errorsRef: ref({}),
         };
     },
 
     computed: {
+        containerRef() {
+            return computed(() => this.$refs.container);
+        },
+
         saving() {
-            return saving.value;
+            return this.savingRef.value;
         },
 
         errors() {
-            return errors.value;
+            return this.errorsRef.value;
         },
 
         formattedTitle() {
@@ -484,7 +487,11 @@ export default {
             }
 
             new Pipeline()
-                .provide({ container, errors, saving })
+                .provide({
+                    container: this.containerRef,
+                    errors: this.errorsRef,
+                    saving: this.savingRef,
+                })
                 .through([
                     new BeforeSaveHooks('runway', {
                         resource: this.resource,
@@ -674,8 +681,6 @@ export default {
 
     created() {
         window.history.replaceState({}, document.title, document.location.href.replace('created=true', ''));
-
-        container = computed(() => this.$refs.container);
     },
 
     unmounted() {
