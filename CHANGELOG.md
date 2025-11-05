@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.7.1 (2025-11-05)
+
+### What's fixed
+* Fixed augmentation on runway routes #745 by @duncanmcclean
+
+
+
 ## v8.7.0 (2025-11-04)
 
 ### What's new
