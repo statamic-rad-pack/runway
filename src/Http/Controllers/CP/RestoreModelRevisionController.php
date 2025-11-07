@@ -5,7 +5,6 @@ namespace StatamicRadPack\Runway\Http\Controllers\CP;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Statamic\Http\Controllers\CP\CpController;
-use Statamic\Revisions\WorkingCopy;
 use StatamicRadPack\Runway\Resource;
 
 class RestoreModelRevisionController extends CpController
@@ -18,7 +17,7 @@ class RestoreModelRevisionController extends CpController
         }
 
         if ($model->published()) {
-            WorkingCopy::fromRevision($target)->date(now())->save();
+            $target->toWorkingCopy()->date(now())->save();
         } else {
             $model->makeFromRevision($target)->published(false)->save();
         }

@@ -506,7 +506,7 @@ export default {
                     if (this.revisionsEnabled) {
                         clearTimeout(this.trackDirtyStateTimeout);
                         this.trackDirtyState = false;
-                        this.values = resetValuesFromResponse(response.data.data.values);
+                        this.values = resetValuesFromResponse(response.data.data.values, this.$refs.container);
                         this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 500);
                         this.$nextTick(() => this.$emit('saved', response));
                         return;

@@ -10,20 +10,16 @@ use StatamicRadPack\Runway\Tests\TestCase;
 
 class RestoreModelRevisionController extends TestCase
 {
-    private $dir;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->dir = __DIR__.'/tmp';
         config(['statamic.revisions.enabled' => true]);
-        config(['statamic.revisions.path' => $this->dir]);
     }
 
     protected function tearDown(): void
     {
-        Folder::delete($this->dir);
+        Folder::delete(__DIR__.'/../../../__fixtures__/revisions');
 
         parent::tearDown();
     }
@@ -47,7 +43,7 @@ class RestoreModelRevisionController extends TestCase
 
         $this
             ->actingAs(User::make()->id('user-1')->makeSuper()->save())
-            ->post($model->runwayRestoreRevisionUrl(), ['revision' => $revision->id()])
+            ->post($model->runwayRestoreRevisionUrl(), ['revision' => $revision->date()->timestamp])
             ->assertOk()
             ->assertSessionHas('success');
 

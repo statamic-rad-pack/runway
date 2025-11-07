@@ -11,20 +11,16 @@ use StatamicRadPack\Runway\Tests\TestCase;
 
 class ModelRevisionsControllerTest extends TestCase
 {
-    private $dir;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->dir = __DIR__.'/tmp';
         config(['statamic.revisions.enabled' => true]);
-        config(['statamic.revisions.path' => $this->dir]);
     }
 
     protected function tearDown(): void
     {
-        Folder::delete($this->dir);
+        Folder::delete(__DIR__.'/../../../__fixtures__/revisions');
 
         parent::tearDown();
     }
@@ -61,8 +57,8 @@ class ModelRevisionsControllerTest extends TestCase
             ->assertJsonPath('0.revisions.0.attributes.data.title', 'Original title')
             ->assertJsonPath('0.revisions.0.attributes.item_url', "http://localhost/cp/runway/post/{$model->id}/revisions/".Carbon::parse('2023-12-12 15:00:00')->timestamp)
 
-            ->assertJsonPath('1.revisions.0.action', 'revision')
-            ->assertJsonPath('1.revisions.0.message', false)
+            ->assertJsonPath('1.revisions.0.action', 'working')
+            ->assertJsonPath('1.revisions.0.message', null)
             ->assertJsonPath('1.revisions.0.attributes.data.title', 'Title modified in working copy')
             ->assertJsonPath('1.revisions.0.attributes.item_url', "http://localhost/cp/runway/post/{$model->id}/revisions/".Carbon::parse('2024-01-01 10:30:00')->timestamp)
 
