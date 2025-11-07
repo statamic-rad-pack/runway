@@ -1,5 +1,20 @@
 # Changelog
 
+## v9.0.0-alpha.5 (2025-11-07)
+
+### What's improved
+- Converted widget to `VueComponent::render()` approach #735 by @duncanmcclean
+- Moved listing into index page component #743 by @duncanmcclean
+- Revision changes #744 by @duncanmcclean
+
+### What's fixed
+- Fix re-used state in publish forms #742 by @duncanmcclean
+
+### What's breaking
+- Renamed `scope` parameter on Runway tag #741 by @duncanmcclean
+
+
+
 ## v9.0.0-alpha.4 (2025-10-21)
 
 ### What's new
