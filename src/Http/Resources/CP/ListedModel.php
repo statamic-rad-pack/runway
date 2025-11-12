@@ -74,7 +74,11 @@ class ListedModel extends JsonResource
                 $fieldKey = Str::after($field->handle(), "{$nestedFieldPrefix}_");
                 $value = data_get($this->resource, "{$nestedFieldPrefix}.{$fieldKey}");
             } else {
-                $value = $extra[$key] ?? $this->resource->getAttribute($key);
+                if ($this->runwayResource->ignoreCasts($key)) {
+                    $value = $extra[$key] ?? $this->resource->getRawOriginal($key);
+                } else {
+                    $value = $extra[$key] ?? $this->resource->getAttribute($key);
+                }
             }
 
             if (! $field) {
