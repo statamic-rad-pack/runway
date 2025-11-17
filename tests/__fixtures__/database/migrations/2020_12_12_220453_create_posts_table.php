@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use StatamicRadPack\Runway\Tests\Fixtures\Enums\MembershipStatus;
 
 class CreatePostsTable extends Migration
 {
@@ -26,6 +27,7 @@ class CreatePostsTable extends Migration
             $table->datetime('end_date')->nullable();
             $table->boolean('published')->default(false);
             $table->string('mutated_value')->nullable();
+            $table->string('membership_status')->default(MembershipStatus::Free);
             $table->timestamps();
         });
     }

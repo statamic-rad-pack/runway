@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway\Tests\Fixtures\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use StatamicRadPack\Runway\Tests\Fixtures\Enums\MembershipStatus;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 
@@ -31,6 +32,10 @@ class PostFactory extends Factory
             'start_date' => now(),
             'published' => true,
             'mutated_value' => 'Foo',
+            'membership_status' => $this->faker->randomElement([
+                MembershipStatus::Free,
+                MembershipStatus::Paid,
+            ]),
         ];
     }
 
