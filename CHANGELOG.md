@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.7.2 (2025-11-17)
+
+### What's fixed
+- Handle enums correctly in listings #746 by @janis-ps
+
+
+
 ## v8.7.1 (2025-11-05)
 
 ### What's fixed
