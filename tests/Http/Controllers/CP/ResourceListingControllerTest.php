@@ -18,13 +18,6 @@ class ResourceListingControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->withoutExceptionHandling();
-    }
-
     #[Test]
     public function user_with_no_permissions_cannot_access_resource_listing()
     {
