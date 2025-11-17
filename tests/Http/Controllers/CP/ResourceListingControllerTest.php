@@ -318,6 +318,8 @@ class ResourceListingControllerTest extends TestCase
     #[Test]
     public function can_get_value_from_enum_column()
     {
+        $this->withoutExceptionHandling();
+
         Post::factory()->create(['membership_status' => MembershipStatus::Free]);
         Post::factory()->create(['membership_status' => MembershipStatus::Paid]);
 
