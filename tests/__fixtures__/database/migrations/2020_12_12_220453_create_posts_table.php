@@ -27,7 +27,7 @@ class CreatePostsTable extends Migration
             $table->datetime('end_date')->nullable();
             $table->boolean('published')->default(false);
             $table->string('mutated_value')->nullable();
-            $table->string('membership_status')->default(MembershipStatus::Free);
+            $table->string('membership_status')->default(MembershipStatus::Free->value);
             $table->timestamps();
         });
     }
