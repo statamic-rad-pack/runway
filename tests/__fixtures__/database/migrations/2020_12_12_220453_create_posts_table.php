@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use StatamicRadPack\Runway\Tests\Fixtures\Enums\MembershipStatus;
 
 class CreatePostsTable extends Migration
 {
