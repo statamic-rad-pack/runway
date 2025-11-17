@@ -18,6 +18,13 @@ class ResourceListingControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->withoutExceptionHandling();
+    }
+
     #[Test]
     public function user_with_no_permissions_cannot_access_resource_listing()
     {
@@ -318,8 +325,6 @@ class ResourceListingControllerTest extends TestCase
     #[Test]
     public function can_get_value_from_enum_column()
     {
-        $this->withoutExceptionHandling();
-
         Post::factory()->create(['membership_status' => MembershipStatus::Free]);
         Post::factory()->create(['membership_status' => MembershipStatus::Paid]);
 
