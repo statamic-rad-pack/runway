@@ -10,6 +10,7 @@ use Statamic\Facades\User;
 use Statamic\Fields\Blueprint;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Resource;
+use UnitEnum;
 
 class ListedModel extends JsonResource
 {
@@ -74,10 +75,10 @@ class ListedModel extends JsonResource
                 $fieldKey = Str::after($field->handle(), "{$nestedFieldPrefix}_");
                 $value = data_get($this->resource, "{$nestedFieldPrefix}.{$fieldKey}");
             } else {
-                if ($this->runwayResource->ignoreCasts($key)) {
-                    $value = $extra[$key] ?? $this->resource->getRawOriginal($key);
-                } else {
-                    $value = $extra[$key] ?? $this->resource->getAttribute($key);
+                $value = $extra[$key] ?? $this->resource->getAttribute($key);
+
+                if ($value instanceof UnitEnum) {
+                    $value = $value->value;
                 }
             }
 

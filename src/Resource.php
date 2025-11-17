@@ -200,11 +200,6 @@ class Resource
             ->first();
     }
 
-    public function ignoreCasts(string $field): bool
-    {
-        return in_array($field, $this->config->get('ignore_casts', []));
-    }
-
     /**
      * Maps Eloquent relationships to their respective blueprint fields.
      */
