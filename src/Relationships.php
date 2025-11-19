@@ -98,7 +98,7 @@ class Relationships
 
     protected function saveCustomRelationship(Field $field, Relation $relationship, array $values): void
     {
-        if ($callable = self::$customSaveMethods[get_class($relationship)] ?? false){
+        if ($callable = self::$customSaveMethods[get_class($relationship)] ?? false) {
             $callable($field, $relationship, $values);
         }
     }
