@@ -13,6 +13,8 @@ use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 
 class Relationships
 {
+    protected static $customSaveMethods = [];
+
     public function __construct(protected Model $model, protected array $values = []) {}
 
     public static function for(Model $model): self
