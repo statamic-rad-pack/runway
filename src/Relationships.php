@@ -95,4 +95,16 @@ class Relationships
 
         $relationship->sync($values);
     }
+
+    protected function saveCustomRelationship(Field $field, Relation $relationship, array $values): void
+    {
+        if($callable = self::$customSaveMethods[get_class($relationship)] ?? false){
+            $callable($field, $relationship, $values);
+        }
+    }
+
+    public static function registerCustomSaveMethod(string $relationshipClass, Callable $callable): void
+    {
+        self::$customSaveMethods[$relationshipClass] = $callable;
+    }
 }
