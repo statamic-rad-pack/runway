@@ -103,7 +103,7 @@ class Relationships
         }
     }
 
-    public static function registerCustomSaveMethod(string $relationshipClass, Callable $callable): void
+    public static function registerCustomSaveMethod(string $relationshipClass, callable $callable): void
     {
         self::$customSaveMethods[$relationshipClass] = $callable;
     }
