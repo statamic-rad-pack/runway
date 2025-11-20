@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Schema;
-use Statamic\Fields\Field;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
+use Statamic\Fields\Field;
+use Statamic\Support\Traits\Hookable;
 
 class Relationships
 {
-    protected static $customSaveMethods = [];
+    use Hookable;
 
     public function __construct(protected Model $model, protected array $values = []) {}
 
@@ -40,7 +41,11 @@ class Relationships
                 match (get_class($relationship = $this->model->{$relationshipName}())) {
                     HasMany::class => $this->saveHasManyRelationship($field, $relationship, $this->values[$field->handle()] ?? []),
                     BelongsToMany::class => $this->saveBelongsToManyRelationship($field, $relationship, $this->values[$field->handle()] ?? []),
-                    default => $this->saveCustomRelationship($field, $relationship, $this->values[$field->handle()] ?? [])
+                    default => $this->runHooks('saveCustomRelationship', [
+                        'relationship' => $relationship,
+                        'field' => $field,
+                        'values' => $this->values[$field->handle()] ?? [],
+                    ])
                 };
             });
     }
@@ -94,17 +99,5 @@ class Relationships
         }
 
         $relationship->sync($values);
-    }
-
-    protected function saveCustomRelationship(Field $field, Relation $relationship, array $values): void
-    {
-        if ($callable = self::$customSaveMethods[get_class($relationship)] ?? false) {
-            $callable($field, $relationship, $values);
-        }
-    }
-
-    public static function registerCustomSaveMethod(string $relationshipClass, callable $callable): void
-    {
-        self::$customSaveMethods[$relationshipClass] = $callable;
     }
 }
