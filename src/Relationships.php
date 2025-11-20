@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Schema;
-use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 use Statamic\Fields\Field;
 use Statamic\Support\Traits\Hookable;
+use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 
 class Relationships
 {
