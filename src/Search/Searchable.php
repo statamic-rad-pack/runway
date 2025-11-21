@@ -45,6 +45,11 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
         return $this->resource;
     }
 
+    public function published()
+    {
+        return $this->model->publishedStatus();
+    }
+
     public function getQueryableValue(string $field)
     {
         if ($field === 'site') {

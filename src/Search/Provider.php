@@ -50,7 +50,14 @@ class Provider extends BaseProvider
             return false;
         }
 
-        return $this->filter()($searchable);
+        if ($this->hasFilter()) {
+            return (! $resource->hasPublishStates() || $searchable->published())
+                && $this->filter()($searchable);
+        }
+
+        // todo: query scope
+
+        return true;
     }
 
     public function find(array $keys): Collection
