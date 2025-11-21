@@ -22,11 +22,13 @@ class Provider extends BaseProvider
 
         $models = (new LazyCollection($resources))
             ->flatMap(function ($handle) {
-                $query = Runway::findResource($handle)
-                    ->newEloquentQuery()
-                    ->when(! $this->hasFilter(), fn ($query) => $query->whereStatus('published'));
+                $query = Runway::findResource($handle)->newEloquentQuery();
 
                 $this->applyQueryScope($query);
+
+                if (! $this->hasFilter()) {
+                    $query->whereStatus('published');
+                }
 
                 return $query->lazy(config('statamic.search.chunk_size'));
             });
@@ -55,9 +57,13 @@ class Provider extends BaseProvider
                 && $this->filter()($searchable);
         }
 
-        // todo: query scope
+        $query = $resource->newEloquentQuery()
+            ->whereKey($searchable->model()->getKey())
+            ->whereStatus('published');
 
-        return true;
+        $this->applyQueryScope($query);
+
+        return $query->exists();
     }
 
     public function find(array $keys): Collection

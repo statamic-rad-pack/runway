@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway\Tests\Search;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use Statamic\Query\Scopes\Scope;
 use StatamicRadPack\Runway\Search\Provider;
 use StatamicRadPack\Runway\Search\Searchable;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
@@ -80,6 +81,34 @@ class ProviderTest extends TestCase
         ];
     }
 
+    #[Test]
+    public function it_can_use_a_query_scope()
+    {
+        CustomModelsScope::register();
+
+        $a = Post::factory()->create();
+        $b = Post::factory()->create();
+        $c = Post::factory()->create(['title' => 'Not Searchable']);
+        $d = Post::factory()->create(['title' => 'Searchable']);
+        $e = Post::factory()->create();
+
+        $provider = $this->makeProvider('en', [
+            'searchables' => ['post'],
+            'query_scope' => 'custom_models_scope',
+        ]);
+
+        $this->assertEquals(
+            ["runway::post::{$a->id}", "runway::post::{$b->id}", "runway::post::{$d->id}", "runway::post::{$e->id}"],
+            $provider->provide()->all()
+        );
+
+        $this->assertTrue($provider->contains(new Searchable($a)));
+        $this->assertTrue($provider->contains(new Searchable($b)));
+        $this->assertFalse($provider->contains(new Searchable($c)));
+        $this->assertTrue($provider->contains(new Searchable($d)));
+        $this->assertTrue($provider->contains(new Searchable($e)));
+    }
+
     private function makeProvider($locale, $config)
     {
         $index = $this->makeIndex($locale, $config);
@@ -114,5 +143,13 @@ class TestSearchableModelsFilter
     public function handle($item)
     {
         return $item->title !== 'Not Searchable';
+    }
+}
+
+class CustomModelsScope extends Scope
+{
+    public function apply($query, $params)
+    {
+        $query->where('title', '!=', 'Not Searchable');
     }
 }
