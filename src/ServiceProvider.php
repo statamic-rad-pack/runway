@@ -240,6 +240,8 @@ class ServiceProvider extends AddonServiceProvider
     {
         SearchProvider::register();
 
+        Search::addContentSearchable(SearchProvider::class);
+
         return $this;
     }
 
