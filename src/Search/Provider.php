@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Search;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\LazyCollection;
 use Statamic\Search\Searchables\Provider as BaseProvider;
 use Statamic\Support\Str;
 use StatamicRadPack\Runway\Runway;
@@ -13,17 +14,26 @@ class Provider extends BaseProvider
 
     protected static $referencePrefix = 'runway';
 
-    public function provide(): Collection
+    public function provide(): LazyCollection
     {
-        $resources = $this->usesWildcard() ? Runway::allResources()->keys() : $this->keys;
+        $resources = $this->usesWildcard()
+            ? Runway::allResources()->keys()
+            : $this->keys;
 
-        return collect($resources)->flatMap(function ($handle) {
-            return Runway::findResource($handle)
-                ->newEloquentQuery()
-                ->whereStatus('published')
-                ->get()
-                ->mapInto(Searchable::class);
-        })->filter($this->filter());
+        $models = (new LazyCollection($resources))
+            ->flatMap(function ($handle) {
+                return Runway::findResource($handle)
+                    ->newEloquentQuery()
+                    ->whereStatus('published')
+                    // todo: query scope
+                    ->lazy(config('statamic.search.chunk_size'));
+            });
+
+        if ($this->hasFilter()) {
+            return $models->filter($this->filter())->values()->map->reference();
+        }
+
+        return $models->map->reference();
     }
 
     public function contains($searchable): bool

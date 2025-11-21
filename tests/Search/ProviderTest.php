@@ -16,19 +16,14 @@ class ProviderTest extends TestCase
         $posts = Post::factory()->count(5)->create();
 
         $provider = $this->makeProvider('en', ['searchables' => ['post']]);
-        $models = $provider->provide();
 
-        $this->assertCount(5, $models);
-        $this->assertInstanceOf(Searchable::class, $models[0]);
-        $this->assertEquals("runway::post::{$posts[0]->id}", $models[0]->getSearchReference());
-        $this->assertInstanceOf(Searchable::class, $models[1]);
-        $this->assertEquals("runway::post::{$posts[1]->id}", $models[1]->getSearchReference());
-        $this->assertInstanceOf(Searchable::class, $models[2]);
-        $this->assertEquals("runway::post::{$posts[2]->id}", $models[2]->getSearchReference());
-        $this->assertInstanceOf(Searchable::class, $models[3]);
-        $this->assertEquals("runway::post::{$posts[3]->id}", $models[3]->getSearchReference());
-        $this->assertInstanceOf(Searchable::class, $models[4]);
-        $this->assertEquals("runway::post::{$posts[4]->id}", $models[4]->getSearchReference());
+        $this->assertEquals([
+            "runway::post::{$posts[0]->id}",
+            "runway::post::{$posts[1]->id}",
+            "runway::post::{$posts[2]->id}",
+            "runway::post::{$posts[3]->id}",
+            "runway::post::{$posts[4]->id}",
+        ], $provider->provide()->all());
     }
 
     #[Test]
@@ -38,14 +33,11 @@ class ProviderTest extends TestCase
         Post::factory()->count(2)->unpublished()->create();
 
         $provider = $this->makeProvider('en', ['searchables' => ['post']]);
-        $models = $provider->provide();
-
-        $this->assertCount(2, $models);
 
         $this->assertEquals([
             "runway::post::{$publishedModels[0]->id}",
             "runway::post::{$publishedModels[1]->id}",
-        ], $models->map->getSearchReference()->all());
+        ], $provider->provide()->all());
     }
 
     private function makeProvider($locale, $config)
