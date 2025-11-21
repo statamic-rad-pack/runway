@@ -22,11 +22,13 @@ class Provider extends BaseProvider
 
         $models = (new LazyCollection($resources))
             ->flatMap(function ($handle) {
-                return Runway::findResource($handle)
+                $query = Runway::findResource($handle)
                     ->newEloquentQuery()
-                    ->whereStatus('published')
-                    // todo: query scope
-                    ->lazy(config('statamic.search.chunk_size'));
+                    ->when(! $this->hasFilter(), fn ($query) => $query->whereStatus('published'));
+
+                $this->applyQueryScope($query);
+
+                return $query->lazy(config('statamic.search.chunk_size'));
             });
 
         if ($this->hasFilter()) {
