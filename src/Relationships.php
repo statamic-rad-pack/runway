@@ -37,7 +37,7 @@ class Relationships
             ->filter(fn (Field $field) => $field->fieldtype() instanceof HasManyFieldtype)
             ->each(function (Field $field): void {
                 $relationshipName = $this->model->runwayResource()->eloquentRelationships()->get($field->handle());
-                $values = $this->values[$relationshipName] ?? [];
+                $values = $this->values[$field->handle()] ?? [];
 
                 match (get_class($relationship = $this->model->{$relationshipName}())) {
                     HasMany::class => $this->saveHasManyRelationship($field, $relationship, $values),
