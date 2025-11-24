@@ -3,10 +3,12 @@
 namespace StatamicRadPack\Runway\Tests;
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Fieldset;
 use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\ExternalPost;
 
 class ResourceTest extends TestCase
 {
@@ -300,5 +302,52 @@ class ResourceTest extends TestCase
         $resource = Runway::findResource('post');
 
         $this->assertFalse($resource->revisionsEnabled());
+    }
+
+    #[Test]
+    public function scope_runway_search_works_with_custom_eloquent_connection()
+    {
+        // Set up a second SQLite database connection for the 'external' connection
+        Config::set('database.connections.external', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ]);
+
+        // Create the external_posts table on the 'external' connection
+        Schema::connection('external')->create('external_posts', function (\Illuminate\Database\Schema\Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->longText('body');
+            $table->timestamps();
+        });
+
+        // Register the ExternalPost resource
+        Config::set('runway.resources.'.ExternalPost::class, [
+            'name' => 'External Posts',
+        ]);
+
+        Runway::discoverResources();
+
+        // Create multiple models on the external connection
+        ExternalPost::create([
+            'title' => 'Test External Post',
+            'body' => 'This is the body of the test post.',
+        ]);
+
+        ExternalPost::create([
+            'title' => 'Another Post',
+            'body' => 'This is different content.',
+        ]);
+
+        ExternalPost::create([
+            'title' => 'Something Else',
+            'body' => 'No matching content here.',
+        ]);
+
+        $results = ExternalPost::query()->runwaySearch('Test External')->get();
+
+        $this->assertCount(1, $results);
+        $this->assertEquals('Test External Post', $results->first()->title);
     }
 }
