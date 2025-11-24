@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.8.1 (2025-11-24)
+
+### What's improved
+- Added `RoutingModel::model()` method by @duncanmcclean
+
+
+
 ## v8.8.0 (2025-11-24)
 
 ### What's new
