@@ -9,10 +9,13 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Schema;
 use Statamic\Fields\Field;
+use Statamic\Support\Traits\Hookable;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 
 class Relationships
 {
+    use Hookable;
+
     public function __construct(protected Model $model, protected array $values = []) {}
 
     public static function for(Model $model): self
@@ -34,10 +37,12 @@ class Relationships
             ->filter(fn (Field $field) => $field->fieldtype() instanceof HasManyFieldtype)
             ->each(function (Field $field): void {
                 $relationshipName = $this->model->runwayResource()->eloquentRelationships()->get($field->handle());
+                $values = $this->values[$relationshipName] ?? [];
 
                 match (get_class($relationship = $this->model->{$relationshipName}())) {
-                    HasMany::class => $this->saveHasManyRelationship($field, $relationship, $this->values[$field->handle()] ?? []),
-                    BelongsToMany::class => $this->saveBelongsToManyRelationship($field, $relationship, $this->values[$field->handle()] ?? []),
+                    HasMany::class => $this->saveHasManyRelationship($field, $relationship, $values),
+                    BelongsToMany::class => $this->saveBelongsToManyRelationship($field, $relationship, $values),
+                    default => $this->runHooks('saveCustomRelationship', compact('field', 'relationship', 'values')),
                 };
             });
     }
