@@ -21,6 +21,11 @@ class RoutingModel implements Augmentable, Responsable
         $this->supplements = collect();
     }
 
+    public function model(): Model
+    {
+        return $this->model;
+    }
+
     public function route(): ?string
     {
         if (! $this->model->runwayUri) {
