@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.8.2 (2025-11-24)
+
+### What's fixed
+- Fixed BelongsToMany field not saving #751 by @janis-ps
+
+
+
 ## v8.8.1 (2025-11-24)
 
 ### What's improved
