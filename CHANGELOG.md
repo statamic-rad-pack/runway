@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.8.0 (2025-11-24)
+
+### What's new
+- Allow saving custom relationship types #747 by @caseydwyer
+
+
+
 ## v8.7.2 (2025-11-17)
 
 ### What's fixed
