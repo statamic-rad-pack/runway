@@ -341,9 +341,16 @@ export default {
             saveKeyBinding: null,
             quickSaveKeyBinding: null,
             quickSave: false,
+        };
+    },
 
-            savingRef: ref(false),
-            errorsRef: ref({}),
+    setup() {
+        const savingRef = ref(false);
+        const errorsRef = ref({});
+
+        return {
+            savingRef: computed(() => savingRef),
+            errorsRef: computed(() => errorsRef),
         };
     },
 
