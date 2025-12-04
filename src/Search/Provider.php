@@ -26,15 +26,15 @@ class Provider extends BaseProvider
 
                 $this->applyQueryScope($query);
 
-                if (! $this->hasFilter()) {
+                if ($this->filter()) {
                     $query->whereStatus('published');
                 }
 
                 return $query->lazy(config('statamic.search.chunk_size'));
             });
 
-        if ($this->hasFilter()) {
-            return $models->filter($this->filter())->values()->map->reference();
+        if ($filter = $this->filter()) {
+            return $models->filter($filter)->values()->map->reference();
         }
 
         return $models->map->reference();
@@ -52,9 +52,9 @@ class Provider extends BaseProvider
             return false;
         }
 
-        if ($this->hasFilter()) {
+        if ($filter = $this->filter()) {
             return (! $resource->hasPublishStates() || $searchable->published())
-                && $this->filter()($searchable);
+                && $filter($searchable);
         }
 
         $query = $resource->newEloquentQuery()
