@@ -26,7 +26,7 @@ class Provider extends BaseProvider
 
                 $this->applyQueryScope($query);
 
-                if ($this->filter()) {
+                if (! $this->filter()) {
                     $query->whereStatus('published');
                 }
 
