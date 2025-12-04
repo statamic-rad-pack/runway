@@ -174,13 +174,13 @@ class BelongsToFieldtypeTest extends TestCase
     #[Test]
     public function can_get_index_items_and_search_using_a_search_index()
     {
-        Config::set('statamic.search.indexes.test_search_index', [
+        Config::set('statamic.search.indexes.test', [
             'driver' => 'local',
             'searchables' => ['runway:author'],
             'fields' => ['name'],
         ]);
 
-        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.search_index', 'test_search_index');
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.search_index', 'test');
 
         Runway::discoverResources();
 

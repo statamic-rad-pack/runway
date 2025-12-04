@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Search;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\LazyCollection;
 use Statamic\Search\Searchables\Provider as BaseProvider;
 use Statamic\Support\Str;
 use StatamicRadPack\Runway\Runway;
@@ -13,17 +14,30 @@ class Provider extends BaseProvider
 
     protected static $referencePrefix = 'runway';
 
-    public function provide(): Collection
+    public function provide(): LazyCollection
     {
-        $resources = $this->usesWildcard() ? Runway::allResources()->keys() : $this->keys;
+        $resources = $this->usesWildcard()
+            ? Runway::allResources()->keys()
+            : $this->keys;
 
-        return collect($resources)->flatMap(function ($handle) {
-            return Runway::findResource($handle)
-                ->newEloquentQuery()
-                ->whereStatus('published')
-                ->get()
-                ->mapInto(Searchable::class);
-        })->filter($this->filter());
+        $models = (new LazyCollection($resources))
+            ->flatMap(function ($handle) {
+                $query = Runway::findResource($handle)->newEloquentQuery();
+
+                $this->applyQueryScope($query);
+
+                if (! $this->filter()) {
+                    $query->whereStatus('published');
+                }
+
+                return $query->lazy(config('statamic.search.chunk_size'));
+            });
+
+        if ($filter = $this->filter()) {
+            return $models->filter($filter)->values()->map->reference();
+        }
+
+        return $models->map->reference();
     }
 
     public function contains($searchable): bool
@@ -38,7 +52,18 @@ class Provider extends BaseProvider
             return false;
         }
 
-        return $this->filter()($searchable);
+        if ($filter = $this->filter()) {
+            return (! $resource->hasPublishStates() || $searchable->published())
+                && $filter($searchable);
+        }
+
+        $query = $resource->newEloquentQuery()
+            ->whereKey($searchable->model()->getKey())
+            ->whereStatus('published');
+
+        $this->applyQueryScope($query);
+
+        return $query->exists();
     }
 
     public function find(array $keys): Collection

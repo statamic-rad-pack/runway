@@ -21,7 +21,6 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
     use ContainsSupplementalData, HasAugmentedInstance;
 
     protected $model;
-
     protected $resource;
 
     public function __construct(Model $model)
@@ -46,6 +45,11 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
         return $this->resource;
     }
 
+    public function published()
+    {
+        return $this->model->publishedStatus();
+    }
+
     public function getQueryableValue(string $field)
     {
         if ($field === 'site') {
@@ -66,10 +70,7 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
 
     public function getSearchReference(): string
     {
-        return vsprintf('runway::%s::%s', [
-            $this->resource->handle(),
-            $this->model->getKey(),
-        ]);
+        return $this->model->reference();
     }
 
     public function toSearchResult(): Result
