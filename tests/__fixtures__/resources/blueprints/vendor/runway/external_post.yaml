@@ -1,0 +1,16 @@
+tabs:
+  main:
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              listable: true
+          -
+            handle: body
+            field:
+              type: textarea
+  sidebar:
+    fields: {  }
