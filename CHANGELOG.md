@@ -1,5 +1,18 @@
 # Changelog
 
+## v9.0.0-alpha.6 (2025-12-04)
+
+### What's improved
+- Updated Runway searchable to go alongside changes in Statamic #748 by @duncanmcclean
+
+### What's fixed
+- Fixed issue with saving and errors state on publish forms
+
+### What's breaking
+- Dropped support for Laravel 11 #750 by @duncanmcclean
+
+
+
 ## v9.0.0-alpha.5 (2025-11-07)
 
 ### What's improved
