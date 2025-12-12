@@ -1,5 +1,13 @@
 # Changelog
 
+## v8.8.3 (2025-12-12)
+
+### What's fixed
+- Fix runway search on models with individual connections #753 by @godismyjudge95
+- PHP 8.5 compatibility #752 by @duncanmcclean
+
+
+
 ## v8.8.2 (2025-11-24)
 
 ### What's fixed
