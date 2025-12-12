@@ -8,6 +8,7 @@ use Statamic\Facades\Blueprint;
 use Statamic\Stache\Stores\UsersStore;
 use Statamic\Statamic;
 use Statamic\Testing\AddonTestCase;
+use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\ServiceProvider;
 
 abstract class TestCase extends AddonTestCase
@@ -54,6 +55,8 @@ abstract class TestCase extends AddonTestCase
         Statamic::booted(function () {
             Blueprint::setDirectory(__DIR__.'/__fixtures__/resources/blueprints');
         });
+
+        Runway::clearRegisteredResources();
     }
 
     protected function getPackageProviders($app): array

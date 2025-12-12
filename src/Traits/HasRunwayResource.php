@@ -3,7 +3,6 @@
 namespace StatamicRadPack\Runway\Traits;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Statamic\Contracts\Data\Augmented;
 use Statamic\Contracts\Revisions\Revision;
@@ -59,7 +58,7 @@ trait HasRunwayResource
     public function scopeRunwaySearch(Builder $query, string $searchQuery)
     {
         $this->runwayResource()->blueprint()->fields()->all()
-            ->filter(fn (Field $field) => Schema::hasColumn($this->getTable(), $field->handle()))
+            ->filter(fn (Field $field) => $this->getConnection()->getSchemaBuilder()->hasColumn($this->getTable(), $field->handle()))
             ->reject(fn (Field $field) => $field->visibility() === 'computed')
             ->each(fn (Field $field) => $query->orWhere($this->getColumnForField($field->handle()), 'LIKE', '%'.$searchQuery.'%'));
     }

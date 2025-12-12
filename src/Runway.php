@@ -82,6 +82,13 @@ class Runway
         return new static;
     }
 
+    public static function clearRegisteredResources(): self
+    {
+        static::$registeredResources = [];
+
+        return new static;
+    }
+
     public static function usesRouting(): bool
     {
         return static::allResources()->filter->hasRouting()->count() >= 1;
