@@ -23,12 +23,12 @@ class RunwayTest extends TestCase
         $this->assertCount(3, $all);
 
         $this->assertTrue($all[0] instanceof Resource);
-        $this->assertEquals('post', $all[0]->handle());
+        $this->assertEquals('author', $all[0]->handle());
         $this->assertTrue($all[0]->model() instanceof Model);
         $this->assertTrue($all[0]->blueprint() instanceof Blueprint);
 
         $this->assertTrue($all[1] instanceof Resource);
-        $this->assertEquals('author', $all[1]->handle());
+        $this->assertEquals('post', $all[1]->handle());
         $this->assertTrue($all[1]->model() instanceof Model);
         $this->assertTrue($all[1]->blueprint() instanceof Blueprint);
 

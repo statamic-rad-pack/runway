@@ -6,6 +6,19 @@ use StatamicRadPack\Runway\Tests\Fixtures\Models\User;
 
 return [
     'resources' => [
+        Author::class => [
+            'name' => 'Authors',
+            'listing' => [
+                'columns' => [
+                    'name',
+                ],
+                'sort' => [
+                    'column' => 'name',
+                    'direction' => 'asc',
+                ],
+            ],
+        ],
+
         Post::class => [
             'name' => 'Posts',
             'listing' => [
@@ -22,19 +35,6 @@ return [
             'revisions' => true,
             'nested_field_prefixes' => [
                 'values', 'external_links',
-            ],
-        ],
-
-        Author::class => [
-            'name' => 'Authors',
-            'listing' => [
-                'columns' => [
-                    'name',
-                ],
-                'sort' => [
-                    'column' => 'name',
-                    'direction' => 'asc',
-                ],
             ],
         ],
 
