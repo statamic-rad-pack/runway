@@ -268,7 +268,7 @@ class ServiceProvider extends AddonServiceProvider
 
     protected function shouldDiscoverResources(): bool
     {
-        if (Str::startsWith(request()->path(), '_ignition/')) {
+        if (Str::startsWith(request()->path(), config('runway.exclude_urls'))) {
             return false;
         }
 
