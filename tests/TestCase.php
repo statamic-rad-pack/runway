@@ -25,6 +25,11 @@ abstract class TestCase extends AddonTestCase
 
         $this->loadMigrationsFrom(__DIR__.'/__fixtures__/database/migrations');
         $this->runLaravelMigrations();
+
+        // We need to do this until https://github.com/statamic/cms/pull/13396
+        // has been merged and tagged.
+        \Statamic\Facades\CP\Nav::shouldReceive('clearCachedUrls')->zeroOrMoreTimes();
+        $this->addToAssertionCount(-1); // Dont want to assert this
     }
 
     protected function resolveApplicationConfiguration($app)
