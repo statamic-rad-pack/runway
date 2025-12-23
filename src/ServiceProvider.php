@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
 use Spatie\ErrorSolutions\Contracts\SolutionProviderRepository;
 use Statamic\API\Middleware\Cache;
@@ -20,6 +21,8 @@ use Statamic\Facades\GraphQL;
 use Statamic\Facades\Permission;
 use Statamic\Facades\Search;
 use Statamic\Http\Middleware\RequireStatamicPro;
+use Statamic\Listeners\UpdateAssetReferences;
+use Statamic\Listeners\UpdateTermReferences;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 use StatamicRadPack\Runway\GraphQL\NestedFieldsType;
@@ -69,6 +72,7 @@ class ServiceProvider extends AddonServiceProvider
                 ->registerNavigation()
                 ->registerBlueprints()
                 ->registerSearchProvider()
+                ->registerReferenceUpdaterHook()
                 ->bootGraphQl()
                 ->bootApi()
                 ->bootModelEventListeners()
@@ -241,6 +245,20 @@ class ServiceProvider extends AddonServiceProvider
         SearchProvider::register();
 
         Search::addContentSearchable(SearchProvider::class);
+
+        return $this;
+    }
+
+    protected function registerReferenceUpdaterHook(): self
+    {
+        $referenceUpdaterHook = function ($payload, $next) {
+            return LazyCollection::make(Runway::allResources())->flatMap(function (Resource $resource) {
+                return $resource->newEloquentQuery()->lazy();
+            });
+        };
+
+        UpdateTermReferences::hook('additional', $referenceUpdaterHook);
+        UpdateAssetReferences::hook('additional', $referenceUpdaterHook);
 
         return $this;
     }

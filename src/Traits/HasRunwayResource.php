@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Statamic\Contracts\Data\Augmented;
 use Statamic\Contracts\Revisions\Revision;
 use Statamic\Data\ContainsSupplementalData;
+use Statamic\Fields\Blueprint;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
 use Statamic\Fieldtypes\Section;
@@ -43,6 +44,11 @@ trait HasRunwayResource
     public function runwayResource(): Resource
     {
         return Runway::findResourceByModel($this);
+    }
+
+    public function blueprint(): Blueprint
+    {
+        return $this->runwayResource()->blueprint();
     }
 
     public function reference(): string
@@ -347,6 +353,19 @@ trait HasRunwayResource
      */
     public function updateLastModified($user = false): self
     {
+        return $this;
+    }
+
+    public function data($data = null)
+    {
+        if (func_num_args() === 0) {
+            return collect($this->attributes);
+        }
+
+        foreach ($data as $key => $value) {
+            $this->attributes[$key] = $value;
+        }
+
         return $this;
     }
 }
