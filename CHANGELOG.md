@@ -1,5 +1,17 @@
 # Changelog
 
+## v9.0.0-alpha.7 (2026-01-05)
+
+### What's new
+- Update asset & term references in models #754 by @duncanmcclean
+
+### What's fixed
+- Avoid persisting active tab in URL hash when publish form is inline by @duncanmcclean
+- Make the tests pass for now by @duncanmcclean
+- Use class name to add content searchable by @duncanmcclean
+
+
+
 ## v9.0.0-alpha.6 (2025-12-04)
 
 ### What's improved
