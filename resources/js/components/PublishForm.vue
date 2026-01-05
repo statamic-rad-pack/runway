@@ -83,6 +83,7 @@
             :meta="meta"
             :errors="errors"
             :track-dirty-state="trackDirtyState"
+            :remember-tab="!isInline"
         >
             <LivePreview
                 :enabled="isPreviewing"
