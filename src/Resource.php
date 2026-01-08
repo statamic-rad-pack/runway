@@ -242,7 +242,7 @@ class Resource
      */
     public function eagerLoadingRelationships(): array
     {
-        if (!is_null($eagerLoadingRelationships = $this->config->get('with'))) {
+        if (! is_null($eagerLoadingRelationships = $this->config->get('with'))) {
             return $eagerLoadingRelationships;
         }
 
