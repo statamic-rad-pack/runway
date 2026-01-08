@@ -4,8 +4,8 @@
  * Before doing that, we want to show a confirmation modal to the user.
  */
 
-import { ConfirmationModal, RelatedItem as StatamicRelatedItem } from '@statamic/cms/temporary';
-import { injectPublishContext } from '@statamic/cms/ui';
+import { RelatedItem as StatamicRelatedItem } from '@statamic/cms';
+import { injectPublishContext, ConfirmationModal } from '@statamic/cms/ui';
 import { ref, computed, getCurrentInstance } from 'vue'
 
 const { meta } = injectPublishContext();
