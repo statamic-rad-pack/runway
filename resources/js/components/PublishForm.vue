@@ -185,21 +185,20 @@
             </LivePreview>
         </PublishContainer>
 
-        <stack
-            name="revision-history"
-            v-if="showRevisionHistory"
-            @closed="showRevisionHistory = false"
-            :narrow="true"
-            v-slot="{ close }"
+        <Stack
+            ref="revisionHistoryStack"
+            size="narrow"
+            :title="__('Revision History')"
+            v-model:open="showRevisionHistory"
         >
             <revision-history
                 :index-url="actions.revisions"
                 :restore-url="actions.restore"
                 :reference="initialReference"
                 :can-restore-revisions="!readOnly"
-                @closed="close"
+                @closed="$refs.revisionHistoryStack.close()"
             />
-        </stack>
+        </Stack>
 
         <publish-actions
             v-if="confirmingPublish"
@@ -250,6 +249,7 @@ import {
     PublishLocalizations as LocalizationsCard,
     LivePreview,
     publishContextKey,
+    Stack,
 } from '@statamic/cms/ui';
 import { Pipeline, Request, BeforeSaveHooks, AfterSaveHooks, PipelineStopped } from '@statamic/cms/save-pipeline';
 import PublishActions from './PublishActions.vue';
@@ -286,6 +286,7 @@ export default {
         Subheading,
         Switch,
         Select,
+        Stack,
     },
 
     inject: {
