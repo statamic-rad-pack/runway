@@ -53,7 +53,7 @@ function confirmDeletion() {
         <StatamicRelatedItem v-bind="$props" @removed="removed" />
 
         <ConfirmationModal
-            v-if="showDeletionConfirmationModel"
+            :open="showDeletionConfirmationModel"
             :title="__('Unlink')"
             :body-text="__('Unlinking this model will result in it being deleted. Are you sure you want to do this?')"
             :button-text="__('Delete')"
