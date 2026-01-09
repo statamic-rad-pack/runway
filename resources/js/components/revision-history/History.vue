@@ -5,7 +5,7 @@
  */
 
 import Revision from './Revision.vue';
-import { RevisionHistory } from '@statamic/cms/temporary';
+import { RevisionHistory } from '@statamic/cms';
 
 export default {
     components: {

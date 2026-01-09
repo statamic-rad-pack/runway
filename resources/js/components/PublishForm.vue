@@ -218,8 +218,14 @@
 
 <script>
 import { router } from '@statamic/cms/inertia';
-import { ItemActions } from '@statamic/cms';
-import { SaveButtonOptions, HasPreferences, HasActions, clone, resetValuesFromResponse } from '@statamic/cms/temporary';
+import {
+    ItemActions,
+    SaveButtonOptions,
+    HasPreferencesMixin,
+    HasActionsMixin,
+    clone,
+    resetValuesFromResponse
+} from '@statamic/cms';
 import {
     Button,
     Card,
@@ -252,7 +258,7 @@ import striptags from 'striptags';
 import { computed, ref } from 'vue';
 
 export default {
-    mixins: [HasPreferences, HasActions],
+    mixins: [HasPreferencesMixin, HasActionsMixin],
 
     components: {
         Button,
