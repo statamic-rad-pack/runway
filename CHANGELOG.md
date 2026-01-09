@@ -1,5 +1,13 @@
 # Changelog
 
+## v9.0.0-alpha.8 (2026-01-09)
+
+### What's fixed
+- Sort out temporary JS imports #762 by @duncanmcclean
+- Update revision history stack #763 by @duncanmcclean
+
+
+
 ## v9.0.0-alpha.7 (2026-01-05)
 
 ### What's new
