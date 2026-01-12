@@ -1,5 +1,18 @@
 # Changelog
 
+## v8.8.4 (2026-01-12)
+
+### What's improved
+- Ability to prevent eager loading by providing empty `with` array #761 by @claasjansen
+- Update search indexes in a queue #764 by @janis-ps
+
+### What's fixed
+- Fixed error when visiting URL of soft-deleted model #766 by @duncanmcclean
+- Fixed `unique` validation rule #765 by @duncanmcclean
+- Render `ResourceNotFound` exception as a 404 #755 by @BobWez98
+
+
+
 ## v8.8.3 (2025-12-12)
 
 ### What's fixed
