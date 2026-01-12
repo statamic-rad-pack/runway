@@ -466,14 +466,8 @@ export default {
             return this.$config.get('direction', 'ltr');
         },
 
-        baseContainer() {
-            let parentContainer = this.publishContext;
-
-            while (parentContainer?.parentContainer) {
-                parentContainer = parentContainer.parentContainer;
-            }
-
-            return parentContainer;
+        parentContainer() {
+            return this.publishContext?.parentContainer;
         },
     },
 
@@ -620,7 +614,7 @@ export default {
          * This method is called when the inline publish form is created.
          */
         populateBelongsToRelationship() {
-            if (! this.baseContainer) return;
+            if (! this.parentContainer) return;
 
             this.initialBlueprint.tabs.forEach((tab) => {
                 tab.sections.forEach((section) => {
@@ -629,22 +623,22 @@ export default {
                         .filter((field) => {
                             // Gets the handle of the base resource from the store reference
                             // Example: "runway::posts::123" -> "posts"
-                            let baseResource = this.baseContainer.reference.value.split('::')[1];
+                            let baseResource = this.parentContainer.reference.value.split('::')[1];
 
                             return field.resource === baseResource;
                         })
                         .forEach((field) => {
-                            let alreadyExists = this.values[field.handle].includes(this.baseContainer.values.value.id);
+                            let alreadyExists = this.values[field.handle].includes(this.parentContainer.values.value.id);
 
                             if (!alreadyExists) {
-                                this.values[field.handle].push(this.baseContainer.values.value.id);
+                                this.values[field.handle].push(this.parentContainer.values.value.id);
 
                                 this.meta[field.handle].data = [
                                     {
-                                        id: this.baseContainer.values.value.id,
-                                        reference: this.baseContainer.reference.value,
-                                        title: this.baseContainer.values.value.title,
-                                        edit_url: this.baseContainer.values.value.edit_url,
+                                        id: this.parentContainer.values.value.id,
+                                        reference: this.parentContainer.reference.value,
+                                        title: this.parentContainer.values.value.title,
+                                        edit_url: this.parentContainer.values.value.edit_url,
                                     },
                                 ];
                             }
