@@ -242,8 +242,8 @@ class Resource
      */
     public function eagerLoadingRelationships(): array
     {
-        if (! is_null($eagerLoadingRelationships = $this->config->get('with'))) {
-            return $eagerLoadingRelationships;
+        if ($this->config->has('with')) {
+            return $this->config->get('with');
         }
 
         return $this->eloquentRelationships()->values()->toArray();
