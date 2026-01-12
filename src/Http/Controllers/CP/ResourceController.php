@@ -179,6 +179,9 @@ class ResourceController extends CpController
 
     public function update(UpdateRequest $request, Resource $resource, $model)
     {
+        $model = $resource->newEloquentQuery()->firstWhere($resource->model()->qualifyColumn($resource->routeKey()), $model);
+        $model = $model->fromWorkingCopy();
+
         $resource->blueprint()
             ->fields()
             ->setParent($model)
@@ -188,9 +191,6 @@ class ResourceController extends CpController
                 $resource->primaryKey() => $model->getAttribute($resource->primaryKey()),
             ])
             ->validate();
-
-        $model = $resource->newEloquentQuery()->firstWhere($resource->model()->qualifyColumn($resource->routeKey()), $model);
-        $model = $model->fromWorkingCopy();
 
         $this->prepareModelForSaving($resource, $model, $request);
 
