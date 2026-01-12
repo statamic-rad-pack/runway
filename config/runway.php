@@ -42,18 +42,4 @@ return [
 
     'disable_migrations' => false,
 
-    /*
-    |--------------------------------------------------------------------------
-    | Excluded urls
-    |--------------------------------------------------------------------------
-    |
-    | Should Runway resources always be registered?
-    | Start of the path you want to exlude is enough.
-    |
-    */
-
-    'exclude_urls' => [
-        '_ignition',
-        // 'other-path'
-    ],
 ];
