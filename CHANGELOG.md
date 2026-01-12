@@ -1,5 +1,12 @@
 # Changelog
 
+## v9.0.0-alpha.9 (2026-01-12)
+
+### What's fixed
+- Use parent publish form values when populating BelongsTo relationship #767 by @duncanmcclean
+
+
+
 ## v9.0.0-alpha.8 (2026-01-09)
 
 ### What's fixed
