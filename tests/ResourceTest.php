@@ -89,6 +89,20 @@ class ResourceTest extends TestCase
     }
 
     #[Test]
+    public function doesnt_get_eager_loading_relationships_when_config_is_empty_array()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.with', []);
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $eagerLoadingRelationships = $resource->eagerLoadingRelationships();
+
+        $this->assertEquals([], $eagerLoadingRelationships);
+    }
+
+    #[Test]
     public function can_get_generated_singular()
     {
         Runway::discoverResources();
