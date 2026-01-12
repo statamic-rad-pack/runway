@@ -179,10 +179,18 @@ class ResourceController extends CpController
 
     public function update(UpdateRequest $request, Resource $resource, $model)
     {
-        $resource->blueprint()->fields()->setParent($model)->addValues($request->all())->validator()->validate();
-
         $model = $resource->newEloquentQuery()->firstWhere($resource->model()->qualifyColumn($resource->routeKey()), $model);
         $model = $model->fromWorkingCopy();
+
+        $resource->blueprint()
+            ->fields()
+            ->setParent($model)
+            ->addValues($request->except($resource->primaryKey()))
+            ->validator()
+            ->withReplacements([
+                $resource->primaryKey() => $model->getAttribute($resource->primaryKey()),
+            ])
+            ->validate();
 
         $this->prepareModelForSaving($resource, $model, $request);
 
