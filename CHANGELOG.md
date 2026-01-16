@@ -1,5 +1,12 @@
 # Changelog
 
+## v9.0.0-alpha.10 (2026-01-16)
+
+### What's fixed
+- Stop loading views from `resources/views` #771 by @duncanmcclean
+
+
+
 ## v9.0.0-alpha.9 (2026-01-12)
 
 ### What's fixed
