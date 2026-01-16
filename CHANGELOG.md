@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.9.0 (2026-01-16)
+
+### What's new
+- Enable URL filter parameter support for Runway listings #768 by @mmodler
+
+
+
 ## v8.8.4 (2026-01-12)
 
 ### What's improved
