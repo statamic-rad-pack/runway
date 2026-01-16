@@ -49,7 +49,6 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::boot();
 
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'runway');
         $this->mergeConfigFrom(__DIR__.'/../config/runway.php', 'runway');
 
         if (! config('runway.disable_migrations')) {
