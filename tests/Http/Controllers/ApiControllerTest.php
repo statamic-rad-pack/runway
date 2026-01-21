@@ -149,8 +149,7 @@ class ApiControllerTest extends TestCase
             ->assertSee(['data'])
             ->assertJsonPath('data.id', $post->id)
             ->assertJsonPath('data.values.alt_title', 'Alternative Title...')
-            ->assertJsonPath('data.values.alt_body', '<p>This is a <strong>great</strong> post! You should <em>read</em> it.</p>
-');
+            ->assertJsonPath('data.values.alt_body', fn ($value) => trim($value) === '<p>This is a <strong>great</strong> post! You should <em>read</em> it.</p>');
     }
 
     #[Test]
