@@ -322,6 +322,7 @@ class ResourceControllerTest extends TestCase
             'time_enabled' => false,
             'time_required' => false,
         ]));
+        Blueprint::shouldReceive('getAdditionalNamespaces')->andReturn(collect(['runway' => base_path('resources/blueprints/runway')]))->once();
 
         $user = User::make()->makeSuper()->save();
         $post = Post::factory()->create();
@@ -360,6 +361,7 @@ class ResourceControllerTest extends TestCase
             'time_enabled' => false,
             'time_required' => false,
         ]));
+        Blueprint::shouldReceive('getAdditionalNamespaces')->andReturn(collect(['runway' => base_path('resources/blueprints/runway')]))->once();
 
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
@@ -398,6 +400,7 @@ class ResourceControllerTest extends TestCase
             'time_enabled' => true,
             'time_required' => false,
         ]));
+        Blueprint::shouldReceive('getAdditionalNamespaces')->andReturn(collect(['runway' => base_path('resources/blueprints/runway')]))->once();
 
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
