@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway\Tests;
 
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use ReflectionClass;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Path;
 use Statamic\Stache\Stores\UsersStore;
@@ -27,7 +28,7 @@ abstract class TestCase extends AddonTestCase
 
         if (isset($uses[PreventsSavingStacheItemsToDisk::class])) {
             $reflector = new ReflectionClass($this->addonServiceProvider);
-            $this->fakeStacheDirectory = Path::resolve(dirname($reflector->getFileName()).'/../tests/__fixtures__/dev-null');
+            $this->fakeStacheDirectory = Path::tidy(dirname($reflector->getFileName()).'/../tests/__fixtures__/dev-null');
 
             $this->preventSavingStacheItemsToDisk();
         }
