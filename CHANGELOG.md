@@ -1,5 +1,23 @@
 # Changelog
 
+## v9.0.0 (2026-01-27)
+
+> Please review the [upgrade guide](https://runway.duncanmcclean.com/upgrade-guides/v8-to-v9) before upgrading.
+
+### What's new
+- Updated for Statamic 6 #658 by @duncanmcclean
+- Live Preview support #721 by @duncanmcclean
+- The Runway tag now uses the `runway` query scope #722 by @duncanmcclean
+- Added `runway_resource` widget
+- Update asset & term references in models #754 by @duncanmcclean
+
+### What's changed
+- Dropped support for PHP 8.2 and Laravel 10
+- Runway now uses route-model binding for Control Panel routes #719 by @duncanmcclean
+- `runway:rebuild-uri-cache` command no longer uses `withoutGlobalScopes` when querying resources #717 by @duncanmcclean
+
+
+
 ## v9.0.0-alpha.10 (2026-01-16)
 
 ### What's fixed
