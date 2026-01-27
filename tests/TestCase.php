@@ -30,7 +30,7 @@ abstract class TestCase extends AddonTestCase
 
         if (isset($uses[PreventsSavingStacheItemsToDisk::class])) {
             $reflector = new ReflectionClass($this->addonServiceProvider);
-            $this->fakeStacheDirectory = Path::resolve(dirname($reflector->getFileName()).'/../tests/__fixtures__/dev-null');
+            $this->fakeStacheDirectory = Path::tidy(dirname($reflector->getFileName()).'/../tests/__fixtures__/dev-null');
 
             $this->preventSavingStacheItemsToDisk();
         }
