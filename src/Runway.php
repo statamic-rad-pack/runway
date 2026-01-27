@@ -13,8 +13,6 @@ class Runway
     protected static array $resources = [];
     protected static array $registeredResources = [];
 
-    //
-
     public static function discoverResources(): self
     {
         static::$resources = collect(config('runway.resources'))
