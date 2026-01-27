@@ -14,7 +14,7 @@
                 <Button icon="x" variant="ghost" class="-me-2" @click="close" />
             </header>
 
-            <div class="flex-1 overflow-auto">
+            <div class="flex-1">
                 <div class="loading flex h-full items-center justify-center" v-if="saving">
                     <Icon name="loading" />
                 </div>
