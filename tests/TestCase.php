@@ -4,14 +4,10 @@ namespace StatamicRadPack\Runway\Tests;
 
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
-use ReflectionClass;
 use Statamic\Facades\Blueprint;
-use Statamic\Facades\Path;
 use Statamic\Stache\Stores\UsersStore;
 use Statamic\Statamic;
 use Statamic\Testing\AddonTestCase;
-use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\ServiceProvider;
 
@@ -26,18 +22,6 @@ abstract class TestCase extends AddonTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        $uses = array_flip(class_uses_recursive(static::class));
-
-        if (isset($uses[PreventsSavingStacheItemsToDisk::class])) {
-//            $reflector = new ReflectionClass($this->addonServiceProvider);
-//            $this->fakeStacheDirectory = Path::tidy(dirname($reflector->getFileName()).'/../tests/__fixtures__/dev-null');
-
-            $reflection = new ReflectionClass($this);
-            $this->fakeStacheDirectory = Str::before(dirname($reflection->getFileName()), DIRECTORY_SEPARATOR.'tests').'/tests/__fixtures__/dev-null';
-
-            $this->preventSavingStacheItemsToDisk();
-        }
 
         $this->loadMigrationsFrom(__DIR__.'/__fixtures__/database/migrations');
         $this->runLaravelMigrations();
