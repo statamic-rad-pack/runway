@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway\Tests;
 
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use ReflectionClass;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Path;
