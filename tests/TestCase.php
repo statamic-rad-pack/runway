@@ -5,6 +5,7 @@ namespace StatamicRadPack\Runway\Tests;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Statamic\Facades\Blueprint;
+use Statamic\Facades\Path;
 use Statamic\Stache\Stores\UsersStore;
 use Statamic\Statamic;
 use Statamic\Testing\AddonTestCase;
@@ -22,6 +23,13 @@ abstract class TestCase extends AddonTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        if (isset($uses[PreventsSavingStacheItemsToDisk::class])) {
+            $reflector = new ReflectionClass($this->addonServiceProvider);
+            $this->fakeStacheDirectory = Path::resolve(dirname($reflector->getFileName()).'/../tests/__fixtures__/dev-null');
+
+            $this->preventSavingStacheItemsToDisk();
+        }
 
         $this->loadMigrationsFrom(__DIR__.'/__fixtures__/database/migrations');
         $this->runLaravelMigrations();
