@@ -9,6 +9,7 @@ use Statamic\Facades\Path;
 use Statamic\Stache\Stores\UsersStore;
 use Statamic\Statamic;
 use Statamic\Testing\AddonTestCase;
+use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\ServiceProvider;
 
