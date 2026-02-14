@@ -115,11 +115,11 @@ protected function casts(): array
 }
 ```
 
-## Computed Fields
+## Computed Values
 
-Like Statamic Core, Runway supports the concept of Computed Fields. However, instead of the computed values being part of a callback in your `AppServiceProvider`, they're accessors on your Eloquent model.
+Runway supports the concept of [computed values](https://statamic.dev/content-modeling/computed-values). However, unlike in core, where they're defined in your `AppServiceProvider`, you define computed values in Runway by adding accessors to your Eloquent model.
 
-For example, if you wanted to have a `full_name` field that's computed based on the user's first & last name, you'd do something like this in your `User` model:
+For example: if you have `first_name` and `last_name` fields, you may want a computed value to combine them, so you might do something like this:
 
 ```php
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -134,8 +134,11 @@ public function fullName(): Attribute
 }
 ```
 
-Then, in your user blueprint, you'd set the field's visibility to "Computed":
+
+<Note>In order for augmentation to work properly, model accessors should be `public` functions.</Note>
+
+Then, in the resource's blueprint, set the field's visibility to "Computed":
 
 ![Field's visibility set to computed](/images/field-visibility-computed.png)
 
-<Note>It's worth noting, Runway requires any accessors to be `public` functions, otherwise the attributes won't be augmentable.</Note>
+<Warning>Computed values can't be searched, sorted or filtered due to them being computed _after_ the query has been executed.</Warning>
