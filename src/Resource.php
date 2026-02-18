@@ -278,7 +278,24 @@ class Resource
         $field = $this->blueprint()->field($fieldHandle);
 
         if (! $field) {
-            return false;
+            // If the field is not in the blueprint, check if it's an appended attribute
+            // Appended attributes are not sortable even if not in the blueprint
+            if ($this->model()->hasAppended($fieldHandle)) {
+                return false;
+            }
+
+            // Allow sorting by common database columns that may not be in the blueprint
+            // These are typically auto-managed by Eloquent or common conventions
+            $commonSortableColumns = [
+                $this->primaryKey(),
+                'id',
+                'created_at',
+                'updated_at',
+                'deleted_at',
+                'published_at',
+            ];
+
+            return in_array($fieldHandle, $commonSortableColumns);
         }
 
         // Computed fields are not sortable (they don't exist in the database)

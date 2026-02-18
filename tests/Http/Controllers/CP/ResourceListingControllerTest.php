@@ -330,4 +330,36 @@ class ResourceListingControllerTest extends TestCase
             ->assertJsonPath('data.0.membership_status', ['Free'])
             ->assertJsonPath('data.1.membership_status', ['Paid']);
     }
+
+    #[Test]
+    public function can_sort_listing_rows_when_computed_field_is_requested()
+    {
+        $user = User::make()->makeSuper()->save();
+        $posts = Post::factory()->count(2)->create();
+
+        // The 'age' field in the Post blueprint has visibility: computed
+        // This test ensures that when a computed field is requested as sort,
+        // it falls back to a sortable column instead of causing a database error
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.listing-api', ['resource' => 'post', 'sort' => 'age', 'order' => 'asc']))
+            ->assertOk()
+            ->assertJsonCount(2, 'data');
+    }
+
+    #[Test]
+    public function can_sort_listing_rows_when_appended_field_is_requested()
+    {
+        $user = User::make()->makeSuper()->save();
+        $posts = Post::factory()->count(2)->create();
+
+        // The 'excerpt' field is an appended attribute on the Post model
+        // This test ensures that when an appended field is requested as sort,
+        // it falls back to a sortable column instead of causing a database error
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.listing-api', ['resource' => 'post', 'sort' => 'excerpt', 'order' => 'asc']))
+            ->assertOk()
+            ->assertJsonCount(2, 'data');
+    }
 }

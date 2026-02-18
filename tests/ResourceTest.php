@@ -315,4 +315,46 @@ class ResourceTest extends TestCase
 
         $this->assertFalse($resource->revisionsEnabled());
     }
+
+    #[Test]
+    public function can_check_if_field_is_sortable()
+    {
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        // Regular fields should be sortable
+        $this->assertTrue($resource->isFieldSortable('title'));
+        $this->assertTrue($resource->isFieldSortable('slug'));
+
+        // Computed fields should not be sortable
+        $this->assertFalse($resource->isFieldSortable('age'));
+
+        // Appended attributes should not be sortable
+        $this->assertFalse($resource->isFieldSortable('excerpt'));
+        $this->assertFalse($resource->isFieldSortable('appended_value'));
+
+        // Relationship fields should not be sortable
+        $this->assertFalse($resource->isFieldSortable('author_id'));
+
+        // Fields with save: false should not be sortable
+        $this->assertFalse($resource->isFieldSortable('dont_save'));
+
+        // Non-existent fields should not be sortable
+        $this->assertFalse($resource->isFieldSortable('nonexistent'));
+    }
+
+    #[Test]
+    public function can_get_first_sortable_column()
+    {
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        // Should return the first sortable column from listable columns
+        $firstSortable = $resource->firstSortableColumn();
+
+        $this->assertNotNull($firstSortable);
+        $this->assertTrue($resource->isFieldSortable($firstSortable));
+    }
 }
