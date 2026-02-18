@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway\Tests\UpdateScripts;
 
 use Illuminate\Support\Facades\File;
 use PHPUnit\Framework\Attributes\Test;
+use Statamic\Testing\Concerns\RunsUpdateScripts;
 use StatamicRadPack\Runway\Tests\TestCase;
 use StatamicRadPack\Runway\UpdateScripts\ChangePermissionNames;
 
