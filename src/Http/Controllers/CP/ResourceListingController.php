@@ -31,11 +31,14 @@ class ResourceListingController extends CpController
 
         $query = $this->applySearch($resource, $query, $searchQuery);
 
-        $query->when(method_exists($query, 'getQuery') && $query->getQuery()->orders, function ($query) use ($request, $resource) {
-            if ($request->input('sort')) {
-                $query->reorder($resource->model()->getColumnForField($request->input('sort')), $request->input('order'));
+        $sortField = $this->getSortableField($resource, $request->input('sort'));
+        $sortDirection = $request->input('order', $resource->orderByDirection());
+
+        $query->when(method_exists($query, 'getQuery') && $query->getQuery()->orders, function ($query) use ($sortField, $sortDirection, $resource) {
+            if ($sortField) {
+                $query->reorder($resource->model()->getColumnForField($sortField), $sortDirection);
             }
-        }, fn ($query) => $query->orderBy($resource->model()->getColumnForField($request->input('sort', $resource->orderBy())), $request->input('order', $resource->orderByDirection())));
+        }, fn ($query) => $query->orderBy($resource->model()->getColumnForField($sortField ?? $resource->orderBy()), $sortDirection));
 
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
             'resource' => $resource->handle(),
@@ -70,5 +73,21 @@ class ResourceListingController extends CpController
         }
 
         return $query->runwaySearch($searchQuery);
+    }
+
+    private function getSortableField(Resource $resource, ?string $requestedSort): ?string
+    {
+        // If no sort was requested, use the resource's default order
+        if (! $requestedSort) {
+            return null;
+        }
+
+        // Check if the requested sort field is sortable
+        if ($resource->isFieldSortable($requestedSort)) {
+            return $requestedSort;
+        }
+
+        // If the requested field is not sortable, fall back to the first sortable column
+        return $resource->firstSortableColumn();
     }
 }

@@ -273,6 +273,49 @@ class Resource
             ->values();
     }
 
+    public function isFieldSortable(string $fieldHandle): bool
+    {
+        $field = $this->blueprint()->field($fieldHandle);
+
+        if (! $field) {
+            return false;
+        }
+
+        // Computed fields are not sortable (they don't exist in the database)
+        if ($field->visibility() === 'computed') {
+            return false;
+        }
+
+        // Fields marked with save: false are not in the database
+        if ($field->get('save', true) === false) {
+            return false;
+        }
+
+        // Check if it's an appended attribute on the model
+        if ($this->model()->hasAppended($fieldHandle)) {
+            return false;
+        }
+
+        // Relationship fields are generally not sortable directly
+        if ($field->fieldtype() instanceof BelongsToFieldtype || $field->fieldtype() instanceof HasManyFieldtype) {
+            return false;
+        }
+
+        // Check if the field explicitly has sortable: false
+        if ($field->get('sortable', true) === false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function firstSortableColumn(): ?string
+    {
+        return $this->listableColumns()
+            ->first(fn ($handle) => $this->isFieldSortable($handle))
+            ?? $this->primaryKey();
+    }
+
     public function hasRouting(): bool
     {
         return ! is_null($this->route())
