@@ -84,6 +84,7 @@
             :errors="errors"
             :track-dirty-state="trackDirtyState"
             :remember-tab="!isInline"
+            :provide="{ isWorkingCopy, revisionsEnabled }"
         >
             <LivePreview
                 :enabled="isPreviewing"
