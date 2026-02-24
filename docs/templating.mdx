@@ -33,17 +33,17 @@ You may use the `sort` parameter to adjust the order of the results.
 
 If you've defined a scope on your Eloquent model and you want to filter by that in your front-end you may use the `scope` parameter.
 
-```php
+```php focus={6-10}
 // app/Models/Post.php
 
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 
-#[Scope] // [tl! focus:start]
+#[Scope]
 protected function food(Builder $query): void
 {
     $query->whereIn('title', ['Pasta', 'Apple', 'Burger']);
-} // [tl! focus:end]
+}
 ```
 
 ```antlers

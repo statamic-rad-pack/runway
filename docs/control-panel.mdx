@@ -148,18 +148,18 @@ public function visibleTo($key)
 
 If you don't want to return everything, you may add a scope (`runwayListing`) to limit the returned results.
 
-```php
+```php focus={7-11}
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class YourModel extends Model
 {
-    #[Scope] // [tl! focus:start]
+    #[Scope]
 	protected function runwayListing(Builder $query): void
 	{
 		$query->where('something', true);
-	} // [tl! focus:end]
+	}
 }
 ```
 
@@ -167,18 +167,18 @@ class YourModel extends Model
 
 On top of scoping your Control Panel results, you may also scope how Runway searches your models. To do this, you may specify a `runwaySearch` scope.
 
-```php
+```php focus={7-11}
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class YourModel extends Model
 {
-    #[Scope] // [tl! focus:start]
+    #[Scope]
 	protected function runwaySearch(Builder $query): void
 	{
 		// Your own search logic
-	} // [tl! focus:end]
+	}
 }
 ```
 
@@ -190,13 +190,13 @@ Runway provides a widget, allowing you to display a list of models from a resour
 // config/statamic/cp.php
 
 'widgets' => [
-  'getting_started',
-  [ // [tl! focus:start]
-      'type' => 'runway_resource',
-      'resource' => 'product',
-      'limit' => 10,
-  ], // [tl! focus:end]
+    [
+        'type' => 'runway_resource',
+        'resource' => 'product',
+        'limit' => 10,
+    ],
 ],
+```
 
 ### Options
 
