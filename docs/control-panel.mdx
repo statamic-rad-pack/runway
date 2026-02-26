@@ -175,7 +175,7 @@ use Illuminate\Database\Eloquent\Model;
 class YourModel extends Model
 {
     #[Scope]
-	protected function runwaySearch(Builder $query): void
+	protected function runwaySearch(Builder $query, string $searchTerm): void
 	{
 		// Your own search logic
 	}
