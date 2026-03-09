@@ -24,7 +24,9 @@ trait RunwayRoutes
 
     public function routingModel(): RoutingModel
     {
-        $this->routingModel = new RoutingModel($this);
+        if (! $this->routingModel) {
+            $this->routingModel = new RoutingModel($this);
+        }
 
         return $this->routingModel;
     }
