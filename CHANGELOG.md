@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.9.1 (2026-03-13)
+
+### What's fixed
+- Fixed publish toggle in relationship stack [#787](https://github.com/doublethreedigital/runway/pull/787) by @Skullsneeze
+
+
+
 ## v8.9.0 (2026-01-16)
 
 ### What's new
