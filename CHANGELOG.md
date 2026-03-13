@@ -1,5 +1,12 @@
 # Changelog
 
+## v9.1.1 (2026-03-13)
+
+### What's fixed
+- Fix error when duplicating model with "computed" title [#788](https://github.com/doublethreedigital/runway/issues/788) by @duncanmcclean
+
+
+
 ## v9.1.0 (2026-03-10)
 
 ### What's new
