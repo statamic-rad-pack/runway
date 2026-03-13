@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Spatie\ErrorSolutions\Contracts\SolutionProviderRepository;
 use Statamic\API\Middleware\Cache;
 use Statamic\Console\Commands\StaticWarm;
+use Statamic\Contracts\Data\DataRepository;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
@@ -21,6 +22,9 @@ use Statamic\Http\Middleware\RequireStatamicPro;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 use StatamicRadPack\Runway\GraphQL\NestedFieldsType;
+use StatamicRadPack\Runway\GraphQL\ResourceIndexQuery;
+use StatamicRadPack\Runway\GraphQL\ResourceShowQuery;
+use StatamicRadPack\Runway\GraphQL\ResourceType;
 use StatamicRadPack\Runway\Http\Controllers\ApiController;
 use StatamicRadPack\Runway\Ignition\SolutionProviders\TraitMissing;
 use StatamicRadPack\Runway\Policies\ResourcePolicy;
@@ -175,7 +179,7 @@ class ServiceProvider extends AddonServiceProvider
     {
         Runway::allResources()
             ->each(function (Resource $resource) {
-                $this->app->bind("runway_graphql_types_{$resource->handle()}", fn () => new \StatamicRadPack\Runway\GraphQL\ResourceType($resource));
+                $this->app->bind("runway_graphql_types_{$resource->handle()}", fn () => new ResourceType($resource));
                 GraphQL::addType("runway_graphql_types_{$resource->handle()}");
 
                 $resource->nestedFieldPrefixes()->each(fn (string $nestedFieldPrefix) => GraphQL::addType(new NestedFieldsType($resource, $nestedFieldPrefix)));
@@ -183,9 +187,9 @@ class ServiceProvider extends AddonServiceProvider
             ->filter
             ->graphqlEnabled()
             ->each(function (Resource $resource) {
-                $this->app->bind("runway_graphql_queries_{$resource->handle()}_index", fn () => new \StatamicRadPack\Runway\GraphQL\ResourceIndexQuery($resource));
+                $this->app->bind("runway_graphql_queries_{$resource->handle()}_index", fn () => new ResourceIndexQuery($resource));
 
-                $this->app->bind("runway_graphql_queries_{$resource->handle()}_show", fn () => new \StatamicRadPack\Runway\GraphQL\ResourceShowQuery($resource));
+                $this->app->bind("runway_graphql_queries_{$resource->handle()}_show", fn () => new ResourceShowQuery($resource));
 
                 GraphQL::addQuery("runway_graphql_queries_{$resource->handle()}_index");
                 GraphQL::addQuery("runway_graphql_queries_{$resource->handle()}_show");
@@ -236,7 +240,7 @@ class ServiceProvider extends AddonServiceProvider
     protected function bootDataRepository(): self
     {
         if (Runway::usesRouting()) {
-            $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
+            $this->app->get(DataRepository::class)
                 ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
 
             StaticWarm::hook('additional', function ($urls, $next) {

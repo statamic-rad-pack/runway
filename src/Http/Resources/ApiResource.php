@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use StatamicRadPack\Runway\Resource;
@@ -13,7 +14,7 @@ class ApiResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param \Illuminate\Http\Request
+     * @param Request
      * @return array
      */
     public function toArray($request)

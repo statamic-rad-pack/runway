@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Tests\Search;
 
 use PHPUnit\Framework\Attributes\Test;
+use Statamic\Search\Index;
 use StatamicRadPack\Runway\Search\Provider;
 use StatamicRadPack\Runway\Search\Searchable;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
@@ -59,7 +60,7 @@ class ProviderTest extends TestCase
 
     private function makeIndex($locale, $config)
     {
-        $index = $this->mock(\Statamic\Search\Index::class);
+        $index = $this->mock(Index::class);
 
         $index->shouldReceive('config')->andReturn($config);
         $index->shouldReceive('locale')->andReturn($locale);

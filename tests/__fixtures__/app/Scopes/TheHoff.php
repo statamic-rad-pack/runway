@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Tests\Fixtures\Scopes;
 
+use Statamic\Query\Builder;
 use Statamic\Query\Scopes\Scope;
 
 class TheHoff extends Scope
@@ -9,7 +10,7 @@ class TheHoff extends Scope
     /**
      * Apply the scope.
      *
-     * @param  \Statamic\Query\Builder  $query
+     * @param  Builder  $query
      * @param  array  $values
      * @return void
      */
