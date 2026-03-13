@@ -11,17 +11,17 @@ However, there is an easy way to scope the model results you get to only those r
 
 2. Once created, add the following scope to your model. Be sure to change `site` to the handle of the column you just created.
 
-```php
+```php focus={6-10}
 // app/Models/Post.php
 
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 
-#[Scope] // [tl! focus:start]
+#[Scope]
 protected function runwayListing(Builder $query): void
 {
     $query->where('site', Site::selected()->handle());
-} // [tl! focus:end]
+}
 ```
 
 3. Now, when you go to your model's listing page, the returned results should relate to the currently selected site.

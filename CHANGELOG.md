@@ -1,5 +1,16 @@
 # Changelog
 
+## v9.1.0 (2026-03-10)
+
+### What's new
+- Provide `isWorkingCopy` and `revisionsEnabled` to publish container context [#782](https://github.com/doublethreedigital/runway/issues/782) by @duncanmcclean
+- Performance: prevent routingModel reinit [#785](https://github.com/doublethreedigital/runway/issues/785) by @macaws
+
+### What's fixed
+- Adopt `RunsUpdateScripts` trait [#778](https://github.com/doublethreedigital/runway/issues/778) by @duncanmcclean
+
+
+
 ## v9.0.0 (2026-01-27)
 
 > Please review the [upgrade guide](https://runway.duncanmcclean.com/upgrade-guides/v8-to-v9) before upgrading.
