@@ -7,7 +7,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Statamic\Extensions\Pagination\LengthAwarePaginator;
 use Statamic\Facades\Blink;
-use Statamic\Fields\Value;
 use Statamic\Tags\Tags;
 use StatamicRadPack\Runway\Exceptions\ResourceNotFound;
 use StatamicRadPack\Runway\Resource;
@@ -76,7 +75,7 @@ class RunwayTag extends Tags
 
                 foreach ($scopeArguments as $key => $scopeArgument) {
                     if ($fromContext = $this->context->get($scopeArgument)) {
-                        if ($fromContext instanceof Value) {
+                        if ($fromContext instanceof \Statamic\Fields\Value) {
                             $fromContext = $fromContext->raw();
                         }
 

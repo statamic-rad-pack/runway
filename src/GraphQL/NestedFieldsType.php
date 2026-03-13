@@ -2,12 +2,11 @@
 
 namespace StatamicRadPack\Runway\GraphQL;
 
-use Rebing\GraphQL\Support\Type;
 use Statamic\Fields\Field;
 use Statamic\Support\Str;
 use StatamicRadPack\Runway\Resource;
 
-class NestedFieldsType extends Type
+class NestedFieldsType extends \Rebing\GraphQL\Support\Type
 {
     public function __construct(protected Resource $resource, protected string $nestedFieldPrefix)
     {

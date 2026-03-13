@@ -14,7 +14,6 @@ use Statamic\Statamic;
 use StatamicRadPack\Runway\Exceptions\PublishedColumnMissingException;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
-use StatamicRadPack\Runway\Routing\Traits\RunwayRoutes;
 
 class Resource
 {
@@ -261,7 +260,7 @@ class Resource
     public function hasRouting(): bool
     {
         return ! is_null($this->route())
-            && in_array(RunwayRoutes::class, class_uses_recursive($this->model()));
+            && in_array(\StatamicRadPack\Runway\Routing\Traits\RunwayRoutes::class, class_uses_recursive($this->model()));
     }
 
     public function primaryKey(): string

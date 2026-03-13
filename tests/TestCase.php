@@ -4,7 +4,6 @@ namespace StatamicRadPack\Runway\Tests;
 
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\LaravelRay\RayServiceProvider;
 use Statamic\Facades\Blueprint;
 use Statamic\Stache\Stores\UsersStore;
 use Statamic\Statamic;
@@ -62,7 +61,7 @@ abstract class TestCase extends AddonTestCase
     {
         return [
             ...parent::getPackageProviders($app),
-            RayServiceProvider::class,
+            \Spatie\LaravelRay\RayServiceProvider::class,
         ];
     }
 }

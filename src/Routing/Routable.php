@@ -5,7 +5,6 @@ namespace StatamicRadPack\Runway\Routing;
 use Statamic\Contracts\Routing\UrlBuilder;
 use Statamic\Facades\Site;
 use Statamic\Facades\URL;
-use Statamic\Routing\ResolveRedirect;
 use Statamic\Support\Str;
 
 /**
@@ -71,7 +70,7 @@ trait Routable
     public function redirectUrl()
     {
         if ($redirect = $this->redirect) {
-            return (new ResolveRedirect)($redirect, $this);
+            return (new \Statamic\Routing\ResolveRedirect)($redirect, $this);
         }
     }
 
