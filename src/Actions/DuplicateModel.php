@@ -2,7 +2,6 @@
 
 namespace StatamicRadPack\Runway\Actions;
 
-use Doctrine\DBAL\Schema\Schema;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Actions\Action;
 use StatamicRadPack\Runway\Exceptions\ResourceNotFound;
