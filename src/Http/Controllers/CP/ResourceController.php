@@ -141,7 +141,7 @@ class ResourceController extends CpController
                     'resource' => $resource->handle(),
                 ]),
             ]]),
-            'resource' => $resource,
+            'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
             'actions' => [
                 'save' => $model->runwayUpdateUrl(),
                 'publish' => $model->runwayPublishUrl(),
