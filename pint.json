@@ -6,6 +6,7 @@
                 "method": "one"
             }
         },
-        "psr_autoloading": true
+        "psr_autoloading": true,
+        "fully_qualified_strict_types": false
     }
 }
