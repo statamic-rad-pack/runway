@@ -177,7 +177,7 @@ class RunwayTag extends Tags
             'current_page' => $paginator->currentPage(),
             'prev_page' => $paginator->previousPageUrl(),
             'next_page' => $paginator->nextPageUrl(),
-            'auto_links' => $paginator->render('pagination::default'),
+            'auto_links' => (string) $paginator->render(),
             'links' => $paginator->renderArray(),
         ];
     }
