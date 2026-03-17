@@ -1,5 +1,12 @@
 # Changelog
 
+## v9.2.0 (2026-03-17)
+
+### What's new
+- Supports Laravel 13 [#781](https://github.com/doublethreedigital/runway/issues/781) by @duncanmcclean
+
+
+
 ## v9.1.1 (2026-03-13)
 
 ### What's fixed
