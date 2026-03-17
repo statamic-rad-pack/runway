@@ -3,7 +3,6 @@
 namespace StatamicRadPack\Runway\Tags;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Statamic\Extensions\Pagination\LengthAwarePaginator;
