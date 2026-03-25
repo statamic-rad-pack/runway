@@ -1,5 +1,15 @@
 # Changelog
 
+## v9.3.0 (2026-03-25)
+
+### What's new
+- Add live preview token support to GraphQL and REST API [#791](https://github.com/doublethreedigital/runway/issues/791) by @duncanmcclean
+
+### What's fixed
+- Fix validation on `published` field [#792](https://github.com/doublethreedigital/runway/issues/792) by @duncanmcclean
+
+
+
 ## v9.2.0 (2026-03-17)
 
 ### What's new
