@@ -22,6 +22,8 @@ const props = defineProps({
     createUrl: { type: String, required: true },
     createLabel: { type: String, required: true },
     columns: { type: Array, required: true },
+    sortColumn: { type: String, required: true },
+    sortDirection: { type: String, required: true },
     filters: { type: Array, required: true },
     actions: { type: Array, required: true },
     actionUrl: { type: String, required: true },
@@ -87,6 +89,8 @@ function requestComplete({ items: newItems, parameters }) {
             ref="listing"
             :url="requestUrl"
             :columns
+            :sortColumn="props.sortColumn"
+            :sortDirection="props.sortDirection"
             :action-url="modelsActionUrl"
             :action-context="{ resource }"
             :preferences-prefix

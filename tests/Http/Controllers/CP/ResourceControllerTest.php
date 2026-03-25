@@ -33,6 +33,25 @@ class ResourceControllerTest extends TestCase
                 ->has('filters')
                 ->has('columns')
                 ->has('actionUrl')
+                ->has('sortColumn')
+                ->has('sortDirection')
+            );
+    }
+
+    #[Test]
+    public function can_change_sort_column_and_direction()
+    {
+        Author::factory()->count(2)->create();
+        $user = User::make()->makeSuper()->save();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.index', ['resource' => 'author']))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('runway::Index')
+                ->where('sortColumn', 'name')
+                ->where('sortDirection', 'desc')
             );
     }
 

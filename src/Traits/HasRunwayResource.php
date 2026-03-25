@@ -61,6 +61,16 @@ trait HasRunwayResource
         return $query;
     }
 
+    public function sortColumn(): string
+    {
+        return $this->runwayResource()->primaryKey();
+    }
+
+    public function sortDirection(): string
+    {
+        return 'asc';
+    }
+
     public function scopeRunwaySearch(Builder $query, string $searchQuery)
     {
         $this->runwayResource()->blueprint()->fields()->all()
