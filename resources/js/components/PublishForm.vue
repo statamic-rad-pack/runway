@@ -124,8 +124,8 @@
                                 <Heading :text="__('Published')" />
                                 <Switch
                                     :model-value="published"
-                                    :read-only="!canManagePublishState"
-                                    @update:model-value="setFieldValue('published', $event)"
+                                    :disabled="!canManagePublishState"
+                                    @update:model-value="setFieldValue(resource.published_column, $event)"
                                 />
                             </Panel>
 
