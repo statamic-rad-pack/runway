@@ -285,6 +285,77 @@ class ResourceControllerTest extends TestCase
     }
 
     #[Test]
+    public function can_store_resource_with_required_if_published_validation()
+    {
+        $postBlueprint = Blueprint::find('runway::post');
+
+        Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->ensureField('membership_status', [
+            'type' => 'select',
+            'options' => ['free' => 'Free', 'paid' => 'Paid'],
+            'validate' => ['required_if:published,true'],
+        ]));
+        Blueprint::shouldReceive('getAdditionalNamespaces')->andReturn(collect(['runway' => base_path('resources/blueprints/runway')]))->zeroOrMoreTimes();
+
+        $author = Author::factory()->create();
+        $user = User::make()->makeSuper()->save();
+
+        // Publishing without the required field should fail
+        $this
+            ->actingAs($user)
+            ->post(cp_route('runway.store', ['resource' => 'post']), [
+                'published' => true,
+                'title' => 'Test Post',
+                'slug' => 'test-post',
+                'body' => 'Test body',
+                'author_id' => [$author->id],
+                'membership_status' => null,
+            ])
+            ->assertSessionHasErrors('membership_status');
+
+        $this->assertDatabaseMissing('posts', [
+            'title' => 'Test Post',
+        ]);
+    }
+
+    #[Test]
+    public function can_store_resource_as_draft_without_required_if_published_field()
+    {
+        $postBlueprint = Blueprint::find('runway::post');
+
+        Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->ensureField('membership_status', [
+            'type' => 'select',
+            'options' => ['free' => 'Free', 'paid' => 'Paid'],
+            'validate' => ['required_if:published,true'],
+        ]));
+        Blueprint::shouldReceive('getAdditionalNamespaces')->andReturn(collect(['runway' => base_path('resources/blueprints/runway')]))->zeroOrMoreTimes();
+
+        $author = Author::factory()->create();
+        $user = User::make()->makeSuper()->save();
+
+        // Saving as draft without the required field should succeed
+        $this
+            ->actingAs($user)
+            ->post(cp_route('runway.store', ['resource' => 'post']), [
+                'published' => false,
+                'title' => 'Draft Post',
+                'slug' => 'draft-post',
+                'body' => 'Draft body',
+                'author_id' => [$author->id],
+                'membership_status' => null,
+            ])
+            ->assertOk();
+
+        $this->assertDatabaseHas('posts', [
+            'title' => 'Draft Post',
+            'published' => false,
+        ]);
+    }
+
+    #[Test]
     public function can_edit_resource()
     {
         $post = Post::factory()->create();
@@ -691,5 +762,36 @@ class ResourceControllerTest extends TestCase
             'user_id' => $user->id,
             'group_id' => 'admins',
         ]);
+    }
+
+    #[Test]
+    public function can_update_resource_with_required_if_published_validation()
+    {
+        $postBlueprint = Blueprint::find('runway::post');
+
+        Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->ensureField('membership_status', [
+            'type' => 'select',
+            'options' => ['free' => 'Free', 'paid' => 'Paid'],
+            'validate' => ['required_if:published,true'],
+        ]));
+        Blueprint::shouldReceive('getAdditionalNamespaces')->andReturn(collect(['runway' => base_path('resources/blueprints/runway')]))->zeroOrMoreTimes();
+
+        $post = Post::factory()->create(['published' => false]);
+        $user = User::make()->makeSuper()->save();
+
+        // Publishing without the required field should fail
+        $this
+            ->actingAs($user)
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
+                'published' => true,
+                'title' => $post->title,
+                'slug' => $post->slug,
+                'body' => $post->body,
+                'author_id' => [$post->author_id],
+                'membership_status' => null,
+            ])
+            ->assertSessionHasErrors('membership_status');
     }
 }

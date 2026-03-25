@@ -95,8 +95,13 @@ class ResourceController extends CpController
 
     public function store(StoreRequest $request, Resource $resource)
     {
-        $resource
-            ->blueprint()
+        $blueprint = $resource->blueprint();
+
+        if ($resource->hasPublishStates()) {
+            $blueprint->ensureField($resource->publishedColumn(), ['type' => 'toggle']);
+        }
+
+        $blueprint
             ->fields()
             ->addValues($request->all())
             ->validator()
@@ -178,7 +183,13 @@ class ResourceController extends CpController
     {
         $model = $model->fromWorkingCopy();
 
-        $resource->blueprint()
+        $blueprint = $resource->blueprint();
+
+        if ($resource->hasPublishStates()) {
+            $blueprint->ensureField($resource->publishedColumn(), ['type' => 'toggle']);
+        }
+
+        $blueprint
             ->fields()
             ->setParent($model)
             ->addValues($request->except($resource->primaryKey()))
