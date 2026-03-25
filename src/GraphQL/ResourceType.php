@@ -20,6 +20,8 @@ class ResourceType extends Type
 
     public function fields(): array
     {
+        $this->resource->blueprint()->addGqlTypes();
+
         return $this->resource->blueprint()->fields()->toGql()
             ->merge($this->nonBlueprintFields())
             ->merge($this->nestedFields())
@@ -64,7 +66,7 @@ class ResourceType extends Type
             ->mapWithKeys(function (array $column): array {
                 $type = null;
 
-                if ($column['type_name'] === 'bigint') {
+                if (in_array($column['type_name'], ['integer', 'bigint'])) {
                     $type = GraphQL::int();
                 }
 

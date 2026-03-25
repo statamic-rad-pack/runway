@@ -18,6 +18,8 @@ class ResourceIndexQuery extends Query
 
     public function __construct(protected Resource $resource)
     {
+        parent::__construct();
+
         $this->attributes['name'] = Str::lower($this->resource->plural());
     }
 

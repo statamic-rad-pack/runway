@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Tests\Http\Controllers;
 
+use Facades\Statamic\CP\LivePreview;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Config;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
@@ -181,6 +182,32 @@ class ApiControllerTest extends TestCase
 
         $this
             ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => $post->id]))
+            ->assertNotFound();
+    }
+
+    #[Test]
+    public function live_preview_token_bypasses_publish_status_check()
+    {
+        $post = Post::factory()->unpublished()->create();
+
+        LivePreview::tokenize('test-token', $post);
+
+        $this
+            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => $post->id, 'token' => 'test-token']))
+            ->assertOk()
+            ->assertJsonPath('data.id', $post->id);
+    }
+
+    #[Test]
+    public function live_preview_token_for_different_model_doesnt_bypass_publish_status_check()
+    {
+        $post = Post::factory()->unpublished()->create();
+        $otherPost = Post::factory()->create();
+
+        LivePreview::tokenize('test-token', $otherPost);
+
+        $this
+            ->get(route('statamic.api.runway.show', ['resourceHandle' => 'posts', 'model' => $post->id, 'token' => 'test-token']))
             ->assertNotFound();
     }
 }

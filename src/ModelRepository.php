@@ -26,6 +26,7 @@ class ModelRepository
         if (
             $model->runwayResource()->hasPublishStates()
             && $model->publishedStatus() !== 'published'
+            && ! request()->isLivePreviewOf($model)
         ) {
             return null;
         }

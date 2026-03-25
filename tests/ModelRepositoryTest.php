@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Tests;
 
+use Facades\Statamic\CP\LivePreview;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Data;
 use StatamicRadPack\Runway\Routing\RoutingModel;
@@ -62,6 +63,47 @@ class ModelRepositoryTest extends TestCase
         $runwayUri = $post->fresh()->runwayUri;
 
         $this->assertEquals($runwayUri->uri, "/posts/{$post->slug}");
+
+        $findByUri = Data::findByUri("/posts/{$post->slug}");
+
+        $this->assertNull($findByUri);
+    }
+
+    #[Test]
+    public function can_find_by_uri_when_model_is_unpublished_with_live_preview_token()
+    {
+        $post = Post::factory()->unpublished()->create();
+        $runwayUri = $post->fresh()->runwayUri;
+
+        $this->assertEquals($runwayUri->uri, "/posts/{$post->slug}");
+
+        LivePreview::tokenize('test-token', $post);
+
+        $findByUri = $this
+            ->withServerVariables(['QUERY_STRING' => 'token=test-token'])
+            ->call('GET', "/posts/{$post->slug}", ['token' => 'test-token'])
+            ->baseResponse;
+
+        $this->get("/posts/{$post->slug}?token=test-token");
+
+        $findByUri = Data::findByUri("/posts/{$post->slug}");
+
+        $this->assertNotNull($findByUri);
+        $this->assertEquals($post->fresh()->id, $findByUri->id);
+    }
+
+    #[Test]
+    public function cant_find_by_uri_when_model_is_unpublished_with_live_preview_token_for_different_model()
+    {
+        $post = Post::factory()->unpublished()->create();
+        $otherPost = Post::factory()->create();
+        $runwayUri = $post->fresh()->runwayUri;
+
+        $this->assertEquals($runwayUri->uri, "/posts/{$post->slug}");
+
+        LivePreview::tokenize('test-token', $otherPost);
+
+        $this->get("/posts/{$post->slug}?token=test-token");
 
         $findByUri = Data::findByUri("/posts/{$post->slug}");
 
