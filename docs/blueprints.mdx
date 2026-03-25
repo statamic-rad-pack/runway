@@ -77,6 +77,26 @@ Runway provides two fieldtypes to let you manage Eloquent Relationships within S
 
 To find out more about Runway's fieldtypes, check out the [Fieldtypes](/fieldtypes) page.
 
+## Validation
+
+Since Runway stores data in the database, you can use Laravel's standard validation rules directly in your blueprints.
+
+For example, Statamic's flat-file storage doesn't support the `unique` validation rule since there's no database to query. With Runway, you can use it just like you would in a regular Laravel application:
+
+```yaml
+-
+  handle: email
+  field:
+    type: text
+    display: Email
+    validate:
+      - required
+      - email
+      - 'unique:users,email,{id}'
+```
+
+When editing existing models, you'll want to exclude the current model from the uniqueness check. Runway will automatically substitute `{id}` (or whatever your model's primary key is) with the current model's ID during validation.
+
 ## Nesting fields inside JSON columns
 
 To avoid needing to create a migration for every new field you add to a blueprint, fields can be stored within JSON columns.
