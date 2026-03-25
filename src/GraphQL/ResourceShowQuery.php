@@ -12,6 +12,8 @@ class ResourceShowQuery extends Query
 {
     public function __construct(protected Resource $resource)
     {
+        parent::__construct();
+
         $this->attributes['name'] = Str::lower($this->resource->singular());
     }
 
@@ -29,6 +31,20 @@ class ResourceShowQuery extends Query
 
     public function resolve($root, $args)
     {
-        return $this->resource->model()->whereStatus('published')->find($args[$this->resource->primaryKey()]);
+        $model = $this->resource->model()->find($args[$this->resource->primaryKey()]);
+
+        if (! $model) {
+            return null;
+        }
+
+        if (
+            $model->runwayResource()->hasPublishStates()
+            && $model->publishedStatus() !== 'published'
+            && ! request()->isLivePreviewOf($model)
+        ) {
+            return null;
+        }
+
+        return $model;
     }
 }
