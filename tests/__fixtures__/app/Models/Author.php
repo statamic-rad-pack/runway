@@ -33,16 +33,6 @@ class Author extends Model
         }
     }
 
-    public function sortColumn(): string
-    {
-        return 'name';
-    }
-
-    public function sortDirection(): string
-    {
-        return 'desc';
-    }
-
     protected static function newFactory()
     {
         return AuthorFactory::new();
