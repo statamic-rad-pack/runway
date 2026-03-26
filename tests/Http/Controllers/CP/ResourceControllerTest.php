@@ -39,8 +39,13 @@ class ResourceControllerTest extends TestCase
     }
 
     #[Test]
-    public function can_change_sort_column_and_direction()
+    public function uses_sort_column_and_direction_from_resource_config()
     {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.order_by', 'name');
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.order_by_direction', 'desc');
+
+        Runway::discoverResources();
+
         Author::factory()->count(2)->create();
         $user = User::make()->makeSuper()->save();
 
