@@ -37,6 +37,20 @@ class HasManyFieldtype extends BaseFieldtype
                     'reorderable' => true,
                 ],
             ],
+            'order_direction' => [
+                'display' => __('Order Column'),
+                'instructions' => __('Which column should be used to keep track of the order?'),
+                'type' => 'radio',
+                'width' => 50,
+                'default' => 'asc',
+                'options' => [
+                    'asc' => __('Ascending (ASC)'),
+                    'desc' => __('Descending (DESC)'),
+                ],
+                'if' => [
+                    'reorderable' => true,
+                ],
+            ],
         ];
 
         return array_merge(parent::configFieldItems(), $config);

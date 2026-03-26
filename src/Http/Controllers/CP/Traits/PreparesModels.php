@@ -82,10 +82,11 @@ trait PreparesModels
                     // When re-ordering is enabled, ensure the models are returned in the correct order.
                     if ($field->get('reorderable', false)) {
                         $orderColumn = $field->get('order_column');
+                        $orderDirection = $field->get('order_direction') ?? 'ASC';
                         $relationshipName = $resource->eloquentRelationships()->get($field->handle());
 
                         $value = $model->{$relationshipName}()
-                            ->reorder($orderColumn, 'ASC')
+                            ->reorder($orderColumn, strtoupper($orderDirection))
                             ->get();
                     }
                 }
