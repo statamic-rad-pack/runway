@@ -1,5 +1,13 @@
 # Changelog
 
+## v9.3.1 (2026-03-26)
+
+### What's fixed
+- Fix publish toggle for custom published columns [#794](https://github.com/statamic-rad-pack/runway/issues/794) by @sebabal
+- Fix error on listing page when using model attribute as first column in blueprint [#793](https://github.com/statamic-rad-pack/runway/issues/793) by @andjsch
+
+
+
 ## v9.3.0 (2026-03-25)
 
 ### What's new
