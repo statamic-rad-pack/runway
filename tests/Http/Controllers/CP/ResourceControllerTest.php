@@ -33,6 +33,30 @@ class ResourceControllerTest extends TestCase
                 ->has('filters')
                 ->has('columns')
                 ->has('actionUrl')
+                ->has('sortColumn')
+                ->has('sortDirection')
+            );
+    }
+
+    #[Test]
+    public function uses_sort_column_and_direction_from_resource_config()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.order_by', 'name');
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.order_by_direction', 'desc');
+
+        Runway::discoverResources();
+
+        Author::factory()->count(2)->create();
+        $user = User::make()->makeSuper()->save();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.index', ['resource' => 'author']))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('runway::Index')
+                ->where('sortColumn', 'name')
+                ->where('sortDirection', 'desc')
             );
     }
 

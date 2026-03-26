@@ -48,6 +48,8 @@ class ResourceController extends CpController
             'createUrl' => cp_route('runway.create', ['resource' => $resource->handle()]),
             'createLabel' => __('Create :resource', ['resource' => $resource->singular()]),
             'columns' => $columns,
+            'sortColumn' => $resource->orderBy(),
+            'sortDirection' => $resource->orderByDirection(),
             'filters' => Scope::filters('runway', ['resource' => $resource->handle()]),
             'actions' => Action::for($resource, ['view' => 'form']),
             'actionUrl' => cp_route('runway.actions.run', ['resource' => $resource->handle()]),
