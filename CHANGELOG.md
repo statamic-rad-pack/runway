@@ -1,5 +1,12 @@
 # Changelog
 
+## v9.3.2 (2026-03-27)
+
+### What's fixed
+- Fix Runway searchables in CP command palette search [#797](https://github.com/statamic-rad-pack/runway/issues/797) by @duncanmcclean
+
+
+
 ## v9.3.1 (2026-03-26)
 
 ### What's fixed
