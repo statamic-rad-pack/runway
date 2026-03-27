@@ -93,6 +93,11 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
         return $this->resource->name();
     }
 
+    public function getCpSearchResultIcon(): string
+    {
+        return $this->resource->icon();
+    }
+
     public function newAugmentedInstance(): Augmented
     {
         foreach ($this->supplements as $key => $value) {
