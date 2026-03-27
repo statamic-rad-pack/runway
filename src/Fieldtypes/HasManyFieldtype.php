@@ -38,9 +38,9 @@ class HasManyFieldtype extends BaseFieldtype
                 ],
             ],
             'order_direction' => [
-                'display' => __('Order Column'),
-                'instructions' => __('Which column should be used to keep track of the order?'),
                 'type' => 'radio',
+                'display' => __('Order Direction'),
+                'instructions' => __('Which direction should the items be sorted in?'),
                 'width' => 50,
                 'default' => 'asc',
                 'options' => [
