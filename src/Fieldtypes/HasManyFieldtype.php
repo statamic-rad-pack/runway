@@ -38,14 +38,14 @@ class HasManyFieldtype extends BaseFieldtype
                 ],
             ],
             'order_direction' => [
-                'type' => 'radio',
                 'display' => __('Order Direction'),
                 'instructions' => __('Which direction should the items be sorted in?'),
+                'type' => 'select',
                 'width' => 50,
                 'default' => 'asc',
                 'options' => [
-                    'asc' => __('Ascending (ASC)'),
-                    'desc' => __('Descending (DESC)'),
+                    'asc' => __('Ascending'),
+                    'desc' => __('Descending'),
                 ],
                 'if' => [
                     'reorderable' => true,
