@@ -152,6 +152,11 @@ class ServiceProvider extends AddonServiceProvider
             }
         });
 
+        Gate::policy(
+            \StatamicRadPack\Runway\Search\Searchable::class,
+            \StatamicRadPack\Runway\Search\SearchablePolicy::class
+        );
+
         return $this;
     }
 
