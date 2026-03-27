@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.10.0 (2026-03-27)
+
+### What's new
+- Add `sort_direction` option to Has Many fieldtype [#795](https://github.com/doublethreedigital/runway/pull/795) by @Skullsneeze
+
+
+
 ## v8.9.1 (2026-03-13)
 
 ### What's fixed
