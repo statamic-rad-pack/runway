@@ -7,6 +7,7 @@ use Statamic\Facades\User;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Requests\FilteredRequest;
 use Statamic\Query\Builder as BaseStatamicBuilder;
+use Statamic\Query\OrderBy;
 use Statamic\Query\Scopes\Filters\Concerns\QueriesFilters;
 use StatamicRadPack\Runway\Http\Resources\CP\Models;
 use StatamicRadPack\Runway\Resource;
@@ -31,11 +32,13 @@ class ResourceListingController extends CpController
 
         $query = $this->applySearch($resource, $query, $searchQuery);
 
-        $query->when(method_exists($query, 'getQuery') && $query->getQuery()->orders, function ($query) use ($request, $resource) {
-            if ($request->input('sort')) {
-                $query->reorder($resource->model()->getColumnForField($request->input('sort')), $request->input('order'));
+        $sortColumn = OrderBy::column($request->input('sort'), $resource->orderBy());
+
+        $query->when(method_exists($query, 'getQuery') && $query->getQuery()->orders, function ($query) use ($request, $resource, $sortColumn) {
+            if ($request->input('sort') && $sortColumn) {
+                $query->reorder($resource->model()->getColumnForField($sortColumn), $request->input('order'));
             }
-        }, fn ($query) => $query->orderBy($resource->model()->getColumnForField($request->input('sort', $resource->orderBy())), $request->input('order', $resource->orderByDirection())));
+        }, fn ($query) => $query->orderBy($resource->model()->getColumnForField($sortColumn), $request->input('order', $resource->orderByDirection())));
 
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
             'resource' => $resource->handle(),

@@ -15,6 +15,7 @@ use Statamic\Facades\Scope;
 use Statamic\Facades\Search;
 use Statamic\Fieldtypes\Relationship;
 use Statamic\Http\Requests\FilteredRequest;
+use Statamic\Query\OrderBy;
 use Statamic\Query\Scopes\Filter;
 use Statamic\Search\Index;
 use Statamic\Search\QueryBuilder as SearchQueryBuilder;
@@ -184,7 +185,7 @@ abstract class BaseFieldtype extends Relationship
     private function applyOrderingToIndexQuery(Builder|SearchQueryBuilder $query, FilteredRequest $request): void
     {
         $query->when(method_exists($query, 'getQuery') && $query->getQuery()->orders, function ($query) use ($request) {
-            if ($orderBy = $request->input('sort')) {
+            if ($orderBy = OrderBy::column($request->input('sort'))) {
                 // The stack selector always uses `title` as the default sort column, but
                 // the "title field" for the model might be a different column, so we need to convert it.
                 $sortColumn = $orderBy === 'title' ? $this->resource()->titleField() : $orderBy;
