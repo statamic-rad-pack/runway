@@ -5,10 +5,10 @@ namespace StatamicRadPack\Runway\GraphQL;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Str;
 use Statamic\Facades\GraphQL;
-use Statamic\Query\OrderBy;
 use Statamic\GraphQL\Queries\Concerns\FiltersQuery;
 use Statamic\GraphQL\Queries\Query;
 use Statamic\GraphQL\Types\JsonArgument;
+use Statamic\Query\OrderBy;
 use StatamicRadPack\Runway\Resource;
 
 class ResourceIndexQuery extends Query
