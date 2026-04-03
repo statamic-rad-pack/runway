@@ -8,6 +8,7 @@ use Statamic\Facades\GraphQL;
 use Statamic\GraphQL\Queries\Concerns\FiltersQuery;
 use Statamic\GraphQL\Queries\Query;
 use Statamic\GraphQL\Types\JsonArgument;
+use Statamic\Query\OrderBy;
 use StatamicRadPack\Runway\Resource;
 
 class ResourceIndexQuery extends Query
@@ -73,7 +74,9 @@ class ResourceIndexQuery extends Query
                 [$sort, $order] = explode(' ', (string) $sort);
             }
 
-            $query = $query->orderBy($sort, $order);
+            if ($sort = OrderBy::column($sort)) {
+                $query = $query->orderBy($sort, $order);
+            }
         }
     }
 }
