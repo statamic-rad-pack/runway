@@ -7,6 +7,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Statamic\Extensions\Pagination\LengthAwarePaginator;
 use Statamic\Facades\Blink;
+use Statamic\Query\OrderBy;
 use Statamic\Tags\Tags;
 use StatamicRadPack\Runway\Exceptions\ResourceNotFound;
 use StatamicRadPack\Runway\Resource;
@@ -122,7 +123,9 @@ class RunwayTag extends Tags
                 $sortDirection = 'asc';
             }
 
-            $query->orderBy($this->resource->model()->getColumnForField($sortColumn), $sortDirection);
+            if ($sortColumn = OrderBy::column($sortColumn)) {
+                $query->orderBy($this->resource->model()->getColumnForField($sortColumn), $sortDirection);
+            }
         }
 
         return $query;
