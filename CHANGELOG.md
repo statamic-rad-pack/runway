@@ -1,5 +1,12 @@
 # Changelog
 
+## v8.10.1 (2026-04-03)
+
+### What's fixed
+- Hardened OrderBys [#798](https://github.com/statamic-rad-pack/runway/pull/798) by @duncanmcclean
+
+
+
 ## v8.10.0 (2026-03-27)
 
 ### What's new
