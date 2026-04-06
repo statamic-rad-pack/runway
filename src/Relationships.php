@@ -9,10 +9,13 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Schema;
 use Statamic\Fields\Field;
+use Statamic\Support\Traits\Hookable;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 
 class Relationships
 {
+    use Hookable;
+
     public function __construct(protected Model $model, protected array $values = [], protected array $except = []) {}
 
     public static function for(Model $model): self
