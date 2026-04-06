@@ -10,8 +10,8 @@
                 </div>
             </h1>
 
-            <dropdown-list class="rtl:ml-4 ltr:mr-4" v-if="canEditBlueprint">
-                <dropdown-item :text="__('Edit Blueprint')" :redirect="actions.editBlueprint" />
+            <dropdown-list class="rtl:ml-4 ltr:mr-4">
+                <dropdown-item v-if="canEditBlueprint" :text="__('Edit Blueprint')" :redirect="actions.editBlueprint" />
                 <li class="divider" />
                 <data-list-inline-actions
                     v-if="!isCreating"

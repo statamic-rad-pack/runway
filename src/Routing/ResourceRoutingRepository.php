@@ -8,7 +8,7 @@ class ResourceRoutingRepository
     {
         $runwayUri = RunwayUri::where('uri', $uri)->first();
 
-        if (! $runwayUri) {
+        if (! $runwayUri || ! $runwayUri->model) {
             return null;
         }
 

@@ -18,14 +18,17 @@ class Fields extends BaseFieldsFilter
 
     public function apply($query, $values): void
     {
+        $resource = Runway::findResource($this->context['resource']);
+
         $this->getFields()
             ->filter(function ($field, $handle) use ($values) {
                 return isset($values[$handle]);
             })
-            ->each(function ($field, $handle) use ($query, $values) {
+            ->each(function (Field $field) use ($query, $values, $resource) {
                 $filter = $field->fieldtype()->filter();
-                $values = $filter->fields()->addValues($values[$handle])->process()->values();
-                $filter->apply($query, $handle, $values);
+                $values = $filter->fields()->addValues($values[$field->handle()])->process()->values();
+
+                $filter->apply($query, $resource->model()->getColumnForField($field->handle()), $values);
             });
     }
 

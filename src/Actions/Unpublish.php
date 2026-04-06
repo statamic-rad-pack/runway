@@ -27,7 +27,7 @@ class Unpublish extends Action
 
     public function authorize($user, $item)
     {
-        return $user->can('edit', [$item->runwayResource(), $item]);
+        return $user->can("publish {$item->runwayResource()->handle()}");
     }
 
     public function confirmationText()

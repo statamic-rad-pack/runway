@@ -28,6 +28,8 @@ use StatamicRadPack\Runway\Routing\RunwayUri;
 use StatamicRadPack\Runway\Search\Provider as SearchProvider;
 use StatamicRadPack\Runway\Search\Searchable;
 
+use function Illuminate\Events\queueable;
+
 class ServiceProvider extends AddonServiceProvider
 {
     protected $vite = [
@@ -224,8 +226,8 @@ class ServiceProvider extends AddonServiceProvider
         Runway::allResources()
             ->map(fn ($resource) => get_class($resource->model()))
             ->each(function ($class) {
-                Event::listen('eloquent.saved: '.$class, fn ($model) => Search::updateWithinIndexes(new Searchable($model)));
-                Event::listen('eloquent.deleted: '.$class, fn ($model) => Search::deleteFromIndexes(new Searchable($model)));
+                Event::listen('eloquent.saved: '.$class, queueable(fn ($model) => Search::updateWithinIndexes(new Searchable($model))));
+                Event::listen('eloquent.deleted: '.$class, queueable(fn ($model) => Search::deleteFromIndexes(new Searchable($model))));
             });
 
         return $this;

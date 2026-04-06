@@ -71,3 +71,10 @@ tabs:
             field:
               type: text
               save: false
+          -
+            handle: membership_status
+            field:
+              type: select
+              options:
+                free: Free
+                paid: Paid

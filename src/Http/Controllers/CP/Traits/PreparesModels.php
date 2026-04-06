@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Statamic\Fields\Field;
+use Statamic\Fieldtypes\Revealer;
 use Statamic\Fieldtypes\Section;
 use Statamic\Support\Arr;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
@@ -47,7 +48,7 @@ trait PreparesModels
                 }
 
                 // When $value is a JSON string, we need to decode it.
-                if (Json::isJson($value)) {
+                if (is_string($value) && json_validate($value)) {
                     $value = json_decode((string) $value, true);
                 }
 
@@ -69,7 +70,9 @@ trait PreparesModels
                 }
 
                 if ($field->fieldtype() instanceof HasManyFieldtype) {
-                    $value = data_get($model, $resource->eloquentRelationships()->get($field->handle()));
+                    $value = $model->{$resource->eloquentRelationships()->get($field->handle())}()
+                        ->runway()
+                        ->get();
 
                     // Use IDs from the model's $runwayRelationships property, if there are any.
                     if (array_key_exists($field->handle(), $model->runwayRelationships)) {
@@ -79,10 +82,11 @@ trait PreparesModels
                     // When re-ordering is enabled, ensure the models are returned in the correct order.
                     if ($field->get('reorderable', false)) {
                         $orderColumn = $field->get('order_column');
+                        $orderDirection = $field->get('order_direction', 'asc');
                         $relationshipName = $resource->eloquentRelationships()->get($field->handle());
 
                         $value = $model->{$relationshipName}()
-                            ->reorder($orderColumn, 'ASC')
+                            ->reorder($orderColumn, $orderDirection)
                             ->get();
                     }
                 }
@@ -179,7 +183,7 @@ trait PreparesModels
 
     protected function shouldSaveField(Field $field): bool
     {
-        if ($field->fieldtype() instanceof Section) {
+        if ($field->fieldtype() instanceof Section || $field->fieldtype() instanceof Revealer) {
             return false;
         }
 

@@ -1,5 +1,182 @@
 # Changelog
 
+## v8.10.1 (2026-04-03)
+
+### What's fixed
+- Hardened OrderBys [#798](https://github.com/statamic-rad-pack/runway/pull/798) by @duncanmcclean
+
+
+
+## v8.10.0 (2026-03-27)
+
+### What's new
+- Add `sort_direction` option to Has Many fieldtype [#795](https://github.com/doublethreedigital/runway/pull/795) by @Skullsneeze
+
+
+
+## v8.9.1 (2026-03-13)
+
+### What's fixed
+- Fixed publish toggle in relationship stack [#787](https://github.com/doublethreedigital/runway/pull/787) by @Skullsneeze
+
+
+
+## v8.9.0 (2026-01-16)
+
+### What's new
+- Enable URL filter parameter support for Runway listings #768 by @mmodler
+
+
+
+## v8.8.4 (2026-01-12)
+
+### What's improved
+- Ability to prevent eager loading by providing empty `with` array #761 by @claasjansen
+- Update search indexes in a queue #764 by @janis-ps
+
+### What's fixed
+- Fixed error when visiting URL of soft-deleted model #766 by @duncanmcclean
+- Fixed `unique` validation rule #765 by @duncanmcclean
+- Render `ResourceNotFound` exception as a 404 #755 by @BobWez98
+
+
+
+## v8.8.3 (2025-12-12)
+
+### What's fixed
+- Fix runway search on models with individual connections #753 by @godismyjudge95
+- PHP 8.5 compatibility #752 by @duncanmcclean
+
+
+
+## v8.8.2 (2025-11-24)
+
+### What's fixed
+- Fixed BelongsToMany field not saving #751 by @janis-ps
+
+
+
+## v8.8.1 (2025-11-24)
+
+### What's improved
+- Added `RoutingModel::model()` method by @duncanmcclean
+
+
+
+## v8.8.0 (2025-11-24)
+
+### What's new
+- Allow saving custom relationship types #747 by @caseydwyer
+
+
+
+## v8.7.2 (2025-11-17)
+
+### What's fixed
+- Handle enums correctly in listings #746 by @janis-ps
+
+
+
+## v8.7.1 (2025-11-05)
+
+### What's fixed
+* Fixed augmentation on runway routes #745 by @duncanmcclean
+
+
+
+## v8.7.0 (2025-11-04)
+
+### What's new
+* Added `default_publish_state` config option #736 by @duncanmcclean
+
+### What's fixed
+* Publish/unpublish actions should check `publish {resource}` permission #737 by @duncanmcclean
+* Fix error when using nocache tag on Runway route #738 by @duncanmcclean
+
+
+
+## v8.6.6 (2025-10-28)
+
+### What's fixed
+* Use augmented values to make the title #734 by @mmodler
+
+
+
+## v8.6.5 (2025-10-21)
+
+### What's fixed
+* Fixed `published() on null` error if model is missing #733 by @joshtaylordev
+
+
+
+## v8.6.4 (2025-09-03)
+
+### What's fixed
+* Avoid saving revealer fields #727 #729 by @duncanmcclean
+* Fix sorting by nested fields #716 #728 by @duncanmcclean
+
+
+
+## v8.6.3 (2025-08-25)
+
+### What's fixed
+* Fix `runway:import-collection` command on Ubuntu #715 by @amadeann
+
+
+
+## v8.6.2 (2025-08-21)
+
+### What's fixed
+* Added column existence check to `runwaySearch` query scope #714 by @kevinmeijer97
+
+
+
+## v8.6.1 (2025-08-14)
+
+### What's fixed
+* Fixed inline actions on edit view #710 #711 by @persteinhorst
+
+
+
+## v8.6.0 (2025-08-11)
+
+### What's new
+* Allow programmatic registration of resources #707 by @Pluuk
+* Update RoutingModel `model` property to be publicly accessible #706 by @jamesmpigott
+
+### What's fixed
+* Fix error when searching via fieldtype #699 #709 by @duncanmcclean
+* Refactor `BaseFieldtype::getIndexItems` #708 by @duncanmcclean
+* Delete `php-cs-fixer.phar` #704 by @duncanmcclean
+
+
+
+## v8.5.2 (2025-07-10)
+
+### What's fixed
+* Fix issues when filtering, sorting and searching nested fields #700 #702 by @duncanmcclean
+* Improve nested field augmentation #698 #701 by @duncanmcclean
+
+
+
+## v8.5.1 (2025-06-11)
+
+### What's fixed
+* Collection Importer fixes #696 by @duncanmcclean
+* Prevent errors from PostgreSQL when querying `runway_uris` table #689 #695 by @duncanmcclean
+* `RunwayRoutes` trait check should consider traits on parent classes #691 #694 by @duncanmcclean
+* Use `runway` query scope when fetching related models #692 #693 by @duncanmcclean
+
+
+
+## v8.5.0 (2025-05-22)
+
+### What's new
+* Added `where_in` parameter to Runway tag #688 by @duncanmcclean
+* Documented usage with Antlers Blade Components by @duncanmcclean
+
+
+
 ## v8.4.0 (2025-05-14)
 
 ### What's new

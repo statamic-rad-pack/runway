@@ -1,10 +1,11 @@
 ---
 title: 'Control Panel'
+description: Runway creates listing and publish forms for your Eloquent models, allowing you to manage them just like you would with entries.
 ---
 
 One of Runway’s core features is the Control Panel integration. Runway will create listing and publish form pages for each of your resources.
 
-![Screenshot of Control Panel Listing View](/img/runway/cp-listing-view.png)
+![Screenshot of Control Panel Listing View](/images/cp-listing-view.png)
 
 The Control Panel functionality is built to work in exactly the same way you’d expect with entries. You can set filters, define scopes and use custom actions.
 
@@ -12,9 +13,7 @@ The Control Panel functionality is built to work in exactly the same way you’d
 
 Technically, you can’t fully disable Runway’s CP feature. However, what you can do is hide the Nav Item from the Control Panel.
 
-```php
-// config/runway.php
-
+```php config/runway.php
 'resources' => [
 	\App\Models\Order::class => [
 	    'name' => 'Orders',
@@ -25,7 +24,7 @@ Technically, you can’t fully disable Runway’s CP feature. However, what you 
 
 ## Permissions
 
-![Screenshot of Runway's User Permissions](/img/runway/cp-user-permissions.png)
+![Screenshot of Runway's User Permissions](/images/cp-user-permissions.png)
 
 If you have other users who are not 'super users', you may wish to also give them permission to view/create/update specific resources.
 
@@ -35,9 +34,7 @@ Runway gives you granular control over which actions users can/cannot do for eac
 
 You may customize permission labels by adding a `resources/lang/{lang}/runway.php` file.
 
-```php
-// resources/lang/pt_BR/runway.php
-
+```php resources/lang/pt_BR/runway.php
 'permissions' => [
     'create' => 'Criar :resource',
     'delete' => 'Excluir :resource',
@@ -52,9 +49,7 @@ In the example above, `:resource` will be replaced by the resource's `name`.
 
 If you need to, you can add new permissions to the existing ones created by Runway:
 
-```php
-// app/Providers/AppServiceProvider.php
-
+```php app/Providers/AppServiceProvider.php
 public function boot()
 {
     Permission::group('Runway', function () {
@@ -74,9 +69,7 @@ public function boot()
 
 If you need to, you can change how resource actions are authorized by extending and rebinding the `ResourcePolicy` class.
 
-```php
-// app/Policies/ResourcePolicy.php
-
+```php app/Policies/ResourcePolicy.php
 <?php
 
 namespace App\Policies;
@@ -98,9 +91,7 @@ class ResourcePolicy extends RunwayResourcePolicy
 }
 ```
 
-```php
-// app/Providers/AppServiceProvider.php
-
+```php app/Providers/AppServiceProvider.php
 <?php
 
 namespace App\Providers;
@@ -136,7 +127,7 @@ class YourCustomAction extends Action
 
 Runway provides a "Fields" filter to filter models in the Control Panel based on blueprint fields.
 
-![Control Panel Filters](/img/runway/cp-filters.png)
+![Control Panel Filters](/images/cp-filters.png)
 
 You can create your own filters using [query scopes and filters](https://statamic.dev/extending/query-scopes-and-filters#filters). To make your filter visible in a Runway resource, specify it in `visibleTo` method, specifying the context of the resource and the key as 'runway'.
 

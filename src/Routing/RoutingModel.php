@@ -5,8 +5,11 @@ namespace StatamicRadPack\Runway\Routing;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Contracts\Data\Augmentable;
+use Statamic\Contracts\Data\Augmented;
 use Statamic\Data\ContainsSupplementalData;
 use Statamic\Data\HasAugmentedData;
+use StatamicRadPack\Runway\Data\AugmentedModel;
+use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Runway;
 
 class RoutingModel implements Augmentable, Responsable
@@ -16,6 +19,11 @@ class RoutingModel implements Augmentable, Responsable
     public function __construct(protected Model $model)
     {
         $this->supplements = collect();
+    }
+
+    public function model(): Model
+    {
+        return $this->model;
     }
 
     public function route(): ?string
@@ -46,19 +54,24 @@ class RoutingModel implements Augmentable, Responsable
 
     public function toResponse($request)
     {
-        return (new ResourceResponse($this->model))
-            ->with($this->supplements)
+        return (new ResourceResponse($this))
+            ->with($this->supplements->all())
             ->toResponse($request);
+    }
+
+    public function resource(): ?Resource
+    {
+        return Runway::findResourceByModel($this->model);
     }
 
     public function template(): string
     {
-        return Runway::findResourceByModel($this->model)->template();
+        return $this->resource()->template();
     }
 
     public function layout(): string
     {
-        return Runway::findResourceByModel($this->model)->layout();
+        return $this->resource()->layout();
     }
 
     public function id()
@@ -71,9 +84,9 @@ class RoutingModel implements Augmentable, Responsable
         return $this->model->getAttributeValue($this->model->getRouteKeyName());
     }
 
-    public function augmentedArrayData()
+    public function newAugmentedInstance(): Augmented
     {
-        return $this->model->toArray();
+        return new AugmentedModel($this->model);
     }
 
     public function __get($key)

@@ -19,8 +19,8 @@ class ListResourcesTest extends TestCase
             ->expectsTable(
                 ['Handle', 'Model', 'Route'],
                 [
-                    ['post', Post::class, '/posts/{{ slug }}'],
                     ['author', Author::class, 'N/A'],
+                    ['post', Post::class, '/posts/{{ slug }}'],
                 ]
             );
     }

@@ -1,21 +1,20 @@
 ---
 title: Relationships
+description: Relationships are an important part of any web application. Runway provides a way to manage Eloquent relationships within Statamic.
 ---
-
-Relationships are an important part of any web application. Most of your models will be related in some way to other models. Runway provides a way to manage those relationships within Statamic.
 
 ## Belongs To
 
-Runway provides a dedicated fieldtype to manage [`belongsTo`](https://laravel.com/docs/master/eloquent-relationships#one-to-many-inverse) relationships within Statamic. 
+Runway provides a dedicated fieldtype to manage [`belongsTo`](https://laravel.com/docs/master/eloquent-relationships#one-to-many-inverse) relationships within Statamic.
 
 ```php
 <?php
- 
+
 namespace App\Models;
- 
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
- 
+
 class Post extends Model
 {
     public function author(): BelongsTo
@@ -62,12 +61,12 @@ Runway provides a dedicated fieldtype to manage [`hasMany`](https://laravel.com/
 
 ```php
 <?php
- 
+
 namespace App\Models;
- 
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
- 
+
 class Author extends Model
 {
     public function posts(): HasMany
@@ -121,12 +120,12 @@ The Has Many fieldtype is also compatible with [`belongsToMany`](https://laravel
 
 ```php
 <?php
- 
+
 namespace App\Models;
- 
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
- 
+
 class Category extends Model
 {
     public function posts(): BelongsToMany

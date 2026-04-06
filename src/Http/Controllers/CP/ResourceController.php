@@ -74,7 +74,7 @@ class ResourceController extends CpController
             'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
             'blueprint' => $blueprint->toPublishArray(),
             'values' => $fields->values()->merge([
-                $resource->publishedColumn() => true,
+                $resource->publishedColumn() => $resource->defaultPublishState(),
             ])->all(),
             'meta' => $fields->meta(),
             'resourceHasRoutes' => $resource->hasRouting(),
@@ -145,7 +145,7 @@ class ResourceController extends CpController
                     'resource' => $resource->handle(),
                 ]),
             ]]),
-            'resource' => $resource,
+            'resource' => $request->wantsJson() ? $resource->toArray() : $resource,
             'actions' => [
                 'save' => $model->runwayUpdateUrl(),
                 'publish' => $model->runwayPublishUrl(),
@@ -183,10 +183,18 @@ class ResourceController extends CpController
 
     public function update(UpdateRequest $request, Resource $resource, $model)
     {
-        $resource->blueprint()->fields()->setParent($model)->addValues($request->all())->validator()->validate();
-
         $model = $resource->newEloquentQuery()->firstWhere($resource->model()->qualifyColumn($resource->routeKey()), $model);
         $model = $model->fromWorkingCopy();
+
+        $resource->blueprint()
+            ->fields()
+            ->setParent($model)
+            ->addValues($request->except($resource->primaryKey()))
+            ->validator()
+            ->withReplacements([
+                $resource->primaryKey() => $model->getAttribute($resource->primaryKey()),
+            ])
+            ->validate();
 
         $this->prepareModelForSaving($resource, $model, $request);
 

@@ -8,7 +8,6 @@ use Statamic\Contracts\Data\Augmented;
 use Statamic\Contracts\Revisions\Revision;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
-use Statamic\Fieldtypes\Hidden;
 use Statamic\Fieldtypes\Section;
 use Statamic\GraphQL\ResolvesValues;
 use Statamic\Revisions\Revisable;
@@ -58,14 +57,9 @@ trait HasRunwayResource
     public function scopeRunwaySearch(Builder $query, string $searchQuery)
     {
         $this->runwayResource()->blueprint()->fields()->all()
-            ->reject(function (Field $field) {
-                return $field->fieldtype() instanceof HasManyFieldtype
-                    || $field->fieldtype() instanceof Hidden
-                    || $field->fieldtype() instanceof Section
-                    || $field->visibility() === 'computed'
-                    || Str::startsWith($field->handle(), $this->runwayResource()->nestedFieldPrefixes());
-            })
-            ->each(fn (Field $field) => $query->orWhere($field->handle(), 'LIKE', '%'.$searchQuery.'%'));
+            ->filter(fn (Field $field) => $this->getConnection()->getSchemaBuilder()->hasColumn($this->getTable(), $field->handle()))
+            ->reject(fn (Field $field) => $field->visibility() === 'computed')
+            ->each(fn (Field $field) => $query->orWhere($this->getColumnForField($field->handle()), 'LIKE', '%'.$searchQuery.'%'));
     }
 
     public function publishedStatus(): ?string
@@ -128,6 +122,19 @@ trait HasRunwayResource
         }
 
         return $value;
+    }
+
+    public function getColumnForField(string $field): string
+    {
+        foreach ($this->runwayResource()->nestedFieldPrefixes() as $nestedFieldPrefix) {
+            if (Str::startsWith($field, "{$nestedFieldPrefix}_")) {
+                $key = Str::after($field, "{$nestedFieldPrefix}_");
+
+                return "{$nestedFieldPrefix}->{$key}";
+            }
+        }
+
+        return $field;
     }
 
     public function runwayEditUrl(): string

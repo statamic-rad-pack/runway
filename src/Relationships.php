@@ -42,10 +42,12 @@ class Relationships
             ->filter(fn (Field $field) => $field->fieldtype() instanceof HasManyFieldtype)
             ->each(function (Field $field): void {
                 $relationshipName = $this->model->runwayResource()->eloquentRelationships()->get($field->handle());
+                $values = $this->values[$field->handle()] ?? [];
 
                 match (get_class($relationship = $this->model->{$relationshipName}())) {
-                    HasMany::class => $this->saveHasManyRelationship($field, $relationship, $this->values[$field->handle()] ?? []),
-                    BelongsToMany::class => $this->saveBelongsToManyRelationship($field, $relationship, $this->values[$field->handle()] ?? []),
+                    HasMany::class => $this->saveHasManyRelationship($field, $relationship, $values),
+                    BelongsToMany::class => $this->saveBelongsToManyRelationship($field, $relationship, $values),
+                    default => $this->runHooks('saveCustomRelationship', compact('field', 'relationship', 'values')),
                 };
             });
     }

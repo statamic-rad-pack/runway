@@ -39,6 +39,23 @@ class Resource
         return $this->model->newQuery()->runway();
     }
 
+    public function newEloquentQueryBuilderWithEagerLoadedRelationships(): Builder
+    {
+        return $this
+            ->newEloquentQuery()
+            ->with(
+                collect($this->eagerLoadingRelationships())
+                    ->mapWithKeys(function (string $relationship): array {
+                        if ($relationship === 'runwayUri') {
+                            return [$relationship => fn ($query) => null];
+                        }
+
+                        return [$relationship => fn ($query) => $query->runway()];
+                    })
+                    ->all()
+            );
+    }
+
     public function name()
     {
         return $this->name;
@@ -157,6 +174,19 @@ class Resource
         return $column;
     }
 
+    public function defaultPublishState(): ?bool
+    {
+        if (! $this->hasPublishStates()) {
+            return null;
+        }
+
+        if ($this->revisionsEnabled()) {
+            return false;
+        }
+
+        return $this->config->get('default_publish_state', 'published') === 'published';
+    }
+
     public function nestedFieldPrefixes(): Collection
     {
         return collect($this->config->get('nested_field_prefixes'));
@@ -212,8 +242,8 @@ class Resource
      */
     public function eagerLoadingRelationships(): array
     {
-        if ($eagerLoadingRelationships = $this->config->get('with')) {
-            return $eagerLoadingRelationships;
+        if ($this->config->has('with')) {
+            return $this->config->get('with');
         }
 
         return $this->eloquentRelationships()->values()->toArray();
@@ -230,7 +260,7 @@ class Resource
     public function hasRouting(): bool
     {
         return ! is_null($this->route())
-            && in_array(\StatamicRadPack\Runway\Routing\Traits\RunwayRoutes::class, class_uses($this->model()));
+            && in_array(\StatamicRadPack\Runway\Routing\Traits\RunwayRoutes::class, class_uses_recursive($this->model()));
     }
 
     public function primaryKey(): string

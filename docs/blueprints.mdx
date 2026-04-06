@@ -1,14 +1,13 @@
 ---
 title: 'Blueprints'
+description: Blueprints are a key component to Statamic's content modeling process. They let you define the fields available in the Control Panel and how your data is stored.
 ---
-
-As explained in the [Statamic Docs](https://statamic.dev/blueprints#content), Blueprints are a key component to the content modeling process. They let you define the fields that should be available in the Control Panel and the way your data is stored.
 
 ## Creating & managing blueprints
 
 Every resource will have it's own blueprint. Just like with collections, you can manage the blueprints in the Control Panel.
 
-![Runway blueprints in the Control Panel](/img/runway/runway-blueprints-in-the-cp.png)
+![Runway blueprints in the Control Panel](/images/runway-blueprints-in-the-cp.png)
 
 When configuring fields, make sure that the field handles in your blueprint should match up *exactly* with the column names in the database, otherwise bad things will happen. You'll also want to ensure the database column type matches the fieldtype you're trying to use (see [Supported Fieldtypes](#supported-fieldtypes)).
 
@@ -68,7 +67,7 @@ Asset Container| `string`/`json`          |
 [Video](https://statamic.dev/fieldtypes/video)| `string`                 |
 [Width](https://statamic.dev/fieldtypes/width)| `integer`                |
 [YAML](https://statamic.dev/fieldtypes/yaml)| `string`                 |
- 
+
 ## Eloquent Relationships
 
 Runway provides two fieldtypes to let you manage Eloquent Relationships within Statamic:
@@ -87,9 +86,9 @@ To do this, you'll first need to configure the JSON column under the `nested_fie
 ```php
 'resources' => [
     Order::class => [
-        'nested_field_prefixes' => [ // [tl! ++]
-            'address', // [tl! ++]
-        ], // [tl! ++]
+        'nested_field_prefixes' => [ // [!code ++]
+            'address', // [!code ++]
+        ], // [!code ++]
     ],
 ],
 ```
@@ -137,8 +136,6 @@ public function fullName(): Attribute
 
 Then, in your user blueprint, you'd set the field's visibility to "Computed":
 
-![Field's visibility set to computed](/img/runway/field-visibility-computed.png)
+![Field's visibility set to computed](/images/field-visibility-computed.png)
 
-:::note Note!
-It's worth noting, Runway requires any accessors to be `public` functions, otherwise the attributes won't be augmentable.
-:::
+<Note>It's worth noting, Runway requires any accessors to be `public` functions, otherwise the attributes won't be augmentable.</Note>

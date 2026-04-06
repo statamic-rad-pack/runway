@@ -51,14 +51,12 @@ class ResourceResponse implements Responsable
 
     protected function contents()
     {
-        $contents = (new View)
+        return (new View)
             ->template($this->data->template())
             ->layout($this->data->layout())
-            ->with($this->data->toAugmentedArray())
+            ->with($this->with)
             ->cascadeContent($this->data)
             ->render();
-
-        return $contents;
     }
 
     protected function cascade()

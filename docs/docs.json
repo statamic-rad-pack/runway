@@ -1,0 +1,97 @@
+{
+    "$schema": "https://mintlify.com/docs.json",
+    "theme": "mint",
+    "name": "Runway",
+    "colors": {
+        "primary": "#6F100B",
+        "light": "#FF2B20",
+        "dark": "#FF2B20"
+    },
+    "favicon": "/images/favicon.png",
+    "navigation": {
+        "groups": [
+            {
+                "group": "Getting Started",
+                "pages": [
+                    "index",
+                    "installation",
+                    {
+                        "group": "Upgrade Guides",
+                        "pages": [
+                            "upgrade-guides/v7-to-v8",
+                            "upgrade-guides/v6-to-v7",
+                            "upgrade-guides/v5-x-to-v6-0",
+                            "upgrade-guides/v4-x-to-v5-0",
+                            "upgrade-guides/v3-x-to-v4-0"
+                        ]
+                    },
+                    "resources"
+                ]
+            },
+            {
+                "group": "Features",
+                "pages": [
+                    "blueprints",
+                    "control-panel",
+                    "relationships",
+                    "frontend-routing",
+                    "templating",
+                    "graphql",
+                    "rest-api",
+                    "search",
+                    "revisions"
+                ]
+            },
+            {
+                "group": "Guides",
+                "pages": [
+                    "guides/multisite"
+                ]
+            }
+        ]
+    },
+    "logo": {
+        "light": "/images/logo/light.svg",
+        "dark": "/images/logo/dark.svg"
+    },
+    "navbar": {
+        "links": [
+            {
+                "label": "GitHub",
+                "href": "https://github.com/statamic-rad-pack/runway",
+                "icon": "github"
+            }
+        ]
+    },
+    "contextual": {
+        "options": [
+            "copy",
+            "view",
+            "chatgpt",
+            "claude",
+            "perplexity",
+            "mcp",
+            "cursor",
+            "vscode"
+        ]
+    },
+    "footer": {
+        "socials": {
+            "github": "https://github.com/statamic-rad-pack/runway"
+        }
+    },
+    "redirects": [
+        {
+            "source": "/kb-articles/supported-fieldtypes",
+            "destination": "/blueprints"
+        },
+        {
+            "source": "/kb-articles/multisite",
+            "destination": "/guides/multisite"
+        },
+        {
+            "source": "/fieldtypes",
+            "destination": "/relationships"
+        }
+    ]
+}

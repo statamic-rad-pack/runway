@@ -165,6 +165,7 @@ export default {
             preferencesPrefix: `runway.${this.resource}`,
             requestUrl: cp_url(`runway/${this.resource}/listing-api`),
             deletingRow: false,
+            pushQuery: true,
         }
     },
 

@@ -1,5 +1,6 @@
 ---
 title: Resources
+description: Resources are a core part of Runway. They tell Runway about your Eloquent models and how you'd like them to be managed.
 ---
 
 ## What are resources?
@@ -10,57 +11,40 @@ A resource basically tells Runway about the model and how you’d like it to be 
 
 ## Defining resources
 
-You can define resources inside the configuration file published during installation. It’s located in `config/runway.php`.
+There are three steps involved in defining a resource:
 
-```php
-<?php
+<Steps>
+    <Step title="Add resource to config file">
+        Add the resource to Runway's config file. The key should be the model, and the value should be an array of configuration options:
 
-return [
+        ```php config/runway.php
+        'resources' => [
+        	\App\Models\Order::class => [
+        		'name' => 'Orders',
+        	],
+        ],
+        ```
+    </Step>
 
-    /*
-    |--------------------------------------------------------------------------
-    | Resources
-    |--------------------------------------------------------------------------
-    |
-    | Configure the resources (models) you'd like to be available in Runway.
-    |
-    */
+    <Step title="Add HasRunwayResource trait">
+        Add the `HasRunwayResource` trait to your Eloquent model:
 
-    'resources' => [
-        //
-    ],
+        ```php app/Models/Order.php
+        use StatamicRadPack\Runway\Traits\HasRunwayResource; // [!code ++]
 
-];
-```
+        class Order extends Model
+        {
+            use HasRunwayResource; // [!code ++]
+        }
+        ```
+    </Step>
 
-There three steps to defining a Runway Resource: first you need to add it to Runway's `resources` array like so:
+    <Step title="Edit the blueprint">
+        Finally, you can start adding fields to your resource's blueprint. To learn more about using Blueprints in Runway, please review the [Blueprints](/blueprints) page.
+    </Step>
+</Steps>
 
-```php
-'resources' => [
-	\App\Models\Order::class => [
-		'name' => 'Orders',
-	],
-],
-```
-
-Second, you need to add the `HasRunwayResource` trait to your Eloquent model.
-
-```php
-// app/Models/Order.php
-
-use StatamicRadPack\Runway\Traits\HasRunwayResource; // [tl! add]
-
-class Order extends Model
-{
-    use HasRunwayResource; // [tl! add]
-}
-```
-
-Finally, you can start adding fields to your resource's blueprint. To learn more about using Blueprints in Runway, please review the [Blueprints](/blueprints) page.
-
-:::tip Hot Tip
-If you're moving a collection to the database, use the `php please runway:import-collection` command. It'll help you set up everything you need, including moving your entries to the database.
-:::
+<Tip>If you're moving a collection to the database, use the `php please runway:import-collection` command. It'll help you set up everything you need, including moving your entries to the database.</Tip>
 
 ## Configuring resources
 
@@ -81,7 +65,7 @@ If you’d like to hide the CP Nav Item that’s registered for this model, just
 ],
 ```
 
-> Bear in mind, this will just hide the Nav Item for the CP interface, it won’t actually get rid of the routes being registered. If someone knows where to look, they could still use the CP to manage your models (they could guess the URL).
+This will only hide the resource from the Control Panel navigation, the page will still be accessible via its URL if you know where to look. If you want to prevent access to the resource entirely, use [permissions](/control-panel#permissions) instead.
 
 ### Route
 
@@ -201,7 +185,7 @@ If you're writing content that you would like to be able to store without publis
 
 By default, it'll use a `published` column in the database to keep track of the model's "status". You're free to change the name of this column as needed.
 
-:::note Note!
+<Note>
 Runway **won't** automatically add this database column for you, you will need to add it yourself:
 
 ```php
@@ -209,7 +193,7 @@ Schema::table('products', function (Blueprint $table) {
     $table->boolean('published');
 });
 ```
-:::
+</Note>
 
 ### Prevent creating new models
 
@@ -265,7 +249,7 @@ class YourModel extends Model
 	{
 	    // Disables ALL global scopes
 		return $query->withoutGlobalScopes();
-		
+
 		// Disables a specific global scope
 		return $query->withoutGlobalScope([ActiveScope::class]);
 	}
@@ -278,4 +262,4 @@ You can find more information about global scopes on the [Laravel documentation]
 
 If you're unsure about the handle of a resource, you may want to check it. You may do so with the `php please runway:resources` command which will display a list of Runway Resources.
 
-![Resource List command](/img/runway/resource-list.png)
+![Resource List command](/images/resource-list.png)

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\Test;
+use StatamicRadPack\Runway\Data\AugmentedModel;
+use StatamicRadPack\Runway\Resource;
 use StatamicRadPack\Runway\Routing\RoutingModel;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
@@ -85,6 +87,18 @@ class RoutingModelTest extends TestCase
     }
 
     #[Test]
+    public function can_get_resource()
+    {
+        Runway::discoverResources();
+
+        $post = Post::factory()->createQuietly();
+
+        $routingModel = new RoutingModel($post);
+
+        $this->assertInstanceOf(Resource::class, $routingModel->resource());
+    }
+
+    #[Test]
     public function can_get_template()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.template', 'posts.show');
@@ -135,14 +149,14 @@ class RoutingModelTest extends TestCase
     }
 
     #[Test]
-    public function can_get_augmented_array_data()
+    public function can_get_augmented_instance()
     {
         $post = Post::factory()->createQuietly();
         $post->runwayUri()->create(['uri' => '/blog/post-slug']);
 
         $routingModel = new RoutingModel($post);
 
-        $this->assertEquals($post->toArray(), $routingModel->augmentedArrayData());
+        $this->assertInstanceOf(AugmentedModel::class, $routingModel->newAugmentedInstance());
     }
 
     #[Test]

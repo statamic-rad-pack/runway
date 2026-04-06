@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Statamic\Facades\Blink;
 use StatamicRadPack\Runway\Routing\Traits\RunwayRoutes;
 use StatamicRadPack\Runway\Tests\Fixtures\Database\Factories\PostFactory;
+use StatamicRadPack\Runway\Tests\Fixtures\Enums\MembershipStatus;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
 
 class Post extends Model
@@ -15,7 +16,7 @@ class Post extends Model
     use HasFactory, HasRunwayResource, RunwayRoutes;
 
     protected $fillable = [
-        'title', 'slug', 'body', 'values', 'external_links', 'author_id', 'sort_order', 'published', 'mutated_value',
+        'title', 'slug', 'body', 'values', 'external_links', 'author_id', 'sort_order', 'published', 'mutated_value', 'membership_status',
     ];
 
     protected $appends = [
@@ -27,6 +28,7 @@ class Post extends Model
         'values' => 'array',
         'external_links' => 'object',
         'published' => 'boolean',
+        'membership_status' => MembershipStatus::class,
     ];
 
     public function scopeFood($query)

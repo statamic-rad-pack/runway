@@ -7,6 +7,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Statamic\Extensions\Pagination\LengthAwarePaginator;
 use Statamic\Facades\Blink;
+use Statamic\Query\OrderBy;
 use Statamic\Tags\Tags;
 use StatamicRadPack\Runway\Exceptions\ResourceNotFound;
 use StatamicRadPack\Runway\Resource;
@@ -102,8 +103,15 @@ class RunwayTag extends Tags
                     $query->whereIn($relationshipResource->databaseTable().'.'.$relationshipResource->primaryKey(), Arr::wrap($value));
                 });
             } else {
-                $query->where($key, $value);
+                $query->where($this->resource->model()->getColumnForField($key), $value);
             }
+        }
+
+        if ($this->params->has('where_in') && $whereIn = $this->params->get('where_in')) {
+            $key = explode(':', (string) $whereIn)[0];
+            $value = explode(':', (string) $whereIn)[1];
+
+            $query->whereIn($this->resource->model()->getColumnForField($key), explode(',', $value));
         }
 
         if ($this->params->has('sort') && ! empty($this->params->get('sort'))) {
@@ -115,7 +123,9 @@ class RunwayTag extends Tags
                 $sortDirection = 'asc';
             }
 
-            $query->orderBy($sortColumn, $sortDirection);
+            if ($sortColumn = OrderBy::column($sortColumn)) {
+                $query->orderBy($this->resource->model()->getColumnForField($sortColumn), $sortDirection);
+            }
         }
 
         return $query;

@@ -105,6 +105,6 @@ Runway integrates with Statamic's [Search](https://statamic.dev/search) feature,
 
 ## Support
 
-If you find a bug, have some question or have a feature request, please open a [GitHub Issue or Discussion](https://github.com/duncanmcclean/runway/issues/new/choose).
+If you find a bug, have some questions or have a feature request, please open a [GitHub Issue or Discussion](https://github.com/duncanmcclean/runway/issues/new/choose).
 
 > Please note: only the latest version of this addon is supported. Any bug reports regarding an old version will be closed.
