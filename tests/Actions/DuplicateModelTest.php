@@ -47,6 +47,18 @@ class DuplicateModelTest extends TestCase
     }
 
     #[Test]
+    public function is_not_visible_to_eloquent_model_when_resource_is_not_duplicatable()
+    {
+        Config::set('runway.resources.StatamicRadPack\\Runway\\Tests\\Fixtures\\Models\\Post.duplicatable', false);
+
+        Runway::discoverResources();
+
+        $visibleTo = (new DuplicateModel)->visibleTo(Post::factory()->create());
+
+        $this->assertFalse($visibleTo);
+    }
+
+    #[Test]
     public function is_not_visible_to_eloquent_model_when_blueprint_is_hidden()
     {
         $blueprint = Blueprint::find('runway::post');
