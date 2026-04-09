@@ -1,5 +1,12 @@
 # Changelog
 
+## v9.4.0 (2026-04-09)
+
+### What's new
+- Add disable duplicate action option [#801](https://github.com/statamic-rad-pack/runway/pull/801) by @AlexanderFalkenberg
+
+
+
 ## v9.3.3 (2026-04-03)
 
 ### What's fixed
