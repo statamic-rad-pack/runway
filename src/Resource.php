@@ -133,6 +133,11 @@ class Resource
         return $this->config->get('read_only', false);
     }
 
+    public function duplicatable(): bool
+    {
+        return $this->config->get('duplicatable', true);
+    }
+
     public function orderBy(): string
     {
         return $this->config->get('order_by', $this->primaryKey());

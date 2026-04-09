@@ -110,6 +110,19 @@ You may also specify if you want a resource to be 'read only' - eg. users will n
 ],
 ```
 
+### Duplicatable
+
+By default, Runway allows models to be duplicated via the Duplicate action in the Control Panel. You can disable this for a resource by setting `duplicatable` to `false`.
+
+```php
+'resources' => [
+	\App\Models\Order::class => [
+	    'name' => 'Orders',
+        'duplicatable' => false,
+	],
+],
+```
+
 ### Ordering
 
 Sometimes you may want to change the order that your models are returned in the Control Panel listing table. You can use the `order_by` and `order_by_direction` configuration options to tell Runway the order you wish models to be returned.

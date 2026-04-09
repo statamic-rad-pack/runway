@@ -27,7 +27,7 @@ class DuplicateModel extends Action
             return false;
         }
 
-        return $item instanceof Model && $resource->hasVisibleBlueprint() && $resource->readOnly() !== true;
+        return $item instanceof Model && $resource->hasVisibleBlueprint() && $resource->readOnly() !== true && $resource->duplicatable() === true;
     }
 
     public function visibleToBulk($items)

@@ -155,6 +155,28 @@ class ResourceTest extends TestCase
     }
 
     #[Test]
+    public function duplicatable_defaults_to_true()
+    {
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $this->assertTrue($resource->duplicatable());
+    }
+
+    #[Test]
+    public function duplicatable_can_be_disabled()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.duplicatable', false);
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $this->assertFalse($resource->duplicatable());
+    }
+
+    #[Test]
     public function can_get_blueprint()
     {
         $resource = Runway::findResource('post');
