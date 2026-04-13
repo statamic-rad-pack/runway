@@ -1,5 +1,12 @@
 # Changelog
 
+## v9.4.3 (2026-04-13)
+
+### What's fixed
+- Qualify the primary key in queries [#806](https://github.com/statamic-rad-pack/runway/pull/806) by @Jade-GG
+
+
+
 ## v9.4.2 (2026-04-13)
 
 ### What's fixed
