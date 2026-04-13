@@ -289,6 +289,11 @@ class Resource
         return $this->model()->getKeyName();
     }
 
+    public function qualifiedPrimaryKey(): string
+    {
+        return $this->model()->getQualifiedKeyName();
+    }
+
     public function routeKey(): string
     {
         return $this->model()->getRouteKeyName() ?? 'id';

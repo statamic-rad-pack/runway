@@ -293,7 +293,7 @@ abstract class BaseFieldtype extends Relationship
                     $item = $item->first()->{$resource->primaryKey()} ?? null;
                 }
 
-                $model = $resource->model()->firstWhere($resource->primaryKey(), $item);
+                $model = $resource->model()->firstWhere($resource->qualifiedPrimaryKey(), $item);
             } else {
                 $model = $item;
             }
@@ -356,7 +356,7 @@ abstract class BaseFieldtype extends Relationship
                                 fn ($query) => $query->with(Arr::wrap($this->config('with'))),
                                 fn ($query) => $query->with($resource->eagerLoadingRelationships())
                             )
-                            ->firstWhere($resource->primaryKey(), $model);
+                            ->firstWhere($resource->qualifiedPrimaryKey(), $model);
                     });
                 }
 
@@ -386,7 +386,7 @@ abstract class BaseFieldtype extends Relationship
     protected function toItemArray($id)
     {
         $resource = Runway::findResource($this->config('resource'));
-        $model = $id instanceof Model ? $id : $resource->model()->runway()->firstWhere($resource->primaryKey(), $id);
+        $model = $id instanceof Model ? $id : $resource->model()->runway()->firstWhere($resource->qualifiedPrimaryKey(), $id);
 
         if (! $model) {
             return $this->invalidItemArray($id);
