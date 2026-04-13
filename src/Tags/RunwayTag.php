@@ -100,7 +100,7 @@ class RunwayTag extends Tags
                 $relationshipResource = Runway::findResource($this->resource->blueprint()->field($key)->config()['resource']);
 
                 $query->whereHas($relationshipName, function ($query) use ($value, $relationshipResource) {
-                    $query->whereIn($relationshipResource->databaseTable().'.'.$relationshipResource->primaryKey(), Arr::wrap($value));
+                    $query->whereIn($relationshipResource->qualifiedPrimaryKey(), Arr::wrap($value));
                 });
             } else {
                 $query->where($this->resource->model()->getColumnForField($key), $value);
