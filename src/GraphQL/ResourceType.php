@@ -49,7 +49,7 @@ class ResourceType extends Type
             if (! $model instanceof Model) {
                 $resource = Runway::findResource(Str::replace('runway_graphql_types_', '', $info->parentType->name));
 
-                $model = $resource->model()->firstWhere($resource->primaryKey(), $model);
+                $model = $resource->model()->firstWhere($resource->qualifiedPrimaryKey(), $model);
             }
 
             return $model->resolveGqlValue($info->fieldName);
