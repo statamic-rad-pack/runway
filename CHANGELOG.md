@@ -1,5 +1,12 @@
 # Changelog
 
+## v9.4.2 (2026-04-13)
+
+### What's fixed
+- Upgrade to Vite 8 [#804](https://github.com/statamic-rad-pack/runway/pull/804) by @duncanmcclean
+
+
+
 ## v9.4.1 (2026-04-13)
 
 ### What's fixed
