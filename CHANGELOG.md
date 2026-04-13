@@ -1,5 +1,12 @@
 # Changelog
 
+## v9.4.1 (2026-04-13)
+
+### What's fixed
+- Replace spatie/ignition with spatie/error-solutions [#803](https://github.com/statamic-rad-pack/runway/pull/803) by @duncanmcclean
+
+
+
 ## v9.4.0 (2026-04-09)
 
 ### What's new
