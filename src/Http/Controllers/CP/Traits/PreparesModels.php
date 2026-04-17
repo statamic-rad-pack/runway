@@ -182,6 +182,16 @@ trait PreparesModels
                     return;
                 }
 
+                // Skip read-only timestamp columns so Laravel's automatic
+                // timestamp handling isn't prevented by a stale value.
+                if (
+                    $field->visibility() === 'read_only'
+                    && $model->usesTimestamps()
+                    && in_array($field->handle(), [$model->getCreatedAtColumn(), $model->getUpdatedAtColumn()])
+                ) {
+                    return;
+                }
+
                 $model->setAttribute($field->handle(), $processedValue);
             });
     }
