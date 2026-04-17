@@ -80,7 +80,7 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
 
     public function getCpSearchResultTitle(): string
     {
-        return $this->model->{$this->resource->titleField()};
+        return $this->resource->titleValue($this->model);
     }
 
     public function getCpSearchResultUrl(): string

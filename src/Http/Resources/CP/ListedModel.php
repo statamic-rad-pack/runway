@@ -44,7 +44,7 @@ class ListedModel extends JsonResource
 
         return [
             'id' => $model->getKey(),
-            'title' => $model->getAttribute($this->runwayResource->titleField()),
+            'title' => $this->runwayResource->titleValue($model),
             'published' => $this->resource->published(),
             'status' => $this->resource->publishedStatus(),
             'edit_url' => $model->runwayEditUrl(),

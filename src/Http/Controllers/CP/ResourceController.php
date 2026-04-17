@@ -142,7 +142,7 @@ class ResourceController extends CpController
         [$values, $meta] = $this->extractFromFields($model, $resource, $blueprint);
 
         $viewData = [
-            'title' => $model->getAttribute($resource->titleField()),
+            'title' => $resource->titleValue($model),
             'reference' => $model->reference(),
             'method' => 'patch',
             'resource' => $resource->toArray(),

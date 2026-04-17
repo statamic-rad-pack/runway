@@ -71,8 +71,8 @@ class DuplicateModel extends Action
     {
         $model = $original->replicate($resource->blueprint()->fields()->all()->reject->shouldBeDuplicated()->keys()->all());
 
-        if ($resource->titleField() && in_array($resource->titleField(), $resource->databaseColumns())) {
-            $model->setAttribute($resource->titleField(), $original->getAttribute($resource->titleField()).' (Duplicate)');
+        if ($resource->titleField()) {
+            $resource->setTitleValue($model, $resource->titleValue($original).' (Duplicate)');
         }
 
         if ($resource->hasPublishStates()) {

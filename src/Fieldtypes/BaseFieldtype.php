@@ -204,7 +204,7 @@ abstract class BaseFieldtype extends Relationship
             if ($orderBy = OrderBy::column($request->input('sort'))) {
                 // The stack selector always uses `title` as the default sort column, but
                 // the "title field" for the model might be a different column, so we need to convert it.
-                $sortColumn = $orderBy === 'title' ? $this->resource()->titleField() : $orderBy;
+                $sortColumn = $orderBy === 'title' ? $this->resource()->titleDbColumn() : $orderBy;
 
                 $query->reorder($sortColumn, $request->input('order'));
             }
@@ -304,7 +304,7 @@ abstract class BaseFieldtype extends Relationship
 
             return [
                 'id' => $model->{$resource->primaryKey()},
-                'title' => $fieldtype->preProcessIndex($model->{$column}),
+                'title' => $fieldtype->preProcessIndex($resource->titleValue($model)),
                 'edit_url' => $model->runwayEditUrl(),
             ];
         });

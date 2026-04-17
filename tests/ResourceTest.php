@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Fieldset;
 use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 
 class ResourceTest extends TestCase
 {
@@ -272,6 +273,102 @@ class ResourceTest extends TestCase
         $resource = Runway::findResource('post');
 
         $this->assertEquals('values->listable_hidden_field', $resource->titleField());
+    }
+
+    #[Test]
+    public function can_get_title_value()
+    {
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $post = Post::factory()->create(['title' => 'Hello World']);
+
+        $this->assertEquals('Hello World', $resource->titleValue($post));
+    }
+
+    #[Test]
+    public function can_get_title_value_for_nested_field()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.title_field', 'values_alt_title');
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $post = Post::factory()->create(['values' => ['alt_title' => 'Nested Title']]);
+
+        $this->assertEquals('Nested Title', $resource->titleValue($post));
+    }
+
+    #[Test]
+    public function can_get_title_db_column()
+    {
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $this->assertEquals('title', $resource->titleDbColumn());
+    }
+
+    #[Test]
+    public function can_get_title_db_column_for_nested_field()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.title_field', 'values_alt_title');
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $this->assertEquals('values->alt_title', $resource->titleDbColumn());
+    }
+
+    #[Test]
+    public function can_set_title_value()
+    {
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $post = Post::factory()->create(['title' => 'Original']);
+
+        $resource->setTitleValue($post, 'Updated');
+
+        $this->assertEquals('Updated', $post->getAttribute('title'));
+    }
+
+    #[Test]
+    public function can_set_title_value_for_nested_field()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.title_field', 'values_alt_title');
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $post = Post::factory()->create(['values' => ['alt_title' => 'Original', 'alt_body' => 'Keep me']]);
+
+        $resource->setTitleValue($post, 'Updated');
+
+        $this->assertEquals('Updated', data_get($post, 'values.alt_title'));
+        $this->assertEquals('Keep me', data_get($post, 'values.alt_body'));
+    }
+
+    #[Test]
+    public function set_title_value_does_not_set_computed_fields()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.title_field', 'appended_value');
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $post = Post::factory()->create();
+        $original = $post->getAttribute('appended_value');
+
+        $resource->setTitleValue($post, 'Should not be set');
+
+        $this->assertEquals($original, $post->getAttribute('appended_value'));
     }
 
     #[Test]

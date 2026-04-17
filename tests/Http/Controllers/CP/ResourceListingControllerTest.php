@@ -54,6 +54,36 @@ class ResourceListingControllerTest extends TestCase
     }
 
     #[Test]
+    public function can_sort_listing_rows_with_nested_title_field()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.title_field', 'values_alt_title');
+
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+
+        $postA = Post::factory()->create(['values' => ['alt_title' => 'Nested Alpha']]);
+        $postB = Post::factory()->create(['values' => ['alt_title' => 'Nested Beta']]);
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.listing-api', ['resource' => 'post']))
+            ->assertOk()
+            ->assertJson([
+                'data' => [
+                    [
+                        'title' => 'Nested Alpha',
+                        'id' => $postA->id,
+                    ],
+                    [
+                        'title' => 'Nested Beta',
+                        'id' => $postB->id,
+                    ],
+                ],
+            ]);
+    }
+
+    #[Test]
     public function listing_rows_are_ordered_as_per_config()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.order_by', 'id');

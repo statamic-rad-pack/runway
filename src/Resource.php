@@ -163,6 +163,67 @@ class Resource
             ->first();
     }
 
+    public function titleValue(Model $model): mixed
+    {
+        $titleField = $this->titleField();
+
+        if (! $titleField) {
+            return null;
+        }
+
+        if ($prefix = $this->nestedFieldPrefix($titleField)) {
+            $key = Str::after($titleField, "{$prefix}_");
+
+            return data_get($model, "{$prefix}.{$key}");
+        }
+
+        return $model->getAttribute($titleField);
+    }
+
+    public function titleDbColumn(): ?string
+    {
+        $titleField = $this->titleField();
+
+        if (! $titleField) {
+            return null;
+        }
+
+        if ($prefix = $this->nestedFieldPrefix($titleField)) {
+            $key = Str::after($titleField, "{$prefix}_");
+
+            return "{$prefix}->{$key}";
+        }
+
+        return $titleField;
+    }
+
+    public function setTitleValue(Model $model, mixed $value): void
+    {
+        $titleField = $this->titleField();
+
+        if (! $titleField) {
+            return;
+        }
+
+        if ($prefix = $this->nestedFieldPrefix($titleField)) {
+            $key = Str::after($titleField, "{$prefix}_");
+            $current = $model->getAttribute($prefix) ?? [];
+
+            if (is_object($current)) {
+                $current = (array) $current;
+            }
+
+            data_set($current, $key, $value);
+            $model->setAttribute($prefix, $current);
+
+            return;
+        }
+
+        if (in_array($titleField, $this->databaseColumns())) {
+            $model->setAttribute($titleField, $value);
+        }
+    }
+
     public function icon(): string
     {
         $navItem = Nav::build()->pluck('items')->flatten()

@@ -22,7 +22,7 @@ trait ExtractsFromModelFields
 
         $values = $fields->values()->merge([
             'id' => $model->getKey(),
-            'title' => $model->getAttribute($resource->titleField()),
+            'title' => $resource->titleValue($model),
             'edit_url' => $model->runwayEditUrl(),
             $resource->publishedColumn() => $model->published(),
         ]);
