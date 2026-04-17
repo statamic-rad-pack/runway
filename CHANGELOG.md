@@ -1,5 +1,12 @@
 # Changelog
 
+## v9.4.4 (2026-04-17)
+
+### What's fixed
+- Fix updated_at timestamp not updating when field is read-only [#807](https://github.com/statamic-rad-pack/runway/pull/807) by @duncanmcclean
+
+
+
 ## v9.4.3 (2026-04-13)
 
 ### What's fixed
