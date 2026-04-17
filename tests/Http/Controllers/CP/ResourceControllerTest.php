@@ -678,7 +678,7 @@ class ResourceControllerTest extends TestCase
     }
 
     #[Test]
-    public function can_update_resource_and_ensure__field_isnt_saved_to_database()
+    public function can_update_resource_and_ensure_field_with_save_false_isnt_saved_to_database()
     {
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
