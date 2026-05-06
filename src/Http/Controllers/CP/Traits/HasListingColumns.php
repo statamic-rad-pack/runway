@@ -10,7 +10,7 @@ use StatamicRadPack\Runway\Resource;
 
 trait HasListingColumns
 {
-    protected function getPrimaryColumn(Resource $resource): string
+    protected function getTitleColumn(Resource $resource): string
     {
         if ($resource->blueprint()->fields()->all()->isEmpty()) {
             throw new EmptyBlueprintException($resource->handle());

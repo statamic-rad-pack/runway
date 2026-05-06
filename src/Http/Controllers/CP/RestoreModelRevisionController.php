@@ -2,26 +2,22 @@
 
 namespace StatamicRadPack\Runway\Http\Controllers\CP;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Statamic\Http\Controllers\CP\CpController;
-use Statamic\Revisions\WorkingCopy;
 use StatamicRadPack\Runway\Resource;
 
 class RestoreModelRevisionController extends CpController
 {
-    public function __invoke(Request $request, Resource $resource, $model)
+    public function __invoke(Request $request, Resource $resource, Model $model)
     {
-        $model = $resource->model()
-            ->where($resource->model()->qualifyColumn($resource->routeKey()), $model)
-            ->first();
-
         if (! $target = $model->revision($request->revision)) {
             dd('no such revision', $request->revision);
             // todo: handle invalid revision reference
         }
 
         if ($model->published()) {
-            WorkingCopy::fromRevision($target)->date(now())->save();
+            $target->toWorkingCopy()->date(now())->save();
         } else {
             $model->makeFromRevision($target)->published(false)->save();
         }

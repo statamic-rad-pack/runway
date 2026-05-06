@@ -2,7 +2,7 @@
 
 namespace StatamicRadPack\Runway\Ignition\SolutionProviders;
 
-use Spatie\Ignition\Contracts\HasSolutionsForThrowable;
+use Spatie\ErrorSolutions\Contracts\HasSolutionsForThrowable;
 use StatamicRadPack\Runway\Ignition\Solutions\AddTraitToModel;
 use Throwable;
 

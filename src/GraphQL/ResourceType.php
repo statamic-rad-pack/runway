@@ -20,6 +20,8 @@ class ResourceType extends Type
 
     public function fields(): array
     {
+        $this->resource->blueprint()->addGqlTypes();
+
         return $this->resource->blueprint()->fields()->toGql()
             ->merge($this->nonBlueprintFields())
             ->merge($this->nestedFields())
@@ -47,7 +49,7 @@ class ResourceType extends Type
             if (! $model instanceof Model) {
                 $resource = Runway::findResource(Str::replace('runway_graphql_types_', '', $info->parentType->name));
 
-                $model = $resource->model()->firstWhere($resource->primaryKey(), $model);
+                $model = $resource->model()->firstWhere($resource->qualifiedPrimaryKey(), $model);
             }
 
             return $model->resolveGqlValue($info->fieldName);
@@ -64,7 +66,7 @@ class ResourceType extends Type
             ->mapWithKeys(function (array $column): array {
                 $type = null;
 
-                if ($column['type_name'] === 'bigint') {
+                if (in_array($column['type_name'], ['integer', 'bigint'])) {
                     $type = GraphQL::int();
                 }
 

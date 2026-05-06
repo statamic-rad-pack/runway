@@ -6,7 +6,6 @@
 .idea
 vendor
 node_modules
-package-lock.json
 tests/__fixtures__/users/.yaml
 composer.lock
 

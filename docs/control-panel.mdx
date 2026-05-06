@@ -148,12 +148,17 @@ public function visibleTo($key)
 
 If you don't want to return everything, you may add a scope (`runwayListing`) to limit the returned results.
 
-```php
+```php focus={7-11}
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
 class YourModel extends Model
 {
-	public function scopeRunwayListing($query)
+    #[Scope]
+	protected function runwayListing(Builder $query): void
 	{
-		return $query->where('something', true);
+		$query->where('something', true);
 	}
 }
 ```
@@ -162,12 +167,43 @@ class YourModel extends Model
 
 On top of scoping your Control Panel results, you may also scope how Runway searches your models. To do this, you may specify a `runwaySearch` scope.
 
-```php
+```php focus={7-11}
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
 class YourModel extends Model
 {
-	public function scopeRunwaySearch($query, $searchString)
+    #[Scope]
+	protected function runwaySearch(Builder $query, string $searchTerm): void
 	{
 		// Your own search logic
 	}
 }
 ```
+
+## Widget
+
+Runway provides a widget, allowing you to display a list of models from a resource on the Control Panel dashboard. You can configure it in `config/statamic/cp.php`:
+
+```php
+// config/statamic/cp.php
+
+'widgets' => [
+    [
+        'type' => 'runway_resource',
+        'resource' => 'product',
+        'limit' => 10,
+    ],
+],
+```
+
+### Options
+
+* `resource`: The resource's handle **(required)**.
+* `width`: Width of dashboard area as a percentage. Accepts `25`, `33`, `50`, `66`, `75` and `100`.
+* `sites`: Determines the sites in which this widget should be displayed.
+* `limit`: Limit number of entries. Defaults to `5`.
+* `sort`: Sort and order by field name. E.g. `''title:desc''`. Defaults to the resources''s settings.
+* `fields`: An array of field handles to be displayed as columns in the widget.
+* `title`: The title of the widget. Defaults to the resource name.

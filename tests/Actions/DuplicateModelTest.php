@@ -47,6 +47,18 @@ class DuplicateModelTest extends TestCase
     }
 
     #[Test]
+    public function is_not_visible_to_eloquent_model_when_resource_is_not_duplicatable()
+    {
+        Config::set('runway.resources.StatamicRadPack\\Runway\\Tests\\Fixtures\\Models\\Post.duplicatable', false);
+
+        Runway::discoverResources();
+
+        $visibleTo = (new DuplicateModel)->visibleTo(Post::factory()->create());
+
+        $this->assertFalse($visibleTo);
+    }
+
+    #[Test]
     public function is_not_visible_to_eloquent_model_when_blueprint_is_hidden()
     {
         $blueprint = Blueprint::find('runway::post');
@@ -180,5 +192,24 @@ class DuplicateModelTest extends TestCase
         $this->assertEquals('Hello World (Duplicate)', $duplicate->title);
         $this->assertNull($duplicate->start_date);
         $this->assertFalse($duplicate->published());
+    }
+
+    #[Test]
+    public function it_does_not_duplicate_the_title_field_when_it_is_computed()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.title_field', 'appended_value');
+
+        $blueprint = Blueprint::find('runway::post');
+        $blueprint->ensureFieldPrepended('appended_value', ['type' => 'text']);
+
+        $post = Post::factory()->create(['slug' => 'foo']);
+
+        $this->assertCount(1, Post::all());
+
+        (new DuplicateModel)->run(collect([$post]), []);
+
+        $this->assertCount(2, Post::all());
+
+        // The fact it doesn't error is a good sign it hasn't tried to duplicate the title field.
     }
 }

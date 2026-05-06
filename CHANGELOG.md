@@ -1,254 +1,213 @@
 # Changelog
 
-## v8.10.1 (2026-04-03)
+## v9.4.4 (2026-04-17)
+
+### What's fixed
+- Fix updated_at timestamp not updating when field is read-only [#807](https://github.com/statamic-rad-pack/runway/pull/807) by @duncanmcclean
+
+
+
+## v9.4.3 (2026-04-13)
+
+### What's fixed
+- Qualify the primary key in queries [#806](https://github.com/statamic-rad-pack/runway/pull/806) by @Jade-GG
+
+
+
+## v9.4.2 (2026-04-13)
+
+### What's fixed
+- Upgrade to Vite 8 [#804](https://github.com/statamic-rad-pack/runway/pull/804) by @duncanmcclean
+
+
+
+## v9.4.1 (2026-04-13)
+
+### What's fixed
+- Replace spatie/ignition with spatie/error-solutions [#803](https://github.com/statamic-rad-pack/runway/pull/803) by @duncanmcclean
+
+
+
+## v9.4.0 (2026-04-09)
+
+### What's new
+- Add disable duplicate action option [#801](https://github.com/statamic-rad-pack/runway/pull/801) by @AlexanderFalkenberg
+
+
+
+## v9.3.3 (2026-04-03)
 
 ### What's fixed
 - Hardened OrderBys [#798](https://github.com/statamic-rad-pack/runway/pull/798) by @duncanmcclean
 
 
 
-## v8.10.0 (2026-03-27)
+## v9.3.2 (2026-03-27)
+
+### What's fixed
+- Fix Runway searchables in CP command palette search [#797](https://github.com/statamic-rad-pack/runway/issues/797) by @duncanmcclean
+
+
+
+## v9.3.1 (2026-03-26)
+
+### What's fixed
+- Fix publish toggle for custom published columns [#794](https://github.com/statamic-rad-pack/runway/issues/794) by @sebabal
+- Fix error on listing page when using model attribute as first column in blueprint [#793](https://github.com/statamic-rad-pack/runway/issues/793) by @andjsch
+
+
+
+## v9.3.0 (2026-03-25)
 
 ### What's new
-- Add `sort_direction` option to Has Many fieldtype [#795](https://github.com/doublethreedigital/runway/pull/795) by @Skullsneeze
-
-
-
-## v8.9.1 (2026-03-13)
+- Add live preview token support to GraphQL and REST API [#791](https://github.com/doublethreedigital/runway/issues/791) by @duncanmcclean
 
 ### What's fixed
-- Fixed publish toggle in relationship stack [#787](https://github.com/doublethreedigital/runway/pull/787) by @Skullsneeze
+- Fix validation on `published` field [#792](https://github.com/doublethreedigital/runway/issues/792) by @duncanmcclean
 
 
 
-## v8.9.0 (2026-01-16)
+## v9.2.0 (2026-03-17)
 
 ### What's new
-- Enable URL filter parameter support for Runway listings #768 by @mmodler
+- Supports Laravel 13 [#781](https://github.com/doublethreedigital/runway/issues/781) by @duncanmcclean
 
 
 
-## v8.8.4 (2026-01-12)
-
-### What's improved
-- Ability to prevent eager loading by providing empty `with` array #761 by @claasjansen
-- Update search indexes in a queue #764 by @janis-ps
+## v9.1.1 (2026-03-13)
 
 ### What's fixed
-- Fixed error when visiting URL of soft-deleted model #766 by @duncanmcclean
-- Fixed `unique` validation rule #765 by @duncanmcclean
-- Render `ResourceNotFound` exception as a 404 #755 by @BobWez98
+- Fix error when duplicating model with "computed" title [#788](https://github.com/doublethreedigital/runway/issues/788) by @duncanmcclean
 
 
 
-## v8.8.3 (2025-12-12)
-
-### What's fixed
-- Fix runway search on models with individual connections #753 by @godismyjudge95
-- PHP 8.5 compatibility #752 by @duncanmcclean
-
-
-
-## v8.8.2 (2025-11-24)
-
-### What's fixed
-- Fixed BelongsToMany field not saving #751 by @janis-ps
-
-
-
-## v8.8.1 (2025-11-24)
-
-### What's improved
-- Added `RoutingModel::model()` method by @duncanmcclean
-
-
-
-## v8.8.0 (2025-11-24)
+## v9.1.0 (2026-03-10)
 
 ### What's new
-- Allow saving custom relationship types #747 by @caseydwyer
-
-
-
-## v8.7.2 (2025-11-17)
+- Provide `isWorkingCopy` and `revisionsEnabled` to publish container context [#782](https://github.com/doublethreedigital/runway/issues/782) by @duncanmcclean
+- Performance: prevent routingModel reinit [#785](https://github.com/doublethreedigital/runway/issues/785) by @macaws
 
 ### What's fixed
-- Handle enums correctly in listings #746 by @janis-ps
+- Adopt `RunsUpdateScripts` trait [#778](https://github.com/doublethreedigital/runway/issues/778) by @duncanmcclean
 
 
 
-## v8.7.1 (2025-11-05)
+## v9.0.0 (2026-01-27)
 
-### What's fixed
-* Fixed augmentation on runway routes #745 by @duncanmcclean
-
-
-
-## v8.7.0 (2025-11-04)
+> Please review the [upgrade guide](https://runway.duncanmcclean.com/upgrade-guides/v8-to-v9) before upgrading.
 
 ### What's new
-* Added `default_publish_state` config option #736 by @duncanmcclean
-
-### What's fixed
-* Publish/unpublish actions should check `publish {resource}` permission #737 by @duncanmcclean
-* Fix error when using nocache tag on Runway route #738 by @duncanmcclean
-
-
-
-## v8.6.6 (2025-10-28)
-
-### What's fixed
-* Use augmented values to make the title #734 by @mmodler
-
-
-
-## v8.6.5 (2025-10-21)
-
-### What's fixed
-* Fixed `published() on null` error if model is missing #733 by @joshtaylordev
-
-
-
-## v8.6.4 (2025-09-03)
-
-### What's fixed
-* Avoid saving revealer fields #727 #729 by @duncanmcclean
-* Fix sorting by nested fields #716 #728 by @duncanmcclean
-
-
-
-## v8.6.3 (2025-08-25)
-
-### What's fixed
-* Fix `runway:import-collection` command on Ubuntu #715 by @amadeann
-
-
-
-## v8.6.2 (2025-08-21)
-
-### What's fixed
-* Added column existence check to `runwaySearch` query scope #714 by @kevinmeijer97
-
-
-
-## v8.6.1 (2025-08-14)
-
-### What's fixed
-* Fixed inline actions on edit view #710 #711 by @persteinhorst
-
-
-
-## v8.6.0 (2025-08-11)
-
-### What's new
-* Allow programmatic registration of resources #707 by @Pluuk
-* Update RoutingModel `model` property to be publicly accessible #706 by @jamesmpigott
-
-### What's fixed
-* Fix error when searching via fieldtype #699 #709 by @duncanmcclean
-* Refactor `BaseFieldtype::getIndexItems` #708 by @duncanmcclean
-* Delete `php-cs-fixer.phar` #704 by @duncanmcclean
-
-
-
-## v8.5.2 (2025-07-10)
-
-### What's fixed
-* Fix issues when filtering, sorting and searching nested fields #700 #702 by @duncanmcclean
-* Improve nested field augmentation #698 #701 by @duncanmcclean
-
-
-
-## v8.5.1 (2025-06-11)
-
-### What's fixed
-* Collection Importer fixes #696 by @duncanmcclean
-* Prevent errors from PostgreSQL when querying `runway_uris` table #689 #695 by @duncanmcclean
-* `RunwayRoutes` trait check should consider traits on parent classes #691 #694 by @duncanmcclean
-* Use `runway` query scope when fetching related models #692 #693 by @duncanmcclean
-
-
-
-## v8.5.0 (2025-05-22)
-
-### What's new
-* Added `where_in` parameter to Runway tag #688 by @duncanmcclean
-* Documented usage with Antlers Blade Components by @duncanmcclean
-
-
-
-## v8.4.0 (2025-05-14)
-
-### What's new
-* Require `spatie/laravel-ray` in dev #687 by @duncanmcclean
-
-### What's fixed
-* Fixed error when serializing resources with appended attributes #686 by @duncanmcclean
-* Fixed search on listing table with nested fields #681 by @duncanmcclean
-
-
-
-## v8.3.1 (2025-03-31)
-
-### What's fixed
-* `getRouteKeyName` method will only be added to models when imported collection uses slugs #678 by @duncanmcclean
-* Fixed typo in `resources.md` #674 by @mefenlon
-
-
-
-## v8.3.0 (2025-03-20)
-
-### What's new
-* Added `query_scopes` option to fieldtypes #672 by @duncanmcclean
-* Added `runway` query scope #671 by @duncanmcclean
-
-
-
-## v8.2.0 (2025-02-27)
-
-### What's new
-* Laravel 12 support #664 by @duncanmcclean
-
-
-
-## v8.1.2 (2025-02-21)
-
-### What's fixed
-* Reverted "Fix attributes returning a collection instead of an array" #666 by @duncanmcclean
-
-
-
-## v8.1.1 (2025-02-21)
-
-### What's fixed
-* Fixed missing "Status" filter on collections #663 by @duncanmcclean
-
-
-
-## v8.1.0 (2025-02-20)
-
-### What's new
-* The `rebuild-uris` command now bypasses global scopes #661 by @godismyjudge95
-
-
-
-## v8.0.1 (2025-02-17)
-
-### What's fixed
-* Improve compatibility with per model database connections #659 by @godismyjudge95
-* Fix attributes returning a collection instead of an array #654 by @kailumworkhouse
-
-
-
-## v8.0.0 (2025-02-07)
-
-### Read First 👀
-Be sure to read the [Upgrade Guide](https://runway.duncanmcclean.com/upgrade-guides/v7-to-v8) first as manual changes may be necessary.
-
-### What's new
-* Collection Importer #653 by @duncanmcclean
+- Updated for Statamic 6 #658 by @duncanmcclean
+- Live Preview support #721 by @duncanmcclean
+- The Runway tag now uses the `runway` query scope #722 by @duncanmcclean
+- Added `runway_resource` widget
+- Update asset & term references in models #754 by @duncanmcclean
 
 ### What's changed
-* Changed how nested fields work #568 by @duncanmcclean
-* Removed the `cp_icon` config in favour of the CP Nav Customizer #652 by @duncanmcclean
-* Updated the `runway_uris` migration stub to support UUIDs #656 by @duncanmcclean
+- Dropped support for PHP 8.2 and Laravel 10
+- Runway now uses route-model binding for Control Panel routes #719 by @duncanmcclean
+- `runway:rebuild-uri-cache` command no longer uses `withoutGlobalScopes` when querying resources #717 by @duncanmcclean
+
+
+
+## v9.0.0-alpha.10 (2026-01-16)
+
+### What's fixed
+- Stop loading views from `resources/views` #771 by @duncanmcclean
+
+
+
+## v9.0.0-alpha.9 (2026-01-12)
+
+### What's fixed
+- Use parent publish form values when populating BelongsTo relationship #767 by @duncanmcclean
+
+
+
+## v9.0.0-alpha.8 (2026-01-09)
+
+### What's fixed
+- Sort out temporary JS imports #762 by @duncanmcclean
+- Update revision history stack #763 by @duncanmcclean
+
+
+
+## v9.0.0-alpha.7 (2026-01-05)
+
+### What's new
+- Update asset & term references in models #754 by @duncanmcclean
+
+### What's fixed
+- Avoid persisting active tab in URL hash when publish form is inline by @duncanmcclean
+- Make the tests pass for now by @duncanmcclean
+- Use class name to add content searchable by @duncanmcclean
+
+
+
+## v9.0.0-alpha.6 (2025-12-04)
+
+### What's improved
+- Updated Runway searchable to go alongside changes in Statamic #748 by @duncanmcclean
+
+### What's fixed
+- Fixed issue with saving and errors state on publish forms
+
+### What's breaking
+- Dropped support for Laravel 11 #750 by @duncanmcclean
+
+
+
+## v9.0.0-alpha.5 (2025-11-07)
+
+### What's improved
+- Converted widget to `VueComponent::render()` approach #735 by @duncanmcclean
+- Moved listing into index page component #743 by @duncanmcclean
+- Revision changes #744 by @duncanmcclean
+
+### What's fixed
+- Fix re-used state in publish forms #742 by @duncanmcclean
+
+### What's breaking
+- Renamed `scope` parameter on Runway tag #741 by @duncanmcclean
+
+
+
+## v9.0.0-alpha.4 (2025-10-21)
+
+### What's new
+- All pages have been converted to Inertia #731 by @duncanmcclean
+
+### What's fixed
+- Corrected path to `@statamic/cms` npm package by @duncanmcclean
+
+
+
+## v9.0.0-alpha.3 (2025-09-09)
+
+### What's new
+- Live Preview support #721 by @duncanmcclean
+- The Runway tag now uses the `runway` query scope #722 by @duncanmcclean
+
+
+
+## v9.0.0-alpha.2 (2025-09-01)
+
+### What's changed
+- Publish form optimisations #720 by @duncanmcclean
+- Runway now uses route-model binding for Control Panel routes #719 by @duncanmcclean
+- "Statamic Rad Pack" is now listed as the developer on the addon listing by @duncanmcclean
+- Adopted the `#[Scope]` attribute for query scope examples in the docs #718 by @duncanmcclean
+- `runway:rebuild-uri-cache` command no longer uses `withoutGlobalScopes` when querying resources #717 by @duncanmcclean
+
+
+
+## v9.0.0-alpha.1 (2025-08-21)
+
+> Please review the [upgrade guide](https://github.com/statamic-rad-pack/runway/blob/master/docs/upgrade-guides/v8-to-v9.md) before upgrading.
+
+### What's new
+- Updated for Statamic 6 #658 by @duncanmcclean
+- Added `runway_resource` widget
+
+### What's changed
+- Dropped support for PHP 8.2 and Laravel 10

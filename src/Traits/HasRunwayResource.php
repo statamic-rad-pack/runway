@@ -6,6 +6,8 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Statamic\Contracts\Data\Augmented;
 use Statamic\Contracts\Revisions\Revision;
+use Statamic\Data\ContainsSupplementalData;
+use Statamic\Fields\Blueprint;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
 use Statamic\Fieldtypes\Section;
@@ -22,7 +24,7 @@ use StatamicRadPack\Runway\Runway;
 
 trait HasRunwayResource
 {
-    use FluentlyGetsAndSets, HasAugmentedInstance, Revisable;
+    use ContainsSupplementalData, FluentlyGetsAndSets, HasAugmentedInstance, Revisable;
     use ResolvesValues {
         resolveGqlValue as traitResolveGqlValue;
     }
@@ -42,6 +44,11 @@ trait HasRunwayResource
     public function runwayResource(): Resource
     {
         return Runway::findResourceByModel($this);
+    }
+
+    public function blueprint(): Blueprint
+    {
+        return $this->runwayResource()->blueprint();
     }
 
     public function reference(): string
@@ -153,6 +160,18 @@ trait HasRunwayResource
         ]);
     }
 
+    public function livePreviewUrl(): ?string
+    {
+        if (! $this->runwayResource()->hasRouting()) {
+            return null;
+        }
+
+        return cp_route('runway.preview.edit', [
+            'resource' => $this->runwayResource()->handle(),
+            'model' => $this->{$this->runwayResource()->routeKey()},
+        ]);
+    }
+
     public function runwayPublishUrl(): string
     {
         return cp_route('runway.published.store', [
@@ -182,7 +201,7 @@ trait HasRunwayResource
         return cp_route('runway.revisions.show', [
             'resource' => $this->runwayResource()->handle(),
             'model' => $this->{$this->runwayResource()->routeKey()},
-            'revisionId' => $revision->id(),
+            'revisionId' => $revision->date()->timestamp,
         ]);
     }
 
@@ -343,6 +362,19 @@ trait HasRunwayResource
      */
     public function updateLastModified($user = false): self
     {
+        return $this;
+    }
+
+    public function data($data = null)
+    {
+        if (func_num_args() === 0) {
+            return collect($this->attributes);
+        }
+
+        foreach ($data as $key => $value) {
+            $this->attributes[$key] = $value;
+        }
+
         return $this;
     }
 }

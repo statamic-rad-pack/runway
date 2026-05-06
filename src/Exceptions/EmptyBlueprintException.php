@@ -2,9 +2,9 @@
 
 namespace StatamicRadPack\Runway\Exceptions;
 
-use Spatie\Ignition\Contracts\BaseSolution;
-use Spatie\Ignition\Contracts\ProvidesSolution;
-use Spatie\Ignition\Contracts\Solution;
+use Spatie\ErrorSolutions\Contracts\BaseSolution;
+use Spatie\ErrorSolutions\Contracts\ProvidesSolution;
+use Spatie\ErrorSolutions\Contracts\Solution;
 
 class EmptyBlueprintException extends \Exception implements ProvidesSolution
 {
@@ -18,7 +18,7 @@ class EmptyBlueprintException extends \Exception implements ProvidesSolution
         return BaseSolution::create("Add fields to the {$this->resourceHandle} blueprint")
             ->setSolutionDescription('Before you can view this resource in the Control Panel, you need to define fields in its blueprint.')
             ->setDocumentationLinks([
-                'Edit blueprint' => cp_route('blueprints.edit', ['namespace' => 'runway', 'handle' => $this->resourceHandle]),
+                'Edit blueprint' => cp_route('blueprints.additional.edit', ['namespace' => 'runway', 'handle' => $this->resourceHandle]),
                 'Review the docs' => 'https://runway.duncanmcclean.com/blueprints',
             ]);
     }

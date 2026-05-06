@@ -59,7 +59,7 @@ class Relationships
     {
         $relatedResource = Runway::findResource($field->fieldtype()->config('resource'));
 
-        $deleted = $relationship->whereNotIn($relatedResource->primaryKey(), $values)->get()
+        $deleted = $relationship->whereNotIn($relatedResource->qualifiedPrimaryKey(), $values)->get()
             ->each(fn (Model $model) => match ($this->getUnlinkBehaviorForHasManyRelationship($relationship)) {
                 'unlink' => $model->update([$relationship->getForeignKeyName() => null]),
                 'delete' => $model->delete(),

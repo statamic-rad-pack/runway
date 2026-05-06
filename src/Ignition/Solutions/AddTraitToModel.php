@@ -4,7 +4,7 @@ namespace StatamicRadPack\Runway\Ignition\Solutions;
 
 use Archetype\Facades\PHPFile;
 use Illuminate\Support\Str;
-use Spatie\Ignition\Contracts\RunnableSolution;
+use Spatie\ErrorSolutions\Contracts\RunnableSolution;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
 
 class AddTraitToModel implements RunnableSolution

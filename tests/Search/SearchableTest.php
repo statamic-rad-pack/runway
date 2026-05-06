@@ -102,6 +102,16 @@ class SearchableTest extends TestCase
     }
 
     #[Test]
+    public function can_get_cp_search_result_icon()
+    {
+        $post = Post::factory()->create();
+
+        $searchable = new Searchable($post);
+
+        $this->assertIsString($searchable->getCpSearchResultIcon());
+    }
+
+    #[Test]
     public function can_get_new_augmented_instance()
     {
         $post = Post::factory()->create();

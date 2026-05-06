@@ -28,7 +28,7 @@ class ApiController extends StatamicApiController
         $resource = $this->resource($resourceHandle);
         $this->resourceHandle = $resource->handle();
 
-        $results = $this->filterSortAndPaginate($resource->model()->query());
+        $results = $this->updateAndPaginate($resource->model()->query());
 
         $results = ApiResource::collection($results);
 
@@ -46,11 +46,24 @@ class ApiController extends StatamicApiController
         $resource = $this->resource($resourceHandle);
         $this->resourceHandle = $resource->handle();
 
-        if (! $model = $resource->model()->whereStatus('published')->find($model)) {
+        if (! $model = $resource->model()->find($model)) {
             throw new NotFoundHttpException;
         }
 
+        $this->abortIfUnpublished($model);
+
         return ApiResource::make($model)->withBlueprintFields($this->getFieldsFromBlueprint($resource));
+    }
+
+    protected function abortIfUnpublished($model)
+    {
+        if (request()->isLivePreviewOf($model)) {
+            return;
+        }
+
+        if ($model->runwayResource()->hasPublishStates() && $model->publishedStatus() !== 'published') {
+            throw new NotFoundHttpException;
+        }
     }
 
     protected function allowedFilters()

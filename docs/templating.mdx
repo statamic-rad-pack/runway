@@ -33,17 +33,21 @@ You may use the `sort` parameter to adjust the order of the results.
 
 If you've defined a scope on your Eloquent model and you want to filter by that in your front-end you may use the `scope` parameter.
 
-```php
+```php focus={6-10}
 // app/Models/Post.php
 
-public function scopeFood($query)
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
+
+#[Scope]
+protected function food(Builder $query): void
 {
     $query->whereIn('title', ['Pasta', 'Apple', 'Burger']);
 }
 ```
 
 ```antlers
-{{ runway:post scope="food" }}
+{{ runway:post query_scope="food" }}
 	<h2>{{ title }}</h2>
 	<p>{{ intro_text }}</p>
 {{ /runway:post }}
@@ -52,7 +56,7 @@ public function scopeFood($query)
 If you need to you can provide arguments to the scope like so:
 
 ```antlers
-{{ runway:post scope="food:argument" }}
+{{ runway:post query_scope="food:argument" }}
 ```
 
 In the above example, `argument` can either be a string or we'll grab it from 'the context' (the available variables) if we can find it.
@@ -60,7 +64,7 @@ In the above example, `argument` can either be a string or we'll grab it from 't
 You may also provide multiple scopes, if that's something you need...
 
 ```antlers
-{{ runway:post scope="food:argument|fastfood" }}
+{{ runway:post query_scope="food:argument|fastfood" }}
 ```
 
 ### Filtering
@@ -195,7 +199,7 @@ You can use the `where` parameter to filter the results:
 
 ## Blade
 
-You can even use Runway's tag in Blade views, thanks to Statamic's [Antlers Blade Components](https://statamic.dev/blade#using-antlers-blade-components) feature (available in Statamic 5.36 and above):
+You can even use Runway's tag in Blade views, thanks to Statamic's [Antlers Blade Components](https://statamic.dev/blade#using-antlers-blade-components) feature:
 
 ```blade
 <s:runway:post with="author" limit="15" sort="publish_date:desc">

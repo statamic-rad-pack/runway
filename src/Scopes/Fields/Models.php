@@ -58,7 +58,7 @@ class Models extends FieldtypeFilter
 
         $ids = $relatedResource->model()->query()
             ->where($field, $operator, $value)
-            ->select($relatedResource->primaryKey())
+            ->select($relatedResource->qualifiedPrimaryKey())
             ->get()
             ->pluck($relatedResource->primaryKey())
             ->toArray();
@@ -70,7 +70,7 @@ class Models extends FieldtypeFilter
             $queryingResource = Runway::findResourceByModel($query->getModel());
 
             $query->whereHas($queryingResource->eloquentRelationships()->get($this->fieldtype->field()->handle()), function (Builder $query) use ($relatedResource, $ids) {
-                $query->whereIn($relatedResource->primaryKey(), $ids);
+                $query->whereIn($relatedResource->qualifiedPrimaryKey(), $ids);
             });
         } else {
             $query->whereIn($this->fieldtype->field()->handle(), $ids);

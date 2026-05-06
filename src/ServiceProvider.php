@@ -5,19 +5,24 @@ namespace StatamicRadPack\Runway;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
 use Spatie\ErrorSolutions\Contracts\SolutionProviderRepository;
 use Statamic\API\Middleware\Cache;
 use Statamic\Console\Commands\StaticWarm;
+use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
 use Statamic\Facades\Permission;
 use Statamic\Facades\Search;
 use Statamic\Http\Middleware\RequireStatamicPro;
+use Statamic\Listeners\UpdateAssetReferences;
+use Statamic\Listeners\UpdateTermReferences;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 use StatamicRadPack\Runway\GraphQL\NestedFieldsType;
@@ -44,7 +49,6 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::boot();
 
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'runway');
         $this->mergeConfigFrom(__DIR__.'/../config/runway.php', 'runway');
 
         if (! config('runway.disable_migrations')) {
@@ -69,6 +73,7 @@ class ServiceProvider extends AddonServiceProvider
                 ->registerNavigation()
                 ->registerBlueprints()
                 ->registerSearchProvider()
+                ->registerReferenceUpdaterHook()
                 ->bootGraphQl()
                 ->bootApi()
                 ->bootModelEventListeners()
@@ -93,7 +98,28 @@ class ServiceProvider extends AddonServiceProvider
                 return $value;
             }
 
+            throw_unless(
+                Runway::hasResource($value),
+                new NotFoundHttpException("Runway resource [$value] not found.")
+            );
+
             return Runway::findResource($value);
+        });
+
+        Route::bind('model', function ($value) {
+            if (! Statamic::isCpRoute()) {
+                return $value;
+            }
+
+            $resource = request()->route('resource');
+            $model = $resource?->newEloquentQuery()->firstWhere($resource->model()->qualifyColumn($resource->routeKey()), $value);
+
+            throw_unless(
+                $model,
+                new NotFoundHttpException("Model [$value] for resource [{$resource->handle()}] not found.")
+            );
+
+            return $model;
         });
 
         return $this;
@@ -126,6 +152,11 @@ class ServiceProvider extends AddonServiceProvider
             }
         });
 
+        Gate::policy(
+            \StatamicRadPack\Runway\Search\Searchable::class,
+            \StatamicRadPack\Runway\Search\SearchablePolicy::class
+        );
+
         return $this;
     }
 
@@ -144,6 +175,7 @@ class ServiceProvider extends AddonServiceProvider
                 ->each(function (Resource $resource) use (&$nav) {
                     $nav->create($resource->name())
                         ->section('Content')
+                        ->icon(File::get(__DIR__.'/../resources/svg/database.svg'))
                         ->route('runway.index', ['resource' => $resource->handle()])
                         ->can('view', $resource);
                 });
@@ -218,6 +250,22 @@ class ServiceProvider extends AddonServiceProvider
     {
         SearchProvider::register();
 
+        Search::addContentSearchable(SearchProvider::class);
+
+        return $this;
+    }
+
+    protected function registerReferenceUpdaterHook(): self
+    {
+        $referenceUpdaterHook = function ($payload, $next) {
+            return LazyCollection::make(Runway::allResources())->flatMap(function (Resource $resource) {
+                return $resource->newEloquentQuery()->lazy();
+            });
+        };
+
+        UpdateTermReferences::hook('additional', $referenceUpdaterHook);
+        UpdateAssetReferences::hook('additional', $referenceUpdaterHook);
+
         return $this;
     }
 
@@ -236,8 +284,10 @@ class ServiceProvider extends AddonServiceProvider
     protected function bootDataRepository(): self
     {
         if (Runway::usesRouting()) {
+            $this->app->singleton(ModelRepository::class);
+
             $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
-                ->setRepository('runway-resources', Routing\ResourceRoutingRepository::class);
+                ->setRepository('runway-resources', ModelRepository::class);
 
             StaticWarm::hook('additional', function ($urls, $next) {
                 return $next($urls->merge(RunwayUri::select('uri')->pluck('uri')->all()));

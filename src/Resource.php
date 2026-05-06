@@ -5,8 +5,11 @@ namespace StatamicRadPack\Runway;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Statamic\CP\Navigation\NavItem;
 use Statamic\Facades\Blink;
+use Statamic\Facades\CP\Nav;
 use Statamic\Facades\Search;
 use Statamic\Fields\Blueprint;
 use Statamic\Fields\Field;
@@ -36,7 +39,11 @@ class Resource
 
     public function newEloquentQuery(): Builder
     {
-        return $this->model->newQuery()->runway();
+        return $this->model->newQuery()
+            ->runway()
+            ->afterQuery(function ($models) {
+                return app(ModelRepository::class)->applySubstitutions($models);
+            });
     }
 
     public function newEloquentQueryBuilderWithEagerLoadedRelationships(): Builder
@@ -126,6 +133,11 @@ class Resource
         return $this->config->get('read_only', false);
     }
 
+    public function duplicatable(): bool
+    {
+        return $this->config->get('duplicatable', true);
+    }
+
     public function orderBy(): string
     {
         return $this->config->get('order_by', $this->primaryKey());
@@ -149,6 +161,15 @@ class Resource
                 return in_array($field->type(), ['text', 'textarea', 'slug']);
             })
             ->first();
+    }
+
+    public function icon(): string
+    {
+        $navItem = Nav::build()->pluck('items')->flatten()
+            ->filter(fn (NavItem $navItem) => $navItem->url() === cp_route('runway.index', ['resource' => $this->handle()]))
+            ->first();
+
+        return $navItem?->icon() ?? File::get(__DIR__.'/../resources/svg/database.svg');
     }
 
     public function hasPublishStates(): bool
@@ -268,6 +289,11 @@ class Resource
         return $this->model()->getKeyName();
     }
 
+    public function qualifiedPrimaryKey(): string
+    {
+        return $this->model()->getQualifiedKeyName();
+    }
+
     public function routeKey(): string
     {
         return $this->model()->getRouteKeyName() ?? 'id';
@@ -306,6 +332,26 @@ class Resource
     public function hasSearchIndex()
     {
         return $this->searchIndex() !== null;
+    }
+
+    public function previewTargets(): Collection
+    {
+        $targets = $this->config()->get('preview_targets', $this->defaultPreviewTargets());
+
+        return collect($targets)->map(function ($target) {
+            return $target + ['refresh' => $target['refresh'] ?? true];
+        });
+    }
+
+    private function defaultPreviewTargets(): array
+    {
+        return [
+            [
+                'label' => 'Model',
+                'format' => '{permalink}',
+                'refresh' => true,
+            ],
+        ];
     }
 
     public function toArray(): array

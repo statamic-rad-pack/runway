@@ -93,7 +93,7 @@ class RunwayTagTest extends TestCase
         $posts[4]->update(['title' => 'Burger']);
 
         $this->tag->setParameters([
-            'scope' => 'food',
+            'query_scope' => 'food',
         ]);
 
         $usage = $this->tag->wildcard('post');
@@ -118,7 +118,7 @@ class RunwayTagTest extends TestCase
         ]);
 
         $this->tag->setParameters([
-            'scope' => 'fruit:fab',
+            'query_scope' => 'fruit:fab',
         ]);
 
         $usage = $this->tag->wildcard('post');
@@ -141,7 +141,7 @@ class RunwayTagTest extends TestCase
         ]);
 
         $this->tag->setParameters([
-            'scope' => 'food|fruit:fab',
+            'query_scope' => 'food|fruit:fab',
         ]);
 
         $usage = $this->tag->wildcard('post');

@@ -12,6 +12,8 @@ class DuplicateModel extends Action
 {
     private $newItems;
 
+    protected $icon = 'duplicate';
+
     public static function title()
     {
         return __('Duplicate');
@@ -25,7 +27,10 @@ class DuplicateModel extends Action
             return false;
         }
 
-        return $item instanceof Model && $resource->hasVisibleBlueprint() && $resource->readOnly() !== true;
+        return $item instanceof Model
+            && $resource->duplicatable()
+            && $resource->hasVisibleBlueprint()
+            && ! $resource->readOnly();
     }
 
     public function visibleToBulk($items)
@@ -66,7 +71,7 @@ class DuplicateModel extends Action
     {
         $model = $original->replicate($resource->blueprint()->fields()->all()->reject->shouldBeDuplicated()->keys()->all());
 
-        if ($resource->titleField()) {
+        if ($resource->titleField() && in_array($resource->titleField(), $resource->databaseColumns())) {
             $model->setAttribute($resource->titleField(), $original->getAttribute($resource->titleField()).' (Duplicate)');
         }
 

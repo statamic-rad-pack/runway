@@ -11,6 +11,8 @@ class DeleteModel extends Action
 {
     protected $dangerous = true;
 
+    protected $icon = 'trash';
+
     public static function title()
     {
         return __('Delete');

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use StatamicRadPack\Runway\Http\Controllers\CP\ModelActionController;
+use StatamicRadPack\Runway\Http\Controllers\CP\ModelPreviewController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ModelRevisionsController;
 use StatamicRadPack\Runway\Http\Controllers\CP\PublishedModelsController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceActionController;
@@ -37,5 +38,7 @@ Route::name('runway.')->prefix('runway')->group(function () {
         ])->parameters(['revisions' => 'revisionId']);
 
         Route::post('restore-revision', RestoreModelRevisionController::class)->name('restore-revision');
+        Route::post('preview', [ModelPreviewController::class, 'edit'])->name('preview.edit');
+        Route::get('preview', [ModelPreviewController::class, 'show'])->name('preview.popout');
     });
 });

@@ -49,7 +49,7 @@ class RunwayTag extends Tags
 
     protected function query(): Builder
     {
-        $query = $this->resource->query()
+        $query = $this->resource->newEloquentQuery()
             ->when(
                 $this->params->get('status'),
                 fn ($query, $status) => $query->whereStatus($status),
@@ -65,13 +65,13 @@ class RunwayTag extends Tags
             $query->select(explode(',', (string) $select));
         }
 
-        if ($scopes = $this->params->get('scope')) {
-            $scopes = explode('|', (string) $scopes);
+        if ($queryScopes = $this->params->get('query_scope')) {
+            $queryScopes = explode('|', (string) $queryScopes);
 
-            foreach ($scopes as $scope) {
-                $scopeName = explode(':', $scope)[0];
-                $scopeArguments = isset(explode(':', $scope)[1])
-                    ? explode(',', explode(':', $scope)[1])
+            foreach ($queryScopes as $queryScope) {
+                $scopeName = explode(':', $queryScope)[0];
+                $scopeArguments = isset(explode(':', $queryScope)[1])
+                    ? explode(',', explode(':', $queryScope)[1])
                     : [];
 
                 foreach ($scopeArguments as $key => $scopeArgument) {
@@ -100,7 +100,7 @@ class RunwayTag extends Tags
                 $relationshipResource = Runway::findResource($this->resource->blueprint()->field($key)->config()['resource']);
 
                 $query->whereHas($relationshipName, function ($query) use ($value, $relationshipResource) {
-                    $query->whereIn($relationshipResource->databaseTable().'.'.$relationshipResource->primaryKey(), Arr::wrap($value));
+                    $query->whereIn($relationshipResource->qualifiedPrimaryKey(), Arr::wrap($value));
                 });
             } else {
                 $query->where($this->resource->model()->getColumnForField($key), $value);
@@ -180,7 +180,7 @@ class RunwayTag extends Tags
             'current_page' => $paginator->currentPage(),
             'prev_page' => $paginator->previousPageUrl(),
             'next_page' => $paginator->nextPageUrl(),
-            'auto_links' => $paginator->render('pagination::default'),
+            'auto_links' => (string) $paginator->render(),
             'links' => $paginator->renderArray(),
         ];
     }

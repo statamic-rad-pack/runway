@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
 
 use Illuminate\Support\Facades\DB;
+use Inertia\Testing\AssertableInertia as Assert;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Config;
@@ -27,11 +28,47 @@ class ResourceControllerTest extends TestCase
             ->actingAs($user)
             ->get(cp_route('runway.index', ['resource' => 'post']))
             ->assertOk()
-            ->assertViewIs('runway::index')
-            ->assertSee([
-                'filters',
-                'columns',
-            ]);
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('runway::Index')
+                ->has('filters')
+                ->has('columns')
+                ->has('actionUrl')
+                ->has('sortColumn')
+                ->has('sortDirection')
+            );
+    }
+
+    #[Test]
+    public function uses_sort_column_and_direction_from_resource_config()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.order_by', 'name');
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Author.order_by_direction', 'desc');
+
+        Runway::discoverResources();
+
+        Author::factory()->count(2)->create();
+        $user = User::make()->makeSuper()->save();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.index', ['resource' => 'author']))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('runway::Index')
+                ->where('sortColumn', 'name')
+                ->where('sortDirection', 'desc')
+            );
+    }
+
+    #[Test]
+    public function cant_get_model_index_when_resource_doesnt_exist()
+    {
+        $user = User::make()->makeSuper()->save();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.index', ['resource' => 'foo']))
+            ->assertNotFound();
     }
 
     #[Test]
@@ -261,19 +298,84 @@ class ResourceControllerTest extends TestCase
                 'slug' => 'jingle-bells',
                 'body' => 'Jingle Bells, Jingle Bells, jingle all the way...',
                 'author_id' => [$author->id],
-                'start_date' => [
-                    'date' => '2023-09-01',
-                    'time' => '00:00',
-                ],
-                'end_date' => [
-                    'date' => '2023-08-01',
-                    'time' => '00:00',
-                ],
+                'start_date' => '2025-09-01T00:00:00.000Z',
+                'end_date' => '2023-08-01T00:00:00.000Z',
             ])
             ->assertSessionHasErrors('start_date');
 
         $this->assertDatabaseMissing('posts', [
             'title' => 'Jingle Bells',
+        ]);
+    }
+
+    #[Test]
+    public function can_store_resource_with_required_if_published_validation()
+    {
+        $postBlueprint = Blueprint::find('runway::post');
+
+        Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->ensureField('membership_status', [
+            'type' => 'select',
+            'options' => ['free' => 'Free', 'paid' => 'Paid'],
+            'validate' => ['required_if:published,true'],
+        ]));
+        Blueprint::shouldReceive('getAdditionalNamespaces')->andReturn(collect(['runway' => base_path('resources/blueprints/runway')]))->zeroOrMoreTimes();
+
+        $author = Author::factory()->create();
+        $user = User::make()->makeSuper()->save();
+
+        // Publishing without the required field should fail
+        $this
+            ->actingAs($user)
+            ->post(cp_route('runway.store', ['resource' => 'post']), [
+                'published' => true,
+                'title' => 'Test Post',
+                'slug' => 'test-post',
+                'body' => 'Test body',
+                'author_id' => [$author->id],
+                'membership_status' => null,
+            ])
+            ->assertSessionHasErrors('membership_status');
+
+        $this->assertDatabaseMissing('posts', [
+            'title' => 'Test Post',
+        ]);
+    }
+
+    #[Test]
+    public function can_store_resource_as_draft_without_required_if_published_field()
+    {
+        $postBlueprint = Blueprint::find('runway::post');
+
+        Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->ensureField('membership_status', [
+            'type' => 'select',
+            'options' => ['free' => 'Free', 'paid' => 'Paid'],
+            'validate' => ['required_if:published,true'],
+        ]));
+        Blueprint::shouldReceive('getAdditionalNamespaces')->andReturn(collect(['runway' => base_path('resources/blueprints/runway')]))->zeroOrMoreTimes();
+
+        $author = Author::factory()->create();
+        $user = User::make()->makeSuper()->save();
+
+        // Saving as draft without the required field should succeed
+        $this
+            ->actingAs($user)
+            ->post(cp_route('runway.store', ['resource' => 'post']), [
+                'published' => false,
+                'title' => 'Draft Post',
+                'slug' => 'draft-post',
+                'body' => 'Draft body',
+                'author_id' => [$author->id],
+                'membership_status' => null,
+            ])
+            ->assertOk();
+
+        $this->assertDatabaseHas('posts', [
+            'title' => 'Draft Post',
+            'published' => false,
         ]);
     }
 
@@ -299,8 +401,7 @@ class ResourceControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->get(cp_route('runway.edit', ['resource' => 'post', 'model' => 12345]))
-            ->assertNotFound()
-            ->assertSee('Page Not Found');
+            ->assertNotFound();
     }
 
     #[Test]
@@ -316,6 +417,7 @@ class ResourceControllerTest extends TestCase
             'time_enabled' => false,
             'time_required' => false,
         ]));
+        Blueprint::shouldReceive('getAdditionalNamespaces')->andReturn(collect(['runway' => base_path('resources/blueprints/runway')]))->zeroOrMoreTimes();
 
         $user = User::make()->makeSuper()->save();
         $post = Post::factory()->create();
@@ -333,12 +435,10 @@ class ResourceControllerTest extends TestCase
             ]))
             ->assertOk();
 
+        // Seconds aren't enabled, so we shouldn't have any.
         $this->assertEquals(
-            [
-                'date' => $post->created_at->format('Y-m-d'),
-                'time' => null,
-            ],
-            $response->viewData('values')['created_at']
+            $post->created_at->startOfMinute()->toIso8601ZuluString('millisecond'),
+            $response->inertiaProps('values')['created_at']
         );
     }
 
@@ -356,6 +456,7 @@ class ResourceControllerTest extends TestCase
             'time_enabled' => false,
             'time_required' => false,
         ]));
+        Blueprint::shouldReceive('getAdditionalNamespaces')->andReturn(collect(['runway' => base_path('resources/blueprints/runway')]))->zeroOrMoreTimes();
 
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
@@ -373,12 +474,10 @@ class ResourceControllerTest extends TestCase
             ]))
             ->assertOk();
 
+        // Time isn't enabled, so expect the time to be 00:00:00.
         $this->assertEquals(
-            [
-                'date' => $post->created_at->format('Y-m-d'),
-                'time' => null,
-            ],
-            $response->viewData('values')['created_at']
+            $post->created_at->startOfDay()->toIso8601ZuluString('millisecond'),
+            $response->inertiaProps('values')['created_at']
         );
     }
 
@@ -396,6 +495,7 @@ class ResourceControllerTest extends TestCase
             'time_enabled' => true,
             'time_required' => false,
         ]));
+        Blueprint::shouldReceive('getAdditionalNamespaces')->andReturn(collect(['runway' => base_path('resources/blueprints/runway')]))->zeroOrMoreTimes();
 
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
@@ -413,12 +513,10 @@ class ResourceControllerTest extends TestCase
             ]))
             ->assertOk();
 
+        // Seconds aren't enabled, so we shouldn't have any.
         $this->assertEquals(
-            [
-                'date' => $post->created_at->format('Y-m-d'),
-                'time' => $post->created_at->format('H:i'),
-            ],
-            $response->viewData('values')['created_at']
+            $post->created_at->startOfMinute()->toIso8601ZuluString('millisecond'),
+            $response->inertiaProps('values')['created_at']
         );
     }
 
@@ -580,7 +678,47 @@ class ResourceControllerTest extends TestCase
     }
 
     #[Test]
-    public function can_update_resource_and_ensure__field_isnt_saved_to_database()
+    public function can_update_resource_and_ensure_read_only_timestamp_field_doesnt_prevent_timestamp_update()
+    {
+        $postBlueprint = Blueprint::find('runway::post');
+
+        Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->ensureField('updated_at', [
+            'type' => 'date',
+            'time_enabled' => true,
+            'visibility' => 'read_only',
+        ]));
+        Blueprint::shouldReceive('getAdditionalNamespaces')->andReturn(collect(['runway' => base_path('resources/blueprints/runway')]))->zeroOrMoreTimes();
+
+        $post = Post::factory()->create();
+        $user = User::make()->makeSuper()->save();
+
+        $originalUpdatedAt = $post->updated_at;
+
+        $this->travel(5)->minutes();
+
+        $this
+            ->actingAs($user)
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
+                'published' => true,
+                'title' => 'Santa is coming home',
+                'slug' => 'santa-is-coming-home',
+                'body' => $post->body,
+                'author_id' => [$post->author_id],
+                'updated_at' => $originalUpdatedAt->toIso8601ZuluString('millisecond'),
+            ])
+            ->assertOk()
+            ->assertJsonStructure(['data', 'saved']);
+
+        $post->refresh();
+
+        $this->assertEquals('Santa is coming home', $post->title);
+        $this->assertTrue($post->updated_at->gt($originalUpdatedAt));
+    }
+
+    #[Test]
+    public function can_update_resource_and_ensure_field_with_save_false_isnt_saved_to_database()
     {
         $post = Post::factory()->create();
         $user = User::make()->makeSuper()->save();
@@ -688,5 +826,36 @@ class ResourceControllerTest extends TestCase
             'user_id' => $user->id,
             'group_id' => 'admins',
         ]);
+    }
+
+    #[Test]
+    public function can_update_resource_with_required_if_published_validation()
+    {
+        $postBlueprint = Blueprint::find('runway::post');
+
+        Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($postBlueprint->ensureField('membership_status', [
+            'type' => 'select',
+            'options' => ['free' => 'Free', 'paid' => 'Paid'],
+            'validate' => ['required_if:published,true'],
+        ]));
+        Blueprint::shouldReceive('getAdditionalNamespaces')->andReturn(collect(['runway' => base_path('resources/blueprints/runway')]))->zeroOrMoreTimes();
+
+        $post = Post::factory()->create(['published' => false]);
+        $user = User::make()->makeSuper()->save();
+
+        // Publishing without the required field should fail
+        $this
+            ->actingAs($user)
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
+                'published' => true,
+                'title' => $post->title,
+                'slug' => $post->slug,
+                'body' => $post->body,
+                'author_id' => [$post->author_id],
+                'membership_status' => null,
+            ])
+            ->assertSessionHasErrors('membership_status');
     }
 }
