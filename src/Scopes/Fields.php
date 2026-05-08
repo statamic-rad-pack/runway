@@ -50,6 +50,14 @@ class Fields extends BaseFieldsFilter
     {
         $values = array_filter($values);
 
-        return Arr::has($values, 'operator') && Arr::has($values, 'value');
+        if (! $operator = Arr::get($values, 'operator')) {
+            return Arr::has($values, 'value');
+        }
+
+        if (in_array($operator, ['null', 'not-null'])) {
+            return true;
+        }
+
+        return Arr::has($values, 'value');
     }
 }
