@@ -77,7 +77,7 @@
             v-if="blueprint"
             ref="container"
             :name="publishContainer"
-            :reference="initialReference"
+            :reference="reference"
             :blueprint="blueprint"
             v-model="values"
             :meta="meta"
@@ -335,6 +335,7 @@ export default {
             values: clone(this.initialValues),
             visibleValues: {},
             meta: clone(this.initialMeta),
+            reference: this.initialReference,
             isWorkingCopy: this.initialIsWorkingCopy,
             isPreviewing: false,
             tabsVisible: true,
