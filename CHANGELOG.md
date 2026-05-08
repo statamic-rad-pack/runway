@@ -1,5 +1,13 @@
 # Changelog
 
+## v9.4.5 (2026-05-08)
+
+### What's fixed
+- Publish form tweaks [#811](https://github.com/statamic-rad-pack/runway/pull/811) by @duncanmcclean
+- Fix toggle field filter [#812](https://github.com/statamic-rad-pack/runway/pull/812) by @duncanmcclean
+
+
+
 ## v9.4.4 (2026-04-17)
 
 ### What's fixed
