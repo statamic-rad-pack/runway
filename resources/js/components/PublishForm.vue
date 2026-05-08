@@ -82,6 +82,7 @@
             v-model="values"
             :meta="meta"
             :errors="errors"
+            :read-only="readOnly"
             :track-dirty-state="trackDirtyState"
             :remember-tab="!isInline"
             :provide="{ isWorkingCopy, revisionsEnabled }"
