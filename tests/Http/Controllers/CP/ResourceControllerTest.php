@@ -474,10 +474,13 @@ class ResourceControllerTest extends TestCase
             ]))
             ->assertOk();
 
-        // Time isn't enabled, so expect just the date.
-        $this->assertEquals(
-            $post->created_at->startOfDay()->format('Y-m-d'),
-            $response->inertiaProps('values')['created_at']
+        // Time isn't enabled, so expect just the date (or full ISO string on older CMS versions).
+        $this->assertContains(
+            $response->inertiaProps('values')['created_at'],
+            [
+                $post->created_at->startOfDay()->format('Y-m-d'),
+                $post->created_at->startOfDay()->toIso8601ZuluString('millisecond'),
+            ]
         );
     }
 
