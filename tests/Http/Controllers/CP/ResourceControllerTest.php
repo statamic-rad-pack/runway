@@ -474,9 +474,9 @@ class ResourceControllerTest extends TestCase
             ]))
             ->assertOk();
 
-        // Time isn't enabled, so expect the time to be 00:00:00.
+        // Time isn't enabled, so expect just the date.
         $this->assertEquals(
-            $post->created_at->startOfDay()->toIso8601ZuluString('millisecond'),
+            $post->created_at->startOfDay()->format('Y-m-d'),
             $response->inertiaProps('values')['created_at']
         );
     }
