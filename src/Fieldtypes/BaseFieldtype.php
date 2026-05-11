@@ -191,7 +191,7 @@ abstract class BaseFieldtype extends Relationship
 
         $this->applyOrderingToIndexQuery($query, $request);
 
-        $results = ($paginate = $request->boolean('paginate', true)) ? $query->paginate() : $query->get();
+        $results = ($paginate = $request->boolean('paginate', true)) ? $query->paginate($request->integer('perPage', 15)) : $query->get();
 
         $items = $results->map(fn ($item) => $item instanceof Result ? $item->getSearchable()->model() : $item);
 
