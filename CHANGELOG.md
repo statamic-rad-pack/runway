@@ -1,5 +1,20 @@
 # Changelog
 
+## v9.4.6 (2026-05-26)
+
+### What's fixed
+- Fix failing date tests [#814](https://github.com/statamic-rad-pack/runway/pull/814) by @duncanmcclean
+- Fix perPage limit in relationship stack listings [#813](https://github.com/statamic-rad-pack/runway/pull/813) by @duncanmcclean
+- Authorize relationship fieldtype data [#821](https://github.com/statamic-rad-pack/runway/pull/821) by @duncanmcclean
+- Add `.npmrc` file [#815](https://github.com/statamic-rad-pack/runway/pull/815) by @duncanmcclean
+- Pin GitHub Actions to commit SHAs and add Dependabot config [#816](https://github.com/statamic-rad-pack/runway/pull/816) by @duncanmcclean
+- Harden GitHub Actions workflows [#819](https://github.com/statamic-rad-pack/runway/pull/819) by @duncanmcclean
+- Bump the github-actions group with 3 updates [#817](https://github.com/statamic-rad-pack/runway/pull/817) by @dependabot
+- Bump aglipanci/laravel-pint-action from 2.3.1 to 2.6 in the github-actions group [#818](https://github.com/statamic-rad-pack/runway/pull/818) by @dependabot
+- Bump zizmorcore/zizmor-action from 0.5.3 to 0.5.6 in the github-actions group [#820](https://github.com/statamic-rad-pack/runway/pull/820) by @dependabot
+
+
+
 ## v9.4.5 (2026-05-08)
 
 ### What's fixed
