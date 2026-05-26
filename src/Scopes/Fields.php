@@ -58,6 +58,10 @@ class Fields extends BaseFieldsFilter
             return true;
         }
 
+        if ($operator === 'between') {
+          return Arr::has($values, 'range_value.start') && Arr::has($values, 'range_value.end');
+        }
+
         return Arr::has($values, 'value');
     }
 }
