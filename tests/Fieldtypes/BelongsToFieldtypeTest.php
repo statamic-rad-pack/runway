@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blink;
+use Statamic\Facades\User;
 use Statamic\Fields\Field;
 use Statamic\Http\Requests\FilteredRequest;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
@@ -25,6 +26,8 @@ class BelongsToFieldtypeTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->actingAs(User::make()->makeSuper()->save());
 
         $this->fieldtype = tap(new BelongsToFieldtype)
             ->setField(new Field('author', [
