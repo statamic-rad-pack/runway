@@ -1,5 +1,12 @@
 # Changelog
 
+## v9.4.7 (2026-05-26)
+
+### What's fixed
+- Fix date filter `between` operator not working in runway listing [#822](https://github.com/statamic-rad-pack/runway/pull/822) by @albinameti00
+
+
+
 ## v9.4.6 (2026-05-26)
 
 ### What's fixed
