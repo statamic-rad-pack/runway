@@ -13,6 +13,7 @@ use Statamic\CP\Column;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Scope;
 use Statamic\Facades\Search;
+use Statamic\Facades\User;
 use Statamic\Fieldtypes\Relationship;
 use Statamic\Http\Requests\FilteredRequest;
 use Statamic\Query\OrderBy;
@@ -187,6 +188,10 @@ abstract class BaseFieldtype extends Relationship
 
     public function getIndexItems($request)
     {
+        if (! User::current()?->can('view', $this->resource())) {
+            return collect();
+        }
+
         $query = $this->getIndexQuery($request);
 
         $this->applyOrderingToIndexQuery($query, $request);
@@ -381,6 +386,11 @@ abstract class BaseFieldtype extends Relationship
             ->setPreferred("runway.{$resource->handle()}.columns")
             ->rejectUnlisted()
             ->values();
+    }
+
+    protected function authorizeItemData($id): bool
+    {
+        return (bool) User::current()?->can('view', $this->resource());
     }
 
     protected function toItemArray($id)

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Entry;
+use Statamic\Facades\User;
 use Statamic\Fields\Field;
 use Statamic\Http\Requests\FilteredRequest;
 use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
@@ -28,6 +29,8 @@ class HasManyFieldtypeTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->actingAs(User::make()->makeSuper()->save());
 
         $this->fieldtype = tap(new HasManyFieldtype)
             ->setField(new Field('posts', [
