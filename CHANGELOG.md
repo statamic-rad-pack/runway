@@ -1,5 +1,16 @@
 # Changelog
 
+## v9.5.0 (2026-05-28)
+
+### What's new
+- Implement `Data::find()` support for Runway models [#825](https://github.com/statamic-rad-pack/runway/pull/825) by @duncanmcclean
+- Invalidate REST API cache when Runway models are saved or deleted [#826](https://github.com/statamic-rad-pack/runway/pull/826) by @duncanmcclean
+
+### What's fixed
+- Fix belongs_to not being populated during inline has_many creation [#823](https://github.com/statamic-rad-pack/runway/pull/823) by @macaws
+
+
+
 ## v9.4.7 (2026-05-26)
 
 ### What's fixed
