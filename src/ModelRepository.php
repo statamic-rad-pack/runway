@@ -10,6 +10,29 @@ class ModelRepository
     protected $substitutionsById = [];
     protected $substitutionsByUri = [];
 
+    public function find(string $reference)
+    {
+        $fullReference = "runway::{$reference}";
+
+        if ($substitute = Arr::get($this->substitutionsById, $fullReference)) {
+            return $substitute;
+        }
+
+        if (! str_contains($reference, '::')) {
+            return null;
+        }
+
+        [$handle, $id] = explode('::', $reference, 2);
+
+        $resource = Runway::allResources()->get($handle);
+
+        if (! $resource) {
+            return null;
+        }
+
+        return $resource->model()->find($id);
+    }
+
     public function findByUri(string $uri)
     {
         if ($substitute = Arr::get($this->substitutionsByUri, $uri)) {
