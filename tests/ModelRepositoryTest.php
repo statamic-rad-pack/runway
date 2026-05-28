@@ -11,6 +11,33 @@ use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 class ModelRepositoryTest extends TestCase
 {
     #[Test]
+    public function can_find_by_reference()
+    {
+        $post = Post::factory()->create();
+
+        $found = Data::find("runway::post::{$post->id}");
+
+        $this->assertNotNull($found);
+        $this->assertEquals($post->id, $found->id);
+    }
+
+    #[Test]
+    public function cant_find_by_reference_when_model_doesnt_exist()
+    {
+        $found = Data::find('runway::post::99999');
+
+        $this->assertNull($found);
+    }
+
+    #[Test]
+    public function cant_find_by_reference_when_resource_doesnt_exist()
+    {
+        $found = Data::find('runway::nonexistent::12345');
+
+        $this->assertNull($found);
+    }
+
+    #[Test]
     public function can_find_by_uri()
     {
         $post = Post::factory()->create();

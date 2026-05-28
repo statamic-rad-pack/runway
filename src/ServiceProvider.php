@@ -287,7 +287,7 @@ class ServiceProvider extends AddonServiceProvider
             $this->app->singleton(ModelRepository::class);
 
             $this->app->get(\Statamic\Contracts\Data\DataRepository::class)
-                ->setRepository('runway-resources', ModelRepository::class);
+                ->setRepository('runway', ModelRepository::class);
 
             StaticWarm::hook('additional', function ($urls, $next) {
                 return $next($urls->merge(RunwayUri::select('uri')->pluck('uri')->all()));
