@@ -474,7 +474,7 @@ export default {
         },
 
         parentContainer() {
-            return this.publishContext?.parentContainer;
+            return this.publishContext;
         },
     },
 
