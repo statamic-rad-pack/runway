@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
 use Spatie\ErrorSolutions\Contracts\SolutionProviderRepository;
+use Statamic\API\Cacher;
 use Statamic\API\Middleware\Cache;
 use Statamic\Console\Commands\StaticWarm;
 use Statamic\Exceptions\NotFoundHttpException;
@@ -276,9 +277,21 @@ class ServiceProvider extends AddonServiceProvider
             ->each(function ($class) {
                 Event::listen('eloquent.saved: '.$class, queueable(fn ($model) => Search::updateWithinIndexes(new Searchable($model))));
                 Event::listen('eloquent.deleted: '.$class, queueable(fn ($model) => Search::deleteFromIndexes(new Searchable($model))));
+
+                Event::listen('eloquent.saved: '.$class, fn () => $this->invalidateApiCache());
+                Event::listen('eloquent.deleted: '.$class, fn () => $this->invalidateApiCache());
             });
 
         return $this;
+    }
+
+    protected function invalidateApiCache(): void
+    {
+        if (! config('statamic.api.enabled') || ! config('statamic.api.cache.expiry')) {
+            return;
+        }
+
+        app(Cacher::class)->handleInvalidationEvent(new class extends \Statamic\Events\Event {});
     }
 
     protected function bootDataRepository(): self
