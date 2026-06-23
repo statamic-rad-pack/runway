@@ -5,7 +5,7 @@
         - The JS hooks have been renamed to be prefixed with `runway.` instead of `entry.`
     -->
 
-    <stack narrow name="publish-options" @closed="$emit('closed')" v-slot="{ close }">
+    <Stack ref="stack" size="narrow" @closed="$emit('closed')" v-slot="{ close }">
         <div class="m-2 flex h-full flex-col rounded-xl bg-white dark:bg-gray-800">
             <header
                 class="flex items-center justify-between rounded-t-xl border-b border-gray-300 px-4 mb-3 py-2 dark:border-gray-950 dark:bg-gray-800"
@@ -51,14 +51,16 @@
                 </div>
             </div>
         </div>
-    </stack>
+    </Stack>
 </template>
 
 <script>
-import { Heading, Button, Select, DatePicker, Textarea, Icon, Subheading } from '@statamic/cms/ui';
+import { Heading, Button, Select, DatePicker, Textarea, Icon, Subheading, Stack } from '@statamic/cms/ui';
 
 export default {
-    components: { Heading, Button, Select, DatePicker, Textarea, Icon, Subheading },
+    components: { Heading, Button, Select, DatePicker, Textarea, Icon, Subheading, Stack },
+
+    emits: ['saving', 'saved', 'failed', 'closed'],
 
     props: {
         actions: Object,
@@ -75,6 +77,10 @@ export default {
             revisionMessage: null,
             saving: false,
         };
+    },
+
+    mounted() {
+        this.$nextTick(() => this.$refs.stack.open());
     },
 
     computed: {

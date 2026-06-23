@@ -210,12 +210,12 @@
             v-if="confirmingPublish"
             :actions="actions"
             :published="published"
-            :collection="collectionHandle"
+            :resource-handle="resource.handle"
             :reference="initialReference"
             :publish-container="publishContainer"
             :can-manage-publish-state="canManagePublishState"
             @closed="confirmingPublish = false"
-            @saving="saving = true"
+            @saving="savingRef.value = true"
             @saved="publishActionCompleted"
             @failed="publishActionFailed"
         />
@@ -296,7 +296,7 @@ export default {
     },
 
     inject: {
-        publishContext: { from: publishContextKey }
+        publishContext: { from: publishContextKey, default: null }
     },
 
     props: {
@@ -323,6 +323,8 @@ export default {
         resourceHasRoutes: Boolean,
         livePreviewUrl: String,
         previewTargets: Array,
+        initialItemActions: Array,
+        itemActionUrl: String,
     },
 
     data() {
@@ -351,6 +353,7 @@ export default {
 
             confirmingPublish: false,
             readOnly: this.initialReadOnly,
+            itemActions: this.initialItemActions ?? [],
             permalink: this.initialPermalink,
 
             saveKeyBinding: null,
@@ -473,6 +476,10 @@ export default {
             return this.$config.get('direction', 'ltr');
         },
 
+        hasItemActions() {
+            return !!(this.itemActions && this.itemActions.length);
+        },
+
         parentContainer() {
             return this.publishContext;
         },
@@ -589,7 +596,7 @@ export default {
         },
 
         publishActionCompleted({ published, isWorkingCopy, response }) {
-            this.saving = false;
+            this.savingRef.value = false;
             if (published !== undefined) {
                 this.$refs.container.setFieldValue('published', published);
                 this.initialPublished = published;
@@ -601,7 +608,7 @@ export default {
             this.status = response.data.data.status;
             clearTimeout(this.trackDirtyStateTimeout);
             this.trackDirtyState = false;
-            this.values = this.resetValuesFromResponse(response.data.data.values);
+            this.values = resetValuesFromResponse(response.data.data.values, this.$refs.container);
             this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 350);
             this.permalink = response.data.data.permalink;
             this.$nextTick(() => this.$emit('saved', response));
@@ -609,7 +616,7 @@ export default {
 
         publishActionFailed() {
             this.confirmPublish = false;
-            this.saving = false;
+            this.savingRef.value = false;
         },
 
         setFieldValue(handle, value) {
@@ -660,7 +667,7 @@ export default {
                 if (!this.revisionsEnabled) this.permalink = response.data.permalink;
                 clearTimeout(this.trackDirtyStateTimeout);
                 this.trackDirtyState = false;
-                this.values = this.resetValuesFromResponse(response.data.values);
+                this.values = resetValuesFromResponse(response.data.values, this.$refs.container);
                 this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 350);
                 if (this.publishStatesEnabled) {
                     this.initialPublished = response.data.published;
