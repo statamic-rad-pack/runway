@@ -419,7 +419,7 @@ export default {
         },
 
         showLivePreviewButton() {
-            return !this.isCreating && this.isBase && this.livePreviewUrl;
+            return !this.isPreviewing && !this.readOnly && !this.isCreating && this.isBase && this.livePreviewUrl;
         },
 
         showVisitUrlButton() {
@@ -468,7 +468,7 @@ export default {
         },
 
         afterSaveOption() {
-            return this.getPreference('after_save');
+            return this.getPreference('after_save') ?? 'listing';
         },
 
         direction() {
@@ -543,8 +543,8 @@ export default {
                         this.redirectTo(this.createAnotherUrl);
                     }
 
-                    // If the user has opted to go to listing (default/null option), redirect them there.
-                    else if (!this.isInline && nextAction === null) {
+                    // If the user has opted to go to listing, redirect them there.
+                    else if (!this.isInline && nextAction === 'listing') {
                         this.redirectTo(this.listingUrl);
                     }
 
@@ -599,14 +599,32 @@ export default {
             this.$refs.container.saved();
             this.isWorkingCopy = isWorkingCopy;
             this.confirmingPublish = false;
-            this.title = response.data.data.title;
-            this.status = response.data.data.status;
-            clearTimeout(this.trackDirtyStateTimeout);
-            this.trackDirtyState = false;
-            this.values = resetValuesFromResponse(response.data.data.values, this.$refs.container);
-            this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 350);
-            this.permalink = response.data.data.permalink;
-            this.$nextTick(() => this.$emit('saved', response));
+
+            let nextAction = this.quickSave || this.isAutosave ? 'continue_editing' : this.afterSaveOption;
+
+            // If the user has opted to create another model, redirect them to create page.
+            if (!this.isInline && nextAction === 'create_another') {
+                this.redirectTo(this.createAnotherUrl);
+            }
+
+            // If the user has opted to go to listing, redirect them there.
+            else if (!this.isInline && nextAction === 'listing') {
+                this.redirectTo(this.listingUrl);
+            }
+
+            // Otherwise, leave them on the edit form and emit an event. We need to wait until after
+            // the hooks are resolved because if this form is being shown in a stack, we only
+            // want to close it once everything's done.
+            else {
+                this.title = response.data.data.title;
+                this.status = response.data.data.status;
+                clearTimeout(this.trackDirtyStateTimeout);
+                this.trackDirtyState = false;
+                this.values = resetValuesFromResponse(response.data.data.values, this.$refs.container);
+                this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 500);
+                this.permalink = response.data.data.permalink;
+                this.$nextTick(() => this.$emit('saved', response));
+            }
         },
 
         publishActionFailed() {
@@ -663,7 +681,7 @@ export default {
                 clearTimeout(this.trackDirtyStateTimeout);
                 this.trackDirtyState = false;
                 this.values = resetValuesFromResponse(response.data.values, this.$refs.container);
-                this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 350);
+                this.trackDirtyStateTimeout = setTimeout(() => (this.trackDirtyState = true), 500);
                 if (this.publishStatesEnabled) {
                     this.initialPublished = response.data.published;
                 }
