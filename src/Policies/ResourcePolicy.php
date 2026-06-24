@@ -18,7 +18,8 @@ class ResourcePolicy
 
     public function view($user, Resource $resource, $model = null)
     {
-        return User::fromUser($user)->hasPermission("view {$resource->handle()}");
+        return $this->edit($user, $resource, $model)
+            || User::fromUser($user)->hasPermission("view {$resource->handle()}");
     }
 
     public function create($user, Resource $resource)

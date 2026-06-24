@@ -394,6 +394,79 @@ class ResourceControllerTest extends TestCase
     }
 
     #[Test]
+    public function can_view_resource_in_read_only_mode_with_only_view_permission()
+    {
+        $post = Post::factory()->create();
+
+        Role::make('test')->addPermission('access cp')->addPermission('view post')->save();
+        $user = User::make()->assignRole('test')->save();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.edit', ['resource' => 'post', 'model' => $post->id]))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('runway::Edit')
+                ->where('readOnly', true)
+            );
+    }
+
+    #[Test]
+    public function resource_is_not_read_only_when_user_has_edit_permission()
+    {
+        $post = Post::factory()->create();
+
+        Role::make('test')->addPermission('access cp')->addPermission('edit post')->save();
+        $user = User::make()->assignRole('test')->save();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.edit', ['resource' => 'post', 'model' => $post->id]))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('runway::Edit')
+                ->where('readOnly', false)
+            );
+    }
+
+    #[Test]
+    public function cant_edit_resource_without_view_permission()
+    {
+        $post = Post::factory()->create();
+
+        Role::make('test')->addPermission('access cp')->save();
+        $user = User::make()->assignRole('test')->save();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.edit', ['resource' => 'post', 'model' => $post->id]))
+            ->assertRedirect();
+    }
+
+    #[Test]
+    public function cant_update_resource_with_only_view_permission()
+    {
+        $post = Post::factory()->create();
+
+        Role::make('test')->addPermission('access cp')->addPermission('view post')->save();
+        $user = User::make()->assignRole('test')->save();
+
+        $this
+            ->actingAs($user)
+            ->patch(cp_route('runway.update', ['resource' => 'post', 'model' => $post->id]), [
+                'title' => 'Santa is coming home',
+                'slug' => 'santa-is-coming-home',
+                'body' => $post->body,
+                'author_id' => [$post->author_id],
+            ])
+            ->assertRedirect();
+
+        $post->refresh();
+
+        $this->assertNotSame($post->title, 'Santa is coming home');
+    }
+
+    #[Test]
     public function cant_edit_resource_when_it_does_not_exist()
     {
         $user = User::make()->makeSuper()->save();

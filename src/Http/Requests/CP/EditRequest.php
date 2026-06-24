@@ -11,6 +11,6 @@ class EditRequest extends FormRequest
     {
         $model = $this->route('resource');
 
-        return User::current()->can('edit', [$model->runwayResource(), $model]);
+        return User::current()->can('view', [$model->runwayResource(), $model]);
     }
 }

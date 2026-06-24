@@ -158,7 +158,7 @@ class ResourceController extends CpController
             'blueprint' => $blueprint->toPublishArray(),
             'values' => $values,
             'meta' => $meta,
-            'readOnly' => $resource->readOnly(),
+            'readOnly' => $resource->readOnly() || User::current()->cant('edit', [$resource, $model]),
             'status' => $model->publishedStatus(),
             'permalink' => $resource->hasRouting() ? $model->uri() : null,
             'resourceHasRoutes' => $resource->hasRouting(),
