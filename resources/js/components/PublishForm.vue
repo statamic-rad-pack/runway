@@ -296,7 +296,10 @@ export default {
     },
 
     inject: {
-        publishContext: { from: publishContextKey, default: null }
+        publishContext: {
+            from: publishContextKey,
+            default: null,
+        },
     },
 
     props: {
