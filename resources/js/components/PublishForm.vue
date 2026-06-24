@@ -353,7 +353,6 @@ export default {
 
             confirmingPublish: false,
             readOnly: this.initialReadOnly,
-            itemActions: this.initialItemActions ?? [],
             permalink: this.initialPermalink,
 
             saveKeyBinding: null,
@@ -474,10 +473,6 @@ export default {
 
         direction() {
             return this.$config.get('direction', 'ltr');
-        },
-
-        hasItemActions() {
-            return !!(this.itemActions && this.itemActions.length);
         },
 
         parentContainer() {
