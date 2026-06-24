@@ -56,8 +56,6 @@ function requestComplete({ items: newItems, parameters }) {
                 :url="actionUrl"
                 :actions="actions"
                 :item="resource"
-                @started="actionStarted"
-                @completed="actionCompleted"
                 v-slot="{ actions }"
             >
                 <Dropdown placement="left-start" class="me-2">
