@@ -1,5 +1,16 @@
 # Changelog
 
+## v9.5.1 (2026-06-24)
+
+### What's fixed
+- Fix console warnings [#832](https://github.com/statamic-rad-pack/runway/pull/832) by @duncanmcclean
+- Fix revision publishing [#831](https://github.com/statamic-rad-pack/runway/pull/831) by @edalzell
+- Fix view-only permission not allowing read-only access to records [#833](https://github.com/statamic-rad-pack/runway/pull/833) by @duncanmcclean
+- Bump actions/checkout from 6.0.2 to 6.0.3 in the github-actions group [#828](https://github.com/statamic-rad-pack/runway/pull/828) by @dependabot
+- Bump shivammathur/setup-php from 2.37.1 to 2.37.2 in the github-actions group [#829](https://github.com/statamic-rad-pack/runway/pull/829) by @dependabot
+
+
+
 ## v9.5.0 (2026-05-28)
 
 ### What's new
