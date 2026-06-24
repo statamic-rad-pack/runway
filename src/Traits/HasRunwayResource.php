@@ -306,27 +306,6 @@ trait HasRunwayResource
         return $this;
     }
 
-    public function publishWorkingCopy($options = [])
-    {
-        $item = $this->fromWorkingCopy();
-
-        $item
-            ->published(true)
-            ->updateLastModified($user = $options['user'] ?? false)
-            ->save();
-
-        $item
-            ->makeRevision()
-            ->user($user)
-            ->message($options['message'] ?? false)
-            ->action('publish')
-            ->save();
-
-        $item->deleteWorkingCopy();
-
-        return $item;
-    }
-
     public function publish($options = [])
     {
         if ($this->revisionsEnabled()) {
