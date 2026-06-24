@@ -215,7 +215,7 @@
             :publish-container="publishContainer"
             :can-manage-publish-state="canManagePublishState"
             @closed="confirmingPublish = false"
-            @saving="savingRef.value = true"
+            @saving="saving = true"
             @saved="publishActionCompleted"
             @failed="publishActionFailed"
         />
@@ -591,7 +591,7 @@ export default {
         },
 
         publishActionCompleted({ published, isWorkingCopy, response }) {
-            this.savingRef.value = false;
+            this.saving = false;
             if (published !== undefined) {
                 this.$refs.container.setFieldValue('published', published);
                 this.initialPublished = published;
@@ -611,7 +611,7 @@ export default {
 
         publishActionFailed() {
             this.confirmPublish = false;
-            this.savingRef.value = false;
+            this.saving = false;
         },
 
         setFieldValue(handle, value) {
