@@ -34,6 +34,28 @@ class ResourcePolicyTest extends TestCase
     }
 
     #[Test]
+    public function can_view_resource_with_only_edit_permission()
+    {
+        $resource = Runway::findResource('post');
+
+        Role::make('test')->addPermission('edit post')->save();
+        $user = User::make()->assignRole('test')->save();
+
+        $this->assertTrue($user->can('view', $resource));
+    }
+
+    #[Test]
+    public function cant_view_resource_without_permission()
+    {
+        $resource = Runway::findResource('post');
+
+        Role::make('test')->save();
+        $user = User::make()->assignRole('test')->save();
+
+        $this->assertFalse($user->can('view', $resource));
+    }
+
+    #[Test]
     public function can_create_resource()
     {
         $resource = Runway::findResource('post');
