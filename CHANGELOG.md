@@ -1,5 +1,12 @@
 # Changelog
 
+## v9.5.2 (2026-06-29)
+
+### What's fixed
+- Fix styling in revision history [#835](https://github.com/statamic-rad-pack/runway/pull/835) by @duncanmcclean
+
+
+
 ## v9.5.1 (2026-06-24)
 
 ### What's fixed
