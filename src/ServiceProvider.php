@@ -21,6 +21,7 @@ use Statamic\Facades\CP\Nav;
 use Statamic\Facades\GraphQL;
 use Statamic\Facades\Permission;
 use Statamic\Facades\Search;
+use Statamic\Fieldtypes\Link;
 use Statamic\Http\Middleware\RequireStatamicPro;
 use Statamic\Listeners\UpdateAssetReferences;
 use Statamic\Listeners\UpdateTermReferences;
@@ -33,7 +34,6 @@ use StatamicRadPack\Runway\Policies\ResourcePolicy;
 use StatamicRadPack\Runway\Routing\RunwayUri;
 use StatamicRadPack\Runway\Search\Provider as SearchProvider;
 use StatamicRadPack\Runway\Search\Searchable;
-
 use function Illuminate\Events\queueable;
 
 class ServiceProvider extends AddonServiceProvider
@@ -73,6 +73,7 @@ class ServiceProvider extends AddonServiceProvider
                 ->registerPolicies()
                 ->registerNavigation()
                 ->registerBlueprints()
+                ->registerLinkTypes()
                 ->registerSearchProvider()
                 ->registerReferenceUpdaterHook()
                 ->bootGraphQl()
@@ -200,6 +201,16 @@ class ServiceProvider extends AddonServiceProvider
 
             Log::warning('Runway attempted to register its blueprint namespace. However, it seems the `blueprints` table has yet to be migrated.');
         }
+
+        return $this;
+    }
+
+    protected function registerLinkTypes(): self
+    {
+        Runway::allResources()
+            ->filter
+            ->hasRouting()
+            ->each(fn (Resource $resource) => Link::extend(ResourceLinkType::PREFIX.$resource->handle(), ResourceLinkType::class));
 
         return $this;
     }
