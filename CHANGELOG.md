@@ -1,5 +1,13 @@
 # Changelog
 
+## v9.5.3 (2026-07-16)
+
+### What's fixed
+- Fix: default `initialItemActions` prop so PublishForm renders inside stacks [#837](https://github.com/statamic-rad-pack/runway/pull/837) by @firescript
+- Bump the github-actions group with 2 updates [#836](https://github.com/statamic-rad-pack/runway/pull/836) by @dependabot
+
+
+
 ## v9.5.2 (2026-06-29)
 
 ### What's fixed
