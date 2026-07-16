@@ -326,8 +326,6 @@ export default {
         resourceHasRoutes: Boolean,
         livePreviewUrl: String,
         previewTargets: Array,
-        initialItemActions: { type: Array, default: () => [] },
-        itemActionUrl: String,
     },
 
     data() {
