@@ -34,6 +34,7 @@ use StatamicRadPack\Runway\Policies\ResourcePolicy;
 use StatamicRadPack\Runway\Routing\RunwayUri;
 use StatamicRadPack\Runway\Search\Provider as SearchProvider;
 use StatamicRadPack\Runway\Search\Searchable;
+
 use function Illuminate\Events\queueable;
 
 class ServiceProvider extends AddonServiceProvider
