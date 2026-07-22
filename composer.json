@@ -46,7 +46,7 @@
         "pixelfear/composer-dist-plugin": "^0.1.5",
         "spatie/error-solutions": "^1.0 || ^2.0",
         "spatie/invade": "^2.1",
-        "statamic/cms": "^6.25",
+        "statamic/cms": "^6.26",
         "stillat/proteus": "^4.2.1"
     },
     "require-dev": {
