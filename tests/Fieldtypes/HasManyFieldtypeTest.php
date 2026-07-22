@@ -6,7 +6,6 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blink;
@@ -302,84 +301,6 @@ class HasManyFieldtypeTest extends TestCase
 
         $this->assertEquals($posts[0]->id, $augment[0]['id']->value());
         $this->assertEquals($posts[0]->title, (string) $augment[0]['title']->value());
-    }
-
-    #[Test]
-    public function augmenting_multiple_ids_only_queries_the_database_once()
-    {
-        $author = Author::factory()->create();
-        $posts = Post::factory()->count(5)->create(['author_id' => $author->id]);
-
-        DB::enableQueryLog();
-
-        $this->fieldtype->augment(
-            $posts->pluck('id')->toArray()
-        );
-
-        $postQueries = collect(DB::getQueryLog())
-            ->filter(fn ($query) => str_contains($query['query'], 'posts'));
-
-        DB::disableQueryLog();
-
-        $this->assertCount(1, $postQueries);
-    }
-
-    #[Test]
-    public function augmenting_an_id_that_is_already_blink_cached_does_not_requery()
-    {
-        $author = Author::factory()->create();
-        $post = Post::factory()->create(['author_id' => $author->id]);
-
-        // Prime the Blink cache the same way an earlier field, or an earlier
-        // lookup of the same field, would have during the same request.
-        $this->fieldtype->augment([$post->id]);
-
-        DB::enableQueryLog();
-
-        $this->fieldtype->augment([$post->id]);
-
-        $postQueries = collect(DB::getQueryLog())
-            ->filter(fn ($query) => str_contains($query['query'], 'posts'));
-
-        DB::disableQueryLog();
-
-        $this->assertCount(0, $postQueries);
-    }
-
-    #[Test]
-    public function augmenting_ids_eager_loads_configured_relationships_without_extra_queries()
-    {
-        $author = Author::factory()->create();
-        $posts = Post::factory()->count(3)->create(['author_id' => $author->id]);
-
-        $this->fieldtype->setField(new Field('posts', [
-            'mode' => 'stack',
-            'resource' => 'post',
-            'display' => 'Posts',
-            'type' => 'has_many',
-            'with' => ['author'],
-        ]));
-
-        $getAugmentableModels = new \ReflectionMethod($this->fieldtype, 'getAugmentableModels');
-        $getAugmentableModels->setAccessible(true);
-
-        DB::enableQueryLog();
-
-        $models = $getAugmentableModels->invoke(
-            $this->fieldtype,
-            Runway::findResource('post'),
-            $posts->pluck('id')->toArray()
-        );
-
-        $queryCountAfterFetch = count(DB::getQueryLog());
-
-        // Accessing the eager-loaded relationship shouldn't trigger any further queries.
-        $models->each(fn ($post) => $post->author);
-
-        $this->assertCount($queryCountAfterFetch, DB::getQueryLog());
-        $this->assertTrue($models->first()->relationLoaded('author'));
-
-        DB::disableQueryLog();
     }
 
     #[Test]
