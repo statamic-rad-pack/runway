@@ -1,5 +1,12 @@
 # Changelog
 
+## v9.6.0 (2026-07-22)
+
+### What's new
+- Add resources to the Link fieldtype [#838](https://github.com/statamic-rad-pack/runway/pull/838) by @duncanmcclean
+
+
+
 ## v9.5.3 (2026-07-16)
 
 ### What's fixed
