@@ -1,5 +1,12 @@
 # Changelog
 
+## v9.6.1 (2026-07-23)
+
+### What's fixed
+- Batch relationship fieldtype augmentation into a single query [#840](https://github.com/statamic-rad-pack/runway/pull/840) by @ryanmitchell
+
+
+
 ## v9.6.0 (2026-07-22)
 
 ### What's new
