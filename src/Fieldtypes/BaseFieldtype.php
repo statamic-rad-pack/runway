@@ -349,24 +349,33 @@ abstract class BaseFieldtype extends Relationship
 
     protected function getAugmentableModels(Resource $resource, $values): Collection
     {
-        return collect($values instanceof Collection ? $values : Arr::wrap($values))
-            ->map(function ($model) use ($resource) {
-                if (! $model instanceof Model) {
-                    $eagerLoadingRelationships = collect($this->config('with') ?? [])->join(',');
+        $values = $values instanceof Collection ? $values : Arr::wrap($values);
 
-                    return Blink::once("Runway::Model::{$this->config('resource')}_{$model}}::{$eagerLoadingRelationships}", function () use ($resource, $model) {
-                        return $resource->newEloquentQuery()
-                            ->when(
-                                $this->config('with'),
-                                fn ($query) => $query->with(Arr::wrap($this->config('with'))),
-                                fn ($query) => $query->with($resource->eagerLoadingRelationships())
-                            )
-                            ->firstWhere($resource->qualifiedPrimaryKey(), $model);
-                    });
-                }
+        $eagerLoadingRelationships = collect($this->config('with') ?? [])->join(',');
 
-                return $model;
-            })
+        $blinkKey = fn ($id) => "Runway::Model::{$this->config('resource')}_{$id}::{$eagerLoadingRelationships}";
+
+        // Only ids that haven't already been resolved (eg. by another field, or
+        // another instance of this field, earlier in the same request) need fetching.
+        $idsToFetch = collect($values)
+            ->reject(fn ($value) => $value instanceof Model)
+            ->reject(fn ($id) => Blink::has($blinkKey($id)))
+            ->values();
+
+        if ($idsToFetch->isNotEmpty()) {
+            $resource->newEloquentQuery()
+                ->when(
+                    $this->config('with'),
+                    fn ($query) => $query->with(Arr::wrap($this->config('with'))),
+                    fn ($query) => $query->with($resource->eagerLoadingRelationships())
+                )
+                ->whereIn($resource->qualifiedPrimaryKey(), $idsToFetch->all())
+                ->get()
+                ->each(fn ($model) => Blink::put($blinkKey($model->{$resource->primaryKey()}), $model));
+        }
+
+        return collect($values)
+            ->map(fn ($model) => $model instanceof Model ? $model : Blink::get($blinkKey($model)))
             ->when($resource->hasPublishStates(), fn ($collection) => $collection->filter(fn ($model) => $model?->published()))
             ->filter();
     }
