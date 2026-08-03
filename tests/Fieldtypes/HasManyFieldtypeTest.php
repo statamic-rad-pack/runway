@@ -383,6 +383,35 @@ class HasManyFieldtypeTest extends TestCase
     }
 
     #[Test]
+    public function augmenting_defers_the_related_models_own_relationships()
+    {
+        $author = Author::factory()->create();
+        $posts = Post::factory()->count(3)->create(['author_id' => $author->id]);
+
+        $this->fieldtype->setField(new Field('posts', [
+            'mode' => 'stack',
+            'resource' => 'post',
+            'display' => 'Posts',
+            'type' => 'has_many',
+            'with' => ['runwayUri'],
+        ]));
+
+        DB::enableQueryLog();
+
+        $augment = $this->fieldtype->augment($posts->pluck('id')->toArray());
+
+        $authorQueries = collect(DB::getQueryLog())
+            ->filter(fn ($query) => str_contains($query['query'], 'from "authors"'));
+
+        $this->assertCount(0, $authorQueries);
+
+        // The relationship should still be resolvable, once something actually asks for it.
+        $this->assertEquals($author->id, $augment[0]['author_id']->value()['id']->value());
+
+        DB::disableQueryLog();
+    }
+
+    #[Test]
     public function can_get_item_data()
     {
         // Under the hood, this tests the toItemArray method.

@@ -322,7 +322,7 @@ abstract class BaseFieldtype extends Relationship
         $results = $this->getAugmentableModels($resource, $values)
             ->map(function ($model) use ($resource) {
                 return Blink::once("Runway::FieldtypeAugment::{$resource->handle()}_{$model->{$resource->primaryKey()}}", function () use ($model) {
-                    return $model->toAugmentedArray();
+                    return $model->toDeferredAugmentedArray();
                 });
             });
 
