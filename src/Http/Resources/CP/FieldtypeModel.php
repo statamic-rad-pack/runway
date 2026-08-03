@@ -38,6 +38,6 @@ class FieldtypeModel extends JsonResource
             return $model->augmentedValue($firstListableColumn);
         }
 
-        return Parse::template($titleFormat, $model->toAugmentedArray());
+        return Parse::template($titleFormat, $model->toDeferredAugmentedArray());
     }
 }
