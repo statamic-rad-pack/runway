@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Tests\Search;
 
+use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\Test;
 use StatamicRadPack\Runway\Data\AugmentedModel;
 use StatamicRadPack\Runway\Runway;
@@ -79,6 +80,20 @@ class SearchableTest extends TestCase
         $searchable = new Searchable($post);
 
         $this->assertEquals($post->title, $searchable->getCpSearchResultTitle());
+    }
+
+    #[Test]
+    public function can_get_cp_search_result_title_when_title_field_is_a_nested_field()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.title_field', 'values_alt_title');
+
+        Runway::discoverResources();
+
+        $post = Post::factory()->create(['values' => ['alt_title' => 'Alternative Title']]);
+
+        $searchable = new Searchable($post);
+
+        $this->assertEquals('Alternative Title', $searchable->getCpSearchResultTitle());
     }
 
     #[Test]

@@ -187,10 +187,7 @@ class AugmentedModel extends AbstractAugmented
 
     private function wrapNestedField(string $handle): Value
     {
-        $nestedFieldPrefix = Str::before($handle, '_');
-        $key = Str::after($handle, "{$nestedFieldPrefix}_");
-
-        $value = data_get($this->data, "{$nestedFieldPrefix}.{$key}");
+        $value = $this->data->getValueForField($handle);
 
         if ($this->data->hasSupplement($handle)) {
             $value = $this->data->getSupplement($handle);

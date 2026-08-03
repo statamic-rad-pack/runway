@@ -64,7 +64,11 @@ trait HasRunwayResource
     public function scopeRunwaySearch(Builder $query, string $searchQuery)
     {
         $this->runwayResource()->blueprint()->fields()->all()
-            ->filter(fn (Field $field) => $this->getConnection()->getSchemaBuilder()->hasColumn($this->getTable(), $field->handle()))
+            ->filter(function (Field $field) {
+                $column = Str::before($this->getColumnForField($field->handle()), '->');
+
+                return $this->getConnection()->getSchemaBuilder()->hasColumn($this->getTable(), $column);
+            })
             ->reject(fn (Field $field) => $field->visibility() === 'computed')
             ->each(fn (Field $field) => $query->orWhere($this->getColumnForField($field->handle()), 'LIKE', '%'.$searchQuery.'%'));
     }
@@ -142,6 +146,21 @@ trait HasRunwayResource
         }
 
         return $field;
+    }
+
+    public function getValueForField(?string $field): mixed
+    {
+        if (! $field) {
+            return null;
+        }
+
+        $column = $this->getColumnForField($field);
+
+        if ($column === $field) {
+            return $this->getAttribute($field);
+        }
+
+        return data_get($this, str_replace('->', '.', $column));
     }
 
     public function runwayEditUrl(): string

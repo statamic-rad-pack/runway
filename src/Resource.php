@@ -216,8 +216,7 @@ class Resource
     public function nestedFieldPrefix(string $field): ?string
     {
         return $this->nestedFieldPrefixes()
-            ->reject(fn ($prefix) => $field === $prefix)
-            ->filter(fn ($prefix) => Str::startsWith($field, $prefix))
+            ->filter(fn ($prefix) => Str::startsWith($field, "{$prefix}_"))
             ->first();
     }
 

@@ -4,7 +4,6 @@ namespace StatamicRadPack\Runway\Http\Resources\CP;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Statamic\Facades\User;
 use Statamic\Fields\Blueprint;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
@@ -44,7 +43,7 @@ class ListedModel extends JsonResource
 
         return [
             'id' => $model->getKey(),
-            'title' => $model->getAttribute($this->runwayResource->titleField()),
+            'title' => $model->getValueForField($this->runwayResource->titleField()),
             'published' => $this->resource->published(),
             'status' => $this->resource->publishedStatus(),
             'edit_url' => $model->runwayEditUrl(),
@@ -67,13 +66,8 @@ class ListedModel extends JsonResource
             if ($field && $field->fieldtype() instanceof BelongsToFieldtype) {
                 $relationName = $this->runwayResource->eloquentRelationships()->get($key);
                 $value = $this->resource->$relationName;
-            }
-            // When it's a nested field, we need to get the value from the nested JSON object, using data_get().
-            elseif ($field && $nestedFieldPrefix = $this->runwayResource->nestedFieldPrefix($field->handle())) {
-                $fieldKey = Str::after($field->handle(), "{$nestedFieldPrefix}_");
-                $value = data_get($this->resource, "{$nestedFieldPrefix}.{$fieldKey}");
             } else {
-                $value = $extra[$key] ?? $this->resource->getAttribute($key);
+                $value = $extra[$key] ?? $this->resource->getValueForField($key);
 
                 if ($value instanceof UnitEnum) {
                     $value = $value->value;

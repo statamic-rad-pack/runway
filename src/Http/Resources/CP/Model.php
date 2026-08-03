@@ -13,7 +13,7 @@ class Model extends JsonResource
         $data = [
             'id' => $this->resource->getKey(),
             'reference' => $this->resource->reference(),
-            'title' => $this->resource->{$runwayResource->titleField()},
+            'title' => $this->resource->getValueForField($runwayResource->titleField()),
             'permalink' => $runwayResource->hasRouting() ? $this->resource->absoluteUrl() : null,
             'status' => $this->resource->publishedStatus(),
             'published' => $this->resource->published(),

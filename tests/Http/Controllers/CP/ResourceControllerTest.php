@@ -614,6 +614,26 @@ class ResourceControllerTest extends TestCase
     }
 
     #[Test]
+    public function can_edit_resource_when_title_field_is_a_nested_field()
+    {
+        Config::set('runway.resources.'.Post::class.'.title_field', 'values_alt_title');
+
+        Runway::discoverResources();
+
+        $post = Post::factory()->create(['values' => ['alt_title' => 'Alternative Title']]);
+        $user = User::make()->makeSuper()->save();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.edit', ['resource' => 'post', 'model' => $post->id]))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('runway::Edit')
+                ->where('title', 'Alternative Title')
+            );
+    }
+
+    #[Test]
     public function can_edit_resource_if_resource_is_read_only()
     {
         Config::set('runway.resources.'.Post::class.'.read_only', true);

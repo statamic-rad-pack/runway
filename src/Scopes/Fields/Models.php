@@ -57,7 +57,7 @@ class Models extends FieldtypeFilter
         $relatedResource = Runway::findResource($this->fieldtype->config('resource'));
 
         $ids = $relatedResource->model()->query()
-            ->where($field, $operator, $value)
+            ->where($relatedResource->model()->getColumnForField($field), $operator, $value)
             ->select($relatedResource->qualifiedPrimaryKey())
             ->get()
             ->pluck($relatedResource->primaryKey())

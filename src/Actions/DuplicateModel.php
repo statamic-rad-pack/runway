@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Actions;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Statamic\Actions\Action;
 use StatamicRadPack\Runway\Exceptions\ResourceNotFound;
 use StatamicRadPack\Runway\Resource;
@@ -71,8 +72,8 @@ class DuplicateModel extends Action
     {
         $model = $original->replicate($resource->blueprint()->fields()->all()->reject->shouldBeDuplicated()->keys()->all());
 
-        if ($resource->titleField() && in_array($resource->titleField(), $resource->databaseColumns())) {
-            $model->setAttribute($resource->titleField(), $original->getAttribute($resource->titleField()).' (Duplicate)');
+        if ($titleColumn = $this->duplicatableTitleColumn($resource)) {
+            $model->setAttribute($titleColumn, $original->getValueForField($resource->titleField()).' (Duplicate)');
         }
 
         if ($resource->hasPublishStates()) {
@@ -82,6 +83,17 @@ class DuplicateModel extends Action
         $model->save();
 
         return $model;
+    }
+
+    private function duplicatableTitleColumn(Resource $resource): ?string
+    {
+        if (! $titleField = $resource->titleField()) {
+            return null;
+        }
+
+        $column = $resource->model()->getColumnForField($titleField);
+
+        return in_array(Str::before($column, '->'), $resource->databaseColumns()) ? $column : null;
     }
 
     public function redirect($items, $values)

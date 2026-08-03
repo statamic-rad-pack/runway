@@ -201,6 +201,26 @@ class HasManyFieldtypeTest extends TestCase
     }
 
     #[Test]
+    public function can_get_index_items_in_order_when_title_field_is_a_nested_field()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.title_field', 'values_alt_title');
+
+        Runway::discoverResources();
+
+        Post::factory()->create(['values' => ['alt_title' => 'Arnold A']]);
+        Post::factory()->create(['values' => ['alt_title' => 'Richard B']]);
+        Post::factory()->create(['values' => ['alt_title' => 'Graham C']]);
+
+        Blink::put('RunwayListingScopeOrderBy', ['title', 'asc']);
+
+        $getIndexItems = $this->fieldtype->getIndexItems(new FilteredRequest(['paginate' => false, 'sort' => 'title', 'order' => 'desc']));
+
+        $this->assertEquals($getIndexItems->all()[0]->values['alt_title'], 'Richard B');
+        $this->assertEquals($getIndexItems->all()[1]->values['alt_title'], 'Graham C');
+        $this->assertEquals($getIndexItems->all()[2]->values['alt_title'], 'Arnold A');
+    }
+
+    #[Test]
     public function can_get_index_items_and_search()
     {
         $author = Author::factory()->create();
@@ -271,6 +291,40 @@ class HasManyFieldtypeTest extends TestCase
     }
 
     #[Test]
+    public function can_get_item_array_with_title_format_referencing_a_nested_field()
+    {
+        $author = Author::factory()->create();
+        $post = Post::factory()->create(['author_id' => $author->id, 'values' => ['alt_title' => 'Alternative Title']]);
+
+        $this->fieldtype->setField(new Field('posts', [
+            'mode' => 'default',
+            'resource' => 'post',
+            'display' => 'Posts',
+            'type' => 'has_many',
+            'title_format' => '{{ values_alt_title }}',
+        ]));
+
+        $item = $this->fieldtype->getItemData([$post->id]);
+
+        $this->assertEquals('Alternative Title', $item->first()['title']);
+    }
+
+    #[Test]
+    public function can_get_item_array_when_title_field_is_a_nested_field()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.title_field', 'values_alt_title');
+
+        Runway::discoverResources();
+
+        $author = Author::factory()->create();
+        $post = Post::factory()->create(['author_id' => $author->id, 'values' => ['alt_title' => 'Alternative Title']]);
+
+        $item = $this->fieldtype->getItemData([$post->id]);
+
+        $this->assertEquals('Alternative Title', $item->first()['title']);
+    }
+
+    #[Test]
     public function can_get_pre_process_index()
     {
         $author = Author::factory()->create();
@@ -284,6 +338,25 @@ class HasManyFieldtypeTest extends TestCase
             'id' => $posts[0]->id,
             'title' => $posts[0]->title,
             'edit_url' => 'http://localhost/cp/runway/post/'.$posts[0]->id,
+        ]);
+    }
+
+    #[Test]
+    public function can_get_pre_process_index_when_title_field_is_a_nested_field()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.title_field', 'values_alt_title');
+
+        Runway::discoverResources();
+
+        $author = Author::factory()->create();
+        $post = Post::factory()->create(['author_id' => $author->id, 'values' => ['alt_title' => 'Alternative Title']]);
+
+        $preProcessIndex = $this->fieldtype->preProcessIndex($author->posts);
+
+        $this->assertEquals($preProcessIndex->first(), [
+            'id' => $post->id,
+            'title' => 'Alternative Title',
+            'edit_url' => 'http://localhost/cp/runway/post/'.$post->id,
         ]);
     }
 

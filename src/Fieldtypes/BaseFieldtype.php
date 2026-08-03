@@ -211,7 +211,9 @@ abstract class BaseFieldtype extends Relationship
                 // the "title field" for the model might be a different column, so we need to convert it.
                 $sortColumn = $orderBy === 'title' ? $this->resource()->titleField() : $orderBy;
 
-                $query->reorder($sortColumn, $request->input('order'));
+                if ($sortColumn) {
+                    $query->reorder($this->resource()->model()->getColumnForField($sortColumn), $request->input('order'));
+                }
             }
         }, fn ($query) => $query->orderBy($this->resource()->orderBy(), $this->resource()->orderByDirection()));
     }
@@ -309,7 +311,7 @@ abstract class BaseFieldtype extends Relationship
 
             return [
                 'id' => $model->{$resource->primaryKey()},
-                'title' => $fieldtype->preProcessIndex($model->{$column}),
+                'title' => $fieldtype->preProcessIndex($model->getValueForField($column)),
                 'edit_url' => $model->runwayEditUrl(),
             ];
         });

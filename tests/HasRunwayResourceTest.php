@@ -7,9 +7,40 @@ use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\Test;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\ExternalPost;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 
 class HasRunwayResourceTest extends TestCase
 {
+    #[Test]
+    public function it_gets_the_value_for_a_field()
+    {
+        $post = Post::factory()->create([
+            'title' => 'Hello World',
+            'values' => ['alt_title' => 'Alternative Title...'],
+            'external_links' => ['links' => [['label' => 'Statamic', 'url' => 'https://statamic.com']]],
+        ]);
+
+        $this->assertEquals('Hello World', $post->getValueForField('title'));
+        $this->assertEquals('Alternative Title...', $post->getValueForField('values_alt_title'));
+        $this->assertEquals('Statamic', $post->getValueForField('external_links_links')[0]->label);
+        $this->assertNull($post->getValueForField('values_missing_key'));
+
+        // The resource might not have a title field at all.
+        $this->assertNull($post->getValueForField(null));
+    }
+
+    #[Test]
+    public function scope_runway_search_searches_nested_fields()
+    {
+        Post::factory()->create(['title' => 'Hello World', 'values' => ['alt_title' => 'Alternative Title...']]);
+        Post::factory()->create(['title' => 'Goodbye World', 'values' => ['alt_title' => 'Something Else...']]);
+
+        $results = Post::query()->runwaySearch('Alternative')->get();
+
+        $this->assertCount(1, $results);
+        $this->assertEquals('Hello World', $results->first()->title);
+    }
+
     #[Test]
     public function scope_runway_search_works_with_custom_eloquent_connection()
     {
