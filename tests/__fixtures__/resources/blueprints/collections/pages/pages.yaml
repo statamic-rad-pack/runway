@@ -1,0 +1,36 @@
+tabs:
+  main:
+    sections:
+      -
+        fields:
+          -
+            handle: tooltips
+            field:
+              type: replicator
+              sets:
+                main:
+                  sets:
+                    tooltip:
+                      fields:
+                        -
+                          handle: author
+                          field:
+                            type: belongs_to
+                            resource: author
+                            max_items: 1
+                        -
+                          handle: posts
+                          field:
+                            type: has_many
+                            resource: post
+                        -
+                          handle: rows
+                          field:
+                            type: grid
+                            fields:
+                              -
+                                handle: author
+                                field:
+                                  type: belongs_to
+                                  resource: author
+                                  max_items: 1

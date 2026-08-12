@@ -325,6 +325,36 @@ class HasManyFieldtypeTest extends TestCase
     }
 
     #[Test]
+    public function augmenting_replicator_sets_only_queries_the_database_once()
+    {
+        \Statamic\Facades\Collection::make('pages')->save();
+
+        $author = Author::factory()->create();
+        $posts = Post::factory()->count(6)->create(['author_id' => $author->id]);
+
+        $entry = Entry::make()->collection('pages')->slug('test')->data([
+            'tooltips' => $posts->chunk(2)->values()->map(fn ($chunk, $index) => [
+                'id' => "set-{$index}",
+                'type' => 'tooltip',
+                'posts' => $chunk->pluck('id')->all(),
+            ])->all(),
+        ]);
+
+        DB::enableQueryLog();
+
+        foreach ($entry->augmentedValue('tooltips')->value() as $tooltip) {
+            $tooltip['posts'];
+        }
+
+        $postQueries = collect(DB::getQueryLog())
+            ->filter(fn ($query) => str_contains($query['query'], 'posts'));
+
+        DB::disableQueryLog();
+
+        $this->assertCount(1, $postQueries);
+    }
+
+    #[Test]
     public function augmenting_an_id_that_is_already_blink_cached_does_not_requery()
     {
         $author = Author::factory()->create();

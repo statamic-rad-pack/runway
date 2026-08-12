@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
+use Statamic\Contracts\Data\Augmentable;
 use Statamic\CP\Column;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Scope;
@@ -363,6 +364,14 @@ abstract class BaseFieldtype extends Relationship
             ->values();
 
         if ($idsToFetch->isNotEmpty()) {
+            // Sets in a replicator (or rows in a grid, etc.) are augmented one at a time, so
+            // fetch the ids used by the sibling sets too, rather than querying for each one.
+            $idsToFetch = $idsToFetch
+                ->merge($this->siblingIds())
+                ->reject(fn ($id) => Blink::has($blinkKey($id)))
+                ->unique()
+                ->values();
+
             $resource->newEloquentQuery()
                 ->when(
                     $this->config('with'),
@@ -378,6 +387,29 @@ abstract class BaseFieldtype extends Relationship
             ->map(fn ($model) => $model instanceof Model ? $model : Blink::get($blinkKey($model)))
             ->when($resource->hasPublishStates(), fn ($collection) => $collection->filter(fn ($model) => $model?->published()))
             ->filter();
+    }
+
+    private function siblingIds(): Collection
+    {
+        $field = $this->field;
+        $parent = $field?->parent();
+
+        if (! $field?->parentField() || ! $parent instanceof Augmentable) {
+            return collect();
+        }
+
+        [$rootHandle] = $field->handlePath();
+        $handle = $field->handle();
+
+        $ids = function ($value) use (&$ids, $handle) {
+            return collect($value)->flatMap(fn ($item, $key) => match (true) {
+                $key === $handle => collect(Arr::wrap($item))->filter(fn ($id) => is_string($id) || is_int($id)),
+                is_array($item) => $ids($item),
+                default => [],
+            });
+        };
+
+        return $ids($parent->augmentedValue($rootHandle)->raw())->unique()->values();
     }
 
     protected function getColumns()
