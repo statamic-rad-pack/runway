@@ -6,11 +6,15 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blink;
+use Statamic\Facades\Collection as CollectionFacade;
+use Statamic\Facades\Entry;
 use Statamic\Facades\User;
 use Statamic\Fields\Field;
 use Statamic\Http\Requests\FilteredRequest;
+use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
@@ -19,7 +23,7 @@ use StatamicRadPack\Runway\Tests\TestCase;
 
 class BelongsToFieldtypeTest extends TestCase
 {
-    use WithFaker;
+    use PreventsSavingStacheItemsToDisk, WithFaker;
 
     protected BelongsToFieldtype $fieldtype;
 
@@ -262,6 +266,66 @@ class BelongsToFieldtypeTest extends TestCase
         $this->assertIsArray($augment);
         $this->assertEquals($author->id, $augment['id']->value());
         $this->assertEquals($author->name, $augment['name']->value());
+    }
+
+    #[Test]
+    public function augmenting_replicator_sets_only_queries_the_database_once()
+    {
+        CollectionFacade::make('pages')->save();
+
+        $authors = Author::factory()->count(5)->create();
+
+        $entry = Entry::make()->collection('pages')->slug('test')->data([
+            'tooltips' => $authors->map(fn ($author, $index) => [
+                'id' => "set-{$index}",
+                'type' => 'tooltip',
+                'author' => $author->id,
+            ])->all(),
+        ]);
+
+        DB::enableQueryLog();
+
+        foreach ($entry->augmentedValue('tooltips')->value() as $tooltip) {
+            $tooltip['author'];
+        }
+
+        $authorQueries = collect(DB::getQueryLog())
+            ->filter(fn ($query) => str_contains($query['query'], 'authors'));
+
+        DB::disableQueryLog();
+
+        $this->assertCount(1, $authorQueries);
+    }
+
+    #[Test]
+    public function augmenting_grid_rows_nested_in_replicator_sets_only_queries_the_database_once()
+    {
+        CollectionFacade::make('pages')->save();
+
+        $authors = Author::factory()->count(5)->create();
+
+        $entry = Entry::make()->collection('pages')->slug('test')->data([
+            'tooltips' => $authors->map(fn ($author, $index) => [
+                'id' => "set-{$index}",
+                'type' => 'tooltip',
+                'rows' => [['id' => "row-{$index}", 'author' => $author->id]],
+            ])->all(),
+        ]);
+
+        DB::enableQueryLog();
+
+        foreach ($entry->augmentedValue('tooltips')->value() as $tooltip) {
+            foreach ($tooltip['rows'] as $row) {
+                $row['author'];
+            }
+        }
+
+        $authorQueries = collect(DB::getQueryLog())
+            ->filter(fn ($query) => str_contains($query['query'], 'authors'));
+
+        DB::disableQueryLog();
+
+        $this->assertCount(1, $authorQueries);
     }
 
     #[Test]
