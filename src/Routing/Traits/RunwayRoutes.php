@@ -85,7 +85,7 @@ trait RunwayRoutes
             }
 
             $uri = Antlers::parser()
-                ->parse($resource->route(), $model->toAugmentedArray())
+                ->parse($resource->route(), $model->toDeferredAugmentedArray())
                 ->__toString();
 
             $uri = Str::start($uri, '/');

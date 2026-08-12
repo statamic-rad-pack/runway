@@ -83,7 +83,7 @@ class RebuildUriCache extends Command
                     steps: $query->get(),
                     callback: function ($model) use ($resource) {
                         $uri = Antlers::parser()
-                            ->parse($resource->route(), $model->toAugmentedArray())
+                            ->parse($resource->route(), $model->toDeferredAugmentedArray())
                             ->__toString();
 
                         $uri = Str::start($uri, '/');

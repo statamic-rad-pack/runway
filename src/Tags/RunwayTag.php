@@ -165,7 +165,7 @@ class RunwayTag extends Tags
         return collect($query)
             ->map(function ($model, $key) {
                 return Blink::once("Runway::Tag::AugmentModels::{$this->resource->handle()}::{$model->{$this->resource->primaryKey()}}", function () use ($model) {
-                    return $model->toAugmentedArray();
+                    return $model->toDeferredAugmentedArray();
                 });
             })
             ->toArray();
