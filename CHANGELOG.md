@@ -1,5 +1,16 @@
 # Changelog
 
+## v9.6.2 (2026-08-12)
+
+### What's fixed
+- Fix N+1 queries when augmenting relationships inside nested fields [#848](https://github.com/statamic-rad-pack/runway/pull/848) by @duncanmcclean
+- Fix N+1 queries when augmenting relationships [#843](https://github.com/statamic-rad-pack/runway/pull/843) by @duncanmcclean
+- Bump the github-actions group with 2 updates [#841](https://github.com/statamic-rad-pack/runway/pull/841) by @dependabot
+- Bump zizmorcore/zizmor-action from 0.6.0 to 0.6.1 in the github-actions group [#845](https://github.com/statamic-rad-pack/runway/pull/845) by @dependabot
+- Bump zizmorcore/zizmor-action from 0.6.1 to 0.6.2 in the github-actions group [#846](https://github.com/statamic-rad-pack/runway/pull/846) by @dependabot
+
+
+
 ## v9.6.1 (2026-07-23)
 
 ### What's fixed
