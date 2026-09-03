@@ -42,4 +42,16 @@ return [
 
     'disable_migrations' => false,
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Disable Static Warm?
+    |--------------------------------------------------------------------------
+    |
+    | Should Runway's uris be automatically warmed when running `php please static:warm`
+    |
+    */
+
+    'disable_static_warm' => false,
+
 ];
