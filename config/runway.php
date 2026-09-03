@@ -42,7 +42,6 @@ return [
 
     'disable_migrations' => false,
 
-
     /*
     |--------------------------------------------------------------------------
     | Disable Static Warm?
