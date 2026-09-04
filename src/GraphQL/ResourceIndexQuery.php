@@ -66,7 +66,7 @@ class ResourceIndexQuery extends Query
     protected function sortQuery($query, $sorts): void
     {
         if (empty($sorts)) {
-            $sorts = ['id'];
+            $sorts = ["{$this->resource->orderBy()} {$this->resource->orderByDirection()}"];
         }
 
         foreach ($sorts as $sort) {
@@ -77,7 +77,7 @@ class ResourceIndexQuery extends Query
             }
 
             if ($sort = OrderBy::column($sort)) {
-                $query = $query->orderBy($sort, $order);
+                $query->runwayOrderBy($sort, $order);
             }
         }
     }

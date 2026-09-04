@@ -35,6 +35,31 @@ class ResourceControllerTest extends TestCase
                 ->has('actionUrl')
                 ->has('sortColumn')
                 ->has('sortDirection')
+                ->where('reorderable', false)
+                ->has('reorderUrl')
+            );
+    }
+
+    #[Test]
+    public function model_index_is_reorderable_when_resource_is_orderable()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.orderable', true);
+
+        Runway::discoverResources();
+
+        Post::factory()->count(2)->create();
+        $user = User::make()->makeSuper()->save();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.index', ['resource' => 'post']))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('runway::Index')
+                ->where('sortColumn', 'order')
+                ->where('sortDirection', 'asc')
+                ->where('reorderable', true)
+                ->where('reorderUrl', 'http://localhost/cp/runway/post/reorder')
             );
     }
 

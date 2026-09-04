@@ -138,13 +138,26 @@ class Resource
         return $this->config->get('duplicatable', true);
     }
 
+    public function orderable(): bool
+    {
+        return (bool) $this->config->get('orderable', false);
+    }
+
     public function orderBy(): string
     {
+        if ($this->orderable()) {
+            return 'order';
+        }
+
         return $this->config->get('order_by', $this->primaryKey());
     }
 
     public function orderByDirection(): string
     {
+        if ($this->orderable()) {
+            return 'asc';
+        }
+
         return $this->config->get('order_by_direction', 'asc');
     }
 

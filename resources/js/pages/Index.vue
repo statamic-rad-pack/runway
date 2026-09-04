@@ -12,7 +12,7 @@ import {
     Listing,
     StatusIndicator,
 } from '@statamic/cms/ui'
-import { ref } from 'vue';
+import { getCurrentInstance, onBeforeUnmount, onMounted, ref } from 'vue';
 
 const props = defineProps({
     icon: { type: String, required: true },
@@ -32,19 +32,59 @@ const props = defineProps({
     canEditBlueprint: { type: Boolean, required: true },
     hasPublishStates: { type: Boolean, required: true },
     titleColumn: { type: String, required: true },
+    reorderable: { type: Boolean, required: true },
+    reorderUrl: { type: String, required: true },
 });
+
+const { $axios, $toast, $keys } = getCurrentInstance().appContext.config.globalProperties;
 
 const preferencesPrefix = ref(`runway.${props.resource}`);
 const requestUrl = ref(cp_url(`runway/${props.resource}/listing-api`));
 const items = ref(null);
 const page = ref(null);
 const perPage = ref(null);
+const reordering = ref(false);
+
+let saveKeyBinding = null;
 
 function requestComplete({ items: newItems, parameters }) {
     items.value = newItems;
     page.value = parameters.page;
     perPage.value = parameters.perPage;
 }
+
+function reordered(newItems) {
+    items.value = newItems;
+}
+
+function saveOrder() {
+    const payload = {
+        ids: items.value.map((item) => item.id),
+        page: page.value,
+        perPage: perPage.value,
+    };
+
+    $axios
+        .post(props.reorderUrl, payload)
+        .then(() => {
+            reordering.value = false;
+            $toast.success(__('Order saved'));
+        })
+        .catch((e) => {
+            $toast.error(e.response?.data?.message || __('Something went wrong'));
+        });
+}
+
+onMounted(() => {
+    saveKeyBinding = $keys.bindGlobal(['mod+s'], (e) => {
+        if (reordering.value) {
+            e.preventDefault();
+            saveOrder();
+        }
+    });
+});
+
+onBeforeUnmount(() => saveKeyBinding.destroy());
 </script>
 
 <template>
@@ -80,7 +120,16 @@ function requestComplete({ items: newItems, parameters }) {
                 </Dropdown>
             </ItemActions>
 
-            <Button v-if="canCreate" variant="primary" :text="createLabel" :href="createUrl" />
+            <template v-if="reorderable">
+                <Button v-if="!reordering" :text="__('Reorder')" @click="reordering = true" />
+
+                <template v-if="reordering">
+                    <Button :text="__('Cancel')" @click="reordering = false" />
+                    <Button variant="primary" :text="__('Save Order')" @click="saveOrder" />
+                </template>
+            </template>
+
+            <Button v-if="canCreate && !reordering" variant="primary" :text="createLabel" :href="createUrl" />
         </Header>
 
         <Listing
@@ -93,8 +142,10 @@ function requestComplete({ items: newItems, parameters }) {
             :action-context="{ resource }"
             :preferences-prefix
             :filters
+            :reorderable="reordering"
             push-query
             @request-completed="requestComplete"
+            @reordered="reordered"
         >
             <template v-slot:[`cell-${titleColumn}`]="{ row: model, isColumnVisible }">
                 <Link class="title-index-field" :href="model.edit_url" @click.stop>

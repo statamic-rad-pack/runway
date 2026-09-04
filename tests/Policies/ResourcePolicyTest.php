@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Tests\Policies;
 
+use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Role;
 use Statamic\Facades\User;
@@ -106,5 +107,46 @@ class ResourcePolicyTest extends TestCase
         $user = User::make()->assignRole('test')->save();
 
         $this->assertTrue($user->can('delete', [$resource, new Post]));
+    }
+
+    #[Test]
+    public function can_reorder_resource()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.orderable', true);
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        Role::make('test')->addPermission('reorder post')->save();
+        $user = User::make()->assignRole('test')->save();
+
+        $this->assertTrue($user->can('reorder', $resource));
+    }
+
+    #[Test]
+    public function cant_reorder_resource_without_permission()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.orderable', true);
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        Role::make('test')->addPermission('edit post')->save();
+        $user = User::make()->assignRole('test')->save();
+
+        $this->assertFalse($user->can('reorder', $resource));
+    }
+
+    #[Test]
+    public function cant_reorder_resource_when_resource_isnt_orderable()
+    {
+        $resource = Runway::findResource('post');
+
+        Role::make('test')->addPermission('reorder post')->save();
+        $user = User::make()->assignRole('test')->save();
+
+        $this->assertFalse($user->can('reorder', $resource));
     }
 }

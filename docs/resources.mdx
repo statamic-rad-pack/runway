@@ -139,6 +139,33 @@ Sometimes you may want to change the order that your models are returned in the 
 ],
 ```
 
+### Reordering
+
+If you'd rather arrange models by hand, you can make a resource "orderable". Much like an orderable collection, users can drag & drop models into the order they want in the Control Panel listing.
+
+```php
+'resources' => [
+	\App\Models\Manufacturer::class => [
+	    'name' => 'Manufacturers',
+        'orderable' => true,
+	],
+],
+```
+
+Runway keeps track of the order in its own `runway_structures` table, so you don't need to add a column to your model's table. Make sure you've run `php artisan migrate` after updating Runway. If you wish to change the name of the table, you may do so via the `tables.structures` option in the `runway.php` configuration file.
+
+<Note>
+If you've set `disable_migrations` to `true` in your `runway.php` configuration file, Runway won't run this migration for you. You'll need to create the `runway_structures` table yourself, using [Runway's migration](https://github.com/statamic-rad-pack/runway/blob/9.x/database/migrations/2026_09_04_000000_create_runway_structures_table.php) as a reference.
+</Note>
+
+When a resource is orderable, the `order_by` and `order_by_direction` options are ignored. Models will be returned in the manually defined order by the Control Panel listing, the `{{ runway }}` tag and the GraphQL API. You can also sort by `order` explicitly:
+
+```antlers
+{{ runway:manufacturer sort="order:desc" }}
+```
+
+Users need the "Reorder" permission for the resource to be able to change the order. Models created before a resource was made orderable, or created outside of Runway, are placed at the end of the list until the order is next saved.
+
 ### Title field
 
 When Runway displays models inside inside the Control Panel (eg. in relationship fields, in search), it'll default to showing the first listable field it can find, based on your blueprint.

@@ -216,7 +216,15 @@ abstract class BaseFieldtype extends Relationship
                     $query->reorder($this->resource()->model()->getFieldColumn($sortColumn), $request->input('order'));
                 }
             }
-        }, fn ($query) => $query->orderBy($this->resource()->orderBy(), $this->resource()->orderByDirection()));
+        }, function ($query) {
+            if ($query instanceof Builder) {
+                $query->runwayOrderBy($this->resource()->orderBy(), $this->resource()->orderByDirection());
+
+                return;
+            }
+
+            $query->orderBy($this->resource()->orderBy(), $this->resource()->orderByDirection());
+        });
     }
 
     protected function getIndexQuery(FilteredRequest $request): Builder|SearchQueryBuilder
