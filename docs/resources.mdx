@@ -160,9 +160,15 @@ If you've set `disable_migrations` to `true` in your `runway.php` configuration 
 
 When a resource is orderable, the `order_by` and `order_by_direction` options are ignored. Models will be returned in the manually defined order by the Control Panel listing, the `{{ runway }}` tag and the GraphQL API. You can also sort by `order` explicitly:
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:manufacturer sort="order:desc" }}
 ```
+
+```blade Blade
+<s:runway:manufacturer sort="order:desc">
+```
+</CodeGroup>
 
 Users need the "Reorder" permission for the resource to be able to change the order. Models created before a resource was made orderable, or created outside of Runway, are placed at the end of the list until the order is next saved.
 

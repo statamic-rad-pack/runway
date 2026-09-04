@@ -39,12 +39,21 @@ return [
 
 In addition to front-end routing, you may also use Runway's tag to loop through your models and display the results. The tag supports filtering, using Eloquent scopes and sorting.
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:product }}
     <h2>{{ name }}</h2>
     <p>Price: {{ price }}</p>
 {{ /runway:product }}
 ```
+
+```blade Blade
+<s:runway:product>
+    <h2>{{ $name }}</h2>
+    <p>Price: {{ $price }}</p>
+</s:runway:product>
+```
+</CodeGroup>
 
 -   [Review documentation](https://runway.duncanmcclean.com/templating)
 
