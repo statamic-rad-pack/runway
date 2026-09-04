@@ -29,7 +29,7 @@ class Fields extends BaseFieldsFilter
                 $filter = $field->fieldtype()->filter();
                 $values = $filter->fields()->addValues($values[$field->handle()])->process()->values();
 
-                $filter->apply($query, $resource->model()->getColumnForField($field->handle()), $values);
+                $filter->apply($query, $resource->model()->getFieldColumn($field->handle()), $values);
             });
     }
 

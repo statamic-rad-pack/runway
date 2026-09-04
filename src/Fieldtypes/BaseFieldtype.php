@@ -212,7 +212,7 @@ abstract class BaseFieldtype extends Relationship
                 $sortColumn = $orderBy === 'title' ? $this->resource()->titleField() : $orderBy;
 
                 if ($sortColumn) {
-                    $query->reorder($this->resource()->model()->getColumnForField($sortColumn), $request->input('order'));
+                    $query->reorder($this->resource()->model()->getFieldColumn($sortColumn), $request->input('order'));
                 }
             }
         }, fn ($query) => $query->orderBy($this->resource()->orderBy(), $this->resource()->orderByDirection()));

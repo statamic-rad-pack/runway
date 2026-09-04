@@ -91,7 +91,7 @@ class DuplicateModel extends Action
             return null;
         }
 
-        $column = $resource->model()->getColumnForField($titleField);
+        $column = $resource->model()->getFieldColumn($titleField);
 
         return in_array(Str::before($column, '->'), $resource->databaseColumns()) ? $column : null;
     }

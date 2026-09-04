@@ -176,7 +176,7 @@ trait PreparesModels
                     return;
                 }
 
-                $model->setAttribute($model->getColumnForField($field->handle()), $processedValue);
+                $model->setAttribute($model->getFieldColumn($field->handle()), $processedValue);
             });
     }
 
