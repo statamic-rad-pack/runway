@@ -50,9 +50,9 @@ class Post extends Model
         }
     }
 
-    public function scopeRunwayLinks($query)
+    public function scopeRunwayLinkFieldtype($query)
     {
-        if ($params = Blink::get('RunwayLinksScopeWhere')) {
+        if ($params = Blink::get('RunwayLinkFieldtypeScopeWhere')) {
             $query->where($params[0], $params[1]);
         }
     }

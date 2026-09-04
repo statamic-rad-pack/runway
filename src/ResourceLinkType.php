@@ -26,8 +26,8 @@ class ResourceLinkType extends LinkType
 
         return $resource->newEloquentQuery()
             ->when(
-                $resource->model()->hasNamedScope('runwayLinks'),
-                fn ($query) => $query->runwayLinks()
+                $resource->model()->hasNamedScope('runwayLinkFieldtype'),
+                fn ($query) => $query->runwayLinkFieldtype()
             )
             ->firstWhere($resource->qualifiedPrimaryKey(), $id);
     }

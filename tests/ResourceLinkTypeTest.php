@@ -74,12 +74,12 @@ class ResourceLinkTypeTest extends TestCase
     }
 
     #[Test]
-    public function it_applies_the_runway_links_scope_when_resolving()
+    public function it_applies_the_runway_link_fieldtype_scope_when_resolving()
     {
         $published = Post::factory()->createQuietly();
         $unpublished = Post::factory()->unpublished()->createQuietly();
 
-        Blink::put('RunwayLinksScopeWhere', ['published', true]);
+        Blink::put('RunwayLinkFieldtypeScopeWhere', ['published', true]);
 
         $this->assertTrue(Link::resolveType('runway_post')->resolve($published->id)->is($published));
         $this->assertNull(Link::resolveType('runway_post')->resolve($unpublished->id));
