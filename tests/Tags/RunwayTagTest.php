@@ -305,6 +305,47 @@ class RunwayTagTest extends TestCase
     }
 
     #[Test]
+    public function models_are_ordered_by_structure_when_resource_is_orderable()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.orderable', true);
+
+        Runway::discoverResources();
+
+        $posts = Post::factory()->count(3)->create();
+
+        $posts[0]->runwayStructure()->update(['order' => 3]);
+        $posts[2]->runwayStructure()->update(['order' => 1]);
+
+        $this->tag->setParameters([]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertEquals($posts[2]->id, $usage[0]['id']->value());
+        $this->assertEquals($posts[1]->id, $usage[1]['id']->value());
+        $this->assertEquals($posts[0]->id, $usage[2]['id']->value());
+    }
+
+    #[Test]
+    public function can_get_models_with_sort_parameter_on_order()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.orderable', true);
+
+        Runway::discoverResources();
+
+        $posts = Post::factory()->count(3)->create();
+
+        $this->tag->setParameters([
+            'sort' => 'order:desc',
+        ]);
+
+        $usage = $this->tag->wildcard('post');
+
+        $this->assertEquals($posts[2]->id, $usage[0]['id']->value());
+        $this->assertEquals($posts[1]->id, $usage[1]['id']->value());
+        $this->assertEquals($posts[0]->id, $usage[2]['id']->value());
+    }
+
+    #[Test]
     public function can_get_models_with_scoping()
     {
         $posts = Post::factory()->count(2)->create();

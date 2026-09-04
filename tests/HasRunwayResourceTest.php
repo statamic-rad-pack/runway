@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\Test;
 use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Structures\RunwayStructure;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\ExternalPost;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 
@@ -89,5 +90,41 @@ class HasRunwayResourceTest extends TestCase
 
         $this->assertCount(1, $results);
         $this->assertEquals('Test External Post', $results->first()->title);
+    }
+
+    #[Test]
+    public function structure_is_created_when_model_of_orderable_resource_is_created()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.orderable', true);
+
+        Runway::discoverResources();
+
+        $posts = Post::factory()->count(3)->create();
+
+        $this->assertEquals(1, $posts[0]->runwayStructure->order);
+        $this->assertEquals(2, $posts[1]->runwayStructure->order);
+        $this->assertEquals(3, $posts[2]->runwayStructure->order);
+    }
+
+    #[Test]
+    public function structure_isnt_created_when_resource_isnt_orderable()
+    {
+        Post::factory()->count(2)->create();
+
+        $this->assertDatabaseEmpty(RunwayStructure::class);
+    }
+
+    #[Test]
+    public function structure_is_deleted_when_model_of_orderable_resource_is_deleted()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.orderable', true);
+
+        Runway::discoverResources();
+
+        $post = Post::factory()->create();
+
+        $post->delete();
+
+        $this->assertDatabaseEmpty(RunwayStructure::class);
     }
 }

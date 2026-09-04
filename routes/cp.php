@@ -5,6 +5,7 @@ use StatamicRadPack\Runway\Http\Controllers\CP\ModelActionController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ModelPreviewController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ModelRevisionsController;
 use StatamicRadPack\Runway\Http\Controllers\CP\PublishedModelsController;
+use StatamicRadPack\Runway\Http\Controllers\CP\ReorderModelsController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceActionController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceController;
 use StatamicRadPack\Runway\Http\Controllers\CP\ResourceListingController;
@@ -15,6 +16,7 @@ Route::name('runway.')->prefix('runway')->group(function () {
     Route::get('{resource}/listing-api', [ResourceListingController::class, 'index'])->name('listing-api');
 
     Route::post('{resource}/actions', [ResourceActionController::class, 'run'])->name('actions.run');
+    Route::post('{resource}/reorder', ReorderModelsController::class)->name('reorder');
 
     Route::post('{resource}/models/actions', [ModelActionController::class, 'runAction'])->name('models.actions.run');
     Route::post('{resource}/models/actions/list', [ModelActionController::class, 'bulkActionsList'])->name('models.actions.bulk');

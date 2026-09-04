@@ -337,4 +337,29 @@ class ResourceTest extends TestCase
 
         $this->assertFalse($resource->revisionsEnabled());
     }
+
+    #[Test]
+    public function orderable_resource_is_ordered_by_order_ascending()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.orderable', true);
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.order_by', 'title');
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.order_by_direction', 'desc');
+
+        Runway::discoverResources();
+
+        $resource = Runway::findResource('post');
+
+        $this->assertTrue($resource->orderable());
+        $this->assertEquals('order', $resource->orderBy());
+        $this->assertEquals('asc', $resource->orderByDirection());
+    }
+
+    #[Test]
+    public function resource_isnt_orderable_by_default()
+    {
+        $resource = Runway::findResource('post');
+
+        $this->assertFalse($resource->orderable());
+        $this->assertEquals('id', $resource->orderBy());
+    }
 }

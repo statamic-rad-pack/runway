@@ -48,6 +48,10 @@ class Post extends Model
         if ($params = Blink::get('RunwayListingScopeOrderBy')) {
             $query->orderBy($params[0], $params[1]);
         }
+
+        if ($ids = Blink::get('RunwayListingScopeWhereIn')) {
+            $query->whereIn('id', $ids);
+        }
     }
 
     public function author()

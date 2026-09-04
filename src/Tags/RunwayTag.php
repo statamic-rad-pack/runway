@@ -124,8 +124,10 @@ class RunwayTag extends Tags
             }
 
             if ($sortColumn = OrderBy::column($sortColumn)) {
-                $query->orderBy($this->resource->model()->getFieldColumn($sortColumn), $sortDirection);
+                $query->runwayOrderBy($sortColumn, $sortDirection);
             }
+        } elseif ($this->resource->orderable()) {
+            $query->runwayOrderBy('order');
         }
 
         return $query;

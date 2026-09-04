@@ -147,6 +147,11 @@ class ServiceProvider extends AddonServiceProvider
                                             ->label($this->permissionLabel('publish', $resource))
                                         : null,
 
+                                    $resource->orderable()
+                                        ? Permission::make("reorder {$resource->handle()}")
+                                            ->label($this->permissionLabel('reorder', $resource))
+                                        : null,
+
                                     Permission::make("delete {$resource->handle()}")
                                         ->label($this->permissionLabel('delete', $resource)),
                                 ])),
@@ -338,6 +343,7 @@ class ServiceProvider extends AddonServiceProvider
                 'edit' => "Edit {$resource->name()}",
                 'create' => "Create {$resource->name()}",
                 'publish' => "Manage {$resource->name()} Publish State",
+                'reorder' => "Reorder {$resource->name()}",
                 'delete' => "Delete {$resource->name()}"
             };
         }

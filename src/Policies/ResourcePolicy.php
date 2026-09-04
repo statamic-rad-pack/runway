@@ -41,4 +41,10 @@ class ResourcePolicy
     {
         return User::fromUser($user)->hasPermission("publish {$resource->handle()}");
     }
+
+    public function reorder($user, Resource $resource)
+    {
+        return $resource->orderable()
+            && User::fromUser($user)->hasPermission("reorder {$resource->handle()}");
+    }
 }

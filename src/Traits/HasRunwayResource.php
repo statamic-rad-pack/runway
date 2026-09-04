@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Traits;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Str;
 use Statamic\Contracts\Data\Augmented;
 use Statamic\Contracts\Revisions\Revision;
@@ -20,7 +21,9 @@ use StatamicRadPack\Runway\Data\HasAugmentedInstance;
 use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 use StatamicRadPack\Runway\Relationships;
 use StatamicRadPack\Runway\Resource;
+use StatamicRadPack\Runway\Routing\MorphOneWithStringKey;
 use StatamicRadPack\Runway\Runway;
+use StatamicRadPack\Runway\Structures\RunwayStructure;
 
 trait HasRunwayResource
 {
@@ -30,6 +33,26 @@ trait HasRunwayResource
     }
 
     public array $runwayRelationships = [];
+
+    public static function bootHasRunwayResource(): void
+    {
+        static::created(function ($model) {
+            if ($model->runwayResource()->orderable()) {
+                $model->runwayStructure()->create(['order' => RunwayStructure::nextOrderFor($model)]);
+            }
+        });
+
+        static::deleting(function ($model) {
+            if ($model->runwayResource()->orderable()) {
+                $model->runwayStructure()->delete();
+            }
+        });
+    }
+
+    public function runwayStructure(): MorphOneWithStringKey
+    {
+        return new MorphOneWithStringKey(RunwayStructure::query(), $this, 'model_type', 'model_id', $this->getKeyName());
+    }
 
     public function newAugmentedInstance(): Augmented
     {
@@ -71,6 +94,44 @@ trait HasRunwayResource
             })
             ->reject(fn (Field $field) => $field->visibility() === 'computed')
             ->each(fn (Field $field) => $query->orWhere($this->getFieldColumn($field->handle()), 'LIKE', '%'.$searchQuery.'%'));
+    }
+
+    public function scopeRunwayOrderBy(Builder $query, string $field, string $direction = 'asc'): void
+    {
+        if ($field === 'order' && $this->runwayResource()->orderable()) {
+            $this->orderByRunwayStructure($query, $direction);
+
+            return;
+        }
+
+        $query->orderBy($this->getFieldColumn($field), $direction);
+    }
+
+    private function orderByRunwayStructure(Builder $query, string $direction): void
+    {
+        $structureOrder = RunwayStructure::query()
+            ->select('order')
+            ->where('model_type', $this->getMorphClass())
+            ->whereColumn('model_id', '=', $this->keyCastToString($query))
+            ->toBase();
+
+        $query
+            ->orderByRaw("({$structureOrder->toSql()}) is null", $structureOrder->getBindings())
+            ->orderBy($structureOrder, $direction)
+            ->orderBy($this->getQualifiedKeyName());
+    }
+
+    private function keyCastToString(Builder $query): Expression
+    {
+        $key = $query->getGrammar()->wrap($this->getQualifiedKeyName());
+
+        $type = match ($query->getConnection()->getDriverName()) {
+            'pgsql', 'sqlite' => 'text',
+            'sqlsrv' => 'nvarchar(36)',
+            default => 'char',
+        };
+
+        return new Expression("cast({$key} as {$type})");
     }
 
     public function publishedStatus(): ?string

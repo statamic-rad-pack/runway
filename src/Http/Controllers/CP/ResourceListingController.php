@@ -33,12 +33,13 @@ class ResourceListingController extends CpController
         $query = $this->applySearch($resource, $query, $searchQuery);
 
         $sortColumn = OrderBy::column($request->input('sort'), $resource->orderBy());
+        $sortDirection = $request->input('order', $resource->orderByDirection());
 
-        $query->when(method_exists($query, 'getQuery') && $query->getQuery()->orders, function ($query) use ($request, $resource, $sortColumn) {
-            if ($request->input('sort') && $sortColumn) {
-                $query->reorder($resource->model()->getFieldColumn($sortColumn), $request->input('order'));
-            }
-        }, fn ($query) => $query->orderBy($resource->model()->getFieldColumn($sortColumn), $request->input('order', $resource->orderByDirection())));
+        if (! $query instanceof Builder) {
+            $query->orderBy($sortColumn, $sortDirection);
+        } elseif ($request->input('sort') || empty($query->getQuery()->orders)) {
+            $query->reorder()->runwayOrderBy($sortColumn, $sortDirection);
+        }
 
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
             'resource' => $resource->handle(),

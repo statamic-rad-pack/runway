@@ -85,6 +85,58 @@ class ResourceListingControllerTest extends TestCase
     }
 
     #[Test]
+    public function listing_rows_are_ordered_by_structure_when_resource_is_orderable()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.orderable', true);
+
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+        $posts = Post::factory()->count(3)->create();
+
+        $posts[0]->runwayStructure()->update(['order' => 2]);
+        $posts[1]->runwayStructure()->update(['order' => 1]);
+        $posts[2]->runwayStructure()->delete();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.listing-api', ['resource' => 'post']))
+            ->assertOk()
+            ->assertJson([
+                'data' => [
+                    ['id' => $posts[1]->id],
+                    ['id' => $posts[0]->id],
+                    ['id' => $posts[2]->id],
+                ],
+            ]);
+    }
+
+    #[Test]
+    public function listing_rows_can_be_sorted_by_order_when_resource_is_orderable()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.orderable', true);
+
+        Runway::discoverResources();
+
+        $user = User::make()->makeSuper()->save();
+        $posts = Post::factory()->count(3)->create();
+
+        Blink::put('RunwayListingScopeOrderBy', ['id', 'desc']);
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.listing-api', ['resource' => 'post', 'sort' => 'order', 'order' => 'asc']))
+            ->assertOk()
+            ->assertJson([
+                'data' => [
+                    ['id' => $posts[0]->id],
+                    ['id' => $posts[1]->id],
+                    ['id' => $posts[2]->id],
+                ],
+            ]);
+    }
+
+    #[Test]
     public function listing_rows_are_ordered_from_runway_listing_scope()
     {
         $user = User::make()->makeSuper()->save();

@@ -58,6 +58,8 @@ class ResourceController extends CpController
             'canEditBlueprint' => User::current()->can('configure fields'),
             'hasPublishStates' => $resource->hasPublishStates(),
             'titleColumn' => $this->getTitleColumn($resource),
+            'reorderable' => $resource->orderable() && User::current()->can('reorder', $resource),
+            'reorderUrl' => cp_route('runway.reorder', ['resource' => $resource->handle()]),
         ]);
     }
 
