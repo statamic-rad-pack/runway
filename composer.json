@@ -33,17 +33,12 @@
             "providers": [
                 "StatamicRadPack\\Runway\\ServiceProvider"
             ]
-        },
-        "download-dist": {
-            "url": "https://github.com/statamic-rad-pack/runway/releases/download/{$version}/dist.tar.gz",
-            "path": "dist"
         }
     },
     "require": {
         "php": "^8.3",
         "ajthinking/archetype": "^1.0.3 || ^2.0",
         "laravel/framework": "^12.0 || ^13.0",
-        "pixelfear/composer-dist-plugin": "^0.1.5",
         "spatie/error-solutions": "^1.0 || ^2.0",
         "spatie/invade": "^2.1",
         "statamic/cms": "^6.26",
@@ -62,7 +57,6 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pixelfear/composer-dist-plugin": true,
             "composer/package-versions-deprecated": true
         }
     },

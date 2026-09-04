@@ -4,3 +4,4 @@
 /tests export-ignore
 /logo-dark.svg export-ignore
 /logo-default.svg export-ignore
+/dist/**/* linguist-generated=true
