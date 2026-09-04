@@ -1,0 +1,8 @@
+{
+  "resources/js/cp.js": {
+    "file": "assets/cp-BanPwfNp.js",
+    "name": "cp",
+    "src": "resources/js/cp.js",
+    "isEntry": true
+  }
+}
