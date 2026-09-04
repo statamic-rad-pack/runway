@@ -16,6 +16,6 @@ class RunwayUri extends Model
 
     public function getTable()
     {
-        return config('runway.uris_table', 'runway_uris');
+        return config('runway.uris_table') ?? config('runway.tables.uris', 'runway_uris');
     }
 }
