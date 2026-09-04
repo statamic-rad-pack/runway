@@ -39,9 +39,15 @@ You should make sure that the field handle matches the column name in the databa
 
 In Antlers, you can access any of the fields on the model. They'll be [augmented](https://statamic.dev/extending/augmentation) using the resource's blueprint.
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 Written by {{ author:first_name }} {{ author:last_name }} ({{ author:location }})
 ```
+
+```blade Blade
+Written by {{ $author->first_name }} {{ $author->last_name }} ({{ $author->location }})
+```
+</CodeGroup>
 
 ### Options
 
@@ -91,13 +97,23 @@ You should ensure that the field handle matches the name of the Eloquent relatio
 
 Loop through the models and do anything you want with the data.
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 <ul>
     {{ related_posts }}
         <li><a href="{{ url }}">{{ title }}</a></li>
     {{ /related_posts }}
 </ul>
 ```
+
+```blade Blade
+<ul>
+    @foreach ($related_posts as $post)
+        <li><a href="{{ $post->url }}">{{ $post->title }}</a></li>
+    @endforeach
+</ul>
+```
+</CodeGroup>
 
 ### Options
 

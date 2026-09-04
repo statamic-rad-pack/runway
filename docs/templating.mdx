@@ -9,12 +9,23 @@ Runway provides a `{{ runway }}` Antlers tag to enable you to get model data for
 
 For example, if you wish to create a listing/index page for a resource, you can use the tag like shown below:
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:post }}
 	<h2>{{ title }}</h2>
 	<p>{{ intro_text }}</p>
 {{ /runway:post }}
 ```
+
+```blade Blade
+<s:runway:post>
+	<h2>{{ $title }}</h2>
+	<p>{{ $intro_text }}</p>
+</s:runway:post>
+```
+</CodeGroup>
+
+<Tip>The Blade examples use Statamic's [Antlers Blade Components](https://statamic.dev/blade#using-antlers-blade-components) feature, which lets you use Runway's tag in Blade views.</Tip>
 
 There’s a bunch of helpful parameters you can use on the tag as well…
 
@@ -22,12 +33,21 @@ There’s a bunch of helpful parameters you can use on the tag as well…
 
 You may use the `sort` parameter to adjust the order of the results.
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:post sort="title:asc" }}
 	<h2>{{ title }}</h2>
 	<p>{{ intro_text }}</p>
 {{ /runway:post }}
 ```
+
+```blade Blade
+<s:runway:post sort="title:asc">
+	<h2>{{ $title }}</h2>
+	<p>{{ $intro_text }}</p>
+</s:runway:post>
+```
+</CodeGroup>
 
 ### Eloquent Scopes
 
@@ -46,72 +66,135 @@ protected function food(Builder $query): void
 }
 ```
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:post query_scope="food" }}
 	<h2>{{ title }}</h2>
 	<p>{{ intro_text }}</p>
 {{ /runway:post }}
 ```
 
+```blade Blade
+<s:runway:post query_scope="food">
+	<h2>{{ $title }}</h2>
+	<p>{{ $intro_text }}</p>
+</s:runway:post>
+```
+</CodeGroup>
+
 If you need to you can provide arguments to the scope like so:
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:post query_scope="food:argument" }}
 ```
+
+```blade Blade
+<s:runway:post query_scope="food:argument">
+```
+</CodeGroup>
 
 In the above example, `argument` can either be a string or we'll grab it from 'the context' (the available variables) if we can find it.
 
 You may also provide multiple scopes, if that's something you need...
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:post query_scope="food:argument|fastfood" }}
 ```
+
+```blade Blade
+<s:runway:post query_scope="food:argument|fastfood">
+```
+</CodeGroup>
 
 ### Filtering
 
 Just like with the collection tag, you may filter your results like so:
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:post where="author_name:duncan" }}
 	<h2>{{ title }}</h2>
 	<p>{{ intro_text }}</p>
 {{ /runway:post }}
 ```
 
+```blade Blade
+<s:runway:post where="author_name:duncan">
+	<h2>{{ $title }}</h2>
+	<p>{{ $intro_text }}</p>
+</s:runway:post>
+```
+</CodeGroup>
+
 You can also query Belongs To / Has Many fields using the `where` parameter. Simply provide the ID(s) of the related models.
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:post where="categories:2" }}
 	<h2>{{ title }}</h2>
 	<p>{{ intro_text }}</p>
 {{ /runway:post }}
 ```
 
+```blade Blade
+<s:runway:post where="categories:2">
+	<h2>{{ $title }}</h2>
+	<p>{{ $intro_text }}</p>
+</s:runway:post>
+```
+</CodeGroup>
+
 You can also use the `where_in` parameter to filter by multiple IDs.
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:post where_in="author_name:duncan,jack" }}
     <h2>{{ title }}</h2>
     <p>{{ intro_text }}</p>
 {{ /runway:post }}
 ```
 
+```blade Blade
+<s:runway:post where_in="author_name:duncan,jack">
+    <h2>{{ $title }}</h2>
+    <p>{{ $intro_text }}</p>
+</s:runway:post>
+```
+</CodeGroup>
+
 ### Eager Loading
 
 If your model has a relationship that you'd like to bring into the template, you may specify the `with` parameter.
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:post with="user" }}
 	<h2>{{ title }}</h2>
 	<p>By {{ user:name }}</p>
 {{ /runway:post }}
 ```
 
+```blade Blade
+<s:runway:post with="user">
+	<h2>{{ $title }}</h2>
+	<p>By {{ $user->name }}</p>
+</s:runway:post>
+```
+</CodeGroup>
+
 You can specify multiple relationships to eager load, just separate with pipes.
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:post with="user|comments" }}
 ```
+
+```blade Blade
+<s:runway:post with="user|comments">
+```
+</CodeGroup>
 
 <Tip>Eager Loading can make a **massive** difference in the speed of your queries.</Tip>
 
@@ -119,18 +202,28 @@ You can specify multiple relationships to eager load, just separate with pipes.
 
 If you only want X number of results returned instead of ALL of them, you may specify a `limit`.
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:post limit="15" }}
 	<h2>{{ title }}</h2>
 	<p>{{ intro_text }}</p>
 {{ /runway:post }}
 ```
 
+```blade Blade
+<s:runway:post limit="15">
+	<h2>{{ $title }}</h2>
+	<p>{{ $intro_text }}</p>
+</s:runway:post>
+```
+</CodeGroup>
+
 ### Scoping
 
 As [with the collection tag](https://statamic.dev/tags/collection#scope), you may use the `as` parameter to scope your results.
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:post as="posts" }}
 	{{ posts }}
 		<h2>{{ title }}</h2>
@@ -139,18 +232,35 @@ As [with the collection tag](https://statamic.dev/tags/collection#scope), you ma
 {{ /runway:post }}
 ```
 
+```blade Blade
+<s:runway:post as="posts">
+	@foreach ($posts as $post)
+		<h2>{{ $post->title }}</h2>
+		<p>{{ $post->intro_text }}</p>
+	@endforeach
+</s:runway:post>
+```
+</CodeGroup>
+
 ### Publish State
 
 By default, when you're using Runway's [Publish States](/resources#publish-states) feature, only published models are included. Models can be queried against `published` or `draft` status with conditions on `status` like this:
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:post status="published" }}
-    {{ posts }}
-        <h2>{{ title }}</h2>
-        <p>{{ intro_text }}</p>
-    {{ /posts }}
+    <h2>{{ title }}</h2>
+    <p>{{ intro_text }}</p>
 {{ /runway:post }}
 ```
+
+```blade Blade
+<s:runway:post status="published">
+    <h2>{{ $title }}</h2>
+    <p>{{ $intro_text }}</p>
+</s:runway:post>
+```
+</CodeGroup>
 
 ### Pagination
 
@@ -158,7 +268,8 @@ If you want to paginate your results onto multiple pages, you can use the `pagin
 
 Using the Runway tag with pagination is a little more complicated but it’s not rocket science.
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:post as="posts" paginate="true" limit="10" }}
     {{ if no_results }}
         <p>Nothing has been posted yet. Sad times.</p>
@@ -166,7 +277,7 @@ Using the Runway tag with pagination is a little more complicated but it’s not
 
     {{ posts }}
         <h2>{{ title }}</h2>
-	<p>{{ intro_text }}</p>
+        <p>{{ intro_text }}</p>
     {{ /posts }}
 
     {{ paginate }}
@@ -183,30 +294,55 @@ Using the Runway tag with pagination is a little more complicated but it’s not
 {{ /runway:post }}
 ```
 
+```blade Blade
+<s:runway:post as="posts" paginate="true" limit="10">
+    @if ($no_results)
+        <p>Nothing has been posted yet. Sad times.</p>
+    @endif
+
+    @foreach ($posts as $post)
+        <h2>{{ $post->title }}</h2>
+        <p>{{ $post->intro_text }}</p>
+    @endforeach
+
+    @if ($paginate['prev_page'])
+        <a href="{{ $paginate['prev_page'] }}">Previous</a>
+    @endif
+
+    <span>Page {{ $paginate['current_page'] }} of {{ $paginate['total_pages'] }}</span>
+
+    @if ($paginate['next_page'])
+        <a href="{{ $paginate['next_page'] }}">Next</a>
+    @endif
+</s:runway:post>
+```
+</CodeGroup>
+
 ## Counts
 
 When you just want to know how many results you have, you can use the `{{ runway:count }}` tag.
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:count from="posts" }}
 ```
 
+```blade Blade
+<s:runway:count from="posts" />
+```
+</CodeGroup>
+
 You can use the `where` parameter to filter the results:
 
-```antlers
+<CodeGroup>
+```antlers Antlers
 {{ runway:count from="posts" where="author_name:duncan" }}
 ```
 
-## Blade
-
-You can even use Runway's tag in Blade views, thanks to Statamic's [Antlers Blade Components](https://statamic.dev/blade#using-antlers-blade-components) feature:
-
-```blade
-<s:runway:post with="author" limit="15" sort="publish_date:desc">
-    <h2>{{ $title }}</h2>
-    <p>{{ $intro_text }}</p>
-</s:runway:post>
+```blade Blade
+<s:runway:count from="posts" where="author_name:duncan" />
 ```
+</CodeGroup>
 
 ## Augmentation
 
