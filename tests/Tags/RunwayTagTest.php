@@ -40,7 +40,7 @@ class RunwayTagTest extends TestCase
         $this->tag->setParameters([]);
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(5, count($usage));
+        $this->assertCount(5, $usage);
 
         $this->assertEquals((string) $usage[0]['title'], $posts[0]->title);
         $this->assertEquals((string) $usage[1]['title'], $posts[1]->title);
@@ -60,7 +60,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(5, count($usage));
+        $this->assertCount(5, $usage);
 
         $this->assertEquals((string) $usage[0]['title']->value(), $posts[0]->title);
         $this->assertEquals((string) $usage[0]['slug']->value(), $posts[0]->slug);
@@ -98,7 +98,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(3, count($usage));
+        $this->assertCount(3, $usage);
         $this->assertEquals((string) $usage[0]['title']->value(), 'Pasta');
         $this->assertEquals((string) $usage[1]['title']->value(), 'Apple');
         $this->assertEquals((string) $usage[2]['title']->value(), 'Burger');
@@ -123,7 +123,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(1, count($usage));
+        $this->assertCount(1, $usage);
         $this->assertEquals((string) $usage[0]['title']->value(), 'Apple');
     }
 
@@ -146,7 +146,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(1, count($usage));
+        $this->assertCount(1, $usage);
         $this->assertEquals((string) $usage[0]['title']->value(), 'Apple');
     }
 
@@ -163,7 +163,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(1, count($usage));
+        $this->assertCount(1, $usage);
         $this->assertEquals((string) $usage[0]['title']->value(), 'penguin');
     }
 
@@ -183,7 +183,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(3, count($usage));
+        $this->assertCount(3, $usage);
         $this->assertEquals((string) $usage[0]['title']->value(), $posts[0]->title);
         $this->assertEquals((string) $usage[1]['title']->value(), $posts[2]->title);
         $this->assertEquals((string) $usage[2]['title']->value(), $posts[3]->title);
@@ -202,7 +202,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(1, count($usage));
+        $this->assertCount(1, $usage);
         $this->assertEquals((string) $usage[0]['values_alt_title']->value(), 'penguin');
     }
 
@@ -220,7 +220,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(2, count($usage));
+        $this->assertCount(2, $usage);
         $this->assertEquals((string) $usage[0]['slug']->value(), 'foo');
         $this->assertEquals((string) $usage[1]['slug']->value(), 'bar');
     }
@@ -239,7 +239,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(2, count($usage));
+        $this->assertCount(2, $usage);
         $this->assertEquals((string) $usage[0]['values_alt_title']->value(), 'foo');
         $this->assertEquals((string) $usage[1]['values_alt_title']->value(), 'bar');
     }
@@ -257,7 +257,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(5, count($usage));
+        $this->assertCount(5, $usage);
         $this->assertEquals((string) $usage[0]['title'], 'tiger');
 
         $this->assertInstanceOf(Value::class, $usage[0]['author']);
@@ -278,7 +278,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(2, count($usage));
+        $this->assertCount(2, $usage);
 
         $this->assertEquals((string) $usage[0]['title'], 'def');
         $this->assertEquals((string) $usage[1]['title'], 'abc');
@@ -298,7 +298,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(2, count($usage));
+        $this->assertCount(2, $usage);
 
         $this->assertEquals((string) $usage[0]['values_alt_title'], 'def');
         $this->assertEquals((string) $usage[1]['values_alt_title'], 'abc');
@@ -359,7 +359,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(2, count($usage['items']));
+        $this->assertCount(2, $usage['items']);
 
         $this->assertEquals((string) $usage['items'][0]['title'], 'abc');
         $this->assertEquals((string) $usage['items'][1]['title'], 'def');
@@ -376,7 +376,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(2, count($usage));
+        $this->assertCount(2, $usage);
 
         $this->assertEquals((string) $usage[0]['title'], $posts[0]['title']);
         $this->assertEquals((string) $usage[1]['title'], $posts[1]['title']);
@@ -396,7 +396,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(2, count($usage['items']));
+        $this->assertCount(2, $usage['items']);
 
         $this->assertEquals((string) $usage['items'][0]['title'], $posts[0]['title']);
         $this->assertEquals((string) $usage['items'][1]['title'], $posts[1]['title']);
@@ -416,7 +416,7 @@ class RunwayTagTest extends TestCase
 
         $usage = $this->tag->wildcard('post');
 
-        $this->assertEquals(2, count($usage));
+        $this->assertCount(2, $usage);
 
         $this->assertEquals($usage[0]['id']->value(), $posts[0]['id']);
         $this->assertEquals($usage[1]['id']->value(), $posts[1]['id']);
@@ -440,7 +440,7 @@ class RunwayTagTest extends TestCase
         $this->tag->setParameters([]);
         $usage = $this->tag->wildcard('blog_posts');
 
-        $this->assertEquals(5, count($usage));
+        $this->assertCount(5, $usage);
 
         $this->assertEquals((string) $usage[0]['title'], $posts[0]->title);
         $this->assertEquals((string) $usage[1]['title'], $posts[1]->title);
