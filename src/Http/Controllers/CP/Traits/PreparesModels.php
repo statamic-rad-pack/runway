@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Statamic\Fields\Field;
 use Statamic\Fieldtypes\Revealer;
 use Statamic\Fieldtypes\Section;
@@ -77,13 +76,7 @@ trait PreparesModels
             return $results;
         }
 
-        $value = $model->getAttribute($field->handle());
-
-        // When it's a nested field, we need to get the value from the nested JSON object, using data_get().
-        if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field->handle())) {
-            $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
-            $value = data_get($model, "{$nestedFieldPrefix}.{$key}");
-        }
+        $value = $model->getFieldValue($field->handle());
 
         // When $value is a Carbon instance, format it with the format defined in the blueprint.
         if ($value instanceof CarbonInterface) {
@@ -173,15 +166,6 @@ trait PreparesModels
                     $processedValue = json_encode($processedValue, JSON_THROW_ON_ERROR);
                 }
 
-                // When it's a nested field, we need to set the value on the nested JSON object.
-                // Otherwise, it'll attempt to set the model's "root" attributes.
-                if ($nestedFieldPrefix = $resource->nestedFieldPrefix($field->handle())) {
-                    $key = Str::after($field->handle(), "{$nestedFieldPrefix}_");
-                    $model->setAttribute("{$nestedFieldPrefix}->{$key}", $processedValue);
-
-                    return;
-                }
-
                 // Skip read-only timestamp columns so Laravel's automatic
                 // timestamp handling isn't prevented by a stale value.
                 if (
@@ -192,7 +176,7 @@ trait PreparesModels
                     return;
                 }
 
-                $model->setAttribute($field->handle(), $processedValue);
+                $model->setAttribute($model->getFieldColumn($field->handle()), $processedValue);
             });
     }
 

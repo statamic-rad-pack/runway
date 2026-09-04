@@ -316,6 +316,44 @@ class ResourceListingControllerTest extends TestCase
     }
 
     #[Test]
+    public function can_get_title_when_title_field_is_a_nested_field()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.title_field', 'values_alt_title');
+
+        Runway::discoverResources();
+
+        Post::factory()->create(['values' => ['alt_title' => 'Alternative Title']]);
+
+        $user = User::make()->makeSuper()->save();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.listing-api', ['resource' => 'post']))
+            ->assertOk()
+            ->assertJsonPath('data.0.title', 'Alternative Title');
+    }
+
+    #[Test]
+    public function can_sort_listing_rows_by_a_nested_title_field()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.title_field', 'values_alt_title');
+
+        Runway::discoverResources();
+
+        Post::factory()->create(['values' => ['alt_title' => 'Bravo']]);
+        Post::factory()->create(['values' => ['alt_title' => 'Alpha']]);
+
+        $user = User::make()->makeSuper()->save();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.listing-api', ['resource' => 'post', 'sort' => 'values_alt_title', 'order' => 'asc']))
+            ->assertOk()
+            ->assertJsonPath('data.0.title', 'Alpha')
+            ->assertJsonPath('data.1.title', 'Bravo');
+    }
+
+    #[Test]
     public function can_get_value_from_enum_column()
     {
         Post::factory()->create(['membership_status' => MembershipStatus::Free]);

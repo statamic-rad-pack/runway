@@ -32,7 +32,7 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
 
     public function get($key, $fallback = null)
     {
-        return $this->model->{$key} ?? $fallback;
+        return $this->model->getFieldValue($key) ?? $fallback;
     }
 
     public function model(): Model
@@ -56,7 +56,7 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
             return Site::current()->handle();
         }
 
-        return $this->model->{$field};
+        return $this->model->getFieldValue($field);
     }
 
     public function getSearchValue(string $field)
@@ -65,7 +65,7 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
             return $this->model->$field();
         }
 
-        return $this->model->{$field};
+        return $this->model->getFieldValue($field);
     }
 
     public function getSearchReference(): string
@@ -80,7 +80,7 @@ class Searchable implements Augmentable, ContainsQueryableValues, Contract
 
     public function getCpSearchResultTitle(): string
     {
-        return $this->model->{$this->resource->titleField()};
+        return $this->model->getFieldValue($this->resource->titleField());
     }
 
     public function getCpSearchResultUrl(): string

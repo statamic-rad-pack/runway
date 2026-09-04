@@ -3,8 +3,10 @@
 namespace StatamicRadPack\Runway\Tests\Query\Scopes\Filters;
 
 use PHPUnit\Framework\Attributes\Test;
+use Statamic\Facades\Blueprint;
 use Statamic\Fields\Field;
 use StatamicRadPack\Runway\Fieldtypes\BelongsToFieldtype;
+use StatamicRadPack\Runway\Fieldtypes\HasManyFieldtype;
 use StatamicRadPack\Runway\Scopes\Fields\Models;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
@@ -59,6 +61,33 @@ class ModelsTest extends TestCase
         $this->assertEquals($author->id, $results[0]->author_id);
         $this->assertEquals($author->id, $results[1]->author_id);
         $this->assertEquals($author->id, $results[2]->author_id);
+    }
+
+    #[Test]
+    public function can_apply_filter_on_nested_field()
+    {
+        Author::factory()->withPosts(3)->create();
+
+        $author = Author::factory()->create();
+        Post::factory()->create(['author_id' => $author->id, 'values' => ['alt_title' => 'Alternative Title']]);
+
+        $blueprint = Blueprint::find('runway::author');
+        $blueprint->ensureFieldPrepended('posts', ['type' => 'has_many', 'resource' => 'post']);
+
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn($blueprint);
+
+        $fieldtype = new HasManyFieldtype;
+        $fieldtype->setField(new Field('posts', ['resource' => 'post']));
+
+        $query = Author::query();
+
+        (new Models($fieldtype))->apply($query, 'posts', [
+            'field' => 'values_alt_title',
+            'operator' => 'like',
+            'value' => 'Alternative',
+        ]);
+
+        $this->assertEquals([$author->id], $query->pluck('id')->all());
     }
 
     #[Test]

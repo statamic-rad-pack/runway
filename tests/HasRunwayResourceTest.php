@@ -7,9 +7,51 @@ use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\Test;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\ExternalPost;
+use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 
 class HasRunwayResourceTest extends TestCase
 {
+    #[Test]
+    public function it_gets_a_field_column()
+    {
+        $post = Post::factory()->create();
+
+        $this->assertEquals('title', $post->getFieldColumn('title'));
+        $this->assertEquals('values->alt_title', $post->getFieldColumn('values_alt_title'));
+        $this->assertEquals('external_links->links', $post->getFieldColumn('external_links_links'));
+        $this->assertEquals('values', $post->getFieldColumn('values'));
+    }
+
+    #[Test]
+    public function it_gets_a_field_value()
+    {
+        $post = Post::factory()->create([
+            'title' => 'Hello World',
+            'values' => ['alt_title' => 'Alternative Title...'],
+            'external_links' => ['links' => [['label' => 'Statamic', 'url' => 'https://statamic.com']]],
+        ]);
+
+        $this->assertEquals('Hello World', $post->getFieldValue('title'));
+        $this->assertEquals('Alternative Title...', $post->getFieldValue('values_alt_title'));
+        $this->assertEquals('Statamic', $post->getFieldValue('external_links_links')[0]->label);
+        $this->assertNull($post->getFieldValue('values_missing_key'));
+
+        // The resource might not have a title field at all.
+        $this->assertNull($post->getFieldValue(null));
+    }
+
+    #[Test]
+    public function scope_runway_search_searches_nested_fields()
+    {
+        Post::factory()->create(['title' => 'Hello World', 'values' => ['alt_title' => 'Alternative Title...']]);
+        Post::factory()->create(['title' => 'Goodbye World', 'values' => ['alt_title' => 'Something Else...']]);
+
+        $results = Post::query()->runwaySearch('Alternative')->get();
+
+        $this->assertCount(1, $results);
+        $this->assertEquals('Hello World', $results->first()->title);
+    }
+
     #[Test]
     public function scope_runway_search_works_with_custom_eloquent_connection()
     {

@@ -64,9 +64,13 @@ trait HasRunwayResource
     public function scopeRunwaySearch(Builder $query, string $searchQuery)
     {
         $this->runwayResource()->blueprint()->fields()->all()
-            ->filter(fn (Field $field) => $this->getConnection()->getSchemaBuilder()->hasColumn($this->getTable(), $field->handle()))
+            ->filter(function (Field $field) {
+                $column = Str::before($this->getFieldColumn($field->handle()), '->');
+
+                return $this->getConnection()->getSchemaBuilder()->hasColumn($this->getTable(), $column);
+            })
             ->reject(fn (Field $field) => $field->visibility() === 'computed')
-            ->each(fn (Field $field) => $query->orWhere($this->getColumnForField($field->handle()), 'LIKE', '%'.$searchQuery.'%'));
+            ->each(fn (Field $field) => $query->orWhere($this->getFieldColumn($field->handle()), 'LIKE', '%'.$searchQuery.'%'));
     }
 
     public function publishedStatus(): ?string
@@ -131,7 +135,7 @@ trait HasRunwayResource
         return $value;
     }
 
-    public function getColumnForField(string $field): string
+    public function getFieldColumn(string $field): string
     {
         foreach ($this->runwayResource()->nestedFieldPrefixes() as $nestedFieldPrefix) {
             if (Str::startsWith($field, "{$nestedFieldPrefix}_")) {
@@ -142,6 +146,27 @@ trait HasRunwayResource
         }
 
         return $field;
+    }
+
+    /** @deprecated Use getFieldColumn() instead. */
+    public function getColumnForField(string $field): string
+    {
+        return $this->getFieldColumn($field);
+    }
+
+    public function getFieldValue(?string $field): mixed
+    {
+        if (! $field) {
+            return null;
+        }
+
+        $column = $this->getFieldColumn($field);
+
+        if ($column === $field) {
+            return $this->getAttribute($field);
+        }
+
+        return data_get($this, str_replace('->', '.', $column));
     }
 
     public function runwayEditUrl(): string

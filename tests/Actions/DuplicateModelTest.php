@@ -195,6 +195,22 @@ class DuplicateModelTest extends TestCase
     }
 
     #[Test]
+    public function it_duplicates_models_when_title_field_is_a_nested_field()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.title_field', 'values_alt_title');
+
+        Runway::discoverResources();
+
+        $post = Post::factory()->create(['values' => ['alt_title' => 'Alternative Title']]);
+
+        (new DuplicateModel)->run(collect([$post]), []);
+
+        $duplicate = Post::query()->whereNot('id', $post->id)->first();
+
+        $this->assertEquals('Alternative Title (Duplicate)', $duplicate->values['alt_title']);
+    }
+
+    #[Test]
     public function it_does_not_duplicate_the_title_field_when_it_is_computed()
     {
         Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.title_field', 'appended_value');

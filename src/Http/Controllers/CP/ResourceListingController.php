@@ -36,9 +36,9 @@ class ResourceListingController extends CpController
 
         $query->when(method_exists($query, 'getQuery') && $query->getQuery()->orders, function ($query) use ($request, $resource, $sortColumn) {
             if ($request->input('sort') && $sortColumn) {
-                $query->reorder($resource->model()->getColumnForField($sortColumn), $request->input('order'));
+                $query->reorder($resource->model()->getFieldColumn($sortColumn), $request->input('order'));
             }
-        }, fn ($query) => $query->orderBy($resource->model()->getColumnForField($sortColumn), $request->input('order', $resource->orderByDirection())));
+        }, fn ($query) => $query->orderBy($resource->model()->getFieldColumn($sortColumn), $request->input('order', $resource->orderByDirection())));
 
         $activeFilterBadges = $this->queryFilters($query, $request->filters, [
             'resource' => $resource->handle(),

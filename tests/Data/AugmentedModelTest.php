@@ -4,6 +4,7 @@ namespace StatamicRadPack\Runway\Tests\Data;
 
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\TestTime\TestTime;
+use Statamic\Facades\Blueprint;
 use StatamicRadPack\Runway\Data\AugmentedModel;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Author;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
@@ -117,6 +118,21 @@ class AugmentedModelTest extends TestCase
         // Eg. values_alt_title, values_alt_body
         $this->assertEquals('Alternative Title...', $augmented->get('values_alt_title')->value());
         $this->assertEquals('<p>This is a <strong>great</strong> post! You should <em>read</em> it.</p>', trim($augmented->get('values_alt_body')->value()));
+    }
+
+    #[Test]
+    public function it_gets_nested_values_via_nested_field_handle_when_the_prefix_contains_an_underscore()
+    {
+        $blueprint = Blueprint::find('runway::post');
+        $blueprint->ensureFieldPrepended('external_links_heading', ['type' => 'text']);
+
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($blueprint);
+
+        $post = Post::factory()->create(['external_links' => ['heading' => 'Elsewhere on the web']]);
+
+        $augmented = new AugmentedModel($post);
+
+        $this->assertEquals('Elsewhere on the web', $augmented->get('external_links_heading')->value());
     }
 
     #[Test]

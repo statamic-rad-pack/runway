@@ -60,7 +60,7 @@ class ModelRevisionsController extends CpController
         [$values, $meta] = $this->extractFromFields($model, $resource, $blueprint);
 
         return [
-            'title' => $model->getAttribute($resource->titleField()),
+            'title' => $model->getFieldValue($resource->titleField()),
             'editing' => true,
             'actions' => [
                 'save' => $model->runwayUpdateUrl(),

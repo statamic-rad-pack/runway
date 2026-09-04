@@ -154,6 +154,18 @@ If you'd like to specify a different field, you may do so by setting the `title_
 ],
 ```
 
+Fields [nested inside a JSON column](/blueprints#nesting-fields-inside-json-columns) may also be used, by referencing the blueprint handle of the nested field. The field needs to exist in your blueprint, just like any other title field:
+
+```php
+'resources' => [
+	\App\Models\Order::class => [
+	    'name' => 'Orders',
+		'nested_field_prefixes' => ['address'],
+		'title_field' => 'address_street_name', // Represents the street_name key, in the address column.
+	],
+],
+```
+
 ### Search Index
 
 The `search_index` option allows you to specify a [search index](https://statamic.dev/search#indexes) which should be used when search models in the Control Panel listing table.
