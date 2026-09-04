@@ -24,7 +24,12 @@ class ResourceLinkType extends LinkType
     {
         $resource = $this->resource();
 
-        return $resource->newEloquentQuery()->firstWhere($resource->qualifiedPrimaryKey(), $id);
+        return $resource->newEloquentQuery()
+            ->when(
+                $resource->model()->hasNamedScope('runwayLinks'),
+                fn ($query) => $query->runwayLinks()
+            )
+            ->firstWhere($resource->qualifiedPrimaryKey(), $id);
     }
 
     public function fieldtype(Field $field): ?array

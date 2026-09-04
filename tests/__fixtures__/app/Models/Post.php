@@ -50,6 +50,13 @@ class Post extends Model
         }
     }
 
+    public function scopeRunwayLinks($query)
+    {
+        if ($params = Blink::get('RunwayLinksScopeWhere')) {
+            $query->where($params[0], $params[1]);
+        }
+    }
+
     public function author()
     {
         return $this->belongsTo(Author::class);

@@ -3,6 +3,7 @@
 namespace StatamicRadPack\Runway\Tests;
 
 use PHPUnit\Framework\Attributes\Test;
+use Statamic\Facades\Blink;
 use Statamic\Fields\Field;
 use Statamic\Fieldtypes\Link;
 use Statamic\Routing\ResolveRedirect;
@@ -70,6 +71,18 @@ class ResourceLinkTypeTest extends TestCase
     public function it_resolves_null_when_the_model_doesnt_exist()
     {
         $this->assertNull(Link::resolveType('runway_post')->resolve('does-not-exist'));
+    }
+
+    #[Test]
+    public function it_applies_the_runway_links_scope_when_resolving()
+    {
+        $published = Post::factory()->createQuietly();
+        $unpublished = Post::factory()->unpublished()->createQuietly();
+
+        Blink::put('RunwayLinksScopeWhere', ['published', true]);
+
+        $this->assertTrue(Link::resolveType('runway_post')->resolve($published->id)->is($published));
+        $this->assertNull(Link::resolveType('runway_post')->resolve($unpublished->id));
     }
 
     #[Test]

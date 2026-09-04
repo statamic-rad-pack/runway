@@ -120,6 +120,27 @@ By default, Runway will use the `runway_uris` table to store the "URI Cache". If
 ```
 
 
+## Link fieldtype
+
+Resources with front-end routing are available as options in Statamic's [Link fieldtype](https://statamic.dev/fieldtypes/link), allowing you to link to your models from entries and other content.
+
+If you need to change which models can be linked to, you may add a `runwayLinks` query scope to your model:
+
+```php focus={7-11}
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model
+{
+    #[Scope]
+	protected function runwayLinks(Builder $query): void
+	{
+		$query->where('is_active', true);
+	}
+}
+```
+
 ## Live Preview
 Statamic's Live Preview gives you the ability to see what your model will look like in real time as you write and edit.
 
