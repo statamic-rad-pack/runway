@@ -132,7 +132,6 @@ class AugmentedModelTest extends TestCase
 
         $augmented = new AugmentedModel($post);
 
-        // Eg. external_links_heading, where `external_links` is the nested field prefix.
         $this->assertEquals('Elsewhere on the web', $augmented->get('external_links_heading')->value());
     }
 

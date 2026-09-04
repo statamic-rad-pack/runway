@@ -176,8 +176,6 @@ trait PreparesModels
                     return;
                 }
 
-                // When it's a nested field, the column will be something like `values->alt_title`,
-                // so the value gets set on the JSON object rather than a "root" attribute.
                 $model->setAttribute($model->getColumnForField($field->handle()), $processedValue);
             });
     }
