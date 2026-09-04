@@ -36,6 +36,16 @@ class SearchableTest extends TestCase
     }
 
     #[Test]
+    public function can_get_queryable_value_from_nested_field()
+    {
+        $post = Post::factory()->create(['values' => ['alt_title' => 'Alternative Title']]);
+
+        $searchable = new Searchable($post);
+
+        $this->assertEquals('Alternative Title', $searchable->getQueryableValue('values_alt_title'));
+    }
+
+    #[Test]
     public function can_get_search_value()
     {
         $post = Post::factory()->create();
@@ -46,6 +56,16 @@ class SearchableTest extends TestCase
         $this->assertEquals($post->slug, $searchable->getSearchValue('slug'));
         $this->assertEquals($post->id, $searchable->getSearchValue('id'));
         $this->assertEquals($post->searchMethod(), $searchable->getSearchValue('searchMethod'));
+    }
+
+    #[Test]
+    public function can_get_search_value_from_nested_field()
+    {
+        $post = Post::factory()->create(['values' => ['alt_title' => 'Alternative Title']]);
+
+        $searchable = new Searchable($post);
+
+        $this->assertEquals('Alternative Title', $searchable->getSearchValue('values_alt_title'));
     }
 
     #[Test]
