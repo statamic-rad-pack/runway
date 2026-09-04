@@ -148,7 +148,7 @@ trait HasRunwayResource
         return $field;
     }
 
-    public function getValueForField(?string $field): mixed
+    public function getFieldValue(?string $field): mixed
     {
         if (! $field) {
             return null;

@@ -43,7 +43,7 @@ class ListedModel extends JsonResource
 
         return [
             'id' => $model->getKey(),
-            'title' => $model->getValueForField($this->runwayResource->titleField()),
+            'title' => $model->getFieldValue($this->runwayResource->titleField()),
             'published' => $this->resource->published(),
             'status' => $this->resource->publishedStatus(),
             'edit_url' => $model->runwayEditUrl(),
@@ -67,7 +67,7 @@ class ListedModel extends JsonResource
                 $relationName = $this->runwayResource->eloquentRelationships()->get($key);
                 $value = $this->resource->$relationName;
             } else {
-                $value = $extra[$key] ?? $this->resource->getValueForField($key);
+                $value = $extra[$key] ?? $this->resource->getFieldValue($key);
 
                 if ($value instanceof UnitEnum) {
                     $value = $value->value;

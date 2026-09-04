@@ -187,7 +187,7 @@ class AugmentedModel extends AbstractAugmented
 
     private function wrapNestedField(string $handle): Value
     {
-        $value = $this->data->getValueForField($handle);
+        $value = $this->data->getFieldValue($handle);
 
         if ($this->data->hasSupplement($handle)) {
             $value = $this->data->getSupplement($handle);

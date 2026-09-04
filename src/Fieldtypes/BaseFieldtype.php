@@ -311,7 +311,7 @@ abstract class BaseFieldtype extends Relationship
 
             return [
                 'id' => $model->{$resource->primaryKey()},
-                'title' => $fieldtype->preProcessIndex($model->getValueForField($column)),
+                'title' => $fieldtype->preProcessIndex($model->getFieldValue($column)),
                 'edit_url' => $model->runwayEditUrl(),
             ];
         });

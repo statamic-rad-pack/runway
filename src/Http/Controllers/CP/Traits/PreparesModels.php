@@ -76,7 +76,7 @@ trait PreparesModels
             return $results;
         }
 
-        $value = $model->getValueForField($field->handle());
+        $value = $model->getFieldValue($field->handle());
 
         // When $value is a Carbon instance, format it with the format defined in the blueprint.
         if ($value instanceof CarbonInterface) {

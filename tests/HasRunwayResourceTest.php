@@ -12,7 +12,7 @@ use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 class HasRunwayResourceTest extends TestCase
 {
     #[Test]
-    public function it_gets_the_value_for_a_field()
+    public function it_gets_a_field_value()
     {
         $post = Post::factory()->create([
             'title' => 'Hello World',
@@ -20,13 +20,13 @@ class HasRunwayResourceTest extends TestCase
             'external_links' => ['links' => [['label' => 'Statamic', 'url' => 'https://statamic.com']]],
         ]);
 
-        $this->assertEquals('Hello World', $post->getValueForField('title'));
-        $this->assertEquals('Alternative Title...', $post->getValueForField('values_alt_title'));
-        $this->assertEquals('Statamic', $post->getValueForField('external_links_links')[0]->label);
-        $this->assertNull($post->getValueForField('values_missing_key'));
+        $this->assertEquals('Hello World', $post->getFieldValue('title'));
+        $this->assertEquals('Alternative Title...', $post->getFieldValue('values_alt_title'));
+        $this->assertEquals('Statamic', $post->getFieldValue('external_links_links')[0]->label);
+        $this->assertNull($post->getFieldValue('values_missing_key'));
 
         // The resource might not have a title field at all.
-        $this->assertNull($post->getValueForField(null));
+        $this->assertNull($post->getFieldValue(null));
     }
 
     #[Test]
