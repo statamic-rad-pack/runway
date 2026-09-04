@@ -47,7 +47,7 @@ return [
     | Static Warming
     |--------------------------------------------------------------------------
     |
-    | Should Runway's URIs be included when running `php please static:warm`?
+    | Should Runway's URIs be warmed when running `php please static:warm`?
     |
     */
 
