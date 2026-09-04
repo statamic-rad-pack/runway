@@ -44,13 +44,13 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Disable Static Warm?
+    | Static Warming
     |--------------------------------------------------------------------------
     |
-    | Should Runway's uris be automatically warmed when running `php please static:warm`
+    | Should Runway's URIs be included when running `php please static:warm`?
     |
     */
 
-    'disable_static_warm' => false,
+    'static_warming' => true,
 
 ];
