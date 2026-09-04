@@ -12,6 +12,17 @@ use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 class HasRunwayResourceTest extends TestCase
 {
     #[Test]
+    public function it_gets_a_field_column()
+    {
+        $post = Post::factory()->create();
+
+        $this->assertEquals('title', $post->getFieldColumn('title'));
+        $this->assertEquals('values->alt_title', $post->getFieldColumn('values_alt_title'));
+        $this->assertEquals('external_links->links', $post->getFieldColumn('external_links_links'));
+        $this->assertEquals('values', $post->getFieldColumn('values'));
+    }
+
+    #[Test]
     public function it_gets_a_field_value()
     {
         $post = Post::factory()->create([
