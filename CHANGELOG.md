@@ -1,5 +1,16 @@
 # Changelog
 
+## v9.7.0 (2026-09-04)
+
+### What's new
+- Add config option to disable static cache warming of Runway URIs [#850](https://github.com/statamic-rad-pack/runway/pull/850) by @mefenlon
+- Add support for orderable resources [#854](https://github.com/statamic-rad-pack/runway/pull/854) by @duncanmcclean
+
+### What's fixed
+- Fix nested JSON fields in `title_field` and `title_format` [#844](https://github.com/statamic-rad-pack/runway/pull/844) by @duncanmcclean
+
+
+
 ## v9.6.2 (2026-08-12)
 
 ### What's fixed
