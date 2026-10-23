@@ -2,8 +2,6 @@ name: Lint code style issues
 
 on:
   pull_request:
-    paths:
-      - '**.php'
 
 permissions: {}
 
@@ -13,19 +11,6 @@ concurrency:
 
 jobs:
   lint-code-styling:
-    name: Lint code styling
-    runs-on: ubuntu-latest
+    uses: duncanmcclean/.github/.github/workflows/code-style-lint.yaml@a7b7c24ac637a77cc5b4d1835ae3bccbd902ca48
     permissions:
       contents: read
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - name: Check PHP code style issues
-        uses: aglipanci/laravel-pint-action@36de00d5f5a8a4e12d443e01671daa12a18f4c79 # 2.6
-        with:
-          testMode: true
-          verboseMode: true

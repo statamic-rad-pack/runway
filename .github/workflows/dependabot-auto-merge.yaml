@@ -1,0 +1,17 @@
+name: Dependabot Auto Merge
+
+on:
+  pull_request:
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependabot:
+    uses: duncanmcclean/.github/.github/workflows/dependabot-auto-merge.yaml@a7b7c24ac637a77cc5b4d1835ae3bccbd902ca48
+    permissions:
+      contents: write # Merge the PR
+      pull-requests: write # Merge the PR
