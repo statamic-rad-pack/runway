@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Blink;
+use Statamic\Facades\Blueprint;
 use Statamic\Facades\User;
 use StatamicRadPack\Runway\Runway;
 use StatamicRadPack\Runway\Tests\Fixtures\Enums\MembershipStatus;
@@ -419,5 +420,37 @@ class ResourceListingControllerTest extends TestCase
             ->assertOk()
             ->assertJsonPath('data.0.membership_status', ['Free'])
             ->assertJsonPath('data.1.membership_status', ['Paid']);
+    }
+
+    /**
+     * @see https://github.com/statamic-rad-pack/runway/issues/863
+     */
+    #[Test]
+    public function can_get_value_from_published_column_when_resource_does_not_have_publish_states()
+    {
+        Config::set('runway.resources.StatamicRadPack\Runway\Tests\Fixtures\Models\Post.published', false);
+
+        Runway::discoverResources();
+
+        $blueprint = Blueprint::find('runway::post');
+
+        Blueprint::shouldReceive('find')->with('user')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::author')->andReturn(new \Statamic\Fields\Blueprint);
+        Blueprint::shouldReceive('find')->with('runway::post')->andReturn($blueprint->ensureField('published', [
+            'type' => 'toggle',
+            'listable' => true,
+        ]));
+
+        Post::factory()->create();
+        Post::factory()->unpublished()->create();
+
+        $user = User::make()->makeSuper()->save();
+
+        $this
+            ->actingAs($user)
+            ->get(cp_route('runway.listing-api', ['resource' => 'post']).'?columns=title,published')
+            ->assertOk()
+            ->assertJsonPath('data.0.published', true)
+            ->assertJsonPath('data.1.published', false);
     }
 }
