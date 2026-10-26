@@ -12,5 +12,3 @@ updates:
     # to allow community detection of compromised releases
     cooldown:
       default-days: 7
-      exclude:
-        - "duncanmcclean/*"
