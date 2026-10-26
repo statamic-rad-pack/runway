@@ -44,13 +44,15 @@ class ListedModel extends JsonResource
         return [
             'id' => $model->getKey(),
             'title' => $model->getFieldValue($this->runwayResource->titleField()),
-            'published' => $this->resource->published(),
             'status' => $this->resource->publishedStatus(),
             'edit_url' => $model->runwayEditUrl(),
             'permalink' => $this->runwayResource->hasRouting() ? $model->uri() : null,
             'editable' => User::current()->can('edit', [$this->runwayResource, $model]),
             'viewable' => User::current()->can('view', [$this->runwayResource, $model]),
             'collection' => ['dated' => false],
+            $this->mergeWhen($this->runwayResource->hasPublishStates(), [
+                'published' => $this->resource->published(),
+            ]),
             $this->merge($this->values()),
         ];
     }
