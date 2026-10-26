@@ -1,5 +1,16 @@
 # Changelog
 
+## v9.7.1 (2026-10-26)
+
+### What's fixed
+- Fix toggle values for `published` columns in listing [#864](https://github.com/statamic-rad-pack/runway/pull/864) by @duncanmcclean
+- Bump zizmorcore/zizmor-action from 0.6.2 to 0.6.3 in the github-actions group [#858](https://github.com/statamic-rad-pack/runway/pull/858) by @dependabot
+- Bump zizmorcore/zizmor-action from 0.6.3 to 0.6.4 in the github-actions group [#859](https://github.com/statamic-rad-pack/runway/pull/859) by @dependabot
+- Bump actions/setup-node from 7.0.0 to 7.1.0 in the github-actions group [#860](https://github.com/statamic-rad-pack/runway/pull/860) by @dependabot
+- Bump the github-actions group with 2 updates [#861](https://github.com/statamic-rad-pack/runway/pull/861) by @dependabot
+
+
+
 ## v9.7.0 (2026-09-04)
 
 ### What's new
