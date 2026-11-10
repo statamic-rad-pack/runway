@@ -209,12 +209,6 @@ trait HasRunwayResource
         return $field;
     }
 
-    /** @deprecated Use getFieldColumn() instead. */
-    public function getColumnForField(string $field): string
-    {
-        return $this->getFieldColumn($field);
-    }
-
     public function getFieldValue(?string $field): mixed
     {
         if (! $field) {
