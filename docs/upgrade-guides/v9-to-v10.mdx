@@ -52,3 +52,13 @@ The `uris_table` option in the `runway.php` config file has been removed in favo
     'structures' => 'runway_structures', // [!code ++]
 ], // [!code ++]
 ```
+
+### The `getColumnForField` method has been removed
+**Affects apps calling `getColumnForField` on models**
+
+The `getColumnForField` method on the `HasRunwayResource` trait has been removed. You should use `getFieldColumn` instead:
+
+```php
+$model->getColumnForField('values_alt_title'); // [!code --]
+$model->getFieldColumn('values_alt_title'); // [!code ++]
+```
