@@ -2,6 +2,7 @@
 
 namespace StatamicRadPack\Runway\Tests\Actions;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Collection;
@@ -47,6 +48,19 @@ class PublishTest extends TestCase
         Runway::discoverResources();
 
         $visibleTo = (new Publish)->context([])->visibleTo(Post::factory()->unpublished()->create());
+
+        $this->assertFalse($visibleTo);
+    }
+
+    #[Test]
+    public function is_not_visible_to_eloquent_model_without_a_runway_resource()
+    {
+        $model = new class extends Model
+        {
+            protected $table = 'posts';
+        };
+
+        $visibleTo = (new Publish)->context([])->visibleTo(new $model);
 
         $this->assertFalse($visibleTo);
     }
