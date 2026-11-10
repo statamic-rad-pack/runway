@@ -1,6 +1,6 @@
 <?php
 
-namespace StatamicRadPack\Runway\Tests\Http\Controllers;
+namespace StatamicRadPack\Runway\Tests\API;
 
 use Facades\Statamic\CP\LivePreview;
 use PHPUnit\Framework\Attributes\Test;
@@ -8,7 +8,7 @@ use Statamic\Facades\Config;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
 
-class ApiControllerTest extends TestCase
+class APITest extends TestCase
 {
     protected function setUp(): void
     {
