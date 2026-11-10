@@ -4,13 +4,15 @@ namespace StatamicRadPack\Runway\Http\Resources\CP;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Statamic\Facades\Parse;
-use StatamicRadPack\Runway\Fieldtypes\BaseFieldtype;
+use Statamic\Facades\User;
+use Statamic\Fieldtypes\Relationship;
+use StatamicRadPack\Runway\Fieldtypes\RunwayModelsFieldtype;
 
 class FieldtypeModel extends JsonResource
 {
-    private BaseFieldtype $fieldtype;
+    private Relationship $fieldtype;
 
-    public function __construct($resource, BaseFieldtype $fieldtype)
+    public function __construct($resource, Relationship $fieldtype)
     {
         $this->fieldtype = $fieldtype;
 
@@ -26,6 +28,10 @@ class FieldtypeModel extends JsonResource
             'status' => $this->resource->publishedStatus(),
             'edit_url' => $this->resource->runwayEditUrl(),
         ];
+
+        if ($this->fieldtype instanceof RunwayModelsFieldtype) {
+            $data['editable'] = User::current()->can('edit', [$this->resource->runwayResource(), $this->resource]);
+        }
 
         return ['data' => $data];
     }

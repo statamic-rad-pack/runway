@@ -3,14 +3,14 @@
 namespace StatamicRadPack\Runway\Http\Resources\CP;
 
 use Illuminate\Pagination\AbstractPaginator;
-use StatamicRadPack\Runway\Fieldtypes\BaseFieldtype;
+use Statamic\Fieldtypes\Relationship;
 
 class FieldtypeModels extends Models
 {
-    private BaseFieldtype $fieldtype;
+    private Relationship $fieldtype;
     public $collects = FieldtypeListedModel::class;
 
-    public function __construct($resource, BaseFieldtype $fieldtype)
+    public function __construct($resource, Relationship $fieldtype)
     {
         $this->fieldtype = $fieldtype;
 

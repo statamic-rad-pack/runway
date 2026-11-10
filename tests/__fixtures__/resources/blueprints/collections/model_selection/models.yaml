@@ -1,0 +1,18 @@
+title: Models
+tabs:
+  main:
+    sections:
+      - fields:
+          - handle: selected_models
+            field:
+              type: runway_models
+              resource: author
+          - handle: rows
+            field:
+              type: grid
+              fields:
+                - handle: selected_models
+                  field:
+                    type: runway_models
+                    resource: author
+                    with: []

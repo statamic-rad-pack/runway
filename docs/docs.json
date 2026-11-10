@@ -36,6 +36,7 @@
                     "blueprints",
                     "control-panel",
                     "relationships",
+                    "runway-models",
                     "frontend-routing",
                     "templating",
                     "graphql",
