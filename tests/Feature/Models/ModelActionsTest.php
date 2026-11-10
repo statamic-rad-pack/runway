@@ -1,6 +1,6 @@
 <?php
 
-namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
+namespace StatamicRadPack\Runway\Tests\Feature\Models;
 
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Actions\Action;
@@ -8,7 +8,7 @@ use Statamic\Facades\User;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
 
-class ModelActionControllerTest extends TestCase
+class ModelActionsTest extends TestCase
 {
     protected function setUp(): void
     {
