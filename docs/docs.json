@@ -18,6 +18,7 @@
                     {
                         "group": "Upgrade Guides",
                         "pages": [
+                            "upgrade-guides/v9-to-v10",
                             "upgrade-guides/v8-to-v9",
                             "upgrade-guides/v7-to-v8",
                             "upgrade-guides/v6-to-v7",
