@@ -1,6 +1,6 @@
 <?php
 
-namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
+namespace StatamicRadPack\Runway\Tests\Feature\Models;
 
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\Test;
@@ -12,7 +12,7 @@ use StatamicRadPack\Runway\Structures\RunwayStructure;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
 
-class ReorderModelsControllerTest extends TestCase
+class ReorderModelsTest extends TestCase
 {
     protected function setUp(): void
     {
