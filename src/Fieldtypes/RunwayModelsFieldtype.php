@@ -136,14 +136,14 @@ class RunwayModelsFieldtype extends Relationship
             ->uniqueStrict(fn ($id) => (string) $id)->values()->all();
     }
 
-    public function process($data): int|string|array|null
+    public function process($data): int|string|array
     {
         $ids = $this->ids($data);
 
-        return $this->config('max_items') === 1 ? Arr::first($ids) : $ids;
+        return $this->config('max_items') === 1 && $ids !== [] ? $ids[0] : $ids;
     }
 
-    public function toQueryableValue($value): int|string|array|null
+    public function toQueryableValue($value): int|string|array
     {
         return $this->process($value);
     }

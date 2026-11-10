@@ -58,39 +58,49 @@ class RunwayModelsFieldtypeTest extends TestCase
             'single integer' => [1, [7], 7],
             'single string' => [1, ['007'], '007'],
             'single scalar' => [1, '007', '007'],
-            'single empty' => [1, [], null],
+            'single empty' => [1, [], []],
+            'single null' => [1, null, []],
+            'single null selection' => [1, [null], []],
             'zero key' => [1, [0], 0],
             'ordered plural' => [null, [7, '007', 3, 7, '3'], [7, '007', 3]],
+            'plural with null selection' => [null, [7, null, 3], [7, 3]],
             'empty plural' => [null, null, []],
         ];
     }
 
     #[Test]
-    public function stores_json_attributes_without_touching_selected_models_or_mapping_a_relation()
+    #[DataProvider('selectionSizes')]
+    public function stores_json_attributes_without_touching_selected_models_or_mapping_a_relation($maxItems)
     {
         $authors = Author::factory()->count(2)->create();
         $host = Post::factory()->create();
         $before = DB::table('authors')->get()->toJson();
-        $field = $this->field([], 'values_recommended')->setParent($host);
+        $field = $this->field(['max_items' => $maxItems], 'values_recommended')->setParent($host);
 
         $host->setAttribute($host->getFieldColumn($field->handle()), $field->fieldtype()->process($authors->modelKeys()));
         $host->save();
 
-        $this->assertSame($authors->modelKeys(), $host->fresh()->getFieldValue('values_recommended'));
-        $this->assertSame($authors->modelKeys(), $field->fieldtype()->preProcess($host->fresh()->getFieldValue('values_recommended')));
+        $this->assertSame($maxItems === 1 ? $authors[0]->id : $authors->modelKeys(), $host->fresh()->getFieldValue('values_recommended'));
+        $this->assertSame($maxItems === 1 ? [$authors[0]->id] : $authors->modelKeys(), $field->fieldtype()->preProcess($host->fresh()->getFieldValue('values_recommended')));
 
         $host->setAttribute('values->recommended', $field->fieldtype()->process(array_reverse($authors->modelKeys())));
         $host->save();
-        $this->assertSame(array_reverse($authors->modelKeys()), $host->fresh()->getFieldValue('values_recommended'));
+        $this->assertSame($maxItems === 1 ? $authors[1]->id : array_reverse($authors->modelKeys()), $host->fresh()->getFieldValue('values_recommended'));
 
         $host->setAttribute('values->recommended', $field->fieldtype()->process([]));
         $host->save();
         $this->assertSame([], $host->fresh()->getFieldValue('values_recommended'));
+        $this->assertSame([], $field->fieldtype()->preProcess($host->fresh()->getFieldValue('values_recommended')));
         $this->assertSame($before, DB::table('authors')->get()->toJson());
 
         $blueprint = Blueprint::find('runway::post')->ensureField('values_recommended', $field->config());
         Blueprint::shouldReceive('find')->with('runway::post')->andReturn($blueprint);
         $this->assertFalse(Runway::findResource('post')->eloquentRelationships()->has('values_recommended'));
+    }
+
+    public static function selectionSizes(): array
+    {
+        return [[1], [null]];
     }
 
     #[Test]

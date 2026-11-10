@@ -28,7 +28,7 @@ Unlike the [Eloquent relationship fieldtypes](/relationships), selecting, reorde
 | Option | Description |
 | --- | --- |
 | `resource` | The single resource whose records may be selected. Required. |
-| `max_items` | Maximum selections. `1` stores a scalar or `null`; multiple selections store an ordered, deduplicated array, or `[]` when empty. |
+| `max_items` | Maximum selections. `1` stores a primary key; multiple selections store an ordered, deduplicated array of primary keys. Empty selections are `[]`, never `null`. |
 | `mode` | `default` (stack selector), `select` (dropdown), or `typeahead`. |
 | `reorderable` | Allow editors to reorder multiple selections. Defaults to `false`. This changes ID order, not a model's order column. |
 | `create` | Allow inline creation in the stack selector, when permitted. Defaults to `true`. |
@@ -43,7 +43,7 @@ There is no `relationship_name`, `order_column`, or `on_unlink` option. For a Ru
 
 The host's repository persists the value: file or SQL-backed content, user storage, asset metadata, or a model attribute. Singular and plural storage shapes stay the same on every host. Selection order is retained even when reordering is disabled.
 
-Statamic's file-backed repositories may omit cleared values from their files, including empty arrays in entry YAML and asset metadata. An omitted plural value still reopens and augments as an empty selection; the fieldtype returns `[]` when processing it.
+Statamic's file-backed repositories may omit cleared values from their files, including empty arrays in entry YAML and asset metadata. An omitted value still reopens as an empty selection; the fieldtype returns `[]` when processing it. Model attributes must support this empty array when selections can be cleared, for example through a JSON column.
 
 New selections must exist, match the selection scopes and be viewable by the editor. Existing references which become unavailable appear as invalid items without exposing protected titles. They survive unrelated saves, including nested row reordering; editors may explicitly unlink them. Deleting a model does not rewrite content which references it.
 
