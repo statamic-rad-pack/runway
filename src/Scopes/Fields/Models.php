@@ -6,6 +6,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Statamic\Query\Scopes\Filters\Fields\FieldtypeFilter;
 use Statamic\Support\Arr;
 use Statamic\Support\Str;
+use StatamicRadPack\Runway\Fieldtypes\RunwayModelsFieldtype;
 use StatamicRadPack\Runway\Runway;
 
 class Models extends FieldtypeFilter
@@ -62,6 +63,25 @@ class Models extends FieldtypeFilter
             ->get()
             ->pluck($relatedResource->primaryKey())
             ->toArray();
+
+        if ($this->fieldtype instanceof RunwayModelsFieldtype) {
+            if (method_exists($query, 'getModel') && method_exists($query->getModel(), 'getFieldColumn')) {
+                $handle = $query->getModel()->getFieldColumn($handle);
+            }
+
+            if ($this->fieldtype->config('max_items') === 1 || $ids === []) {
+                $query->whereIn($handle, $ids);
+            } else {
+                $query->where(function ($query) use ($handle, $ids) {
+                    foreach ($ids as $id) {
+                        $query->orWhereJsonContains($handle, $id);
+                        $query->orWhereJsonContains($handle, (string) $id);
+                    }
+                });
+            }
+
+            return;
+        }
 
         // When we're dealing with an Eloquent query builder, we can take advantage of `whereHas` to filter.
         // Otherwise, we'll just filter the IDs directly.

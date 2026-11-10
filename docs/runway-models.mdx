@@ -1,0 +1,84 @@
+---
+title: Runway Models
+description: Select Runway records from any Statamic content without creating an Eloquent relationship.
+---
+
+The **Runway Models** fieldtype stores references to records from one registered Runway resource. Use it in entries, terms, users, globals, assets, fieldsets, Grid, Replicator and Bard. It also works in a Runway model's scalar or JSON attribute without a relationship method.
+
+Unlike the [Eloquent relationship fieldtypes](/relationships), selecting, reordering or unlinking models only changes the host's stored IDs. It never saves or deletes selected records, sets foreign keys or synchronizes pivots. Inline creation and editing are ordinary resource operations, subject to the current user's permissions.
+
+## Configuration
+
+```yaml
+- handle: featured_author
+  field:
+    type: runway_models
+    resource: author
+    max_items: 1
+
+- handle: recommended_authors
+  field:
+    type: runway_models
+    resource: author
+    reorderable: true
+```
+
+`resource` is required and must identify one [registered resource](/resources). IDs always use its primary key, not its route key. Integer and string keys, including UUIDs, are supported.
+
+| Option | Description |
+| --- | --- |
+| `resource` | The single resource whose records may be selected. Required. |
+| `max_items` | Maximum selections. `1` stores a primary key; multiple selections store an ordered, deduplicated array of primary keys. Empty selections are `[]`, never `null`. |
+| `mode` | `default` (stack selector), `select` (dropdown), or `typeahead`. |
+| `reorderable` | Allow editors to reorder multiple selections. Defaults to `false`. This changes ID order, not a model's order column. |
+| `create` | Allow inline creation in the stack selector, when permitted. Defaults to `true`. |
+| `query_scopes` | Handles of [query scopes](https://statamic.dev/extending/query-scopes-and-filters#scopes) applied to selectable models. |
+| `search_index` | Search index to use instead of the resource's configured index or database search. Resource and selection scopes still apply. |
+| `title_format` | Antlers template used for CP labels, e.g. `{{ name }} — {{ location }}`. |
+| `with` | Relationships to eager load when augmenting. Defaults to the resource's eager-loading configuration. |
+
+There is no `relationship_name`, `order_column`, or `on_unlink` option. For a Runway JSON attribute, configure its [nested field prefix](/blueprints#nesting-fields-inside-json-columns) and cast the JSON column to an array as usual. Do not add a relationship method for this field.
+
+## Storage and unavailable records
+
+The host's repository persists the value: file or SQL-backed content, user storage, asset metadata, or a model attribute. Singular and plural storage shapes stay the same on every host. Selection order is retained even when reordering is disabled.
+
+Statamic's file-backed repositories may omit cleared values from their files, including empty arrays in entry YAML and asset metadata. An omitted value still reopens as an empty selection; the fieldtype returns `[]` when processing it. Model attributes must support this empty array when selections can be cleared, for example through a JSON column.
+
+New selections must exist, match the selection scopes and be viewable by the editor. Existing references which become unavailable appear as invalid items without exposing protected titles. They survive unrelated saves, including nested row reordering; editors may explicitly unlink them. Deleting a model does not rewrite content which references it.
+
+Saved working copies count as existing content. For older nested rows without persisted row IDs, preservation uses existing references from the same field and set type, rather than assuming the row's position is unchanged.
+
+Public augmentation omits missing records and unpublished records on resources with publish states. A missing singular selection becomes `null`; a plural field remains an array. CP selection scopes and CP permissions are not frontend access controls: use your normal resource scopes and application authorization for private data.
+
+## Templates and APIs
+
+Singular fields augment to one model; plural fields augment to an ordered array. Models use their resource's blueprint and support deferred and shallow augmentation.
+
+<CodeGroup>
+```antlers Antlers
+{{ featured_author:name }}
+
+{{ recommended_authors }}
+    <p>{{ name }}</p>
+{{ /recommended_authors }}
+```
+
+```blade Blade
+{{ $featured_author['name'] ?? '' }}
+
+@foreach ($recommended_authors as $author)
+    <p>{{ $author['name'] }}</p>
+@endforeach
+```
+</CodeGroup>
+
+Enabled [REST endpoints](/rest-api) expose the field through the host's normal augmentation and shallow relationship handling. No public write endpoint is added. Host API exposure settings still apply; Statamic's default REST user resource only exposes its standard fields, not custom blueprint fields.
+
+In [GraphQL](/graphql), the field uses the selected resource's existing object type, or a list of that type for plural fields. Enable GraphQL on the target resource and host before querying it. Resolution reads the stored IDs, not an Eloquent relationship method.
+
+CP filters can match selected records by their ID or title field. On Runway scalar/JSON attributes, filtering uses ID membership rather than `whereHas`.
+
+## Caching
+
+Model resolution is batched within a request, including nested sibling fields, and cached by resource and eager-loading configuration. New requests resolve current labels and model data through Runway's existing mechanisms. Search indexes still require their normal updates. There is no reverse-reference index to invalidate every cached page or API response when a selected model changes; use the application's cache invalidation policy for those responses.
