@@ -4,6 +4,8 @@ namespace StatamicRadPack\Runway\Actions;
 
 use Illuminate\Database\Eloquent\Model;
 use Statamic\Actions\Action;
+use StatamicRadPack\Runway\Exceptions\ResourceNotFound;
+use StatamicRadPack\Runway\Runway;
 
 class Publish extends Action
 {
@@ -16,9 +18,15 @@ class Publish extends Action
 
     public function visibleTo($item)
     {
+        try {
+            $resource = Runway::findResourceByModel($item);
+        } catch (ResourceNotFound $e) {
+            return false;
+        }
+
         return $this->context['view'] === 'list'
             && $item instanceof Model
-            && $item->runwayResource()->readOnly() !== true
+            && $resource->readOnly() !== true
             && $item->published() === false;
     }
 
