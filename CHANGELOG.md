@@ -1,5 +1,15 @@
 # Changelog
 
+## v9.7.2 (2026-11-10)
+
+### What's fixed
+- Fix Publish/Unpublish actions on models without a Runway resource [#872](https://github.com/statamic-rad-pack/runway/pull/872) by @christophstockinger
+- Bump zizmorcore/zizmor-action from 0.6.4 to 0.7.1 in the github-actions group [#867](https://github.com/statamic-rad-pack/runway/pull/867) by @dependabot
+- Bump zizmorcore/zizmor-action from 0.7.1 to 0.8.0 in the github-actions group [#869](https://github.com/statamic-rad-pack/runway/pull/869) by @dependabot
+- Bump zizmorcore/zizmor-action from 0.8.0 to 0.8.1 in the github-actions group [#870](https://github.com/statamic-rad-pack/runway/pull/870) by @dependabot
+
+
+
 ## v9.7.1 (2026-10-26)
 
 ### What's fixed
