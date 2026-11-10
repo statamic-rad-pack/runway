@@ -1,6 +1,6 @@
 <?php
 
-namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
+namespace StatamicRadPack\Runway\Tests\Feature\Models;
 
 use Facades\Statamic\CP\LivePreview;
 use Mockery;
@@ -10,7 +10,7 @@ use Statamic\Facades\User;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
 
-class ModelPreviewControllerTest extends TestCase
+class PreviewModelTest extends TestCase
 {
     #[Test]
     public function it_creates_a_token_with_model_for_editing()

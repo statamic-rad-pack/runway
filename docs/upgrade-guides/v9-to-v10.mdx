@@ -40,4 +40,25 @@ TODO
 
 ## Low impact changes
 
-TODO
+### The `uris_table` config option has been removed
+**Affects apps using the `uris_table` config option**
+
+The `uris_table` option in the `runway.php` config file has been removed in favour of the `tables.uris` option:
+
+```php
+'uris_table' => 'custom_uris', // [!code --]
+'tables' => [ // [!code ++]
+    'uris' => 'custom_uris', // [!code ++]
+    'structures' => 'runway_structures', // [!code ++]
+], // [!code ++]
+```
+
+### The `getColumnForField` method has been removed
+**Affects apps calling `getColumnForField` on models**
+
+The `getColumnForField` method on the `HasRunwayResource` trait has been removed. You should use `getFieldColumn` instead:
+
+```php
+$model->getColumnForField('values_alt_title'); // [!code --]
+$model->getFieldColumn('values_alt_title'); // [!code ++]
+```

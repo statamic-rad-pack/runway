@@ -1,13 +1,13 @@
 <?php
 
-namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
+namespace StatamicRadPack\Runway\Tests\Feature\Resources;
 
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Actions\Action;
 use Statamic\Facades\User;
 use StatamicRadPack\Runway\Tests\TestCase;
 
-class ResourceActionControllerTest extends TestCase
+class ResourceActionsTest extends TestCase
 {
     protected function setUp(): void
     {

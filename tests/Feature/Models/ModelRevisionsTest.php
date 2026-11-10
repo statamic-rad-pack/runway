@@ -1,6 +1,6 @@
 <?php
 
-namespace StatamicRadPack\Runway\Tests\Http\Controllers\CP;
+namespace StatamicRadPack\Runway\Tests\Feature\Models;
 
 use Illuminate\Support\Carbon;
 use PHPUnit\Framework\Attributes\Test;
@@ -9,7 +9,7 @@ use Statamic\Facades\User;
 use StatamicRadPack\Runway\Tests\Fixtures\Models\Post;
 use StatamicRadPack\Runway\Tests\TestCase;
 
-class ModelRevisionsControllerTest extends TestCase
+class ModelRevisionsTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -20,7 +20,7 @@ class ModelRevisionsControllerTest extends TestCase
 
     protected function tearDown(): void
     {
-        Folder::delete(__DIR__.'/../../../__fixtures__/revisions');
+        Folder::delete(__DIR__.'/../../__fixtures__/revisions');
 
         parent::tearDown();
     }
@@ -130,5 +130,78 @@ class ModelRevisionsControllerTest extends TestCase
                 ],
                 'readOnly' => true,
             ]);
+    }
+
+    #[Test]
+    public function can_publish_a_model()
+    {
+        $model = Post::factory()->unpublished()->create();
+
+        $this
+            ->actingAs(User::make()->makeSuper()->save())
+            ->post($model->runwayPublishUrl(), [
+                'message' => 'Live live live!',
+            ])
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'reference',
+                    'title',
+                    'published',
+                ],
+            ]);
+
+        $this->assertTrue($model->fresh()->published());
+    }
+
+    #[Test]
+    public function can_unpublish_a_model()
+    {
+        $model = Post::factory()->create();
+
+        $this
+            ->actingAs(User::make()->makeSuper()->save())
+            ->post($model->runwayUnpublishUrl(), [
+                'message' => 'Live live live!',
+            ])
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'reference',
+                    'title',
+                    'published',
+                ],
+            ]);
+
+        $this->assertFalse($model->fresh()->published());
+    }
+
+    #[Test]
+    public function it_restores_revision()
+    {
+        $model = Post::factory()->create(['title' => 'Some new title']);
+
+        $revision = $model->makeRevision()
+            ->message('The revision')
+            ->attributes([
+                'id' => $model->id,
+                'published' => true,
+                'data' => collect($model->getAttributes())->merge([
+                    'title' => 'Original title',
+                ])->all(),
+            ]);
+
+        $revision->save();
+
+        $this
+            ->actingAs(User::make()->id('user-1')->makeSuper()->save())
+            ->post($model->runwayRestoreRevisionUrl(), ['revision' => $revision->date()->timestamp])
+            ->assertOk()
+            ->assertSessionHas('success');
+
+        $workingCopy = $model->workingCopy();
+
+        $this->assertEquals($model->id, $workingCopy->attributes()['id']);
+        $this->assertEquals('Original title', $workingCopy->attributes()['data']['title']);
     }
 }
