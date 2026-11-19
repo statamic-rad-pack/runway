@@ -1,5 +1,12 @@
 # Changelog
 
+## v9.7.3 (2026-11-19)
+
+### What's fixed
+- Fix Publish/Unpublish actions replacing Statamic's entry actions [#878](https://github.com/statamic-rad-pack/runway/pull/878) by @jonasemde
+
+
+
 ## v9.7.2 (2026-11-10)
 
 ### What's fixed
