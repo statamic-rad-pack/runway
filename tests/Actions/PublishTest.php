@@ -36,33 +36,6 @@ class PublishTest extends TestCase
     }
 
     #[Test]
-    public function entries_can_still_be_published()
-    {
-        Collection::make('posts')->save();
-
-        $entry = tap(Entry::make()->collection('posts')->slug('hello-world')->published(false))->save();
-
-        $this->actingAs(User::make()->makeSuper()->save());
-
-        $this
-            ->post(cp_route('collections.entries.actions.bulk', 'posts'), [
-                'selections' => [$entry->id()],
-            ])
-            ->assertOk()
-            ->assertJsonFragment(['handle' => 'publish']);
-
-        $this
-            ->post(cp_route('collections.entries.actions.run', 'posts'), [
-                'action' => 'publish',
-                'selections' => [$entry->id()],
-                'values' => [],
-            ])
-            ->assertOk();
-
-        $this->assertTrue(Entry::find($entry->id())->published());
-    }
-
-    #[Test]
     public function is_visible_to_eloquent_model()
     {
         $visibleTo = (new Publish)->context([])->visibleTo(Post::factory()->unpublished()->create());

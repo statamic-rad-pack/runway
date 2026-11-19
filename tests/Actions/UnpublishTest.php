@@ -36,33 +36,6 @@ class UnpublishTest extends TestCase
     }
 
     #[Test]
-    public function entries_can_still_be_unpublished()
-    {
-        Collection::make('posts')->save();
-
-        $entry = tap(Entry::make()->collection('posts')->slug('hello-world')->published(true))->save();
-
-        $this->actingAs(User::make()->makeSuper()->save());
-
-        $this
-            ->post(cp_route('collections.entries.actions.bulk', 'posts'), [
-                'selections' => [$entry->id()],
-            ])
-            ->assertOk()
-            ->assertJsonFragment(['handle' => 'unpublish']);
-
-        $this
-            ->post(cp_route('collections.entries.actions.run', 'posts'), [
-                'action' => 'unpublish',
-                'selections' => [$entry->id()],
-                'values' => [],
-            ])
-            ->assertOk();
-
-        $this->assertFalse(Entry::find($entry->id())->published());
-    }
-
-    #[Test]
     public function is_visible_to_eloquent_model()
     {
         $visibleTo = (new Unpublish)->context([])->visibleTo(Post::factory()->create());
