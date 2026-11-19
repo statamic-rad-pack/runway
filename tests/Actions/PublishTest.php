@@ -5,6 +5,7 @@ namespace StatamicRadPack\Runway\Tests\Actions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\Test;
+use Statamic\Actions\Publish as StatamicPublish;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 use Statamic\Facades\Role;
@@ -23,6 +24,42 @@ class PublishTest extends TestCase
     public function it_returns_title()
     {
         $this->assertEquals('Publish', Publish::title());
+    }
+
+    #[Test]
+    public function it_does_not_replace_statamics_publish_action()
+    {
+        $actions = app('statamic.actions');
+
+        $this->assertSame(StatamicPublish::class, $actions->get('publish'));
+        $this->assertSame(Publish::class, $actions->get('runway_publish'));
+    }
+
+    #[Test]
+    public function entries_can_still_be_published()
+    {
+        Collection::make('posts')->save();
+
+        $entry = tap(Entry::make()->collection('posts')->slug('hello-world')->published(false))->save();
+
+        $this->actingAs(User::make()->makeSuper()->save());
+
+        $this
+            ->post(cp_route('collections.entries.actions.bulk', 'posts'), [
+                'selections' => [$entry->id()],
+            ])
+            ->assertOk()
+            ->assertJsonFragment(['handle' => 'publish']);
+
+        $this
+            ->post(cp_route('collections.entries.actions.run', 'posts'), [
+                'action' => 'publish',
+                'selections' => [$entry->id()],
+                'values' => [],
+            ])
+            ->assertOk();
+
+        $this->assertTrue(Entry::find($entry->id())->published());
     }
 
     #[Test]

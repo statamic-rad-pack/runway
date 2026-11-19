@@ -5,6 +5,7 @@ namespace StatamicRadPack\Runway\Tests\Actions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\Test;
+use Statamic\Actions\Unpublish as StatamicUnpublish;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 use Statamic\Facades\Role;
@@ -23,6 +24,42 @@ class UnpublishTest extends TestCase
     public function it_returns_title()
     {
         $this->assertEquals('Unpublish', Unpublish::title());
+    }
+
+    #[Test]
+    public function it_does_not_replace_statamics_unpublish_action()
+    {
+        $actions = app('statamic.actions');
+
+        $this->assertSame(StatamicUnpublish::class, $actions->get('unpublish'));
+        $this->assertSame(Unpublish::class, $actions->get('runway_unpublish'));
+    }
+
+    #[Test]
+    public function entries_can_still_be_unpublished()
+    {
+        Collection::make('posts')->save();
+
+        $entry = tap(Entry::make()->collection('posts')->slug('hello-world')->published(true))->save();
+
+        $this->actingAs(User::make()->makeSuper()->save());
+
+        $this
+            ->post(cp_route('collections.entries.actions.bulk', 'posts'), [
+                'selections' => [$entry->id()],
+            ])
+            ->assertOk()
+            ->assertJsonFragment(['handle' => 'unpublish']);
+
+        $this
+            ->post(cp_route('collections.entries.actions.run', 'posts'), [
+                'action' => 'unpublish',
+                'selections' => [$entry->id()],
+                'values' => [],
+            ])
+            ->assertOk();
+
+        $this->assertFalse(Entry::find($entry->id())->published());
     }
 
     #[Test]

@@ -48,7 +48,7 @@ class ModelActionsTest extends TestCase
                 'selections' => [$post->id],
             ])
             ->assertOk()
-            ->assertJsonPath('0.handle', 'unpublish');
+            ->assertJsonFragment(['handle' => 'runway_unpublish']);
     }
 }
 

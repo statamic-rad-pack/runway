@@ -9,6 +9,8 @@ use StatamicRadPack\Runway\Runway;
 
 class Publish extends Action
 {
+    protected static $handle = 'runway_publish';
+
     protected $icon = 'eye';
 
     public static function title()
