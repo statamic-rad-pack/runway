@@ -5,6 +5,7 @@ namespace StatamicRadPack\Runway\Tests\Actions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\Test;
+use Statamic\Actions\Publish as StatamicPublish;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 use Statamic\Facades\Role;
@@ -23,6 +24,15 @@ class PublishTest extends TestCase
     public function it_returns_title()
     {
         $this->assertEquals('Publish', Publish::title());
+    }
+
+    #[Test]
+    public function it_does_not_replace_statamics_publish_action()
+    {
+        $actions = app('statamic.actions');
+
+        $this->assertSame(StatamicPublish::class, $actions->get('publish'));
+        $this->assertSame(Publish::class, $actions->get('runway_publish'));
     }
 
     #[Test]

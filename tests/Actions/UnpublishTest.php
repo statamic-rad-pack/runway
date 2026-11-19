@@ -5,6 +5,7 @@ namespace StatamicRadPack\Runway\Tests\Actions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\Test;
+use Statamic\Actions\Unpublish as StatamicUnpublish;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 use Statamic\Facades\Role;
@@ -23,6 +24,15 @@ class UnpublishTest extends TestCase
     public function it_returns_title()
     {
         $this->assertEquals('Unpublish', Unpublish::title());
+    }
+
+    #[Test]
+    public function it_does_not_replace_statamics_unpublish_action()
+    {
+        $actions = app('statamic.actions');
+
+        $this->assertSame(StatamicUnpublish::class, $actions->get('unpublish'));
+        $this->assertSame(Unpublish::class, $actions->get('runway_unpublish'));
     }
 
     #[Test]

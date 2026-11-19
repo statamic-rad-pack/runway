@@ -9,6 +9,8 @@ use StatamicRadPack\Runway\Runway;
 
 class Unpublish extends Action
 {
+    protected static $handle = 'runway_unpublish';
+
     protected $icon = 'eye-slash';
 
     public static function title()
