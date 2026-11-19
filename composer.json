@@ -50,7 +50,8 @@
         "orchestra/testbench": "^10.0 || ^11.0",
         "phpunit/phpunit": "^11.0",
         "spatie/laravel-ray": "^1.43.6",
-        "inertiajs/inertia-laravel": "^2.0.10"
+        "inertiajs/inertia-laravel": "^2.0.10",
+        "thecodingmachine/safe": "^3.4"
     },
     "config": {
         "optimize-autoloader": true,
